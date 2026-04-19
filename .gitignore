@@ -57,9 +57,9 @@ yarn-error.log*
 frontend/dist/
 frontend/build/
 
-# Railway specific
-railway.toml
-nixpacks.toml
+# Railway specific (needed for deployment)
+# railway.toml
+# nixpacks.toml
 
 # Test files
 tests/

@@ -1,0 +1,20 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[[services]]
+name = "budget-buddy-backend"
+
+[services.variables]
+PORT = "8080"
+DB_SSLMODE = "disable"
+DB_DEBUG = "false"
+
+[[services.ports]]
+port = 8080
+protocol = "TCP"

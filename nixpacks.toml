@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["go", "git", "ca-certificates"]
+
+[phases.build]
+cmds = [
+  "cd backend && go mod download",
+  "cd backend && go build -o budget-buddy ."
+]
+
+[start]
+cmd = "cd backend && ./budget-buddy"
