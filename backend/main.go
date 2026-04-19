@@ -12,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/julian/budget-buddy/core"
 	"github.com/julian/budget-buddy/core/context"
+	"github.com/julian/budget-buddy/migrations"
 )
 
 func main() {
@@ -21,6 +22,11 @@ func main() {
 	}
 
 	context.ConnectToDatabase()
+
+	// Run database migrations
+	if err := migrations.RunMigrations(); err != nil {
+		log.Fatalf("Failed to run migrations: %v", err)
+	}
 
 	r := chi.NewRouter()
 
