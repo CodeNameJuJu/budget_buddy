@@ -24,9 +24,9 @@ func ConnectToDatabase() {
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
 		// For Railway, ensure SSL mode is properly set
 		if os.Getenv("RAILWAY_ENVIRONMENT") != "" {
-			// Railway environment - ensure SSL is enabled
+			// Railway environment - ensure SSL is disabled for Railway internal connections
 			if !strings.Contains(databaseURL, "sslmode=") {
-				dsn = databaseURL + "&sslmode=require"
+				dsn = databaseURL + "?sslmode=disable"
 			} else {
 				dsn = databaseURL
 			}
