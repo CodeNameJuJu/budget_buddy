@@ -167,7 +167,7 @@ export default function SavingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Loading savings...</p>
+        <p className="text-slate-400">Loading savings...</p>
       </div>
     )
   }
@@ -183,8 +183,8 @@ export default function SavingsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Savings</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-100">Savings</h1>
+          <p className="text-slate-400">
             Break your savings into pots and track allocations
           </p>
         </div>
@@ -196,14 +196,14 @@ export default function SavingsPage() {
 
       {/* Balance comparison panel */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-slate-400">
               Actual savings balance
             </CardTitle>
             <button
               onClick={() => setEditingBalance(!editingBalance)}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-slate-400 hover:text-slate-300"
             >
               <Pencil className="h-3.5 w-3.5" />
             </button>
@@ -230,49 +230,49 @@ export default function SavingsPage() {
                   : "Not set"}
               </div>
             )}
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               Enter your actual bank savings balance
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-slate-400">
               Total allocated
             </CardTitle>
-            <Landmark className="h-4 w-4 text-primary" />
+            <Landmark className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">
+            <div className="text-2xl font-bold text-blue-400">
               {formatCurrency(totalAllocated)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               Sum of all pot allocations
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-slate-400">
               Unallocated
             </CardTitle>
             {unallocated >= 0 ? (
-              <ArrowUpRight className="h-4 w-4 text-emerald-500" />
+              <ArrowUpRight className="h-4 w-4 text-teal-400" />
             ) : (
-              <ArrowDownRight className="h-4 w-4 text-red-500" />
+              <ArrowDownRight className="h-4 w-4 text-red-400" />
             )}
           </CardHeader>
           <CardContent>
             <div
               className={`text-2xl font-bold ${
-                unallocated >= 0 ? "text-emerald-600" : "text-red-600"
+                unallocated >= 0 ? "text-teal-400" : "text-red-400"
               }`}
             >
               {formatCurrency(Math.abs(unallocated))}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               {unallocated >= 0
                 ? "Savings not yet assigned to a pot"
                 : "You've allocated more than your balance"}
@@ -283,7 +283,7 @@ export default function SavingsPage() {
 
       {/* Allocation bar — visual breakdown */}
       {pots.length > 0 && savingsBalance > 0 && (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium">Allocation breakdown</CardTitle>
           </CardHeader>
@@ -348,7 +348,7 @@ export default function SavingsPage() {
 
       {/* Forecast panel */}
       {forecast && parseFloat(forecast.total_monthly) > 0 && (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-primary" />
@@ -444,7 +444,7 @@ export default function SavingsPage() {
 
       {/* New pot form */}
       {showPotForm && (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle>New savings pot</CardTitle>
           </CardHeader>
@@ -454,7 +454,7 @@ export default function SavingsPage() {
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
             >
               <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium text-slate-300">Name</label>
                 <Input
                   placeholder="e.g. Emergency fund"
                   value={potForm.name}
@@ -465,7 +465,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-medium text-slate-300">
                   Target amount (optional)
                 </label>
                 <Input
@@ -479,7 +479,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Colour</label>
+                <label className="text-sm font-medium text-slate-300">Colour</label>
                 <div className="flex gap-1.5 flex-wrap">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -500,7 +500,7 @@ export default function SavingsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-medium text-slate-300">
                   Contribution (optional)
                 </label>
                 <Input
@@ -514,7 +514,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-medium text-slate-300">
                   Contribution period
                 </label>
                 <select
@@ -530,7 +530,7 @@ export default function SavingsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Icon (emoji)</label>
+                <label className="text-sm font-medium text-slate-300">Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 🏦"
                   value={potForm.icon}
@@ -558,9 +558,9 @@ export default function SavingsPage() {
       {/* Savings pots grid */}
       {pots.length === 0 ? (
         <div className="text-center py-16">
-          <Landmark className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-lg font-semibold mb-1">No savings pots yet</h2>
-          <p className="text-muted-foreground text-sm">
+          <Landmark className="h-12 w-12 mx-auto text-slate-500 mb-4" />
+          <h2 className="text-lg font-semibold mb-1 text-slate-100">No savings pots yet</h2>
+          <p className="text-slate-400 text-sm">
             Create pots to break your savings into categories.
           </p>
         </div>
@@ -579,7 +579,7 @@ export default function SavingsPage() {
             const potForecast = forecast?.pots.find((f) => f.pot_id === pot.id)
 
             return (
-              <Card key={pot.id}>
+              <Card key={pot.id} className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
                     <div
@@ -593,7 +593,7 @@ export default function SavingsPage() {
                     <div>
                       <CardTitle className="text-base">{pot.name}</CardTitle>
                       {target !== null && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-slate-400">
                           Target: {formatCurrency(target)}
                         </p>
                       )}
@@ -602,7 +602,7 @@ export default function SavingsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground hover:text-destructive -mt-1"
+                    className="text-slate-400 hover:text-red-400 -mt-1"
                     onClick={() => handleDeletePot(pot.id)}
                   >
                     <Trash2 className="h-4 w-4" />
