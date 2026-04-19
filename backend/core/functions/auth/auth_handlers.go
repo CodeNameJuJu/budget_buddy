@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -73,6 +74,19 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	err = database.NewInsert().Model(user).Returning("*").Scan(context.Background())
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create user")
+		return
+	}
+
+	// Create associated account for the user
+	account := &types.Account{
+		Name:     fmt.Sprintf("%s %s's Account", user.FirstName, user.LastName),
+		Email:    user.Email,
+		Currency: "ZAR",
+	}
+
+	err = database.NewInsert().Model(account).Returning("*").Scan(context.Background())
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create user account")
 		return
 	}
 
