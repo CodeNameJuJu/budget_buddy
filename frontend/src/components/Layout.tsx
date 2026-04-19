@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { NavLink, Outlet } from "react-router-dom"
+import { useState, useEffect, useRef } from "react"
+import { NavLink, Outlet, useLocation } from "react-router-dom"
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -11,6 +11,7 @@ import {
   Bell,
   Menu,
   X,
+  ChevronLeft,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -26,93 +27,227 @@ const navItems = [
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+  const sidebarRef = useRef<HTMLElement>(null)
+  const location = useLocation()
+
+  // Close sidebar on route change
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [location])
+
+  // Handle swipe gestures for mobile
+  useEffect(() => {
+    const handleSwipe = (e: TouchEvent) => {
+      if (!sidebarRef.current) return
+      
+      const touchStartX = e.changedTouches[0].clientX
+      const touchEndX = e.changedTouches[0].clientX
+      const swipeThreshold = 50
+
+      if (touchEndX - touchStartX > swipeThreshold && !sidebarOpen) {
+        // Swipe right to open
+        setSidebarOpen(true)
+      } else if (touchStartX - touchEndX > swipeThreshold && sidebarOpen) {
+        // Swipe left to close
+        closeSidebar()
+      }
+    }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touchStartX = e.touches[0].clientX
+      const sidebar = sidebarRef.current
+      
+      if (sidebar && !sidebarOpen && touchStartX < 20) {
+        // Touch started near left edge - enable swipe to open
+        document.addEventListener('touchend', handleSwipe, { once: true })
+      } else if (sidebar && sidebarOpen) {
+        // Touch anywhere when sidebar is open - enable swipe to close
+        document.addEventListener('touchend', handleSwipe, { once: true })
+      }
+    }
+
+    if (window.innerWidth < 1024) {
+      document.addEventListener('touchstart', handleTouchStart)
+    }
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchend', handleSwipe)
+    }
+  }, [sidebarOpen])
+
+  // Handle escape key to close sidebar
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && sidebarOpen) {
+        closeSidebar()
+      }
+    }
+
+    if (sidebarOpen) {
+      document.addEventListener('keydown', handleEscape)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [sidebarOpen])
+
+  const closeSidebar = () => {
+    // Simulate haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10)
+    }
+    setIsClosing(true)
+    setTimeout(() => {
+      setSidebarOpen(false)
+      setIsClosing(false)
+    }, 300)
+  }
+
+  const openSidebar = () => {
+    // Simulate haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10)
+    }
+    setSidebarOpen(true)
+    setIsClosing(false)
+  }
+
+  const handleNavClick = () => {
+    // Simulate haptic feedback for navigation
+    if ('vibrate' in navigator) {
+      navigator.vibrate(5)
+    }
+  }
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-zinc-800 to-zinc-700 relative mobile-safe-area">
-      {/* Mobile overlay */}
+      {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden animate-fade-in"
-          onClick={() => setSidebarOpen(false)}
+          className={cn(
+            "fixed inset-0 bg-black/60 mobile-backdrop z-40 lg:hidden transition-opacity duration-300",
+            isClosing ? "opacity-0" : "opacity-100"
+          )}
+          onClick={closeSidebar}
         />
       )}
 
+      {/* Swipe indicator for mobile */}
+      {!sidebarOpen && (
+        <div className="swipe-indicator lg:hidden" />
+      )}
+
       {/* Sidebar */}
-      <aside className={cn(
-        "fixed lg:static inset-y-0 left-0 z-50 w-64 xs:w-72 bg-card border-r shadow-xl transform transition-all duration-300 ease-in-out",
-        sidebarOpen ? "translate-x-0 animate-slide-in" : "-translate-x-full lg:translate-x-0"
-      )}>
+      <aside 
+        ref={sidebarRef}
+        className={cn(
+          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-card/95 backdrop-blur-md border-r shadow-2xl transform transition-all duration-300 ease-out",
+          sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          "lg:w-64 lg:bg-card lg:backdrop-blur-0 lg:shadow-xl"
+        )}
+      >
         <div className="flex flex-col h-full">
-          <div className="p-3 xs:p-4 lg:p-6 border-b">
+          {/* Sidebar Header */}
+          <div className="p-4 xs:p-5 lg:p-6 border-b border-zinc-700/50">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 xs:gap-3">
-                <div className="p-1.5 xs:p-2 rounded-full bg-primary text-white">
-                  <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
+              <div className="flex items-center gap-3 xs:gap-4">
+                <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-lg">
+                  <Wallet className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
                 <div>
-                  <h1 className="text-base xs:text-lg lg:text-xl font-bold bg-gradient-to-r from-teal-400 to-teal-500 bg-clip-text text-transparent">Budget Buddy</h1>
-                  <p className="text-xs text-muted-foreground hidden md:block">Your financial companion</p>
+                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-teal-400 to-teal-500 bg-clip-text text-transparent">Budget Buddy</h1>
+                  <p className="text-xs xs:text-sm text-muted-foreground hidden md:block">Your financial companion</p>
                 </div>
               </div>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1.5 xs:p-2 rounded-md hover:bg-zinc-700 mobile-button-sm"
-              >
-                <X className="h-4 w-4 xs:h-5 xs:w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={closeSidebar}
+                  className="lg:hidden p-2 xs:p-2.5 rounded-full hover:bg-zinc-700/50 transition-colors mobile-button-sm"
+                >
+                  <ChevronLeft className="h-5 w-5 xs:h-6 xs:w-6" />
+                </button>
+              </div>
             </div>
           </div>
-          <nav className="flex-1 p-3 xs:p-4 space-y-1 overflow-y-auto mobile-scroll">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === "/"}
-                onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) =>
-                  cn(
-                    "flex items-center gap-2 xs:gap-3 px-2 xs:px-3 py-2 xs:py-2.5 rounded-md text-xs xs:text-sm font-medium transition-all duration-300 mobile-button",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-lg transform scale-105"
-                      : "text-muted-foreground hover:bg-zinc-700 hover:text-foreground hover:shadow-md"
-                  )
-                }
-              >
-                <item.icon className="h-3.5 w-3.5 xs:h-4 xs:w-4 flex-shrink-0" />
-                <span className="truncate mobile-text">{item.label}</span>
-              </NavLink>
-            ))}
+
+          {/* Navigation */}
+          <nav className="flex-1 p-4 xs:p-5 lg:p-6 space-y-1 overflow-y-auto mobile-scroll">
+            <div className="space-y-1">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === "/"}
+                  onClick={() => {
+                    closeSidebar()
+                    handleNavClick()
+                  }}
+                  className={({ isActive }) =>
+                    cn(
+                      "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
+                      isActive
+                        ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg transform scale-[1.02]"
+                        : "text-muted-foreground hover:bg-zinc-700/50 hover:text-foreground hover:shadow-md hover:transform hover:translate-x-1"
+                    )
+                  }
+                >
+                  <div className={cn(
+                    "p-2 rounded-lg transition-all duration-200",
+                    "group-hover:bg-zinc-600/50 group-hover:scale-110",
+                    "group-[.active]:bg-white/20"
+                  )}>
+                    <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
+                  </div>
+                  <span className="truncate font-medium">{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
           </nav>
+
+          {/* Sidebar Footer */}
+          <div className="p-4 xs:p-5 lg:p-6 border-t border-zinc-700/50">
+            <div className="status-indicator online">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs xs:text-sm">Connected to Railway</span>
+            </div>
+          </div>
         </div>
       </aside>
 
       {/* Main content */}
       <main className="flex-1 overflow-auto mobile-scroll">
-        {/* Mobile header */}
-        <div className="lg:hidden sticky top-0 z-30 bg-card border-b responsive-padding">
+        {/* Mobile header with enhanced design */}
+        <div className="lg:hidden sticky top-0 z-30 bg-card/95 mobile-backdrop border-b border-zinc-700/50 responsive-padding">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-1.5 xs:p-2 rounded-md hover:bg-zinc-700 mobile-button-sm"
+              onClick={openSidebar}
+              className="p-2.5 xs:p-3 rounded-full hover:bg-zinc-700/50 transition-all duration-200 mobile-app-button group"
             >
-              <Menu className="h-4 w-4 xs:h-5 xs:w-5" />
+              <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
             </button>
-            <div className="flex items-center gap-1.5 xs:gap-2">
-              <div className="p-1 xs:p-1.5 rounded-full bg-primary text-white">
-                <Wallet className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
+            <div className="flex items-center gap-2 xs:gap-3">
+              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-md">
+                <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
               </div>
-              <span className="font-semibold text-xs xs:text-sm mobile-text">Budget Buddy</span>
+              <span className="font-bold text-sm xs:text-base text-foreground">Budget Buddy</span>
             </div>
-            <div className="w-6 xs:w-8"></div> {/* Spacer for balance */}
+            <div className="w-8 xs:w-10"></div> {/* Spacer for balance */}
           </div>
         </div>
 
-        {/* Page content */}
-        <div className="responsive-padding animate-fade-in">
+        {/* Page content with smooth transitions */}
+        <div className={cn(
+          "responsive-padding transition-all duration-300",
+          sidebarOpen ? "opacity-50" : "opacity-100"
+        )}>
           <div className="responsive-container">
             <Outlet />
           </div>
         </div>
       </main>
-    </div  )
+    </div>
+  )
 }

@@ -1,4 +1,4 @@
-const API_BASE = process.env.NODE_ENV === 'production' 
+const API_BASE = import.meta.env.PROD 
   ? 'https://budget-buddy-production.up.railway.app/api'
   : '/api'
 
