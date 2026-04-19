@@ -47,7 +47,7 @@ interface AuthContextType {
 }
 
 // API base URL
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://budgetbuddy-production-b70f.up.railway.app/api';
 
 // Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
