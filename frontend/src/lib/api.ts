@@ -3,12 +3,77 @@ const API_BASE = import.meta.env.PROD
   : '/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = localStorage.getItem('access_token')
+  
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  }
+  
+  // Add authorization header if token exists
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     ...options,
   })
+
+  // Handle 401 Unauthorized - token expired or invalid
+  if (res.status === 401) {
+    // Try to refresh the token
+    const refreshToken = localStorage.getItem('refresh_token')
+    if (refreshToken) {
+      try {
+        const refreshResponse = await fetch(`${API_BASE}/auth/refresh`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        })
+
+        if (refreshResponse.ok) {
+          const refreshData = await refreshResponse.json()
+          localStorage.setItem('access_token', refreshData.access_token)
+          localStorage.setItem('refresh_token', refreshData.refresh_token)
+          localStorage.setItem('token_expires_at', (Date.now() + refreshData.expires_in * 1000).toString())
+          
+          // Retry the original request with new token
+          headers["Authorization"] = `Bearer ${refreshData.access_token}`
+          const retryResponse = await fetch(`${API_BASE}${path}`, {
+            headers,
+            ...options,
+          })
+          
+          if (!retryResponse.ok) {
+            const body = await retryResponse.json().catch(() => null)
+            throw new Error(body?.error || `Request failed: ${retryResponse.status}`)
+          }
+          
+          return retryResponse.json()
+        } else {
+          // Refresh failed, clear tokens and redirect to login
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
+          localStorage.removeItem('token_expires_at')
+          window.location.href = '/login'
+          throw new Error('Session expired. Please log in again.')
+        }
+      } catch (error) {
+        // Refresh failed, clear tokens and redirect to login
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        localStorage.removeItem('token_expires_at')
+        window.location.href = '/login'
+        throw new Error('Session expired. Please log in again.')
+      }
+    } else {
+      // No refresh token, redirect to login
+      window.location.href = '/login'
+      throw new Error('Please log in to continue.')
+    }
+  }
 
   if (!res.ok) {
     const body = await res.json().catch(() => null)
