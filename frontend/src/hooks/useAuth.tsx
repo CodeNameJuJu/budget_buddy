@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authApi, apiClient } from '@/lib/apiClient';
 
 // Types
 interface User {
@@ -140,39 +141,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(true);
     try {
       console.log('Login attempt for:', email);
-      console.log('API_BASE being used:', API_BASE);
       
-      const response = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      console.log('Login response status:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Login error response:', errorData);
-        throw new Error(errorData.error || errorData.message || 'Login failed');
-      }
-
-      // First get the response as text to see what we actually received
-      const responseText = await response.text();
-      console.log('Raw response from server:', responseText);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-      
-      let data;
-      try {
-        data = JSON.parse(responseText);
-        console.log('Login successful, user:', data.user.email);
-      } catch (e) {
-        console.error('JSON parse error:', e);
-        console.error('Response looks like HTML:', responseText.includes('<html>') || responseText.includes('<!DOCTYPE'));
-        throw new Error(`Invalid response format from server. Received: ${responseText.substring(0, 100)}...`);
-      }
+      const data = await authApi.login({ email, password });
+      console.log('Login successful, user:', data.user.email);
       
       setTokens(data);
       setUser(data.user);
@@ -187,26 +158,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (credentials: RegisterCredentials): Promise<void> => {
     setIsLoading(true);
     try {
-      console.log('API_BASE being used:', API_BASE);
-      const response = await fetch(`${API_BASE}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || errorData.message || 'Registration failed');
-      }
-
-      const data: AuthResponse = await response.json().catch((e) => {
-        console.error('JSON parse error in register:', e);
-        throw new Error('Invalid response format from server');
-      });
+      console.log('Register attempt for:', credentials.email);
+      
+      const data = await authApi.register(credentials);
+      console.log('Registration successful, user:', data.user.email);
+      
       setTokens(data);
       setUser(data.user);
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -214,16 +175,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = async (): Promise<void> => {
     try {
-      const accessToken = localStorage.getItem('access_token');
-      if (accessToken) {
-        await fetch(`${API_BASE}/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
-      }
+      // Try to call logout API, but don't fail if it doesn't work
+      await apiClient.post('/auth/logout', {});
     } catch (error) {
       // Even if logout API fails, clear local tokens
       console.error('Logout API error:', error);
