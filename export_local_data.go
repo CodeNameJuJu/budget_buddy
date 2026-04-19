@@ -10,10 +10,34 @@ import (
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/joho/godotenv"
 	"github.com/uptrace/bun"
 )
 
 func main() {
+	// Load environment variables
+	if err := godotenv.Load("export.env"); err != nil {
+		log.Println("No export.env found, using system environment variables")
+	}
+
+	// Check if we have database credentials
+	dbHost := os.Getenv("DB_HOST")
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+
+	if dbHost == "" || dbUsername == "" || dbPassword == "" {
+		log.Println("Database connection not configured.")
+		log.Println("Please update export.env with your database credentials:")
+		log.Println("DB_HOST=localhost")
+		log.Println("DB_PORT=5400")
+		log.Println("DB_NAME=budget_buddy")
+		log.Println("DB_USERNAME=postgres")
+		log.Println("DB_PASSWORD=your_password")
+		log.Println("DB_SSLMODE=disable")
+		log.Println("DB_DEBUG=false")
+		os.Exit(1)
+	}
+
 	// Initialize local database connection
 	appcontext.ConnectToDatabase()
 	defer appcontext.CloseDB()
