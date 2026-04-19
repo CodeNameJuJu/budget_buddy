@@ -162,7 +162,7 @@ export const LoginForm: React.FC = () => {
                 className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-blue-800 rounded bg-slate-700"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300">
-                Remember me
+                Remember me {formData.rememberMe ? '(ON)' : '(OFF)'}
               </label>
             </div>
 

@@ -61,24 +61,45 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Check for existing tokens on mount
   useEffect(() => {
     const initAuth = async () => {
+      console.log('Initializing auth...');
+      
       // Check both localStorage and sessionStorage for tokens
-      const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-      const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
+      const localStorageToken = localStorage.getItem('access_token');
+      const sessionStorageToken = sessionStorage.getItem('access_token');
+      const accessToken = localStorageToken || sessionStorageToken;
+      
+      const localStorageRefresh = localStorage.getItem('refresh_token');
+      const sessionStorageRefresh = sessionStorage.getItem('refresh_token');
+      const refreshToken = localStorageRefresh || sessionStorageRefresh;
+
+      console.log('Token check:', {
+        localStorageToken: localStorageToken ? 'exists' : 'none',
+        sessionStorageToken: sessionStorageToken ? 'exists' : 'none',
+        accessToken: accessToken ? 'found' : 'none',
+        refreshToken: refreshToken ? 'found' : 'none'
+      });
 
       if (accessToken && refreshToken) {
         try {
+          console.log('Validating access token...');
           // Validate access token
           const userData = await validateToken(accessToken);
+          console.log('Token validation successful, user:', userData.email);
           setUser(userData);
         } catch (error) {
+          console.log('Access token invalid, trying refresh...', error);
           // Access token invalid, try refresh
           try {
             await refreshAccessToken();
+            console.log('Token refresh successful');
           } catch (refreshError) {
+            console.log('Token refresh failed, clearing tokens', refreshError);
             // Refresh failed, clear tokens
             clearTokens();
           }
         }
+      } else {
+        console.log('No tokens found, user not authenticated');
       }
       setIsLoading(false);
     };
@@ -252,6 +273,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
     return () => clearInterval(interval);
   }, [user]);
+
+  // Test function to verify remember me functionality
+  const testRememberMe = () => {
+    console.log('=== REMEMBER ME TEST ===');
+    console.log('localStorage tokens:', {
+      access: localStorage.getItem('access_token') ? 'exists' : 'none',
+      refresh: localStorage.getItem('refresh_token') ? 'exists' : 'none',
+      expires: localStorage.getItem('token_expires_at') ? 'exists' : 'none'
+    });
+    console.log('sessionStorage tokens:', {
+      access: sessionStorage.getItem('access_token') ? 'exists' : 'none',
+      refresh: sessionStorage.getItem('refresh_token') ? 'exists' : 'none',
+      expires: sessionStorage.getItem('token_expires_at') ? 'exists' : 'none'
+    });
+    console.log('User authenticated:', !!user);
+    console.log('====================');
+  };
+
+  // Make test function available globally for debugging
+  if (typeof window !== 'undefined') {
+    (window as any).testRememberMe = testRememberMe;
+  }
 
   const value: AuthContextType = {
     user,
