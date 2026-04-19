@@ -1,0 +1,12 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+startCommand = "serve -s dist -l 8080"
+healthcheckPath = "/"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[env]
+NODE_VERSION = "18"
+PORT = "8080"
