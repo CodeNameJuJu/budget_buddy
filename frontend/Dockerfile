@@ -20,8 +20,8 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
-# Install serve globally
-RUN npm install -g serve
+# Install serve globally and wget for health check
+RUN npm install -g serve && apk add --no-cache wget
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
@@ -31,7 +31,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 
 # Start the application
 CMD ["serve", "-s", "dist", "-l", "8080"]
