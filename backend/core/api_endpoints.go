@@ -10,6 +10,7 @@ import (
 	"github.com/julian/budget-buddy/core/functions/budgets"
 	"github.com/julian/budget-buddy/core/functions/categories"
 	"github.com/julian/budget-buddy/core/functions/dashboard"
+	"github.com/julian/budget-buddy/core/functions/debug"
 	"github.com/julian/budget-buddy/core/functions/goals"
 	"github.com/julian/budget-buddy/core/functions/savings"
 	"github.com/julian/budget-buddy/core/functions/tags"
@@ -18,7 +19,7 @@ import (
 
 func RegisterRoutes(r chi.Router) {
 	// Add debug endpoint outside of /api to bypass all middleware
-	r.Get("/debug", debugfunctions.DebugCategoryCreation)
+	r.Get("/debug", debug.DebugCategoryCreation)
 
 	r.Route("/api", func(r chi.Router) {
 		/* ----------- HEALTH ----------- */
