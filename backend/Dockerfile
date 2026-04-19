@@ -1,4 +1,4 @@
-# Build stage
+# Use Go 1.23 image
 FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
