@@ -148,11 +148,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || 'Login failed');
       }
 
-      const data: AuthResponse = await response.json();
+      const data: AuthResponse = await response.json().catch((e) => {
+        console.error('JSON parse error in login:', e);
+        throw new Error('Invalid response format from server');
+      });
       setTokens(data);
       setUser(data.user);
     } finally {
@@ -172,11 +175,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || 'Registration failed');
       }
 
-      const data: AuthResponse = await response.json();
+      const data: AuthResponse = await response.json().catch((e) => {
+        console.error('JSON parse error in register:', e);
+        throw new Error('Invalid response format from server');
+      });
       setTokens(data);
       setUser(data.user);
     } finally {
