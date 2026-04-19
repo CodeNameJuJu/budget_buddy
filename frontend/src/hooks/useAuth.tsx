@@ -139,6 +139,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
+      console.log('Login attempt for:', email);
+      console.log('API_BASE being used:', API_BASE);
+      
       const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: {
@@ -147,15 +150,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('Login response status:', response.status);
+      console.log('Login response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('Login error response:', errorData);
         throw new Error(errorData.error || errorData.message || 'Login failed');
       }
 
-      const data: AuthResponse = await response.json().catch((e) => {
+      const responseText = await response.text();
+      console.log('Raw login response:', responseText);
+      
+      let data: AuthResponse;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
         console.error('JSON parse error in login:', e);
+        console.error('Response text:', responseText);
         throw new Error('Invalid response format from server');
-      });
+      }
+      
+      console.log('Parsed login data:', data);
       setTokens(data);
       setUser(data.user);
     } finally {
