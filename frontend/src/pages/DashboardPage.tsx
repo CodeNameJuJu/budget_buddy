@@ -59,21 +59,10 @@ export default function DashboardPage() {
     )
   }
 
-  if (!summary) {
-    return (
-      <div className="text-center py-16">
-        <Wallet className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Welcome to Budget Buddy</h2>
-        <p className="text-muted-foreground">
-          Create an account and start adding transactions to see your dashboard.
-        </p>
-      </div>
-    )
-  }
-
-  const income = parseFloat(summary.total_income)
-  const expenses = parseFloat(summary.total_expenses)
-  const balance = parseFloat(summary.balance)
+  
+  const income = parseFloat(summary?.total_income || "0")
+  const expenses = parseFloat(summary?.total_expenses || "0")
+  const balance = parseFloat(summary?.balance || "0")
 
   return (
     <div className="space-y-8">
@@ -148,7 +137,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {(!summary.recent_transactions || summary.recent_transactions.length === 0) ? (
+            {(!summary?.recent_transactions || summary.recent_transactions.length === 0) ? (
               <p className="text-sm text-muted-foreground py-4 text-center">
                 No transactions yet
               </p>
@@ -188,7 +177,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {(!summary.top_categories || summary.top_categories.length === 0) ? (
+            {(!summary?.top_categories || summary.top_categories.length === 0) ? (
               <p className="text-sm text-muted-foreground py-4 text-center">
                 No expense data yet
               </p>
@@ -279,7 +268,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-purple-400">
-                    {summary ? summary.recent_transactions?.length || 0 : 0}
+                    {summary?.recent_transactions?.length || 0}
                   </div>
                   <p className="text-xs text-muted-foreground">Transactions</p>
                 </div>
@@ -294,20 +283,20 @@ export default function DashboardPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Avg Transaction</span>
                   <span className="text-blue-400">
-                    {summary ? formatCurrency(
-                      (parseFloat(summary.total_expenses || "0") + parseFloat(summary.total_income || "0")) / 
-                      Math.max(1, (summary.recent_transactions?.length || 0))
-                    ) : formatCurrency(0)}
+                    {formatCurrency(
+                      (parseFloat(summary?.total_expenses || "0") + parseFloat(summary?.total_income || "0")) / 
+                      Math.max(1, (summary?.recent_transactions?.length || 0))
+                    )}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Savings Rate</span>
                   <span className="text-emerald-400">
-                    {summary ? formatPercentage(
-                      parseFloat(summary.total_income || "0") > 0 
-                        ? (parseFloat(summary.total_income || "0") - parseFloat(summary.total_expenses || "0")) / parseFloat(summary.total_income || "1") * 100
+                    {formatPercentage(
+                      parseFloat(summary?.total_income || "0") > 0 
+                        ? (parseFloat(summary?.total_income || "0") - parseFloat(summary?.total_expenses || "0")) / parseFloat(summary?.total_income || "1") * 100
                         : 0
-                    ) : "0%"}
+                    )}
                   </span>
                 </div>
               </div>
