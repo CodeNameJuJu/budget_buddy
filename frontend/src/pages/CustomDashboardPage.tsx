@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react"
 import { LayoutDashboard } from "lucide-react"
 import WidgetRenderer from "@/components/widgets/WidgetRenderer"
-import { dashboardApi, type Widget, type DashboardLayout } from "@/lib/api"
+import { apiClient } from "@/lib/apiClient"
 import { useAuth } from "@/hooks"
+
+// Temporary types for dashboard
+interface Widget {
+  id: string
+  type: string
+  title: string
+  size: string
+  position: { x: number; y: number; w: number; h: number }
+  is_visible: boolean
+  updated_at: string
+}
 
 export default function CustomDashboardPage() {
   const [widgets, setWidgets] = useState<Widget[]>([])
@@ -19,16 +30,28 @@ export default function CustomDashboardPage() {
       // For now, use a default account ID since we don't have account management yet
       // TODO: Update this when account management is implemented
       const accountId = 1
-      const response = await dashboardApi.getLayout(accountId)
       
-      // Parse widgets from layout
-      if (response.data?.layout) {
-        const parsedWidgets = JSON.parse(response.data.layout)
-        setWidgets(parsedWidgets.filter((w: Widget) => w.is_visible))
+      // Try to get dashboard layout from API
+      try {
+        const response = await apiClient.get(`/dashboard/layout?account_id=${accountId}`)
+        
+        // Parse widgets from layout if available
+        if (response.data?.layout) {
+          const parsedWidgets = JSON.parse(response.data.layout)
+          setWidgets(parsedWidgets.filter((w: Widget) => w.is_visible))
+        } else {
+          // Use default widgets if no layout found
+          setWidgets(getCustomLayout())
+        }
+      } catch (apiError) {
+        console.log("Dashboard layout API not available, using default widgets")
+        // Use default widgets if API fails
+        setWidgets(getCustomLayout())
       }
     } catch (error) {
       console.error("Failed to load dashboard", error)
-      // Don't show error to user, just use default widgets
+      // Always use default widgets as fallback
+      setWidgets(getCustomLayout())
     } finally {
       setLoading(false)
     }
