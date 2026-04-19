@@ -39,7 +39,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
@@ -61,8 +61,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Check for existing tokens on mount
   useEffect(() => {
     const initAuth = async () => {
-      const accessToken = localStorage.getItem('access_token');
-      const refreshToken = localStorage.getItem('refresh_token');
+      // Check both localStorage and sessionStorage for tokens
+      const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+      const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
 
       if (accessToken && refreshToken) {
         try {
@@ -102,10 +103,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const refreshAccessToken = async (): Promise<void> => {
-    const refreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
+
+    // Determine which storage type to use based on where the token was found
+    const useLocalStorage = localStorage.getItem('refresh_token') === refreshToken;
 
     const response = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
@@ -120,32 +124,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     const data: AuthResponse = await response.json();
-    setTokens(data);
+    setTokens(data, useLocalStorage);
     setUser(data.user);
   };
 
-  const setTokens = (data: AuthResponse) => {
-    localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem('refresh_token', data.refresh_token);
-    localStorage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
+  const setTokens = (data: AuthResponse, rememberMe: boolean = false) => {
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem('access_token', data.access_token);
+    storage.setItem('refresh_token', data.refresh_token);
+    storage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
   };
 
   const clearTokens = () => {
+    // Clear from both storage locations
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('token_expires_at');
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('token_expires_at');
     setUser(null);
   };
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
     setIsLoading(true);
     try {
-      console.log('Login attempt for:', email);
+      console.log('Login attempt for:', email, 'Remember me:', rememberMe);
       
       const data = await authApi.login({ email, password });
       console.log('Login successful, user:', data.user.email);
       
-      setTokens(data);
+      setTokens(data, rememberMe);
       setUser(data.user);
     } catch (error) {
       console.error('Login error:', error);
@@ -163,7 +172,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const data = await authApi.register(credentials);
       console.log('Registration successful, user:', data.user.email);
       
-      setTokens(data);
+      // For registration, we'll use localStorage by default (remember me = true)
+      setTokens(data, true);
       setUser(data.user);
     } catch (error) {
       console.error('Registration error:', error);

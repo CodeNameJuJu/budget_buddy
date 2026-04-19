@@ -5,12 +5,14 @@ import { useAuth } from '../../hooks';
 interface LoginFormData {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 export const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
+    rememberMe: false,
   });
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -20,11 +22,14 @@ export const LoginForm: React.FC = () => {
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    // Handle the remember-me checkbox name mismatch
+    const fieldName = name === 'remember-me' ? 'rememberMe' : name;
+    setFormData(prev => ({ ...prev, [fieldName]: fieldValue }));
     // Clear error when user starts typing
-    if (errors[name as keyof LoginFormData]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
+    if (errors[fieldName as keyof LoginFormData]) {
+      setErrors(prev => ({ ...prev, [fieldName]: undefined }));
     }
   };
 
@@ -54,7 +59,7 @@ export const LoginForm: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await login(formData.email, formData.password);
+      await login(formData.email, formData.password, formData.rememberMe);
       navigate('/dashboard');
     } catch (error: any) {
       setErrors({ 
