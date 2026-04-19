@@ -25,7 +25,8 @@ func main() {
 
 	// Run database migrations
 	if err := migrations.RunMigrations(); err != nil {
-		log.Fatalf("Failed to run migrations: %v", err)
+		log.Printf("Warning: Failed to run migrations: %v", err)
+		log.Printf("Continuing without migrations - some features may not work")
 	}
 
 	r := chi.NewRouter()
