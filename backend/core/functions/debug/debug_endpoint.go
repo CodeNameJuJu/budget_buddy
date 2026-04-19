@@ -66,9 +66,9 @@ func DebugCategoryCreation(w http.ResponseWriter, r *http.Request) {
 	if accountCount == 0 {
 		fmt.Printf("=== DEBUG: Creating test account ===\n")
 		testAccount := types.Account{
-			Name:        "Debug Test Account",
-			Type:        "personal",
-			Description: "Auto-created test account for debugging",
+			Name:     "Debug Test Account",
+			Email:    "debug@test.com",
+			Currency: "ZAR",
 		}
 
 		accountInsertErr := db.InsertAccount(&testAccount)

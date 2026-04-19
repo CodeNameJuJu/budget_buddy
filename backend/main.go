@@ -12,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/julian/budget-buddy/core"
 	"github.com/julian/budget-buddy/core/context"
+	dbmiddleware "github.com/julian/budget-buddy/core/middleware"
 	"github.com/julian/budget-buddy/migrations"
 )
 
