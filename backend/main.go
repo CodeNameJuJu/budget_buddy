@@ -10,8 +10,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
-	"github.com/julian/budget-buddy/core"
-	"github.com/julian/budget-buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core"
+	"github.com/CodeNameJuJu/budget_buddy/core/context"
 )
 
 func main() {

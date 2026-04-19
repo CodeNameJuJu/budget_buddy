@@ -3,7 +3,7 @@ package functions
 import (
 	"net/http"
 
-	"github.com/julian/budget-buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 )
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {

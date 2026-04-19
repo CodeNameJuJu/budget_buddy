@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/utils/types"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func QueryCategories(accountID int64, categoryID *int64, categoryType *string) ([]types.Category, int, error) {

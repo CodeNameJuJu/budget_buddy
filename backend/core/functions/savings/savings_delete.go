@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/julian/budget-buddy/core/db"
-	"github.com/julian/budget-buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 )
 
 func DELETEPot(w http.ResponseWriter, r *http.Request) {
