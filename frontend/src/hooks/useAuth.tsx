@@ -108,6 +108,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const validateToken = async (token: string): Promise<User> => {
+    console.log('Validating token with API:', `${API_BASE}/auth/profile`);
+    
     const response = await fetch(`${API_BASE}/auth/profile`, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -115,11 +117,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       },
     });
 
+    console.log('Token validation response status:', response.status);
+    console.log('Token validation response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      throw new Error('Token validation failed');
+      throw new Error(`Token validation failed: ${response.status} ${response.statusText}`);
+    }
+
+    // Check content type before parsing JSON
+    const contentType = response.headers.get('content-type');
+    console.log('Response content type:', contentType);
+    
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.log('Non-JSON response from token validation:', text);
+      throw new Error('Token validation returned non-JSON response');
     }
 
     const data = await response.json();
+    console.log('Token validation data:', data);
     return data.data || data;
   };
 
@@ -132,6 +148,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Determine which storage type to use based on where the token was found
     const useLocalStorage = localStorage.getItem('refresh_token') === refreshToken;
 
+    console.log('Refreshing token with API:', `${API_BASE}/auth/refresh`);
+
     const response = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
       headers: {
@@ -140,11 +158,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
 
+    console.log('Token refresh response status:', response.status);
+    console.log('Token refresh response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      throw new Error('Token refresh failed');
+      throw new Error(`Token refresh failed: ${response.status} ${response.statusText}`);
+    }
+
+    // Check content type before parsing JSON
+    const contentType = response.headers.get('content-type');
+    console.log('Token refresh content type:', contentType);
+    
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.log('Non-JSON response from token refresh:', text);
+      throw new Error('Token refresh returned non-JSON response');
     }
 
     const data: AuthResponse = await response.json();
+    console.log('Token refresh data:', data);
     // Use the same storage type as before
     setTokens(data, useLocalStorage);
     setUser(data.user);
