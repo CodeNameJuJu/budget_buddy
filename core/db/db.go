@@ -45,8 +45,6 @@ func ConnectToDatabase() {
 		pgdriver.WithDSN(dsn),
 		pgdriver.WithReadTimeout(30*time.Second),
 		pgdriver.WithWriteTimeout(30*time.Second),
-		pgdriver.WithConnectTimeout(10*time.Second),
-		pgdriver.WithDialTimeout(5*time.Second),
 	))
 
 	database = bun.NewDB(sqlDB, pgdialect.New(), bun.WithDiscardUnknownColumns())
