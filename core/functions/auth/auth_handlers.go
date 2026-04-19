@@ -112,7 +112,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		ExpiresIn:    int(AccessTokenDuration.Seconds()),
 	}
 
-	helpers.RespondData(w, response, http.StatusCreated)
+	helpers.RespondJSON(w, http.StatusCreated, response)
 }
 
 // Login handles user login
@@ -195,7 +195,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		ExpiresIn:    int(AccessTokenDuration.Seconds()),
 	}
 
-	helpers.RespondData(w, response, http.StatusOK)
+	helpers.RespondJSON(w, http.StatusOK, response)
 }
 
 // RefreshToken handles token refresh
@@ -272,7 +272,7 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 		ExpiresIn:    int(AccessTokenDuration.Seconds()),
 	}
 
-	helpers.RespondData(w, response, http.StatusOK)
+	helpers.RespondJSON(w, http.StatusOK, response)
 }
 
 // Logout handles user logout
