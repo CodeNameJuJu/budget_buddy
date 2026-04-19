@@ -3,9 +3,9 @@ nixPkgs = ["go", "git", "ca-certificates"]
 
 [phases.build]
 cmds = [
-  "go mod download",
-  "go build -o budget-buddy ./backend"
+  "cd backend && go mod download",
+  "cd backend && go build -o budget-buddy ."
 ]
 
 [start]
-cmd = "./budget-buddy"
+cmd = "cd backend && ./budget-buddy"
