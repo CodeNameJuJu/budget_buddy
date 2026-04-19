@@ -73,19 +73,24 @@ func ConnectToDatabase() {
 
 	// Test connection with retry logic
 	maxRetries := 5
+	var lastErr error
 	for i := 0; i < maxRetries; i++ {
 		if err := db.Ping(); err != nil {
+			lastErr = err
 			fmt.Printf("Database connection attempt %d/%d failed: %s\n", i+1, maxRetries, err)
-			if i == maxRetries-1 {
-				panic(fmt.Sprintf("Failed to connect to database after %d attempts: %s", maxRetries, err))
+			if i < maxRetries-1 {
+				time.Sleep(time.Duration(i+1) * time.Second)
+				continue
 			}
-			time.Sleep(time.Duration(i+1) * time.Second)
 		} else {
-			break
+			fmt.Println("Connected to database")
+			return
 		}
 	}
 
-	fmt.Println("Connected to database")
+	// Don't panic - just log the error and continue
+	fmt.Printf("Warning: Failed to connect to database after %d attempts: %s\n", maxRetries, lastErr)
+	fmt.Println("Application will continue but database operations will fail until connection is restored")
 }
 
 func GetDb() *bun.DB {
