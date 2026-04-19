@@ -10,3 +10,4 @@ restartPolicyMaxRetries = 10
 [env]
 NODE_VERSION = "18"
 PORT = "8080"
+RAILWAY_SERVICE_BUDGET_BUDDY_URL = "https://budgetbuddy-production-b70f.up.railway.app"
