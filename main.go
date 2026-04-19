@@ -5,11 +5,23 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/CodeNameJuJu/budget_buddy/core"
+	"github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Println("Warning: Could not load .env file")
+	}
+
+	// Initialize database
+	context.ConnectToDatabase()
+	defer context.CloseDB()
+
 	// Create router
 	r := chi.NewRouter()
 
@@ -23,19 +35,8 @@ func main() {
 		MaxAge:           300,
 	}))
 
-	// Health check endpoint
-	r.Get("/api/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status":"ok","service":"budget-buddy-backend"}`))
-	})
-
-	// Simple test endpoint
-	r.Get("/api/test", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message":"Budget Buddy API is working!"}`))
-	})
+	// Register all API routes
+	core.RegisterRoutes(r)
 
 	// Start server
 	port := os.Getenv("PORT")

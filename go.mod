@@ -5,6 +5,12 @@ go 1.23
 require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/cors v1.2.1
+	github.com/joho/godotenv v1.5.1
+	github.com/shopspring/decimal v1.4.0
+	github.com/uptrace/bun v1.2.6
+	github.com/uptrace/bun/dialect/pgdialect v1.2.6
+	github.com/uptrace/bun/driver/pgdriver v1.2.6
+	github.com/uptrace/bun/extra/bundebug v1.2.6
 )
 
 require (
@@ -12,7 +18,6 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/lib/pq v1.12.3 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
