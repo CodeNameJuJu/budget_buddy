@@ -12,7 +12,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/julian/budget-buddy/core"
 	"github.com/julian/budget-buddy/core/context"
-	dbmiddleware "github.com/julian/budget-buddy/core/middleware"
 	"github.com/julian/budget-buddy/migrations"
 )
 
@@ -34,7 +33,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(dbmiddleware.DatabaseMiddleware)
+	// r.Use(dbmiddleware.DatabaseMiddleware) // Temporarily disabled for debugging
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000", "https://budget-buddy-frontend-production.up.railway.app", "https://*.railway.app"},
 		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
