@@ -11,7 +11,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/julian/budget-buddy/core/db"
+	appcontext "github.com/julian/budget-buddy/core/context"
 	"github.com/julian/budget-buddy/utils/types"
 )
 
@@ -133,7 +133,7 @@ func (s *AuthService) GenerateSecureToken(length int) (string, error) {
 
 // StoreRefreshToken stores a refresh token in the database
 func (s *AuthService) StoreRefreshToken(userID int, tokenHash string, expiresAt time.Time) error {
-	database := db.GetDb()
+	database := appcontext.GetDb()
 	if database == nil {
 		return fmt.Errorf("database not connected")
 	}
@@ -154,7 +154,7 @@ func (s *AuthService) StoreRefreshToken(userID int, tokenHash string, expiresAt 
 
 // ValidateRefreshToken validates a refresh token against the database
 func (s *AuthService) ValidateRefreshToken(tokenString string) (*types.RefreshToken, error) {
-	database := db.GetDb()
+	database := appcontext.GetDb()
 	if database == nil {
 		return nil, fmt.Errorf("database not connected")
 	}
@@ -177,7 +177,7 @@ func (s *AuthService) ValidateRefreshToken(tokenString string) (*types.RefreshTo
 
 // RevokeRefreshToken revokes a refresh token
 func (s *AuthService) RevokeRefreshToken(tokenID int) error {
-	database := db.GetDb()
+	database := appcontext.GetDb()
 	if database == nil {
 		return fmt.Errorf("database not connected")
 	}
@@ -196,7 +196,7 @@ func (s *AuthService) RevokeRefreshToken(tokenID int) error {
 
 // RevokeAllUserTokens revokes all refresh tokens for a user
 func (s *AuthService) RevokeAllUserTokens(userID int) error {
-	database := db.GetDb()
+	database := appcontext.GetDb()
 	if database == nil {
 		return fmt.Errorf("database not connected")
 	}

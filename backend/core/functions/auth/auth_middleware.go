@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/julian/budget-buddy/core/db"
+	appcontext "github.com/julian/budget-buddy/core/context"
 	"github.com/julian/budget-buddy/core/helpers"
 	"github.com/julian/budget-buddy/utils/types"
 )
@@ -41,7 +41,7 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Get user from database
-		database := db.GetDb()
+		database := appcontext.GetDb()
 		if database == nil {
 			helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
 			return
@@ -109,7 +109,7 @@ func (h *AuthHandler) OptionalAuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Get user from database
-		database := db.GetDb()
+		database := appcontext.GetDb()
 		if database == nil {
 			// Database not connected, continue without user
 			next.ServeHTTP(w, r)
