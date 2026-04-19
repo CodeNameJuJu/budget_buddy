@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/julian/budget-buddy/core/context"
+	appcontext "github.com/julian/budget-buddy/core/context"
 	"github.com/uptrace/bun"
 )
 
@@ -22,7 +22,7 @@ type Migration struct {
 
 // RunMigrations executes all SQL migration files in the migrations directory
 func RunMigrations() error {
-	db := context.GetDb()
+	db := appcontext.GetDb()
 
 	// Create migrations table if it doesn't exist
 	if err := createMigrationsTable(db); err != nil {
@@ -89,11 +89,10 @@ func runMigration(db *bun.DB, filename string) error {
 	ctx := context.Background()
 
 	// Check if migration has already been run
-	var count int
-	err := db.NewSelect().
+	count, err := db.NewSelect().
 		Model((*Migration)(nil)).
 		Where("filename = ?", filename).
-		Count(ctx, &count)
+		Count(ctx)
 	if err != nil {
 		return err
 	}
