@@ -6,6 +6,7 @@ import (
 	"github.com/julian/budget-buddy/core/functions/accounts"
 	"github.com/julian/budget-buddy/core/functions/alerts"
 	"github.com/julian/budget-buddy/core/functions/analytics"
+	"github.com/julian/budget-buddy/core/functions/auth"
 	"github.com/julian/budget-buddy/core/functions/budgets"
 	"github.com/julian/budget-buddy/core/functions/categories"
 	"github.com/julian/budget-buddy/core/functions/dashboard"
@@ -19,6 +20,13 @@ func RegisterRoutes(r chi.Router) {
 	r.Route("/api", func(r chi.Router) {
 		/* ----------- HEALTH ----------- */
 		r.Get("/health", functions.HealthCheck)
+
+		/* ----------- AUTHENTICATION ----------- */
+		authHandler := auth.NewAuthHandler()
+		r.Post("/auth/register", authHandler.Register)
+		r.Post("/auth/login", authHandler.Login)
+		r.Post("/auth/refresh", authHandler.RefreshToken)
+		r.Get("/auth/me", authHandler.GetProfile)
 
 		/* ----------- ACCOUNTS ----------- */
 		r.Get("/accounts", accounts.GETAccount)
