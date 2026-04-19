@@ -1,0 +1,148 @@
+import { useEffect, useState } from "react"
+import { TrendingUp, TrendingDown, DollarSign, Target, AlertCircle, CheckCircle, BarChart3 } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { analyticsApi, type SpendingTrend, type CategoryBreakdown, type FinancialHealth } from "@/lib/analytics"
+import { formatCurrency, formatPercentage } from "@/lib/utils"
+import SpendingTrendsChart from "@/components/charts/SpendingTrendsChart"
+import CategoryBreakdownChart from "@/components/charts/CategoryBreakdownChart"
+import FinancialHealthGauge from "@/components/charts/FinancialHealthGauge"
+
+const ACCOUNT_ID = 1
+
+export default function AnalyticsPage() {
+  const [trends, setTrends] = useState<SpendingTrend[]>([])
+  const [categoryBreakdown, setCategoryBreakdown] = useState<CategoryBreakdown[]>([])
+  const [financialHealth, setFinancialHealth] = useState<FinancialHealth | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedPeriod, setSelectedPeriod] = useState("current_month")
+
+  useEffect(() => {
+    loadAnalytics()
+  }, [selectedPeriod])
+
+  async function loadAnalytics() {
+    setLoading(true)
+    try {
+      const [trendsRes, categoryRes, healthRes] = await Promise.all([
+        analyticsApi.trends(ACCOUNT_ID, 6),
+        analyticsApi.categoryBreakdown(ACCOUNT_ID, selectedPeriod),
+        analyticsApi.financialHealth(ACCOUNT_ID),
+      ])
+      
+      setTrends(trendsRes.data || [])
+      setCategoryBreakdown(categoryRes.data || [])
+      setFinancialHealth(healthRes.data)
+    } catch (error) {
+      console.error("Failed to load analytics", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-muted-foreground">Loading analytics...</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
+        <p className="text-muted-foreground">Insights into your financial patterns</p>
+      </div>
+
+      {/* Financial Health Score */}
+      {financialHealth && (
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className={`p-2 rounded-full bg-primary text-white`}>
+                <Target className="h-4 w-4" />
+              </div>
+              Financial Health Score
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <FinancialHealthGauge score={financialHealth.score} />
+              </div>
+              <div className="ml-8 space-y-3">
+                <div>
+                  <p className="text-sm text-muted-foreground">Savings Rate</p>
+                  <p className="text-lg font-semibold">{formatPercentage(financialHealth.savings_rate)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Budget Adherence</p>
+                  <p className="text-lg font-semibold">{formatPercentage(financialHealth.budget_adherence)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Income Stability</p>
+                  <p className="text-lg font-semibold">{formatPercentage(financialHealth.income_stability)}</p>
+                </div>
+              </div>
+            </div>
+            {financialHealth.recommendations.length > 0 && (
+              <div className="mt-6">
+                <p className="text-sm font-medium mb-2">Recommendations:</p>
+                <ul className="space-y-1">
+                  {financialHealth.recommendations.map((rec, index) => (
+                    <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                      <span className="text-primary">•</span>
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Spending Trends */}
+      <Card className="card-hover">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 rounded-full bg-primary text-white">
+              <BarChart3 className="h-4 w-4" />
+            </div>
+            6-Month Spending Trends
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SpendingTrendsChart data={trends} />
+        </CardContent>
+      </Card>
+
+      {/* Category Breakdown */}
+      <Card className="card-hover">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-accent text-white">
+                <DollarSign className="h-4 w-4" />
+              </div>
+              Category Breakdown
+            </div>
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="px-3 py-1 rounded-md bg-secondary border border-border text-sm"
+            >
+              <option value="current_month">Current Month</option>
+              <option value="last_month">Last Month</option>
+              <option value="current_year">Current Year</option>
+            </select>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CategoryBreakdownChart data={categoryBreakdown} />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
