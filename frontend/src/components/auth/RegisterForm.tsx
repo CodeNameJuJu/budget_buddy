@@ -87,21 +87,19 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
+    <div className="min-h-screen bg-gradient-to-br from-rose-300 via-orange-200 to-yellow-100 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg">
-            <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
+          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-rose-400 to-orange-400 text-white shadow-lg animate-bounce">
+            <span className="text-2xl">🎉</span>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-100">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-800">
             Create your Budget Buddy account
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-300">
+          <p className="mt-2 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-emerald-400 hover:text-emerald-300">
-              Sign in
+            <Link to="/login" className="font-medium text-rose-500 hover:text-rose-600">
+              Sign in 👋
             </Link>
           </p>
         </div>
@@ -110,7 +108,7 @@ export const RegisterForm: React.FC = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-slate-200">
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   First name
                 </label>
                 <input
@@ -118,7 +116,7 @@ export const RegisterForm: React.FC = () => {
                   name="firstName"
                   type="text"
                   autoComplete="given-name"
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-slate-600 rounded-md placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-rose-300 rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm"
                   placeholder="First name"
                   value={formData.firstName}
                   onChange={handleChange}
@@ -126,7 +124,7 @@ export const RegisterForm: React.FC = () => {
               </div>
               
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-slate-200">
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                   Last name
                 </label>
                 <input
@@ -134,7 +132,7 @@ export const RegisterForm: React.FC = () => {
                   name="lastName"
                   type="text"
                   autoComplete="family-name"
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-slate-600 rounded-md placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-rose-300 rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm"
                   placeholder="Last name"
                   value={formData.lastName}
                   onChange={handleChange}
@@ -143,7 +141,7 @@ export const RegisterForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-200">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <input
@@ -153,8 +151,8 @@ export const RegisterForm: React.FC = () => {
                 autoComplete="email"
                 required
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  errors.email ? 'border-red-500' : 'border-slate-600'
-                } rounded-md placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm`}
+                  errors.email ? 'border-red-400' : 'border-rose-300'
+                } rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm`}
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
@@ -165,7 +163,7 @@ export const RegisterForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-200">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -176,8 +174,8 @@ export const RegisterForm: React.FC = () => {
                   autoComplete="new-password"
                   required
                   className={`appearance-none relative block w-full px-3 py-2 pr-10 border ${
-                    errors.password ? 'border-red-500' : 'border-slate-600'
-                  } rounded-md placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm`}
+                    errors.password ? 'border-red-400' : 'border-rose-300'
+                  } rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm`}
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
@@ -202,13 +200,13 @@ export const RegisterForm: React.FC = () => {
               {errors.password && (
                 <p className="mt-1 text-sm text-red-400">{errors.password}</p>
               )}
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-gray-500">
                 Must be at least 6 characters with uppercase, lowercase, and number
               </p>
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-200">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
               <div className="mt-1 relative">
@@ -219,8 +217,8 @@ export const RegisterForm: React.FC = () => {
                   autoComplete="new-password"
                   required
                   className={`appearance-none relative block w-full px-3 py-2 pr-10 border ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-slate-600'
-                  } rounded-md placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm`}
+                    errors.confirmPassword ? 'border-red-400' : 'border-rose-300'
+                  } rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm`}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -254,15 +252,15 @@ export const RegisterForm: React.FC = () => {
               name="agree-terms"
               type="checkbox"
               required
-              className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-600 rounded bg-slate-800"
+              className="h-4 w-4 text-rose-500 focus:ring-rose-400 border-rose-300 rounded bg-white"
             />
-            <label htmlFor="agree-terms" className="ml-2 block text-sm text-slate-200">
+            <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-700">
               I agree to the{' '}
-              <Link to="/terms" className="text-emerald-400 hover:text-emerald-300">
+              <Link to="/terms" className="text-rose-500 hover:text-rose-600">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link to="/privacy" className="text-emerald-400 hover:text-emerald-300">
+              <Link to="/privacy" className="text-rose-500 hover:text-rose-600">
                 Privacy Policy
               </Link>
             </label>
@@ -272,7 +270,7 @@ export const RegisterForm: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-gradient-to-r from-rose-400 to-orange-400 hover:from-rose-500 hover:to-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-105 transition-all"
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

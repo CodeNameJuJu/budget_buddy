@@ -123,7 +123,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative mobile-safe-area">
+    <div className="flex h-screen bg-gradient-to-br from-rose-400 via-orange-300 to-yellow-200 relative mobile-safe-area">
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
         <div 
@@ -144,22 +144,22 @@ export default function Layout() {
       <aside 
         ref={sidebarRef}
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-slate-800/95 backdrop-blur-xl border-r border-slate-700/50 shadow-2xl transform transition-all duration-300 ease-out",
+          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-white/90 backdrop-blur-xl border-r border-rose-200/50 shadow-2xl transform transition-all duration-300 ease-out",
           sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          "lg:w-64 lg:bg-slate-800/90 lg:backdrop-blur-md lg:shadow-xl lg:border-slate-700/30"
+          "lg:w-64 lg:bg-white/95 lg:backdrop-blur-md lg:shadow-xl lg:border-rose-200/30"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-4 xs:p-5 lg:p-6 border-b border-slate-700/50">
+          <div className="p-4 xs:p-5 lg:p-6 border-b border-rose-200/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
-                <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg">
+                <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-rose-400 to-orange-400 text-white shadow-lg animate-bounce">
                   <Wallet className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
                 <div>
-                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">Budget Buddy</h1>
-                  <p className="text-xs xs:text-sm text-slate-400 hidden md:block">Your financial companion</p>
+                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">Budget Buddy</h1>
+                  <p className="text-xs xs:text-sm text-gray-600 hidden md:block">Your fun financial friend! 🌈</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -189,15 +189,15 @@ export default function Layout() {
                     cn(
                       "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
-                        ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg transform scale-[1.02]"
-                        : "text-slate-300/70 hover:bg-slate-700/30 hover:text-slate-100 hover:shadow-md hover:transform hover:translate-x-1"
+                        ? "bg-gradient-to-r from-rose-400 to-orange-400 text-white shadow-lg transform scale-[1.02] animate-pulse"
+                        : "text-gray-700 hover:bg-yellow-100 hover:text-gray-900 hover:shadow-md hover:transform hover:translate-x-1 hover:rotate-1"
                     )
                   }
                 >
                   <div className={cn(
                     "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
-                    "group-hover:bg-slate-700/50 group-hover:scale-110",
-                    "group-[.active]:bg-emerald-500/20"
+                    "group-hover:bg-yellow-100 group-hover:scale-110 group-hover:rotate-3",
+                    "group-[.active]:bg-rose-100"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                   </div>
@@ -208,10 +208,10 @@ export default function Layout() {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 xs:p-5 lg:p-6 border-t border-slate-700/50">
+          <div className="p-4 xs:p-5 lg:p-6 border-t border-rose-200/50">
             <div className="status-indicator online">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></div>
-              <span className="text-xs xs:text-sm text-slate-300">Connected to Railway</span>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
+              <span className="text-xs xs:text-sm text-gray-600">Connected and ready to play! 🎮</span>
             </div>
           </div>
         </div>
@@ -220,19 +220,19 @@ export default function Layout() {
       {/* Main content */}
       <main className="flex-1 overflow-auto mobile-scroll">
         {/* Mobile header with enhanced design */}
-        <div className="lg:hidden sticky top-0 z-30 bg-slate-800/90 backdrop-blur-md border-b border-slate-700/50 responsive-padding">
+        <div className="lg:hidden sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-rose-200/50 responsive-padding">
           <div className="flex items-center justify-between">
             <button
               onClick={openSidebar}
-              className="p-2.5 xs:p-3 rounded-full hover:bg-slate-700/30 transition-all duration-200 mobile-app-button group text-slate-300"
+              className="p-2.5 xs:p-3 rounded-full hover:bg-yellow-100 transition-all duration-200 mobile-app-button group text-gray-700 hover:rotate-3"
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
             </button>
             <div className="flex items-center gap-2 xs:gap-3">
-              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md">
+              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-rose-400 to-orange-400 text-white shadow-md animate-bounce">
                 <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
               </div>
-              <span className="font-bold text-sm xs:text-base text-slate-100">Budget Buddy</span>
+              <span className="font-bold text-sm xs:text-base text-gray-800">Budget Buddy</span>
             </div>
             <div className="w-8 xs:w-10"></div> {/* Spacer for balance */}
           </div>

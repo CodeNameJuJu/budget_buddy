@@ -77,17 +77,17 @@ export default function CustomDashboardPage() {
     return (
       <div className="space-y-4 xs:space-y-6">
         <div className="responsive-margin">
-          <h1 className="mobile-title flex items-center gap-2 text-slate-100">
+          <h1 className="mobile-title flex items-center gap-2 text-gray-800">
             <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
             Dashboard
           </h1>
-          <p className="mobile-text text-slate-300">Your personalized financial overview</p>
+          <p className="mobile-text text-gray-600">Your fun financial playground! </p>
         </div>
         
         <div className="grid-responsive-xs">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-24 xs:h-32 lg:h-40">
-              <div className="h-full bg-slate-800/50 rounded-lg animate-pulse"></div>
+              <div className="h-full bg-rose-200/50 rounded-full animate-bounce"></div>
             </div>
           ))}
         </div>
@@ -98,32 +98,32 @@ export default function CustomDashboardPage() {
   return (
     <div className="space-y-4 xs:space-y-6">
       <div className="responsive-margin">
-        <h1 className="mobile-title flex items-center gap-2 text-slate-100">
+        <h1 className="mobile-title flex items-center gap-2 text-gray-800">
           <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
           Dashboard
         </h1>
-        <p className="mobile-text text-slate-300">Your personalized financial overview</p>
+        <p className="mobile-text text-gray-600">Your fun financial playground! </p>
       </div>
 
       {/* Simple Welcome Card */}
       <div className="grid-responsive">
-        <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-lg p-6 shadow-lg">
-          <h2 className="text-xl font-bold text-slate-100 mb-4">Welcome to Budget Buddy!</h2>
-          <p className="text-slate-300 mb-4">
-            Hi {user?.email || 'User'}! Your financial dashboard is ready to use.
+        <div className="bg-white/80 backdrop-blur-md border border-rose-200/50 rounded-2xl p-6 shadow-lg">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Welcome to Budget Buddy! </h2>
+          <p className="text-gray-600 mb-4">
+            Hi {user?.email || 'User'}! Your fun financial playground is ready to use! 🌈
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
-              <h3 className="text-slate-100 font-semibold mb-2">Track Expenses</h3>
-              <p className="text-slate-300 text-sm">Monitor your spending patterns</p>
+            <div className="bg-gradient-to-br from-rose-100 to-orange-100 rounded-2xl p-4 border border-rose-200/50 transform hover:scale-105 transition-all">
+              <h3 className="text-gray-800 font-semibold mb-2">Track Expenses 📊</h3>
+              <p className="text-gray-600 text-sm">Monitor your spending patterns with fun charts!</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
-              <h3 className="text-slate-100 font-semibold mb-2">Set Budgets</h3>
-              <p className="text-slate-300 text-sm">Create and manage your budgets</p>
+            <div className="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl p-4 border border-yellow-200/50 transform hover:scale-105 transition-all">
+              <h3 className="text-gray-800 font-semibold mb-2">Set Budgets 💰</h3>
+              <p className="text-gray-600 text-sm">Create and manage your budgets like a game!</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
-              <h3 className="text-slate-100 font-semibold mb-2">Save Money</h3>
-              <p className="text-slate-300 text-sm">Achieve your financial goals</p>
+            <div className="bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl p-4 border border-green-200/50 transform hover:scale-105 transition-all">
+              <h3 className="text-gray-800 font-semibold mb-2">Save Money 🎯</h3>
+              <p className="text-gray-600 text-sm">Achieve your financial goals with rewards!</p>
             </div>
           </div>
         </div>
