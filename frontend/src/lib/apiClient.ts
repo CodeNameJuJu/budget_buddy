@@ -39,8 +39,9 @@ class ApiClient {
       const response = await fetch(url, {
         ...options,
         headers,
-        // Ensure we don't follow redirects that might return HTML
-        redirect: 'manual',
+        // Allow normal redirect handling
+        mode: 'cors',
+        credentials: 'omit',
       });
 
       console.log(`API Response Status: ${response.status}`);
@@ -71,6 +72,16 @@ class ApiClient {
       console.error(`API Request Failed:`, error);
       
       if (error instanceof Error) {
+        // Handle specific network errors
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          throw new Error('Network error - unable to connect to server. Please check your internet connection.');
+        }
+        
+        // Handle CORS errors
+        if (error.message.includes('CORS')) {
+          throw new Error('CORS error - the server is blocking this request. Please contact support.');
+        }
+        
         throw error;
       }
       
