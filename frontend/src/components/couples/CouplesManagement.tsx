@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Users, Plus, Mail, Settings, UserPlus, Shield, Eye, Edit } from 'lucide-react';
+import { Heart, Users, Plus, Mail, Settings, UserPlus, Shield, Eye, Edit, User } from 'lucide-react';
 
 // Types for couples system
 interface Partnership {
