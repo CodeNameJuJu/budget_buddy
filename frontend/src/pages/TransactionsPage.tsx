@@ -113,7 +113,7 @@ export default function TransactionsPage() {
     <div className="space-y-3 xs:space-y-4 lg:space-y-6">
       <div className="responsive-flex responsive-margin">
         <div>
-          <h1 className="mobile-title tracking-tight">Transactions</h1>
+          <h1 className="mobile-title tracking-tight text-slate-100">Transactions</h1>
           <p className="mobile-text text-slate-400">{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2">
@@ -183,9 +183,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Type</label>
+                  <label className="mobile-text font-medium text-slate-300">Type</label>
                   <select
-                    className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
+                    className="flex responsive-input rounded-md border border-slate-600 bg-slate-700 px-3 py-1 mobile-text text-slate-300 shadow-sm"
                     value={form.type}
                     onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
                   >
@@ -194,7 +194,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Date</label>
+                  <label className="mobile-text font-medium text-slate-300">Date</label>
                   <Input
                     type="date"
                     value={form.date}
@@ -206,7 +206,7 @@ export default function TransactionsPage() {
                 <div className="space-y-2">
                   <label className="mobile-text font-medium text-slate-300">Account Type</label>
                   <select
-                    className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
+                    className="flex responsive-input rounded-md border border-slate-600 bg-slate-700 px-3 py-1 mobile-text text-slate-300 shadow-sm"
                     value={form.account_type}
                     onChange={(e) => setForm({ ...form, account_type: e.target.value as "checking" | "savings" })}
                   >
@@ -226,7 +226,7 @@ export default function TransactionsPage() {
                 <div className="space-y-2">
                   <label className="mobile-text font-medium text-slate-300">Category</label>
                   <select
-                    className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
+                    className="flex responsive-input rounded-md border border-slate-600 bg-slate-700 px-3 py-1 mobile-text text-slate-300 shadow-sm"
                     value={form.category_id}
                     onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                   >
