@@ -1,5 +1,5 @@
 const API_BASE = import.meta.env.PROD 
-  ? 'https://budgetbuddy-production-b70f.up.railway.app'
+  ? `${import.meta.env.RAILWAY_SERVICE_BUDGET_BUDDY_URL || 'https://budgetbuddy-production-b70f.up.railway.app'}/api`
   : '/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
