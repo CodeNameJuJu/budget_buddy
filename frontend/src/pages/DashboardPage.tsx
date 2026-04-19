@@ -15,7 +15,7 @@ import {
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { dashboardApi, budgetsApi, savingsApi, goalsApi, alertsApi, type DashboardSummary, type Budget, type SavingsPot, type Goal, type Alert } from "@/lib/api"
+import { dashboardApi, budgetsApi, savingsApi, alertsApi, type DashboardSummary, type Budget, type SavingsPot, type Alert } from "@/lib/api"
 import { formatCurrency, formatDate, formatPercentage } from "@/lib/utils"
 
 const ACCOUNT_ID = 1
@@ -24,7 +24,6 @@ export default function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [savings, setSavings] = useState<SavingsPot[]>([])
-  const [goals, setGoals] = useState<Goal[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -34,18 +33,16 @@ export default function DashboardPage() {
 
   async function loadSummary() {
     try {
-      const [summaryRes, budgetsRes, savingsRes, goalsRes, alertsRes] = await Promise.all([
+      const [summaryRes, budgetsRes, savingsRes, alertsRes] = await Promise.all([
         dashboardApi.summary(ACCOUNT_ID),
         budgetsApi.list(ACCOUNT_ID),
-        savingsApi.list(ACCOUNT_ID),
-        goalsApi.list(ACCOUNT_ID),
-        alertsApi.list(ACCOUNT_ID, 5), // Get last 5 alerts
+        savingsApi.listPots(ACCOUNT_ID),
+        alertsApi.list(ACCOUNT_ID, false, 5), // Get last 5 alerts
       ])
       
       setSummary(summaryRes.data)
       setBudgets(budgetsRes.data || [])
       setSavings(savingsRes.data || [])
-      setGoals(goalsRes.data || [])
       setAlerts(alertsRes.data || [])
     } catch (error) {
       console.error("Failed to load dashboard", error)
@@ -267,46 +264,54 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Savings Goals */}
+        {/* Quick Stats */}
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <div className="p-2 rounded-full bg-purple-600 text-white transition-colors duration-200">
-                <Heart className="h-4 w-4" />
+                <Activity className="h-4 w-4" />
               </div>
-              Savings Goals
+              Quick Stats
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {goals.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">
-                No savings goals
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {goals.slice(0, 3).map((goal) => {
-                  const current = parseFloat(goal.current_amount || "0")
-                  const target = parseFloat(goal.target_amount || "1")
-                  const percentage = (current / target) * 100
-                  return (
-                    <div key={goal.id} className="space-y-1">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{goal.name}</span>
-                        <span className="text-muted-foreground">
-                          {formatPercentage(percentage)}
-                        </span>
-                      </div>
-                      <div className="h-2 bg-zinc-600 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-purple-500 rounded-full transition-all duration-700 ease-out"
-                          style={{ width: `${Math.min(percentage, 100)}%` }}
-                        />
-                      </div>
-                    </div>
-                  )
-                })}
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400">
+                    {summary ? summary.recent_transactions?.length || 0 : 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Transactions</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-400">
+                    {summary?.top_categories?.length || 0}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Categories</p>
+                </div>
               </div>
-            )}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Avg Transaction</span>
+                  <span className="text-blue-400">
+                    {summary ? formatCurrency(
+                      (parseFloat(summary.total_expenses || "0") + parseFloat(summary.total_income || "0")) / 
+                      Math.max(1, (summary.recent_transactions?.length || 0))
+                    ) : formatCurrency(0)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Savings Rate</span>
+                  <span className="text-emerald-400">
+                    {summary ? formatPercentage(
+                      parseFloat(summary.total_income || "0") > 0 
+                        ? (parseFloat(summary.total_income || "0") - parseFloat(summary.total_expenses || "0")) / parseFloat(summary.total_income || "1") * 100
+                        : 0
+                    ) : "0%"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
