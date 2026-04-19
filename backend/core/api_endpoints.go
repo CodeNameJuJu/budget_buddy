@@ -17,6 +17,9 @@ import (
 )
 
 func RegisterRoutes(r chi.Router) {
+	// Add debug endpoint outside of /api to bypass all middleware
+	r.Get("/debug", debugfunctions.DebugCategoryCreation)
+
 	r.Route("/api", func(r chi.Router) {
 		/* ----------- HEALTH ----------- */
 		r.Get("/health", functions.HealthCheck)
