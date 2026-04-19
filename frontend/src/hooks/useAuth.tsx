@@ -146,12 +146,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
         },
         body: JSON.stringify({ email, password }),
       });
 
       console.log('Login response status:', response.status);
-      console.log('Login response headers:', Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -159,23 +159,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error(errorData.error || errorData.message || 'Login failed');
       }
 
-      console.log('Response content-type:', response.headers.get('content-type'));
+      const data = await response.json();
+      console.log('Login successful, user:', data.user.email);
       
-      let data: AuthResponse;
-      let responseText: string;
-      
-      try {
-        responseText = await response.text();
-        console.log('Raw login response:', responseText);
-        data = JSON.parse(responseText);
-        console.log('Parsed login data:', data);
-      } catch (e) {
-        console.error('JSON parse error in login:', e);
-        console.error('Response text:', responseText || 'No response text available');
-        throw new Error('Invalid response format from server');
-      }
       setTokens(data);
       setUser(data.user);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
