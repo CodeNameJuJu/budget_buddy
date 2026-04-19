@@ -48,7 +48,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
 
   if (loading) {
     return (
-      <Card className="h-full">
+      <Card className="h-full bg-slate-800/50 border-slate-700">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <PiggyBank className="h-4 w-4" />
@@ -60,10 +60,10 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="animate-pulse bg-muted h-4 w-20 rounded"></div>
-                  <div className="animate-pulse bg-muted h-4 w-12 rounded"></div>
+                  <div className="animate-pulse bg-slate-700 h-4 w-20 rounded"></div>
+                  <div className="animate-pulse bg-slate-700 h-4 w-12 rounded"></div>
                 </div>
-                <div className="animate-pulse bg-muted h-2 w-full rounded"></div>
+                <div className="animate-pulse bg-slate-700 h-2 w-full rounded"></div>
               </div>
             ))}
           </div>
@@ -74,7 +74,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
 
   if (!data || data.budgets.length === 0) {
     return (
-      <Card className="h-full">
+      <Card className="h-full bg-slate-800/50 border-slate-700">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <PiggyBank className="h-4 w-4" />
@@ -82,7 +82,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-muted-foreground py-8">
+          <div className="text-center text-slate-400 py-8">
             <PiggyBank className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm mb-2">No budgets set</p>
             <p className="text-xs">Create budgets to track your spending goals</p>
@@ -145,14 +145,14 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                       {budget.name}
                     </span>
                     {isOverBudget && (
-                      <AlertTriangle className="h-3 w-3 text-red-500" />
+                      <AlertTriangle className="h-3 w-3 text-red-400" />
                     )}
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-medium">
                       {formatCurrency(budget.spent)}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-slate-400">
                       of {formatCurrency(budget.amount)}
                     </div>
                   </div>
@@ -163,12 +163,12 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                     value={displayProgress} 
                     className="h-2"
                   />
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>{budget.category}</span>
                     <span className={`
-                      ${isOverBudget ? "text-red-500 font-medium" : 
-                        isNearLimit ? "text-yellow-500" : 
-                        "text-green-500"}
+                      ${isOverBudget ? "text-red-400 font-medium" : 
+                        isNearLimit ? "text-yellow-400" : 
+                        "text-teal-400"}
                     `}>
                       {budget.progress.toFixed(0)}%
                     </span>
@@ -180,7 +180,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
           
           {!isExpanded && hasMore && (
             <div className="text-center pt-2">
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-slate-400">
                 {data.count - defaultDisplayCount} more budgets
               </p>
             </div>

@@ -49,7 +49,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
 
   if (loading) {
     return (
-      <Card className="h-full">
+      <Card className="h-full bg-slate-800/50 border-slate-700">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Target className="h-4 w-4" />
@@ -61,10 +61,10 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="animate-pulse bg-muted h-4 w-24 rounded"></div>
-                  <div className="animate-pulse bg-muted h-4 w-12 rounded"></div>
+                  <div className="animate-pulse bg-slate-700 h-4 w-24 rounded"></div>
+                  <div className="animate-pulse bg-slate-700 h-4 w-12 rounded"></div>
                 </div>
-                <div className="animate-pulse bg-muted h-2 w-full rounded"></div>
+                <div className="animate-pulse bg-slate-700 h-2 w-full rounded"></div>
               </div>
             ))}
           </div>
@@ -75,7 +75,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
 
   if (!data || data.goals.length === 0) {
     return (
-      <Card className="h-full">
+      <Card className="h-full bg-slate-800/50 border-slate-700">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Target className="h-4 w-4" />
@@ -83,7 +83,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-muted-foreground py-8">
+          <div className="text-center text-slate-400 py-8">
             <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm mb-2">No active goals</p>
             <p className="text-xs">Set savings goals to track your progress</p>
@@ -157,7 +157,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                     <div className="text-sm font-medium">
                       {formatCurrency(goal.current_amount)}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-slate-400">
                       of {formatCurrency(goal.target_amount)}
                     </div>
                   </div>
@@ -168,7 +168,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                     value={progress} 
                     className="h-2"
                   />
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
                     <div className="flex items-center gap-1">
                       {goal.deadline && (
                         <>
@@ -177,7 +177,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                         </>
                       )}
                     </div>
-                    <span className={isCompleted ? "text-green-500 font-medium" : "text-blue-500"}>
+                    <span className={isCompleted ? "text-teal-400 font-medium" : "text-blue-400"}>
                       {progress.toFixed(0)}%
                     </span>
                   </div>
@@ -188,7 +188,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
           
           {!isExpanded && hasMore && (
             <div className="text-center pt-2">
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-slate-400">
                 {data.count - defaultDisplayCount} more goals
               </p>
             </div>
