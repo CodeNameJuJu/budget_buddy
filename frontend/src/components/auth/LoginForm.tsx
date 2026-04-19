@@ -72,19 +72,21 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-300 via-orange-200 to-yellow-100 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-rose-400 to-orange-400 text-white shadow-lg animate-bounce">
-            <span className="text-2xl">🔐</span>
+          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-teal-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
+            <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-800">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-100">
             Sign in to Budget Buddy
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-slate-400">
             Or{' '}
-            <Link to="/register" className="font-medium text-rose-500 hover:text-rose-600">
-              create a new account 🎉
+            <Link to="/register" className="font-medium text-blue-300 hover:text-blue-200">
+              create a new account
             </Link>
           </p>
         </div>
@@ -92,7 +94,7 @@ export const LoginForm: React.FC = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300">
                 Email address
               </label>
               <input
@@ -102,8 +104,8 @@ export const LoginForm: React.FC = () => {
                 autoComplete="email"
                 required
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  errors.email ? 'border-red-400' : 'border-rose-300'
-                } rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm`}
+                  errors.email ? 'border-red-400' : 'border-blue-800'
+                } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm`}
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
@@ -114,7 +116,7 @@ export const LoginForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -125,8 +127,8 @@ export const LoginForm: React.FC = () => {
                   autoComplete="current-password"
                   required
                   className={`appearance-none relative block w-full px-3 py-2 pr-10 border ${
-                    errors.password ? 'border-red-400' : 'border-rose-300'
-                  } rounded-full placeholder-gray-400 text-gray-700 bg-white/80 focus:outline-none focus:ring-rose-400 focus:border-rose-400 sm:text-sm`}
+                    errors.password ? 'border-red-400' : 'border-blue-800'
+                  } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm`}
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -137,9 +139,9 @@ export const LoginForm: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <span className="text-gray-500">Hide</span>
+                    <span className="text-slate-400">Hide</span>
                   ) : (
-                    <span className="text-gray-500">Show</span>
+                    <span className="text-slate-400">Show</span>
                   )}
                 </button>
               </div>
@@ -155,15 +157,15 @@ export const LoginForm: React.FC = () => {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-rose-500 focus:ring-rose-400 border-rose-300 rounded bg-white"
+                className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-blue-800 rounded bg-slate-700"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300">
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <Link to="/forgot-password" className="font-medium text-rose-500 hover:text-rose-600">
+              <Link to="/forgot-password" className="font-medium text-blue-300 hover:text-blue-200">
                 Forgot your password?
               </Link>
             </div>
@@ -173,7 +175,7 @@ export const LoginForm: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-gradient-to-r from-rose-400 to-orange-400 hover:from-rose-500 hover:to-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-105 transition-all"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200"
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
