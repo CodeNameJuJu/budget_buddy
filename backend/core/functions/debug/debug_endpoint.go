@@ -61,10 +61,38 @@ func DebugCategoryCreation(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Create a test account first if none exists
+	var testAccountID int64 = 1
+	if accountCount == 0 {
+		fmt.Printf("=== DEBUG: Creating test account ===\n")
+		testAccount := types.Account{
+			Name:        "Debug Test Account",
+			Type:        "personal",
+			Description: "Auto-created test account for debugging",
+		}
+
+		accountInsertErr := db.InsertAccount(&testAccount)
+		if accountInsertErr != nil {
+			fmt.Printf("=== DEBUG: Account creation failed: %v ===\n", accountInsertErr)
+			debugInfo["account_creation_error"] = accountInsertErr.Error()
+		} else {
+			fmt.Printf("=== DEBUG: Account creation successful ===\n")
+			debugInfo["account_creation"] = "ok"
+			debugInfo["created_account"] = testAccount
+			testAccountID = testAccount.ID
+		}
+	} else {
+		// Use existing account
+		if accountCount > 0 {
+			testAccountID = testAccounts[0].ID
+			fmt.Printf("=== DEBUG: Using existing account ID: %d ===\n", testAccountID)
+		}
+	}
+
 	// Test actual category insertion
 	fmt.Printf("=== DEBUG: Testing category insertion ===\n")
 	testCategory := types.Category{
-		AccountID: 1,
+		AccountID: testAccountID,
 		Name:      "Debug Test Category",
 		Type:      "expense",
 	}
