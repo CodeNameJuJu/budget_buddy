@@ -77,17 +77,17 @@ export default function CustomDashboardPage() {
     return (
       <div className="space-y-4 xs:space-y-6">
         <div className="responsive-margin">
-          <h1 className="mobile-title flex items-center gap-2 text-purple-100">
+          <h1 className="mobile-title flex items-center gap-2 text-slate-100">
             <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
             Dashboard
           </h1>
-          <p className="mobile-text text-purple-200">Your personalized financial overview</p>
+          <p className="mobile-text text-slate-300">Your personalized financial overview</p>
         </div>
         
         <div className="grid-responsive-xs">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-24 xs:h-32 lg:h-40">
-              <div className="h-full bg-purple-900/50 rounded-lg animate-pulse"></div>
+              <div className="h-full bg-slate-800/50 rounded-lg animate-pulse"></div>
             </div>
           ))}
         </div>
@@ -98,32 +98,32 @@ export default function CustomDashboardPage() {
   return (
     <div className="space-y-4 xs:space-y-6">
       <div className="responsive-margin">
-        <h1 className="mobile-title flex items-center gap-2 text-purple-100">
+        <h1 className="mobile-title flex items-center gap-2 text-slate-100">
           <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
           Dashboard
         </h1>
-        <p className="mobile-text text-purple-200">Your personalized financial overview</p>
+        <p className="mobile-text text-slate-300">Your personalized financial overview</p>
       </div>
 
       {/* Simple Welcome Card */}
       <div className="grid-responsive">
-        <div className="bg-purple-950/50 backdrop-blur-md border border-purple-800/50 rounded-lg p-6 shadow-lg">
-          <h2 className="text-xl font-bold text-purple-100 mb-4">Welcome to Budget Buddy!</h2>
-          <p className="text-purple-200 mb-4">
+        <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-lg p-6 shadow-lg">
+          <h2 className="text-xl font-bold text-slate-100 mb-4">Welcome to Budget Buddy!</h2>
+          <p className="text-slate-300 mb-4">
             Hi {user?.email || 'User'}! Your financial dashboard is ready to use.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-purple-900/50 rounded-lg p-4">
-              <h3 className="text-purple-100 font-semibold mb-2">Track Expenses</h3>
-              <p className="text-purple-200 text-sm">Monitor your spending patterns</p>
+            <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+              <h3 className="text-slate-100 font-semibold mb-2">Track Expenses</h3>
+              <p className="text-slate-300 text-sm">Monitor your spending patterns</p>
             </div>
-            <div className="bg-purple-900/50 rounded-lg p-4">
-              <h3 className="text-purple-100 font-semibold mb-2">Set Budgets</h3>
-              <p className="text-purple-200 text-sm">Create and manage your budgets</p>
+            <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+              <h3 className="text-slate-100 font-semibold mb-2">Set Budgets</h3>
+              <p className="text-slate-300 text-sm">Create and manage your budgets</p>
             </div>
-            <div className="bg-purple-900/50 rounded-lg p-4">
-              <h3 className="text-purple-100 font-semibold mb-2">Save Money</h3>
-              <p className="text-purple-200 text-sm">Achieve your financial goals</p>
+            <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+              <h3 className="text-slate-100 font-semibold mb-2">Save Money</h3>
+              <p className="text-slate-300 text-sm">Achieve your financial goals</p>
             </div>
           </div>
         </div>
