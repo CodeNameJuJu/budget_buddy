@@ -175,7 +175,7 @@ export default function Layout() {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 xs:p-5 lg:p-6 space-y-1 overflow-y-auto mobile-scroll">
-            <div className="space-y-1">
+            <div className="space-y-1 text-left">
               {navItems.map((item) => (
                 <NavLink
                   key={item.to}
@@ -187,7 +187,7 @@ export default function Layout() {
                   }}
                   className={({ isActive }) =>
                     cn(
-                      "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
+                      "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile text-left",
                       isActive
                         ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg transform scale-[1.02]"
                         : "text-muted-foreground hover:bg-zinc-700/50 hover:text-foreground hover:shadow-md hover:transform hover:translate-x-1"
@@ -195,13 +195,13 @@ export default function Layout() {
                   }
                 >
                   <div className={cn(
-                    "p-2 rounded-lg transition-all duration-200",
+                    "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
                     "group-hover:bg-zinc-600/50 group-hover:scale-110",
                     "group-[.active]:bg-white/20"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                   </div>
-                  <span className="truncate font-medium">{item.label}</span>
+                  <span className="truncate font-medium text-left">{item.label}</span>
                 </NavLink>
               ))}
             </div>
