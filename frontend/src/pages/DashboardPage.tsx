@@ -33,6 +33,7 @@ export default function DashboardPage() {
 
   async function loadSummary() {
     try {
+      console.log("Loading dashboard data...")
       const [summaryRes, budgetsRes, savingsRes, alertsRes] = await Promise.all([
         dashboardApi.summary(ACCOUNT_ID),
         budgetsApi.list(ACCOUNT_ID),
@@ -40,10 +41,24 @@ export default function DashboardPage() {
         alertsApi.list(ACCOUNT_ID, false, 5), // Get last 5 alerts
       ])
       
+      console.log("API responses:", {
+        summary: summaryRes,
+        budgets: budgetsRes,
+        savings: savingsRes,
+        alerts: alertsRes
+      })
+      
       setSummary(summaryRes.data)
       setBudgets(budgetsRes.data || [])
       setSavings(savingsRes.data || [])
       setAlerts(alertsRes.data || [])
+      
+      console.log("State set:", {
+        summary: summaryRes.data,
+        budgets: budgetsRes.data,
+        savings: savingsRes.data,
+        alerts: alertsRes.data
+      })
     } catch (error) {
       console.error("Failed to load dashboard", error)
     } finally {
@@ -66,6 +81,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Debug Info */}
+      <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+        <h3 className="text-sm font-medium text-slate-300 mb-2">Debug Info:</h3>
+        <div className="text-xs text-slate-400 space-y-1">
+          <p>Loading: {loading ? 'Yes' : 'No'}</p>
+          <p>Summary: {summary ? 'Loaded' : 'Null'}</p>
+          <p>Budgets: {budgets.length} items</p>
+          <p>Savings: {savings.length} items</p>
+          <p>Alerts: {alerts.length} items</p>
+          <p>Account ID: {ACCOUNT_ID}</p>
+        </div>
+      </div>
+      
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">Your financial overview for this month</p>

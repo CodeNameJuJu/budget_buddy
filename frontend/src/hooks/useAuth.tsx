@@ -131,9 +131,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const setTokens = (data: AuthResponse, rememberMe: boolean = false) => {
     const storage = rememberMe ? localStorage : sessionStorage;
+    console.log('Setting tokens with rememberMe:', rememberMe, 'Using storage:', storage === localStorage ? 'localStorage' : 'sessionStorage');
     storage.setItem('access_token', data.access_token);
     storage.setItem('refresh_token', data.refresh_token);
     storage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
+    console.log('Tokens stored successfully');
   };
 
   const clearTokens = () => {

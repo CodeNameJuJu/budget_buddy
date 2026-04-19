@@ -157,6 +157,8 @@ export const LoginForm: React.FC = () => {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
+                checked={formData.rememberMe}
+                onChange={handleChange}
                 className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-blue-800 rounded bg-slate-700"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300">
