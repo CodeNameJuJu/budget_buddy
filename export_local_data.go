@@ -10,11 +10,12 @@ import (
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/uptrace/bun"
 )
 
 func main() {
 	// Initialize local database connection
-	appcontext.Init()
+	appcontext.ConnectToDatabase()
 	defer appcontext.CloseDB()
 
 	db := appcontext.GetDb()
@@ -66,15 +67,24 @@ func exportAccounts(db *bun.DB) error {
 	defer writer.Flush()
 
 	// Write header
-	writer.Write([]string{"id", "name", "type", "balance", "created_date", "modified_date", "deleted_date"})
+	writer.Write([]string{"id", "name", "email", "currency", "timezone", "savings_balance", "created_date", "modified_date", "deleted_date"})
 
 	// Write data
 	for _, account := range accounts {
+		var timezone, savingsBalance string
+		if account.Timezone != nil {
+			timezone = *account.Timezone
+		}
+		if account.SavingsBalance != nil {
+			savingsBalance = account.SavingsBalance.String()
+		}
 		writer.Write([]string{
 			fmt.Sprintf("%d", account.ID),
 			account.Name,
-			account.Type,
-			account.Balance.String(),
+			account.Email,
+			account.Currency,
+			timezone,
+			savingsBalance,
 			account.CreatedDate.Format(time.RFC3339),
 			account.ModifiedDate.Format(time.RFC3339),
 			"", // deleted_date is NULL
@@ -141,7 +151,7 @@ func exportBudgets(db *bun.DB) error {
 		writer.Write([]string{
 			fmt.Sprintf("%d", budget.ID),
 			fmt.Sprintf("%d", budget.AccountID),
-			fmt.Sprintf("%d", *budget.CategoryID),
+			fmt.Sprintf("%d", budget.CategoryID),
 			budget.Name,
 			budget.Amount.String(),
 			budget.Period,
@@ -230,16 +240,34 @@ func exportSavingsPots(db *bun.DB) error {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	writer.Write([]string{"id", "account_id", "name", "target_amount", "current_amount", "target_date", "created_date", "modified_date", "deleted_date"})
+	writer.Write([]string{"id", "account_id", "name", "icon", "colour", "target", "contribution", "contribution_period", "created_date", "modified_date", "deleted_date"})
 
 	for _, pot := range savingsPots {
+		var icon, colour, target, contribution, contributionPeriod string
+		if pot.Icon != nil {
+			icon = *pot.Icon
+		}
+		if pot.Colour != nil {
+			colour = *pot.Colour
+		}
+		if pot.Target != nil {
+			target = pot.Target.String()
+		}
+		if pot.Contribution != nil {
+			contribution = pot.Contribution.String()
+		}
+		if pot.ContributionPeriod != nil {
+			contributionPeriod = *pot.ContributionPeriod
+		}
 		writer.Write([]string{
 			fmt.Sprintf("%d", pot.ID),
 			fmt.Sprintf("%d", pot.AccountID),
 			pot.Name,
-			pot.TargetAmount.String(),
-			pot.CurrentAmount.String(),
-			pot.TargetDate.Format(time.RFC3339),
+			icon,
+			colour,
+			target,
+			contribution,
+			contributionPeriod,
 			pot.CreatedDate.Format(time.RFC3339),
 			pot.ModifiedDate.Format(time.RFC3339),
 			"",
