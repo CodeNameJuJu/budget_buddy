@@ -166,6 +166,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (credentials: RegisterCredentials): Promise<void> => {
     setIsLoading(true);
     try {
+      console.log('API_BASE being used:', API_BASE);
       const response = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
         headers: {
@@ -179,17 +180,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error(errorData.error || errorData.message || 'Registration failed');
       }
 
-      const responseText = await response.text();
-      console.log('Raw register response:', responseText);
-      
-      let data: AuthResponse;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
+      const data: AuthResponse = await response.json().catch((e) => {
         console.error('JSON parse error in register:', e);
-        console.error('Response text:', responseText);
         throw new Error('Invalid response format from server');
-      }
+      });
       setTokens(data);
       setUser(data.user);
     } finally {
