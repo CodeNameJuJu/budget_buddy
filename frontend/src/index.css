@@ -34,6 +34,16 @@
     font-family: "Inter", system-ui, -apple-system, sans-serif;
     background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
     min-height: 100vh;
+    /* Mobile-specific improvements */
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Mobile viewport fixes */
+  @media (max-width: 640px) {
+    body {
+      font-size: 14px;
+    }
   }
 }
 
@@ -84,6 +94,62 @@
   .card-hover:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Mobile-specific utilities */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .mobile-safe-area {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+  
+  /* Responsive grid helpers */
+  .grid-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  @media (max-width: 640px) {
+    .grid-responsive {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+  
+  /* Mobile card improvements */
+  .mobile-card {
+    @apply rounded-lg border bg-card p-4 shadow-sm;
+  }
+  
+  @media (max-width: 640px) {
+    .mobile-card {
+      @apply p-3;
+    }
+  }
+  
+  /* Touch-friendly buttons */
+  .mobile-button {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Mobile text improvements */
+  .mobile-title {
+    @apply text-lg font-bold;
+  }
+  
+  @media (max-width: 640px) {
+    .mobile-title {
+      @apply text-base;
+    }
   }
 }
 

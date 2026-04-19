@@ -23,13 +23,6 @@ go.work
 .env.local
 .env.production
 .env.supabase
-export.env
-export_env.sh
-
-# Data export files (may contain sensitive data)
-*_export.csv
-data_export/
-export_*.csv
 
 # IDE files
 .vscode/

@@ -110,19 +110,20 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
-          <p className="text-muted-foreground">{count} transaction{count !== 1 ? "s" : ""}</p>
+          <h1 className="text-xl lg:text-2xl font-bold tracking-tight">Transactions</h1>
+          <p className="text-muted-foreground text-sm lg:text-base">{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2">
           <Button 
             variant="outline" 
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
+            className="mobile-button"
           >
-            <Settings className="h-4 w-4 mr-2" />
-            Advanced
+            <Settings className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Advanced</span>
           </Button>
         </div>
       </div>
@@ -131,11 +132,12 @@ export default function TransactionsPage() {
       <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
 
       {/* Filters */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button
           variant={filterType === "" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilterType("")}
+          className="mobile-button"
         >
           All
         </Button>
@@ -143,6 +145,7 @@ export default function TransactionsPage() {
           variant={filterType === "income" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilterType("income")}
+          className="mobile-button"
         >
           Income
         </Button>
@@ -150,6 +153,7 @@ export default function TransactionsPage() {
           variant={filterType === "expense" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilterType("expense")}
+          className="mobile-button"
         >
           Expenses
         </Button>
@@ -268,54 +272,60 @@ export default function TransactionsPage() {
           ) : (
             <div className="divide-y">
               {transactions.map((t) => (
-                <div key={t.id} className="flex items-center justify-between px-6 py-4 hover:bg-accent/50 transition-colors">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium truncate">
-                        {t.description || "Untitled transaction"}
-                      </p>
-                      <Badge variant={t.type === "income" ? "income" : "expense"}>
-                        {t.type}
-                      </Badge>
+                <div key={t.id} className="px-4 lg:px-6 py-4 hover:bg-accent/50 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2 sm:mb-0">
+                        <p className="text-sm font-medium truncate">
+                          {t.description || "Untitled transaction"}
+                        </p>
+                        <Badge variant={t.type === "income" ? "income" : "expense"} className="text-xs">
+                          {t.type}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        <span>{formatDate(t.date)}</span>
+                        {t.category && (
+                          <>
+                            <span>·</span>
+                            <span>{t.category.name}</span>
+                          </>
+                        )}
+                        {t.tags && (
+                          <>
+                            <span>·</span>
+                            <div className="flex items-center gap-1">
+                              <TagIcon className="h-3 w-3" />
+                              <div className="flex gap-1 flex-wrap">
+                                {JSON.parse(t.tags).slice(0, 2).map((tag: string, index: number) => (
+                                  <Badge key={index} variant="outline" className="text-xs px-1 py-0">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                                {JSON.parse(t.tags).length > 2 && (
+                                  <Badge variant="outline" className="text-xs px-1 py-0">
+                                    +{JSON.parse(t.tags).length - 2}
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <p className="text-xs text-muted-foreground">{formatDate(t.date)}</p>
-                      {t.category && (
-                        <span className="text-xs text-muted-foreground">
-                          · {t.category.name}
-                        </span>
-                      )}
-                      {t.tags && (
-                        <div className="flex items-center gap-1">
-                          <TagIcon className="h-3 w-3 text-muted-foreground" />
-                          <div className="flex gap-1">
-                            {JSON.parse(t.tags).slice(0, 2).map((tag: string, index: number) => (
-                              <Badge key={index} variant="outline" className="text-xs px-1 py-0">
-                                {tag}
-                              </Badge>
-                            ))}
-                            {JSON.parse(t.tags).length > 2 && (
-                              <Badge variant="outline" className="text-xs px-1 py-0">
-                                +{JSON.parse(t.tags).length - 2}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
+                        {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive mobile-button"
+                        onClick={() => handleDelete(t.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 ml-4">
-                    <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
-                      {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-muted-foreground hover:text-destructive"
-                      onClick={() => handleDelete(t.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               ))}

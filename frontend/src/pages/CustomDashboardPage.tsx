@@ -92,18 +92,18 @@ export default function CustomDashboardPage() {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6">
+      <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <LayoutDashboard className="h-6 w-6" />
+          <h1 className="text-xl lg:text-2xl font-bold tracking-tight flex items-center gap-2">
+            <LayoutDashboard className="h-5 w-5 lg:h-6 lg:w-6" />
             Dashboard
           </h1>
-          <p className="text-muted-foreground">Your personalized financial overview</p>
+          <p className="text-muted-foreground text-sm lg:text-base">Your personalized financial overview</p>
         </div>
         
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="col-span-12 h-32">
+            <div key={i} className="col-span-1 lg:col-span-12 h-32 lg:h-40">
               <div className="h-full bg-muted rounded-lg animate-pulse"></div>
             </div>
           ))}
@@ -115,20 +115,21 @@ export default function CustomDashboardPage() {
   const customWidgets = getCustomLayout()
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <LayoutDashboard className="h-6 w-6" />
+        <h1 className="text-xl lg:text-2xl font-bold tracking-tight flex items-center gap-2">
+          <LayoutDashboard className="h-5 w-5 lg:h-6 lg:w-6" />
           Dashboard
         </h1>
-        <p className="text-muted-foreground">Your personalized financial overview</p>
+        <p className="text-muted-foreground text-sm lg:text-base">Your personalized financial overview</p>
       </div>
 
-      {/* Dashboard Grid */}
-      <div className="grid grid-cols-12 gap-4">
+      {/* Dashboard Grid - Mobile Responsive */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-4">
         {customWidgets.map((widget) => (
           <div 
             key={widget.id} 
+            className="lg:col-span-12"
             style={{
               gridColumn: `span ${widget.position.w}`,
               gridRow: `span ${widget.position.h}`,
