@@ -20,8 +20,8 @@ class ApiClient {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     
-    // Get auth token
-    const token = localStorage.getItem('access_token');
+    // Get auth token from both storage locations
+    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

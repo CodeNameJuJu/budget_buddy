@@ -124,6 +124,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     const data: AuthResponse = await response.json();
+    // Use the same storage type as before
     setTokens(data, useLocalStorage);
     setUser(data.user);
   };
