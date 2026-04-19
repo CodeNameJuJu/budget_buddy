@@ -2,17 +2,17 @@ package core
 
 import (
 	"github.com/go-chi/chi/v5"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/accounts"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/alerts"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/analytics"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/budgets"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/categories"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/dashboard"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/goals"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/tags"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/transactions"
+	"github.com/julian/budget-buddy/core/functions"
+	"github.com/julian/budget-buddy/core/functions/accounts"
+	"github.com/julian/budget-buddy/core/functions/alerts"
+	"github.com/julian/budget-buddy/core/functions/analytics"
+	"github.com/julian/budget-buddy/core/functions/budgets"
+	"github.com/julian/budget-buddy/core/functions/categories"
+	"github.com/julian/budget-buddy/core/functions/dashboard"
+	"github.com/julian/budget-buddy/core/functions/goals"
+	"github.com/julian/budget-buddy/core/functions/savings"
+	"github.com/julian/budget-buddy/core/functions/tags"
+	"github.com/julian/budget-buddy/core/functions/transactions"
 )
 
 func RegisterRoutes(r chi.Router) {

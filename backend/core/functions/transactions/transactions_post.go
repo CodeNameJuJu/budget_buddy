@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/CodeNameJuJu/budget_buddy/core/db"
-	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
-	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/julian/budget-buddy/core/db"
+	"github.com/julian/budget-buddy/core/helpers"
+	"github.com/julian/budget-buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
 

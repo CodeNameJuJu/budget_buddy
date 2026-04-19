@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/julian/budget-buddy/utils/types"
 )
 
 func RespondJSON(w http.ResponseWriter, status int, data interface{}) {
