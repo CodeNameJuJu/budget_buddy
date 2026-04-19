@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/CodeNameJuJu/budget_buddy/core"
+	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
@@ -34,8 +35,7 @@ func main() {
 	}
 
 	// Initialize database
-	context.ConnectToDatabase()
-	defer context.CloseDB()
+	db.ConnectToDatabase()
 
 	// Create router
 	r := chi.NewRouter()
@@ -66,11 +66,11 @@ func main() {
 }
 
 func runMigrations() error {
-	db := appcontext.GetDb()
+	database := db.GetDb()
 	ctx := context.Background()
 
 	// Create migrations table if it doesn't exist
-	_, err := db.NewRaw(`
+	_, err := database.NewRaw(`
 		CREATE TABLE IF NOT EXISTS schema_migrations (
 			version VARCHAR(255) PRIMARY KEY,
 			applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -101,7 +101,7 @@ func runMigrations() error {
 
 	// Run each migration
 	for _, filename := range migrationFiles {
-		if err := runMigration(db, migrationsDir, filename); err != nil {
+		if err := runMigration(database, migrationsDir, filename); err != nil {
 			return fmt.Errorf("failed to run migration %s: %s", filename, err)
 		}
 	}
