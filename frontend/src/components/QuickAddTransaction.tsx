@@ -73,15 +73,15 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
   }
 
   return (
-    <Card className="border-2 border-dashed border-primary/20">
+    <Card className="border-2 border-dashed border-blue-800/50 bg-slate-800/30">
       <CardContent className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <h3 className="font-semibold">Quick Add Transaction</h3>
+              <Sparkles className="h-4 w-4 text-blue-400" />
+              <h3 className="font-semibold text-slate-100">Quick Add Transaction</h3>
               {suggestedCategory && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-blue-800/30 text-blue-300 border border-blue-700/50">
                   Auto-categorized as {suggestedCategory.category}
                 </Badge>
               )}
@@ -98,7 +98,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Amount</label>
+              <label className="text-sm font-medium text-slate-300">Amount</label>
               <Input
                 type="number"
                 step="0.01"
@@ -111,7 +111,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium text-slate-300">Description</label>
               <Input
                 placeholder="e.g. Grocery shopping at Woolworths"
                 value={description}
@@ -127,7 +127,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               variant="ghost"
               size="sm"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-muted-foreground"
+              className="text-slate-400"
             >
               {showAdvanced ? (
                 <ChevronUp className="h-4 w-4 mr-1" />
@@ -138,7 +138,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
             </Button>
             
             {amount && (
-              <Badge variant={getTransactionType() === "income" ? "income" : "expense"}>
+              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? "bg-teal-800/30 text-teal-300 border border-teal-700/50" : "bg-red-800/30 text-red-300 border border-red-700/50"}>
                 {getTransactionType() === "income" ? "Income" : "Expense"}
               </Badge>
             )}
@@ -147,7 +147,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
           {showAdvanced && (
             <div className="space-y-4 pt-4 border-t">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Notes (optional)</label>
+                <label className="text-sm font-medium text-slate-300">Notes (optional)</label>
                 <Input
                   placeholder="Additional notes..."
                   value={notes}

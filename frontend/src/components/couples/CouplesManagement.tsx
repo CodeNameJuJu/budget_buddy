@@ -148,10 +148,10 @@ export const CouplesManagement: React.FC = () => {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'owner': return 'bg-purple-100 text-purple-800';
-      case 'admin': return 'bg-blue-100 text-blue-800';
-      case 'member': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'owner': return 'bg-purple-800/30 text-purple-300 border border-purple-700/50';
+      case 'admin': return 'bg-blue-800/30 text-blue-300 border border-blue-700/50';
+      case 'member': return 'bg-slate-700/30 text-slate-300 border border-slate-600/50';
+      default: return 'bg-slate-700/30 text-slate-300 border border-slate-600/50';
     }
   };
 
@@ -167,7 +167,7 @@ export const CouplesManagement: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
       </div>
     );
   }
@@ -175,22 +175,22 @@ export const CouplesManagement: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-          <Heart className="h-8 w-8 text-red-500" />
+        <h1 className="text-3xl font-bold text-slate-100 flex items-center gap-2">
+          <Heart className="h-8 w-8 text-red-400" />
           Couples & Partners
         </h1>
-        <p className="text-gray-600 mt-2">Manage your shared finances with your partner</p>
+        <p className="text-slate-400 mt-2">Manage your shared finances with your partner</p>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-slate-700 mb-6">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('partnerships')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'partnerships'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-blue-500 text-blue-400'
+                : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600'
             }`}
           >
             My Partnerships ({partnerships.length})
@@ -199,8 +199,8 @@ export const CouplesManagement: React.FC = () => {
             onClick={() => setActiveTab('invitations')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'invitations'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-blue-500 text-blue-400'
+                : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600'
             }`}
           >
             Pending Invitations ({pendingInvitations.length})
@@ -212,10 +212,10 @@ export const CouplesManagement: React.FC = () => {
         <div className="space-y-6">
           {/* Create Partnership Button */}
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-900">Your Partnerships</h2>
+            <h2 className="text-xl font-semibold text-slate-100">Your Partnerships</h2>
             <button
               onClick={() => setShowCreateForm(true)}
-              className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
               <Plus className="h-4 w-4" />
               Create Partnership
@@ -225,12 +225,12 @@ export const CouplesManagement: React.FC = () => {
           {/* Partnerships List */}
           {partnerships.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No partnerships yet</h3>
-              <p className="text-gray-600 mb-4">Create your first partnership to start sharing finances with your partner</p>
+              <Users className="h-12 w-12 text-slate-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-slate-100 mb-2">No partnerships yet</h3>
+              <p className="text-slate-400 mb-4">Create your first partnership to start sharing finances with your partner</p>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
               >
                 Create Partnership
               </button>
@@ -238,12 +238,12 @@ export const CouplesManagement: React.FC = () => {
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
               {partnerships.map((partnership) => (
-                <div key={partnership.id} className="bg-white border border-gray-200 rounded-lg p-6">
+                <div key={partnership.id} className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{partnership.name}</h3>
+                      <h3 className="text-lg font-semibold text-slate-100">{partnership.name}</h3>
                       {partnership.description && (
-                        <p className="text-gray-600 text-sm mt-1">{partnership.description}</p>
+                        <p className="text-slate-400 text-sm mt-1">{partnership.description}</p>
                       )}
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(partnership.current_user_role)}`}>
@@ -254,17 +254,17 @@ export const CouplesManagement: React.FC = () => {
 
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Members</span>
+                      <span className="text-slate-400">Members</span>
                       <span className="font-medium">{partnership.member_count}</span>
                     </div>
                     
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Shared Accounts</span>
+                      <span className="text-slate-400">Shared Accounts</span>
                       <span className="font-medium">{partnership.shared_accounts.length}</span>
                     </div>
 
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Created</span>
+                      <span className="text-slate-400">Created</span>
                       <span className="font-medium">
                         {new Date(partnership.created_at).toLocaleDateString()}
                       </span>
@@ -273,14 +273,14 @@ export const CouplesManagement: React.FC = () => {
 
                   {/* Members */}
                   {partnership.members && partnership.members.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Members</h4>
+                    <div className="mt-4 pt-4 border-t border-slate-700">
+                      <h4 className="text-sm font-medium text-slate-100 mb-2">Members</h4>
                       <div className="space-y-2">
                         {partnership.members.slice(0, 3).map((member) => (
                           <div key={member.id} className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-2">
-                              <div className="h-6 w-6 bg-gray-300 rounded-full flex items-center justify-center">
-                                <User className="h-3 w-3 text-gray-600" />
+                              <div className="h-6 w-6 bg-slate-600 rounded-full flex items-center justify-center">
+                                <User className="h-3 w-3 text-slate-300" />
                               </div>
                               <span>
                                 {member.user?.first_name || member.user?.email}

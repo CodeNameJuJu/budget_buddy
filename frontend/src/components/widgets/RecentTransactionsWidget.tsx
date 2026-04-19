@@ -83,7 +83,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-muted-foreground py-8">
+          <div className="text-center text-slate-400 py-8">
             <ArrowLeftRight className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm mb-2">No transactions yet</p>
             <p className="text-xs">Start tracking your expenses to see them here</p>
@@ -138,18 +138,18 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                     {t.description || t.category?.name || "Transaction"}
                   </p>
                   {t.account_type === "savings" && (
-                    <Badge variant="outline" className="text-xs text-blue-600 border-blue-200">
+                    <Badge variant="outline" className="text-xs text-blue-300 border-blue-700/50 bg-blue-800/20">
                       Savings
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">{formatDate(t.date)}</p>
+                <p className="text-xs text-slate-400">{formatDate(t.date)}</p>
               </div>
               <div className="flex items-center gap-2 ml-4">
                 <Badge variant={t.type === "income" ? "default" : "destructive"} className="text-xs">
                   {t.type}
                 </Badge>
-                <span className={`text-sm font-semibold ${t.type === "income" ? "text-green-500" : "text-red-500"}`}>
+                <span className={`text-sm font-semibold ${t.type === "income" ? "text-teal-400" : "text-red-400"}`}>
                   {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                 </span>
               </div>
@@ -158,7 +158,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
           
           {!isExpanded && hasMore && (
             <div className="text-center pt-2">
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-slate-400">
                 {data.count - defaultDisplayCount} more transactions
               </p>
             </div>

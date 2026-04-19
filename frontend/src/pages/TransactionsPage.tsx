@@ -114,7 +114,7 @@ export default function TransactionsPage() {
       <div className="responsive-flex responsive-margin">
         <div>
           <h1 className="mobile-title tracking-tight">Transactions</h1>
-          <p className="mobile-text text-muted-foreground">{count} transaction{count !== 1 ? "s" : ""}</p>
+          <p className="mobile-text text-slate-400">{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -171,7 +171,7 @@ export default function TransactionsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Amount</label>
+                  <label className="mobile-text font-medium text-slate-300">Amount</label>
                   <Input
                     type="number"
                     step="0.01"
@@ -204,7 +204,7 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Account Type</label>
+                  <label className="mobile-text font-medium text-slate-300">Account Type</label>
                   <select
                     className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
                     value={form.account_type}
@@ -215,7 +215,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Description</label>
+                  <label className="mobile-text font-medium text-slate-300">Description</label>
                   <Input
                     placeholder="e.g. Grocery shopping"
                     value={form.description}
@@ -224,7 +224,7 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Category</label>
+                  <label className="mobile-text font-medium text-slate-300">Category</label>
                   <select
                     className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
                     value={form.category_id}
@@ -241,7 +241,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium">Notes</label>
+                  <label className="mobile-text font-medium text-slate-300">Notes</label>
                   <Input
                     placeholder="Optional notes"
                     value={form.notes}
@@ -251,7 +251,7 @@ export default function TransactionsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="mobile-text font-medium">Tags</label>
+                <label className="mobile-text font-medium text-slate-300">Tags</label>
                 <TagInput
                   value={form.tags}
                   onChange={(tags) => setForm({ ...form, tags })}
@@ -274,13 +274,13 @@ export default function TransactionsPage() {
       <Card className="mobile-card">
         <CardContent className="p-0">
           {loading ? (
-            <p className="mobile-text text-muted-foreground text-center py-6 xs:py-8">Loading...</p>
+            <p className="mobile-text text-slate-400 text-center py-6 xs:py-8">Loading...</p>
           ) : transactions.length === 0 ? (
-            <p className="mobile-text text-muted-foreground text-center py-6 xs:py-8">No transactions found</p>
+            <p className="mobile-text text-slate-400 text-center py-6 xs:py-8">No transactions found</p>
           ) : (
             <div className="divide-y">
               {transactions.map((t) => (
-                <div key={t.id} className="px-3 xs:px-4 lg:px-6 py-3 xs:py-4 hover:bg-accent/50 transition-colors">
+                <div key={t.id} className="px-3 xs:px-4 lg:px-6 py-3 xs:py-4 hover:bg-blue-900/20 transition-colors">
                   <div className="flex flex-col gap-2 xs:gap-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -288,11 +288,11 @@ export default function TransactionsPage() {
                           <p className="mobile-text font-medium truncate">
                             {t.description || "Untitled transaction"}
                           </p>
-                          <Badge variant={t.type === "income" ? "income" : "expense"} className="text-xs">
+                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={t.type === "income" ? "bg-teal-800/30 text-teal-300 border border-teal-700/50 text-xs" : "bg-red-800/30 text-red-300 border border-red-700/50 text-xs"}>
                             {t.type}
                           </Badge>
                         </div>
-                        <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
                           <span>{formatDate(t.date)}</span>
                           {t.category && (
                             <>
@@ -323,13 +323,13 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={`mobile-text font-semibold ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
+                        <span className={`mobile-text font-semibold ${t.type === "income" ? "text-teal-400" : "text-red-400"}`}>
                           {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-muted-foreground hover:text-destructive mobile-button-sm"
+                          className="text-slate-400 hover:text-red-400 mobile-button-sm"
                           onClick={() => handleDelete(t.id)}
                         >
                           <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
