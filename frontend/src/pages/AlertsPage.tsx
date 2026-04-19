@@ -88,17 +88,17 @@ export default function AlertsPage() {
 
   function getAlertIcon(severity: string) {
     switch (severity) {
-      case "critical": return <AlertTriangle className="h-4 w-4 text-red-500" />
-      case "warning": return <AlertCircle className="h-4 w-4 text-yellow-500" />
-      default: return <Info className="h-4 w-4 text-blue-500" />
+      case "critical": return <AlertTriangle className="h-4 w-4 text-red-400" />
+      case "warning": return <AlertCircle className="h-4 w-4 text-yellow-400" />
+      default: return <Info className="h-4 w-4 text-blue-400" />
     }
   }
 
   function getSeverityColor(severity: string) {
     switch (severity) {
-      case "critical": return "border-red-500 bg-red-50 dark:bg-red-900/20"
-      case "warning": return "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20"
-      default: return "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+      case "critical": return "border-red-500/50 bg-red-900/20"
+      case "warning": return "border-yellow-500/50 bg-yellow-900/20"
+      default: return "border-blue-500/50 bg-blue-900/20"
     }
   }
 
@@ -117,7 +117,7 @@ export default function AlertsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Loading alerts...</p>
+        <p className="text-slate-400">Loading alerts...</p>
       </div>
     )
   }
@@ -126,7 +126,7 @@ export default function AlertsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
             <Bell className="h-6 w-6" />
             Alerts
             {unreadCount > 0 && (
@@ -135,7 +135,7 @@ export default function AlertsPage() {
               </Badge>
             )}
           </h1>
-          <p className="text-muted-foreground">Stay informed about your finances</p>
+          <p className="text-slate-400">Stay informed about your finances</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={triggerAlerts} variant="outline" size="sm">
@@ -155,16 +155,16 @@ export default function AlertsPage() {
 
       {/* Alert Preferences */}
       {showPreferences && (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle>Alert Preferences</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {preferences.map((pref) => (
-              <div key={pref.id} className="flex items-center justify-between p-3 border rounded-lg">
+              <div key={pref.id} className="flex items-center justify-between p-3 border border-slate-600 rounded-lg">
                 <div className="flex-1">
                   <Label className="font-medium">{getAlertTypeLabel(pref.type)}</Label>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-slate-400 mt-1">
                     {pref.type === "budget_threshold" && 
                       "Get notified when you reach a certain percentage of your budget"
                     }
@@ -190,7 +190,7 @@ export default function AlertsPage() {
                         }}
                         className="w-16 h-8 text-sm"
                       />
-                      <span className="text-sm text-muted-foreground">%</span>
+                      <span className="text-sm text-slate-400">%</span>
                     </div>
                   )}
                   <Switch
@@ -211,11 +211,11 @@ export default function AlertsPage() {
       {/* Alerts List */}
       <div className="space-y-4">
         {alerts.length === 0 ? (
-          <Card>
+          <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <BellOff className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">No alerts</h3>
-              <p className="text-muted-foreground text-center mt-2">
+              <BellOff className="h-12 w-12 text-slate-500 mb-4" />
+              <h3 className="text-lg font-medium text-slate-100">No alerts</h3>
+              <p className="text-slate-400 text-center mt-2">
                 You're all caught up! Check back later for new notifications.
               </p>
             </CardContent>
@@ -239,8 +239,8 @@ export default function AlertsPage() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{alert.message}</p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <p className="text-sm text-slate-400 mb-2">{alert.message}</p>
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
                         <span>{formatDate(alert.created_date)}</span>
                         <span>•</span>
                         <span>{getAlertTypeLabel(alert.type)}</span>

@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Loading analytics...</p>
+        <p className="text-slate-400">Loading analytics...</p>
       </div>
     )
   }
@@ -51,16 +51,16 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-muted-foreground">Insights into your financial patterns</p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-100">Analytics</h1>
+        <p className="text-slate-400">Insights into your financial patterns</p>
       </div>
 
       {/* Financial Health Score */}
       {financialHealth && (
-        <Card className="card-hover">
+        <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className={`p-2 rounded-full bg-primary text-white`}>
+              <div className={`p-2 rounded-full bg-blue-600 text-white transition-colors duration-200`}>
                 <Target className="h-4 w-4" />
               </div>
               Financial Health Score
@@ -73,26 +73,26 @@ export default function AnalyticsPage() {
               </div>
               <div className="ml-8 space-y-3">
                 <div>
-                  <p className="text-sm text-muted-foreground">Savings Rate</p>
+                  <p className="text-sm text-slate-400">Savings Rate</p>
                   <p className="text-lg font-semibold">{formatPercentage(financialHealth.savings_rate)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Budget Adherence</p>
+                  <p className="text-sm text-slate-400">Budget Adherence</p>
                   <p className="text-lg font-semibold">{formatPercentage(financialHealth.budget_adherence)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Income Stability</p>
+                  <p className="text-sm text-slate-400">Income Stability</p>
                   <p className="text-lg font-semibold">{formatPercentage(financialHealth.income_stability)}</p>
                 </div>
               </div>
             </div>
             {financialHealth.recommendations.length > 0 && (
               <div className="mt-6">
-                <p className="text-sm font-medium mb-2">Recommendations:</p>
+                <p className="text-sm font-medium mb-2 text-slate-300">Recommendations:</p>
                 <ul className="space-y-1">
                   {financialHealth.recommendations.map((rec, index) => (
-                    <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-primary">•</span>
+                    <li key={index} className="text-sm text-slate-400 flex items-start gap-2">
+                      <span className="text-blue-400">•</span>
                       {rec}
                     </li>
                   ))}
@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-accent text-white">
+              <div className="p-2 rounded-full bg-teal-600 text-white transition-colors duration-200">
                 <DollarSign className="h-4 w-4" />
               </div>
               Category Breakdown
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="px-3 py-1 rounded-md bg-secondary border border-border text-sm"
+              className="px-3 py-1 rounded-md bg-slate-700 border border-slate-600 text-sm text-slate-300"
             >
               <option value="current_month">Current Month</option>
               <option value="last_month">Last Month</option>
