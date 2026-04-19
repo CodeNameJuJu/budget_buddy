@@ -38,7 +38,7 @@ func InsertCategory(category *types.Category) error {
 
 	// Set timestamps before insertion
 	now := time.Now()
-	category.CreatedDate = &now
+	category.CreatedDate = now
 	category.ModifiedDate = &now
 
 	fmt.Printf("Attempting to insert category: %+v\n", category)
