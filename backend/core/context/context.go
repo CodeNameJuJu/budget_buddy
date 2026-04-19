@@ -14,6 +14,7 @@ import (
 )
 
 var db *bun.DB
+var dbConnected bool = false
 
 const DatabaseName = "budget_buddy"
 
@@ -84,6 +85,7 @@ func ConnectToDatabase() {
 			}
 		} else {
 			fmt.Println("Connected to database")
+			dbConnected = true
 			return
 		}
 	}
@@ -91,10 +93,15 @@ func ConnectToDatabase() {
 	// Don't panic - just log the error and continue
 	fmt.Printf("Warning: Failed to connect to database after %d attempts: %s\n", maxRetries, lastErr)
 	fmt.Println("Application will continue but database operations will fail until connection is restored")
+	dbConnected = false
 }
 
 func GetDb() *bun.DB {
 	return db
+}
+
+func IsDbConnected() bool {
+	return dbConnected
 }
 
 func CloseDB() {

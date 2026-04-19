@@ -33,6 +33,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(dbmiddleware.DatabaseMiddleware)
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000", "https://budget-buddy-frontend-production.up.railway.app", "https://*.railway.app"},
 		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
