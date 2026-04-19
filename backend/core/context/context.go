@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -19,9 +20,19 @@ const DatabaseName = "budget_buddy"
 func ConnectToDatabase() {
 	var dsn string
 
-	// Check if DATABASE_URL is provided (preferred for Supabase)
+	// Check if DATABASE_URL is provided (preferred for Railway/Supabase)
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
-		dsn = databaseURL
+		// For Railway, ensure SSL mode is properly set
+		if os.Getenv("RAILWAY_ENVIRONMENT") != "" {
+			// Railway environment - ensure SSL is enabled
+			if !strings.Contains(databaseURL, "sslmode=") {
+				dsn = databaseURL + "&sslmode=require"
+			} else {
+				dsn = databaseURL
+			}
+		} else {
+			dsn = databaseURL
+		}
 		fmt.Printf("Using DATABASE_URL: %s\n", maskPassword(databaseURL))
 	} else {
 		// Build connection string from individual components
@@ -41,11 +52,17 @@ func ConnectToDatabase() {
 		fmt.Printf("Using individual DB settings, host: %s\n", os.Getenv("DB_HOST"))
 	}
 
+	// Create SQL connection with Railway-compatible settings
 	sqlDB := sql.OpenDB(pgdriver.NewConnector(
 		pgdriver.WithDSN(dsn),
 		pgdriver.WithReadTimeout(30*time.Second),
 		pgdriver.WithWriteTimeout(30*time.Second),
 	))
+
+	// Configure connection pool for Railway
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(25)
+	sqlDB.SetConnMaxLifetime(5 * time.Minute)
 
 	db = bun.NewDB(sqlDB, pgdialect.New(), bun.WithDiscardUnknownColumns())
 
@@ -54,8 +71,18 @@ func ConnectToDatabase() {
 		db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	}
 
-	if err := db.Ping(); err != nil {
-		panic(fmt.Sprintf("Failed to connect to database: %s", err))
+	// Test connection with retry logic
+	maxRetries := 5
+	for i := 0; i < maxRetries; i++ {
+		if err := db.Ping(); err != nil {
+			fmt.Printf("Database connection attempt %d/%d failed: %s\n", i+1, maxRetries, err)
+			if i == maxRetries-1 {
+				panic(fmt.Sprintf("Failed to connect to database after %d attempts: %s", maxRetries, err))
+			}
+			time.Sleep(time.Duration(i+1) * time.Second)
+		} else {
+			break
+		}
 	}
 
 	fmt.Println("Connected to database")
