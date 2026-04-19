@@ -51,6 +51,8 @@ func POSTCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := db.InsertCategory(&category); err != nil {
+		fmt.Printf("Category creation error: %v\n", err)
+		fmt.Printf("Category data: %+v\n", category)
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not create category")
 		return
 	}

@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	appcontext "github.com/julian/budget-buddy/core/context"
@@ -31,10 +32,28 @@ func QueryCategories(accountID int64, categoryID *int64, categoryType *string) (
 
 func InsertCategory(category *types.Category) error {
 	db := appcontext.GetDb()
+	if db == nil {
+		return fmt.Errorf("database connection is nil")
+	}
+
+	// Set timestamps before insertion
+	now := time.Now()
+	category.CreatedDate = &now
+	category.ModifiedDate = &now
+
+	fmt.Printf("Attempting to insert category: %+v\n", category)
+
 	_, err := db.NewInsert().Model(category).
 		Returning("*").
 		Exec(context.Background())
-	return err
+
+	if err != nil {
+		fmt.Printf("Database insertion error: %v\n", err)
+		return fmt.Errorf("failed to insert category: %w", err)
+	}
+
+	fmt.Printf("Category inserted successfully: %+v\n", category)
+	return nil
 }
 
 func UpdateCategory(category *types.Category) error {
