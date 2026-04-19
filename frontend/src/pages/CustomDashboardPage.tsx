@@ -1,61 +1,17 @@
 import { useEffect, useState } from "react"
 import { LayoutDashboard } from "lucide-react"
-import WidgetRenderer from "@/components/widgets/WidgetRenderer"
-import { apiClient } from "@/lib/apiClient"
 import { useAuth } from "@/hooks"
 
-// Temporary types for dashboard
-interface Widget {
-  id: string
-  type: string
-  title: string
-  size: string
-  position: { x: number; y: number; w: number; h: number }
-  is_visible: boolean
-  updated_at: string
-}
-
 export default function CustomDashboardPage() {
-  const [widgets, setWidgets] = useState<Widget[]>([])
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
 
   useEffect(() => {
-    loadDashboard()
-  }, [])
-
-  async function loadDashboard() {
-    setLoading(true)
-    try {
-      // For now, use a default account ID since we don't have account management yet
-      // TODO: Update this when account management is implemented
-      const accountId = 1
-      
-      // Try to get dashboard layout from API
-      try {
-        const response = await apiClient.get(`/dashboard/layout?account_id=${accountId}`)
-        
-        // Parse widgets from layout if available
-        if (response.data?.layout) {
-          const parsedWidgets = JSON.parse(response.data.layout)
-          setWidgets(parsedWidgets.filter((w: Widget) => w.is_visible))
-        } else {
-          // Use default widgets if no layout found
-          setWidgets(getCustomLayout())
-        }
-      } catch (apiError) {
-        console.log("Dashboard layout API not available, using default widgets")
-        // Use default widgets if API fails
-        setWidgets(getCustomLayout())
-      }
-    } catch (error) {
-      console.error("Failed to load dashboard", error)
-      // Always use default widgets as fallback
-      setWidgets(getCustomLayout())
-    } finally {
+    // Simulate loading
+    setTimeout(() => {
       setLoading(false)
-    }
-  }
+    }, 1000)
+  }, [])
 
   // Clean layout with full-width widgets for better readability
   function getCustomLayout(): Widget[] {
@@ -121,17 +77,17 @@ export default function CustomDashboardPage() {
     return (
       <div className="space-y-4 xs:space-y-6">
         <div className="responsive-margin">
-          <h1 className="mobile-title flex items-center gap-2">
+          <h1 className="mobile-title flex items-center gap-2 text-purple-100">
             <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
             Dashboard
           </h1>
-          <p className="mobile-text text-muted-foreground">Your personalized financial overview</p>
+          <p className="mobile-text text-purple-200">Your personalized financial overview</p>
         </div>
         
         <div className="grid-responsive-xs">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-24 xs:h-32 lg:h-40">
-              <div className="h-full bg-muted rounded-lg animate-pulse"></div>
+              <div className="h-full bg-purple-900/50 rounded-lg animate-pulse"></div>
             </div>
           ))}
         </div>
@@ -139,32 +95,38 @@ export default function CustomDashboardPage() {
     )
   }
 
-  const customWidgets = getCustomLayout()
-
   return (
     <div className="space-y-4 xs:space-y-6">
       <div className="responsive-margin">
-        <h1 className="mobile-title flex items-center gap-2">
+        <h1 className="mobile-title flex items-center gap-2 text-purple-100">
           <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
           Dashboard
         </h1>
-        <p className="mobile-text text-muted-foreground">Your personalized financial overview</p>
+        <p className="mobile-text text-purple-200">Your personalized financial overview</p>
       </div>
 
-      {/* Dashboard Grid - 100% Responsive */}
+      {/* Simple Welcome Card */}
       <div className="grid-responsive">
-        {customWidgets.map((widget) => (
-          <div 
-            key={widget.id} 
-            className="mobile-card animate-scale-in"
-            style={{
-              gridColumn: `span ${widget.position.w}`,
-              gridRow: `span ${widget.position.h}`,
-            }}
-          >
-            <WidgetRenderer widget={widget} accountId={1} />
+        <div className="bg-purple-950/50 backdrop-blur-md border border-purple-800/50 rounded-lg p-6 shadow-lg">
+          <h2 className="text-xl font-bold text-purple-100 mb-4">Welcome to Budget Buddy!</h2>
+          <p className="text-purple-200 mb-4">
+            Hi {user?.email || 'User'}! Your financial dashboard is ready to use.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="bg-purple-900/50 rounded-lg p-4">
+              <h3 className="text-purple-100 font-semibold mb-2">Track Expenses</h3>
+              <p className="text-purple-200 text-sm">Monitor your spending patterns</p>
+            </div>
+            <div className="bg-purple-900/50 rounded-lg p-4">
+              <h3 className="text-purple-100 font-semibold mb-2">Set Budgets</h3>
+              <p className="text-purple-200 text-sm">Create and manage your budgets</p>
+            </div>
+            <div className="bg-purple-900/50 rounded-lg p-4">
+              <h3 className="text-purple-100 font-semibold mb-2">Save Money</h3>
+              <p className="text-purple-200 text-sm">Achieve your financial goals</p>
+            </div>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   )

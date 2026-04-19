@@ -1,7 +1,17 @@
 import { lazy, Suspense } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle } from "lucide-react"
-import type { Widget } from "@/lib/api"
+
+// Local Widget interface to match dashboard
+interface Widget {
+  id: string
+  type: string
+  title: string
+  size: string
+  position: { x: number; y: number; w: number; h: number }
+  is_visible: boolean
+  updated_at: string
+}
 
 // Lazy load widget components to improve performance
 const WelcomeWidget = lazy(() => import("./WelcomeWidget"))
