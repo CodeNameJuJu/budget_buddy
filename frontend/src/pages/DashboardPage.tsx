@@ -6,16 +6,26 @@ import {
   ArrowLeftRight,
   CreditCard,
   Heart,
+  Target,
+  AlertCircle,
+  PiggyBank,
+  BarChart3,
+  Activity,
+  Bell,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { dashboardApi, type DashboardSummary } from "@/lib/api"
-import { formatCurrency, formatDate } from "@/lib/utils"
+import { dashboardApi, budgetsApi, savingsApi, goalsApi, alertsApi, type DashboardSummary, type Budget, type SavingsPot, type Goal, type Alert } from "@/lib/api"
+import { formatCurrency, formatDate, formatPercentage } from "@/lib/utils"
 
 const ACCOUNT_ID = 1
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
+  const [budgets, setBudgets] = useState<Budget[]>([])
+  const [savings, setSavings] = useState<SavingsPot[]>([])
+  const [goals, setGoals] = useState<Goal[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -24,10 +34,21 @@ export default function DashboardPage() {
 
   async function loadSummary() {
     try {
-      const res = await dashboardApi.summary(ACCOUNT_ID)
-      setSummary(res.data)
-    } catch {
-      console.error("Failed to load dashboard")
+      const [summaryRes, budgetsRes, savingsRes, goalsRes, alertsRes] = await Promise.all([
+        dashboardApi.summary(ACCOUNT_ID),
+        budgetsApi.list(ACCOUNT_ID),
+        savingsApi.list(ACCOUNT_ID),
+        goalsApi.list(ACCOUNT_ID),
+        alertsApi.list(ACCOUNT_ID, 5), // Get last 5 alerts
+      ])
+      
+      setSummary(summaryRes.data)
+      setBudgets(budgetsRes.data || [])
+      setSavings(savingsRes.data || [])
+      setGoals(goalsRes.data || [])
+      setAlerts(alertsRes.data || [])
+    } catch (error) {
+      console.error("Failed to load dashboard", error)
     } finally {
       setLoading(false)
     }
@@ -199,6 +220,266 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Additional widgets row */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Budget Progress */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-orange-600 text-white transition-colors duration-200">
+                <Target className="h-4 w-4" />
+              </div>
+              Budget Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {budgets.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">
+                No budgets set up
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {budgets.slice(0, 3).map((budget) => {
+                  const spent = parseFloat(budget.amount || "0") * 0.65 // Mock spent amount
+                  const percentage = (spent / parseFloat(budget.amount || "1")) * 100
+                  return (
+                    <div key={budget.id} className="space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium">{budget.name}</span>
+                        <span className="text-muted-foreground">
+                          {formatCurrency(spent)} / {formatCurrency(parseFloat(budget.amount || "0"))}
+                        </span>
+                      </div>
+                      <div className="h-2 bg-zinc-600 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-700 ease-out ${
+                            percentage > 80 ? 'bg-red-500' : percentage > 60 ? 'bg-orange-500' : 'bg-emerald-500'
+                          }`}
+                          style={{ width: `${Math.min(percentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Savings Goals */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-purple-600 text-white transition-colors duration-200">
+                <Heart className="h-4 w-4" />
+              </div>
+              Savings Goals
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {goals.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">
+                No savings goals
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {goals.slice(0, 3).map((goal) => {
+                  const current = parseFloat(goal.current_amount || "0")
+                  const target = parseFloat(goal.target_amount || "1")
+                  const percentage = (current / target) * 100
+                  return (
+                    <div key={goal.id} className="space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium">{goal.name}</span>
+                        <span className="text-muted-foreground">
+                          {formatPercentage(percentage)}
+                        </span>
+                      </div>
+                      <div className="h-2 bg-zinc-600 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-purple-500 rounded-full transition-all duration-700 ease-out"
+                          style={{ width: `${Math.min(percentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Recent Alerts */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-red-600 text-white transition-colors duration-200">
+                <Bell className="h-4 w-4" />
+              </div>
+              Recent Alerts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {alerts.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">
+                No new alerts
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {alerts.map((alert) => (
+                  <div key={alert.id} className="flex items-start gap-2 p-2 rounded-lg bg-zinc-800/50">
+                    <AlertCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{alert.message}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDate(alert.created_date)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Bottom widgets row */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Savings Summary */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-teal-600 text-white transition-colors duration-200">
+                <PiggyBank className="h-4 w-4" />
+              </div>
+              Savings Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {savings.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">
+                No savings accounts
+              </p>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-teal-400">
+                      {formatCurrency(savings.reduce((sum, pot) => sum + parseFloat(pot.allocated || "0"), 0))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Total Allocated</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-400">
+                      {savings.length}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Active Pots</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {savings.slice(0, 3).map((pot) => (
+                    <div key={pot.id} className="flex items-center justify-between p-2 rounded-lg bg-zinc-800/50">
+                      <span className="text-sm font-medium">{pot.name}</span>
+                      <span className="text-sm text-teal-400">
+                        {formatCurrency(parseFloat(pot.allocated || "0"))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Spending Trends Mini Chart */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-blue-600 text-white transition-colors duration-200">
+                <BarChart3 className="h-4 w-4" />
+              </div>
+              Spending Trends
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-lg font-bold text-emerald-400">+12%</div>
+                  <p className="text-xs text-muted-foreground">vs Last Month</p>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-red-400">-8%</div>
+                  <p className="text-xs text-muted-foreground">vs Budget</p>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-blue-400">R2,450</div>
+                  <p className="text-xs text-muted-foreground">Avg Daily</p>
+                </div>
+              </div>
+              <div className="h-20 flex items-end justify-between gap-1">
+                {[65, 80, 45, 90, 70, 85, 60, 75, 55, 88, 72, 68].map((height, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-300 hover:from-blue-500 hover:to-blue-300"
+                    style={{ height: `${height}%` }}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Last 12 days spending pattern
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Financial Health Score */}
+      <Card className="card-hover">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 rounded-full bg-green-600 text-white transition-colors duration-200">
+              <Activity className="h-4 w-4" />
+            </div>
+            Financial Health Score
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-green-400">78</div>
+                  <p className="text-sm text-muted-foreground">Good Health</p>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Savings Rate</span>
+                    <span className="text-emerald-400">+15%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Budget Adherence</span>
+                    <span className="text-blue-400">92%</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Income Stability</span>
+                    <span className="text-purple-400">Stable</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="ml-8">
+              <div className="w-20 h-20 rounded-full border-4 border-zinc-600 relative">
+                <div className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent border-r-transparent transform rotate-45"></div>
+                <div className="absolute inset-2 flex items-center justify-center">
+                  <span className="text-lg font-bold text-green-400">78%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
