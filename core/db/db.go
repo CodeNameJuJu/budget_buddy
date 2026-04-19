@@ -45,6 +45,8 @@ func ConnectToDatabase() {
 		pgdriver.WithDSN(dsn),
 		pgdriver.WithReadTimeout(30*time.Second),
 		pgdriver.WithWriteTimeout(30*time.Second),
+		pgdriver.WithConnectTimeout(10*time.Second),
+		pgdriver.WithDialTimeout(5*time.Second),
 	))
 
 	database = bun.NewDB(sqlDB, pgdialect.New(), bun.WithDiscardUnknownColumns())
@@ -54,11 +56,26 @@ func ConnectToDatabase() {
 		database.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	}
 
-	if err := database.Ping(); err != nil {
-		panic(fmt.Sprintf("Failed to connect to database: %s", err))
+	// Retry database connection with exponential backoff
+	maxRetries := 5
+	var lastErr error
+
+	for i := 0; i < maxRetries; i++ {
+		if err := database.Ping(); err != nil {
+			lastErr = err
+			if i < maxRetries-1 {
+				waitTime := time.Duration(i+1) * time.Second
+				fmt.Printf("Database connection attempt %d failed, retrying in %v: %s\n", i+1, waitTime, err)
+				time.Sleep(waitTime)
+				continue
+			}
+		} else {
+			fmt.Println("Connected to database")
+			return
+		}
 	}
 
-	fmt.Println("Connected to database")
+	panic(fmt.Sprintf("Failed to connect to database after %d attempts: %s", maxRetries, lastErr))
 }
 
 func GetDb() *bun.DB {
