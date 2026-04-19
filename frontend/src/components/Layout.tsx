@@ -123,7 +123,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-zinc-800 to-zinc-700 relative mobile-safe-area">
+    <div className="flex h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 relative mobile-safe-area">
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
         <div 
@@ -144,14 +144,14 @@ export default function Layout() {
       <aside 
         ref={sidebarRef}
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-card/95 backdrop-blur-md border-r shadow-2xl transform transition-all duration-300 ease-out",
+          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-purple-950/80 backdrop-blur-xl border-r border-purple-800/50 shadow-2xl transform transition-all duration-300 ease-out",
           sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          "lg:w-64 lg:bg-card lg:backdrop-blur-0 lg:shadow-xl"
+          "lg:w-64 lg:bg-purple-950/90 lg:backdrop-blur-md lg:shadow-xl lg:border-purple-800/30"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-4 xs:p-5 lg:p-6 border-b border-zinc-700/50">
+          <div className="p-4 xs:p-5 lg:p-6 border-b border-purple-800/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
                 <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-lg">
@@ -189,15 +189,15 @@ export default function Layout() {
                     cn(
                       "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
-                        ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg transform scale-[1.02]"
-                        : "text-muted-foreground hover:bg-zinc-700/50 hover:text-foreground hover:shadow-md hover:transform hover:translate-x-1"
+                        ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg transform scale-[1.02]"
+                        : "text-purple-200/70 hover:bg-purple-800/30 hover:text-purple-100 hover:shadow-md hover:transform hover:translate-x-1"
                     )
                   }
                 >
                   <div className={cn(
                     "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
-                    "group-hover:bg-zinc-600/50 group-hover:scale-110",
-                    "group-[.active]:bg-white/20"
+                    "group-hover:bg-purple-700/50 group-hover:scale-110",
+                    "group-[.active]:bg-purple-500/20"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                   </div>
@@ -208,10 +208,10 @@ export default function Layout() {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 xs:p-5 lg:p-6 border-t border-zinc-700/50">
+          <div className="p-4 xs:p-5 lg:p-6 border-t border-purple-800/50">
             <div className="status-indicator online">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs xs:text-sm">Connected to Railway</span>
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></div>
+              <span className="text-xs xs:text-sm text-purple-200">Connected to Railway</span>
             </div>
           </div>
         </div>
@@ -220,19 +220,19 @@ export default function Layout() {
       {/* Main content */}
       <main className="flex-1 overflow-auto mobile-scroll">
         {/* Mobile header with enhanced design */}
-        <div className="lg:hidden sticky top-0 z-30 bg-card/95 mobile-backdrop border-b border-zinc-700/50 responsive-padding">
+        <div className="lg:hidden sticky top-0 z-30 bg-purple-950/90 backdrop-blur-md border-b border-purple-800/50 responsive-padding">
           <div className="flex items-center justify-between">
             <button
               onClick={openSidebar}
-              className="p-2.5 xs:p-3 rounded-full hover:bg-zinc-700/50 transition-all duration-200 mobile-app-button group"
+              className="p-2.5 xs:p-3 rounded-full hover:bg-purple-800/30 transition-all duration-200 mobile-app-button group text-purple-200"
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
             </button>
             <div className="flex items-center gap-2 xs:gap-3">
-              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-md">
+              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-md">
                 <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
               </div>
-              <span className="font-bold text-sm xs:text-base text-foreground">Budget Buddy</span>
+              <span className="font-bold text-sm xs:text-base text-purple-100">Budget Buddy</span>
             </div>
             <div className="w-8 xs:w-10"></div> {/* Spacer for balance */}
           </div>
