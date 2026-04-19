@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 interface User {
   id: number;
   email: string;
-  first_name?: string;
-  last_name?: string;
+  first_name?: string | null;
+  last_name?: string | null;
   is_active: boolean;
   email_verified: boolean;
-  last_login?: string;
+  last_login?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -179,10 +179,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error(errorData.error || errorData.message || 'Registration failed');
       }
 
-      const data: AuthResponse = await response.json().catch((e) => {
+      const responseText = await response.text();
+      console.log('Raw register response:', responseText);
+      
+      let data: AuthResponse;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
         console.error('JSON parse error in register:', e);
+        console.error('Response text:', responseText);
         throw new Error('Invalid response format from server');
-      });
+      }
       setTokens(data);
       setUser(data.user);
     } finally {
