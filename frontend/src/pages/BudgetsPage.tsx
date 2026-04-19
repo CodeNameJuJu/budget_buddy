@@ -107,8 +107,8 @@ export default function BudgetsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Budgets</h1>
-          <p className="text-muted-foreground">Track your spending limits</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-100">Budgets</h1>
+          <p className="text-slate-400">Track your spending limits</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} className="hover:shadow-lg transition-all duration-300">
           <Plus className="h-4 w-4 mr-2" />
@@ -118,14 +118,14 @@ export default function BudgetsPage() {
 
       {/* Add budget form */}
       {showForm && (
-        <Card className="card-hover animate-float">
+        <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-200">
           <CardHeader>
             <CardTitle>New budget</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium text-slate-300">Name</label>
                 <Input
                   placeholder="e.g. Monthly groceries"
                   value={form.name}
@@ -134,7 +134,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Amount</label>
+                <label className="text-sm font-medium text-slate-300">Amount</label>
                 <Input
                   type="number"
                   step="0.01"
@@ -145,7 +145,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Category</label>
+                <label className="text-sm font-medium text-slate-300">Category</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={form.category_id}
@@ -161,7 +161,7 @@ export default function BudgetsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Period</label>
+                <label className="text-sm font-medium text-slate-300">Period</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={form.period}
@@ -173,7 +173,7 @@ export default function BudgetsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Start date</label>
+                <label className="text-sm font-medium text-slate-300">Start date</label>
                 <Input
                   type="date"
                   value={form.start_date}
@@ -182,7 +182,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">End date (optional)</label>
+                <label className="text-sm font-medium text-slate-300">End date (optional)</label>
                 <Input
                   type="date"
                   value={form.end_date}
@@ -202,12 +202,12 @@ export default function BudgetsPage() {
 
       {/* Budgets grid */}
       {loading ? (
-        <p className="text-muted-foreground text-center py-8">Loading...</p>
+        <p className="text-slate-400 text-center py-8">Loading...</p>
       ) : budgets.length === 0 ? (
         <div className="text-center py-16">
-          <PiggyBank className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-lg font-semibold mb-1">No budgets yet</h2>
-          <p className="text-muted-foreground text-sm">Create a budget to start tracking your spending.</p>
+          <PiggyBank className="h-12 w-12 mx-auto text-slate-500 mb-4" />
+          <h2 className="text-lg font-semibold mb-1 text-slate-100">No budgets yet</h2>
+          <p className="text-slate-400 text-sm">Create a budget to start tracking your spending.</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -217,15 +217,15 @@ export default function BudgetsPage() {
             const remaining = budget.remaining ? parseFloat(budget.remaining) : parseFloat(budget.amount)
 
             return (
-              <Card key={budget.id} className="card-hover group">
+              <Card key={budget.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-200 group">
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
-                    <div className={`p-2 rounded-lg ${remaining >= 0 ? "bg-emerald-500" : percentage >= 90 ? "bg-destructive" : "bg-accent"} text-white`}>
+                    <div className={`p-2 rounded-lg ${remaining >= 0 ? "bg-teal-500" : percentage >= 90 ? "bg-red-500" : "bg-blue-600"} text-white transition-colors duration-200`}>
                       {getProgressIcon(percentage)}
                     </div>
                     <div>
-                      <CardTitle className="text-base group-hover:text-primary transition-colors">{budget.name}</CardTitle>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <CardTitle className="text-base group-hover:text-blue-400 transition-colors">{budget.name}</CardTitle>
+                      <p className="text-xs text-slate-400 mt-1">
                         {budget.category?.name} · {budget.period}
                       </p>
                     </div>
@@ -233,7 +233,7 @@ export default function BudgetsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground hover:text-destructive -mt-1"
+                    className="text-slate-400 hover:text-red-400 -mt-1"
                     onClick={() => handleDelete(budget.id)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -241,14 +241,14 @@ export default function BudgetsPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
+                    <span className="text-slate-400">
                       {formatCurrency(spent)} spent
                     </span>
                     <span className="font-medium">
                       {formatCurrency(budget.amount)}
                     </span>
                   </div>
-                  <div className="h-4 bg-zinc-600 rounded-full overflow-hidden">
+                  <div className="h-4 bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColour(percentage)} progress-bar-fill`}
                       style={{ width: `${percentage}%` }}
@@ -260,7 +260,7 @@ export default function BudgetsPage() {
                         ? `${formatCurrency(remaining)} remaining`
                         : `${formatCurrency(Math.abs(remaining))} over budget`}
                     </p>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-slate-400">
                       {percentage.toFixed(1)}% used
                     </div>
                   </div>

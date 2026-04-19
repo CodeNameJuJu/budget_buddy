@@ -83,8 +83,8 @@ export default function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Categories</h1>
-          <p className="text-muted-foreground">Organise your transactions</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-100">Categories</h1>
+          <p className="text-slate-400">Organise your transactions</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -119,14 +119,14 @@ export default function CategoriesPage() {
 
       {/* Add category form */}
       {showForm && (
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle>New category</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium text-slate-300">Name</label>
                 <Input
                   placeholder="e.g. Groceries"
                   value={form.name}
@@ -135,7 +135,7 @@ export default function CategoriesPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Type</label>
+                <label className="text-sm font-medium text-slate-300">Type</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={form.type}
@@ -146,7 +146,7 @@ export default function CategoriesPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Colour</label>
+                <label className="text-sm font-medium text-slate-300">Colour</label>
                 <div className="flex gap-1.5 flex-wrap">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -163,7 +163,7 @@ export default function CategoriesPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Icon (emoji)</label>
+                <label className="text-sm font-medium text-slate-300">Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 🛒"
                   value={form.icon}
@@ -184,18 +184,18 @@ export default function CategoriesPage() {
 
       {/* Categories */}
       {loading ? (
-        <p className="text-muted-foreground text-center py-8">Loading...</p>
+        <p className="text-slate-400 text-center py-8">Loading...</p>
       ) : categories.length === 0 ? (
         <div className="text-center py-16">
-          <Tags className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-lg font-semibold mb-1">No categories yet</h2>
-          <p className="text-muted-foreground text-sm">Create categories to organise your transactions.</p>
+          <Tags className="h-12 w-12 mx-auto text-slate-500 mb-4" />
+          <h2 className="text-lg font-semibold mb-1 text-slate-100">No categories yet</h2>
+          <p className="text-slate-400 text-sm">Create categories to organise your transactions.</p>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Income categories */}
           {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
-            <Card>
+            <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Badge variant="income">Income</Badge>
@@ -207,7 +207,7 @@ export default function CategoriesPage() {
                   {incomeCategories.map((cat) => (
                     <div
                       key={cat.id}
-                      className="flex items-center justify-between p-3 rounded-md border hover:bg-accent/50 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-md border border-slate-700 hover:bg-blue-900/20 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -221,7 +221,7 @@ export default function CategoriesPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-muted-foreground hover:text-destructive"
+                        className="text-slate-400 hover:text-red-400"
                         onClick={() => handleDelete(cat.id)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -235,7 +235,7 @@ export default function CategoriesPage() {
 
           {/* Expense categories */}
           {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
-            <Card>
+            <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Badge variant="expense">Expense</Badge>
@@ -247,7 +247,7 @@ export default function CategoriesPage() {
                   {expenseCategories.map((cat) => (
                     <div
                       key={cat.id}
-                      className="flex items-center justify-between p-3 rounded-md border hover:bg-accent/50 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-md border border-slate-700 hover:bg-blue-900/20 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -261,7 +261,7 @@ export default function CategoriesPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-muted-foreground hover:text-destructive"
+                        className="text-slate-400 hover:text-red-400"
                         onClick={() => handleDelete(cat.id)}
                       >
                         <Trash2 className="h-4 w-4" />
