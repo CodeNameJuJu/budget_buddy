@@ -110,11 +110,11 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="space-y-4 lg:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-3 xs:space-y-4 lg:space-y-6">
+      <div className="responsive-flex responsive-margin">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold tracking-tight">Transactions</h1>
-          <p className="text-muted-foreground text-sm lg:text-base">{count} transaction{count !== 1 ? "s" : ""}</p>
+          <h1 className="mobile-title tracking-tight">Transactions</h1>
+          <p className="mobile-text text-muted-foreground">{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -122,17 +122,19 @@ export default function TransactionsPage() {
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
             className="mobile-button"
           >
-            <Settings className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Advanced</span>
+            <Settings className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
+            <span className="hidden sm:inline ml-2">Advanced</span>
           </Button>
         </div>
       </div>
 
       {/* Quick Add Transaction - Always Visible */}
-      <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
+      <div className="responsive-margin">
+        <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
+      </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 responsive-margin">
         <Button
           variant={filterType === "" ? "default" : "outline"}
           size="sm"
@@ -161,89 +163,95 @@ export default function TransactionsPage() {
 
       {/* Advanced transaction form */}
       {showAdvancedForm && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Advanced Transaction Entry</CardTitle>
+        <Card className="mobile-card">
+          <CardHeader className="responsive-padding">
+            <CardTitle className="mobile-title">Advanced Transaction Entry</CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Amount</label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={form.amount}
-                  onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                  required
-                />
+          <CardContent className="responsive-padding">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Amount</label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    value={form.amount}
+                    onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                    className="responsive-input"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Type</label>
+                  <select
+                    className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
+                    value={form.type}
+                    onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
+                  >
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Date</label>
+                  <Input
+                    type="date"
+                    value={form.date}
+                    onChange={(e) => setForm({ ...form, date: e.target.value })}
+                    className="responsive-input"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Account Type</label>
+                  <select
+                    className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
+                    value={form.account_type}
+                    onChange={(e) => setForm({ ...form, account_type: e.target.value as "checking" | "savings" })}
+                  >
+                    <option value="checking">Checking Account</option>
+                    <option value="savings">Savings Account</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Description</label>
+                  <Input
+                    placeholder="e.g. Grocery shopping"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    className="responsive-input"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Category</label>
+                  <select
+                    className="flex responsive-input rounded-md border border-input bg-transparent px-3 py-1 mobile-text shadow-sm"
+                    value={form.category_id}
+                    onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                  >
+                    <option value="">No category</option>
+                    {categories
+                      .filter((c) => c.type === form.type)
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="mobile-text font-medium">Notes</label>
+                  <Input
+                    placeholder="Optional notes"
+                    value={form.notes}
+                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                    className="responsive-input"
+                  />
+                </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Type</label>
-                <select
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
-                >
-                  <option value="expense">Expense</option>
-                  <option value="income">Income</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Date</label>
-                <Input
-                  type="date"
-                  value={form.date}
-                  onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Account Type</label>
-                <select
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-                  value={form.account_type}
-                  onChange={(e) => setForm({ ...form, account_type: e.target.value as "checking" | "savings" })}
-                >
-                  <option value="checking">Checking Account</option>
-                  <option value="savings">Savings Account</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Description</label>
-                <Input
-                  placeholder="e.g. Grocery shopping"
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Category</label>
-                <select
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-                  value={form.category_id}
-                  onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-                >
-                  <option value="">No category</option>
-                  {categories
-                    .filter((c) => c.type === form.type)
-                    .map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Notes</label>
-                <Input
-                  placeholder="Optional notes"
-                  value={form.notes}
-                  onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2 sm:col-span-2 lg:col-span-3">
-                <label className="text-sm font-medium">Tags</label>
+                <label className="mobile-text font-medium">Tags</label>
                 <TagInput
                   value={form.tags}
                   onChange={(tags) => setForm({ ...form, tags })}
@@ -251,9 +259,9 @@ export default function TransactionsPage() {
                   suggestions={popularTags.map(tag => tag.tag)}
                 />
               </div>
-              <div className="sm:col-span-2 lg:col-span-3 flex gap-2">
-                <Button type="submit">Save transaction</Button>
-                <Button type="button" variant="outline" onClick={() => setShowAdvancedForm(false)}>
+              <div className="flex flex-col xs:flex-row gap-2">
+                <Button type="submit" className="mobile-button">Save transaction</Button>
+                <Button type="button" variant="outline" onClick={() => setShowAdvancedForm(false)} className="mobile-button">
                   Cancel
                 </Button>
               </div>
@@ -263,68 +271,70 @@ export default function TransactionsPage() {
       )}
 
       {/* Transactions list */}
-      <Card>
+      <Card className="mobile-card">
         <CardContent className="p-0">
           {loading ? (
-            <p className="text-muted-foreground text-center py-8">Loading...</p>
+            <p className="mobile-text text-muted-foreground text-center py-6 xs:py-8">Loading...</p>
           ) : transactions.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">No transactions found</p>
+            <p className="mobile-text text-muted-foreground text-center py-6 xs:py-8">No transactions found</p>
           ) : (
             <div className="divide-y">
               {transactions.map((t) => (
-                <div key={t.id} className="px-4 lg:px-6 py-4 hover:bg-accent/50 transition-colors">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2 sm:mb-0">
-                        <p className="text-sm font-medium truncate">
-                          {t.description || "Untitled transaction"}
-                        </p>
-                        <Badge variant={t.type === "income" ? "income" : "expense"} className="text-xs">
-                          {t.type}
-                        </Badge>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                        <span>{formatDate(t.date)}</span>
-                        {t.category && (
-                          <>
-                            <span>·</span>
-                            <span>{t.category.name}</span>
-                          </>
-                        )}
-                        {t.tags && (
-                          <>
-                            <span>·</span>
-                            <div className="flex items-center gap-1">
-                              <TagIcon className="h-3 w-3" />
-                              <div className="flex gap-1 flex-wrap">
-                                {JSON.parse(t.tags).slice(0, 2).map((tag: string, index: number) => (
-                                  <Badge key={index} variant="outline" className="text-xs px-1 py-0">
-                                    {tag}
-                                  </Badge>
-                                ))}
-                                {JSON.parse(t.tags).length > 2 && (
-                                  <Badge variant="outline" className="text-xs px-1 py-0">
-                                    +{JSON.parse(t.tags).length - 2}
-                                  </Badge>
-                                )}
+                <div key={t.id} className="px-3 xs:px-4 lg:px-6 py-3 xs:py-4 hover:bg-accent/50 transition-colors">
+                  <div className="flex flex-col gap-2 xs:gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col xs:flex-row xs:items-center gap-2 mb-1">
+                          <p className="mobile-text font-medium truncate">
+                            {t.description || "Untitled transaction"}
+                          </p>
+                          <Badge variant={t.type === "income" ? "income" : "expense"} className="text-xs">
+                            {t.type}
+                          </Badge>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                          <span>{formatDate(t.date)}</span>
+                          {t.category && (
+                            <>
+                              <span>·</span>
+                              <span>{t.category.name}</span>
+                            </>
+                          )}
+                          {t.tags && (
+                            <>
+                              <span>·</span>
+                              <div className="flex items-center gap-1">
+                                <TagIcon className="h-3 w-3" />
+                                <div className="flex gap-1 flex-wrap">
+                                  {JSON.parse(t.tags).slice(0, 2).map((tag: string, index: number) => (
+                                    <Badge key={index} variant="outline" className="text-xs px-1 py-0">
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                  {JSON.parse(t.tags).length > 2 && (
+                                    <Badge variant="outline" className="text-xs px-1 py-0">
+                                      +{JSON.parse(t.tags).length - 2}
+                                    </Badge>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          </>
-                        )}
+                            </>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
-                        {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-destructive mobile-button"
-                        onClick={() => handleDelete(t.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className={`mobile-text font-semibold ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
+                          {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground hover:text-destructive mobile-button-sm"
+                          onClick={() => handleDelete(t.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

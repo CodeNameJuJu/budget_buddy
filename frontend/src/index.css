@@ -96,7 +96,7 @@
     box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
   }
   
-  /* Mobile-specific utilities */
+  /* Comprehensive responsive utilities */
   .mobile-scroll {
     -webkit-overflow-scrolling: touch;
   }
@@ -104,6 +104,8 @@
   .mobile-safe-area {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
   
   .mobile-full-width {
@@ -114,8 +116,21 @@
   /* Responsive grid helpers */
   .grid-responsive {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
+  }
+  
+  .grid-responsive-xs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  @media (max-width: 375px) {
+    .grid-responsive-xs {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
   }
   
   @media (max-width: 640px) {
@@ -125,9 +140,13 @@
     }
   }
   
-  /* Mobile card improvements */
+  /* Responsive card improvements */
   .mobile-card {
-    @apply rounded-lg border bg-card p-4 shadow-sm;
+    @apply rounded-lg border bg-card p-4 shadow-sm transition-all duration-200;
+  }
+  
+  .mobile-card:hover {
+    @apply shadow-md transform -translate-y-1;
   }
   
   @media (max-width: 640px) {
@@ -136,19 +155,163 @@
     }
   }
   
-  /* Touch-friendly buttons */
-  .mobile-button {
-    @apply min-h-[44px] min-w-[44px];
+  @media (max-width: 375px) {
+    .mobile-card {
+      @apply p-2.5;
+    }
   }
   
-  /* Mobile text improvements */
+  /* Touch-friendly buttons */
+  .mobile-button {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+  
+  .mobile-button-sm {
+    @apply min-h-[40px] min-w-[40px] flex items-center justify-center;
+  }
+  
+  @media (max-width: 375px) {
+    .mobile-button {
+      @apply min-h-[48px] min-w-[48px];
+    }
+  }
+  
+  /* Responsive text improvements */
   .mobile-title {
-    @apply text-lg font-bold;
+    @apply text-xl font-bold;
+  }
+  
+  .mobile-subtitle {
+    @apply text-lg font-semibold;
+  }
+  
+  .mobile-text {
+    @apply text-sm;
   }
   
   @media (max-width: 640px) {
     .mobile-title {
+      @apply text-lg;
+    }
+    .mobile-subtitle {
       @apply text-base;
+    }
+    .mobile-text {
+      @apply text-xs;
+    }
+  }
+  
+  @media (max-width: 375px) {
+    .mobile-title {
+      @apply text-base;
+    }
+    .mobile-subtitle {
+      @apply text-sm;
+    }
+  }
+  
+  /* Responsive spacing */
+  .responsive-padding {
+    @apply p-4;
+  }
+  
+  .responsive-margin {
+    @apply m-4;
+  }
+  
+  @media (min-width: 640px) {
+    .responsive-padding {
+      @apply p-6;
+    }
+    .responsive-margin {
+      @apply m-6;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .responsive-padding {
+      @apply p-8;
+    }
+    .responsive-margin {
+      @apply m-8;
+    }
+  }
+  
+  /* Responsive containers */
+  .responsive-container {
+    @apply w-full max-w-7xl mx-auto px-4;
+  }
+  
+  @media (min-width: 640px) {
+    .responsive-container {
+      @apply px-6;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .responsive-container {
+      @apply px-8;
+    }
+  }
+  
+  /* Responsive flex utilities */
+  .responsive-flex {
+    @apply flex flex-col;
+  }
+  
+  @media (min-width: 640px) {
+    .responsive-flex {
+      @apply flex-row;
+    }
+  }
+  
+  /* Responsive hidden/visible utilities */
+  .mobile-only {
+    @apply block;
+  }
+  
+  .desktop-only {
+    @apply hidden;
+  }
+  
+  @media (min-width: 1024px) {
+    .mobile-only {
+      @apply hidden;
+    }
+    .desktop-only {
+      @apply block;
+    }
+  }
+  
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .tablet-only {
+      @apply block;
+    }
+  }
+  
+  /* Responsive form elements */
+  .responsive-input {
+    @apply w-full h-10;
+  }
+  
+  @media (min-width: 640px) {
+    .responsive-input {
+      @apply h-9;
+    }
+  }
+  
+  /* Responsive tables */
+  .responsive-table {
+    @apply block overflow-x-auto;
+  }
+  
+  .responsive-table table {
+    @apply min-w-full;
+  }
+  
+  @media (max-width: 640px) {
+    .responsive-table {
+      @apply text-xs;
     }
   }
 }
