@@ -162,14 +162,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log('Response content-type:', response.headers.get('content-type'));
       
       let data: AuthResponse;
+      let responseText: string;
+      
       try {
-        data = await response.json();
+        responseText = await response.text();
+        console.log('Raw login response:', responseText);
+        data = JSON.parse(responseText);
         console.log('Parsed login data:', data);
       } catch (e) {
         console.error('JSON parse error in login:', e);
-        // Try to get the raw text to see what we received
-        const responseText = await response.text();
-        console.error('Response text:', responseText);
+        console.error('Response text:', responseText || 'No response text available');
         throw new Error('Invalid response format from server');
       }
       setTokens(data);
