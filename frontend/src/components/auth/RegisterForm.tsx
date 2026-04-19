@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks';
+import { useAuth } from '../../hooks';
 
 interface RegisterFormData {
   email: string;
