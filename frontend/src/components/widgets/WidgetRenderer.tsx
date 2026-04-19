@@ -4,6 +4,8 @@ import { AlertCircle } from "lucide-react"
 import type { Widget } from "@/lib/api"
 
 // Lazy load widget components to improve performance
+const WelcomeWidget = lazy(() => import("./WelcomeWidget"))
+const GettingStartedWidget = lazy(() => import("./GettingStartedWidget"))
 const BalanceWidget = lazy(() => import("./BalanceWidget"))
 const RecentTransactionsWidget = lazy(() => import("./RecentTransactionsWidget"))
 const BudgetProgressWidget = lazy(() => import("./BudgetProgressWidget"))
@@ -37,6 +39,20 @@ interface WidgetRendererProps {
 export default function WidgetRenderer({ widget, accountId }: WidgetRendererProps) {
   const renderWidget = () => {
     switch (widget.type) {
+      case "welcome":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Welcome" />}>
+            <WelcomeWidget />
+          </Suspense>
+        )
+      
+      case "getting_started":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Getting Started" />}>
+            <GettingStartedWidget />
+          </Suspense>
+        )
+      
       case "balance":
         return (
           <Suspense fallback={<WidgetSkeleton title="Account Balance" />}>

@@ -12,8 +12,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'https://budgetbuddy-production-b70f.up.railway.app',
         changeOrigin: true,
+        secure: true,
       },
     },
   },

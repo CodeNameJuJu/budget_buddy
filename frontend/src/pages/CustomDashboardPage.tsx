@@ -2,12 +2,12 @@ import { useEffect, useState } from "react"
 import { LayoutDashboard } from "lucide-react"
 import WidgetRenderer from "@/components/widgets/WidgetRenderer"
 import { dashboardApi, type Widget, type DashboardLayout } from "@/lib/api"
-
-const ACCOUNT_ID = 1
+import { useAuth } from "@/hooks"
 
 export default function CustomDashboardPage() {
   const [widgets, setWidgets] = useState<Widget[]>([])
   const [loading, setLoading] = useState(true)
+  const { user } = useAuth()
 
   useEffect(() => {
     loadDashboard()
@@ -16,7 +16,10 @@ export default function CustomDashboardPage() {
   async function loadDashboard() {
     setLoading(true)
     try {
-      const response = await dashboardApi.getLayout(ACCOUNT_ID)
+      // For now, use a default account ID since we don't have account management yet
+      // TODO: Update this when account management is implemented
+      const accountId = 1
+      const response = await dashboardApi.getLayout(accountId)
       
       // Parse widgets from layout
       if (response.data?.layout) {
@@ -25,6 +28,7 @@ export default function CustomDashboardPage() {
       }
     } catch (error) {
       console.error("Failed to load dashboard", error)
+      // Don't show error to user, just use default widgets
     } finally {
       setLoading(false)
     }
@@ -34,20 +38,20 @@ export default function CustomDashboardPage() {
   function getCustomLayout(): Widget[] {
     return [
       {
-        id: "balance-1",
-        type: "balance",
-        title: "Account Balance",
-        size: "medium",
-        position: { x: 0, y: 0, w: 12, h: 3 },
+        id: "welcome-1",
+        type: "welcome",
+        title: "Welcome to Budget Buddy",
+        size: "large",
+        position: { x: 0, y: 0, w: 12, h: 4 },
         is_visible: true,
         updated_at: ""
       },
       {
-        id: "budget-progress-1",
-        type: "budget_progress",
-        title: "Budget Progress",
+        id: "getting-started-1",
+        type: "getting_started",
+        title: "Getting Started",
         size: "medium",
-        position: { x: 0, y: 3, w: 12, h: 4 },
+        position: { x: 0, y: 4, w: 12, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -135,7 +139,7 @@ export default function CustomDashboardPage() {
               gridRow: `span ${widget.position.h}`,
             }}
           >
-            <WidgetRenderer widget={widget} accountId={ACCOUNT_ID} />
+            <WidgetRenderer widget={widget} accountId={1} />
           </div>
         ))}
       </div>
