@@ -25,16 +25,19 @@ func ConnectToDatabase() {
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
 		// For Railway, ensure SSL mode is properly set
 		if os.Getenv("RAILWAY_ENVIRONMENT") != "" {
-			// Railway environment - ensure SSL is disabled for Railway internal connections
+			// Railway environment - use require SSL for Railway PostgreSQL
 			if !strings.Contains(databaseURL, "sslmode=") {
-				dsn = databaseURL + "?sslmode=disable"
+				dsn = databaseURL + "?sslmode=require"
 			} else {
-				dsn = databaseURL
+				// Replace existing sslmode with require
+				dsn = strings.Replace(databaseURL, "sslmode=disable", "sslmode=require", 1)
+				dsn = strings.Replace(dsn, "sslmode=allow", "sslmode=require", 1)
 			}
 		} else {
 			dsn = databaseURL
 		}
 		fmt.Printf("Using DATABASE_URL: %s\n", maskPassword(databaseURL))
+		fmt.Printf("Final DSN: %s\n", maskPassword(dsn))
 	} else {
 		// Build connection string from individual components
 		sslmode := os.Getenv("DB_SSLMODE")
