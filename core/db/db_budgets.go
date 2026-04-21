@@ -32,6 +32,10 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 	for i := range budgets {
 		spent, calcErr := calculateBudgetSpent(budgets[i].CategoryID, budgets[i].AccountID, budgets[i].StartDate, budgets[i].EndDate)
 		if calcErr != nil {
+			// If calculation fails, set spent to 0 instead of skipping
+			zero := decimal.Zero
+			budgets[i].Spent = &zero
+			budgets[i].Remaining = &budgets[i].Amount
 			continue
 		}
 		remaining := budgets[i].Amount.Sub(spent)
