@@ -16,9 +16,8 @@ import {
 } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
 
-const ACCOUNT_ID = 1
-
 export default function TransactionsPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [popularTags, setPopularTags] = useState<PopularTag[]>([])
@@ -39,19 +38,38 @@ export default function TransactionsPage() {
   })
 
   useEffect(() => {
-    loadData()
-  }, [filterType])
+    loadUserAccount()
+  }, [])
+
+  useEffect(() => {
+    if (accountId) {
+      loadData()
+    }
+  }, [accountId, filterType])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
 
   async function loadData() {
+    if (!accountId) return
+    
     setLoading(true)
     try {
       const params: Record<string, string> = {}
       if (filterType) params.type = filterType
 
       const [txRes, catRes, tagsRes] = await Promise.all([
-        transactionsApi.list(ACCOUNT_ID, params),
-        categoriesApi.list(ACCOUNT_ID),
-        tagsApi.popular(ACCOUNT_ID),
+        transactionsApi.list(accountId, params),
+        categoriesApi.list(accountId),
+        tagsApi.popular(accountId),
       ])
       setTransactions(txRes.data || [])
       setCount(txRes.count)

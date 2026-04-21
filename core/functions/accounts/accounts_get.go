@@ -9,6 +9,9 @@ import (
 )
 
 func GETAccount(w http.ResponseWriter, r *http.Request) {
+	// Get user ID from context (set by auth middleware)
+	userID := r.Context().Value("user_id").(int64)
+
 	var accountID *int64
 	if idStr := r.URL.Query().Get("id"); idStr != "" {
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -19,7 +22,7 @@ func GETAccount(w http.ResponseWriter, r *http.Request) {
 		accountID = &id
 	}
 
-	accounts, count, err := db.QueryAccounts(accountID)
+	accounts, count, err := db.QueryAccounts(accountID, &userID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not query accounts")
 		return

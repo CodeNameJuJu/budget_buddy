@@ -8,19 +8,28 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
-func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
+func QueryAccounts(accountID *int64, userID *int64) ([]types.Account, int, error) {
 	db := appcontext.GetDb()
 	var accounts []types.Account
 
 	query := db.NewSelect().Model(&accounts).
-		Where("a.deleted_date IS NULL")
+		Where("a.deleted_date IS NULL").
+		Order("a.name ASC")
 
 	if accountID != nil {
 		query = query.Where("a.id = ?", *accountID)
 	}
 
+	if userID != nil {
+		query = query.Where("a.user_id = ?", *userID)
+	}
+
 	count, err := query.ScanAndCount(context.Background())
-	return accounts, count, err
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return accounts, count, nil
 }
 
 func InsertAccount(account *types.Account) error {
