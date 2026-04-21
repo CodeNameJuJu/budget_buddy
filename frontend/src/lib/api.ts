@@ -175,7 +175,7 @@ export const accountsApi = {
   update: (id: number, data: Partial<Account>) =>
     patch<APIResponse<Account>>(`/accounts/${id}`, data),
   // Get the authenticated user's account
-  getMyAccount: () => get<APIResponse<Account[]>>("/accounts"),
+  getMyAccount: () => get<APIResponse<Account[]>>("/accounts/my"),
 }
 
 // Category API

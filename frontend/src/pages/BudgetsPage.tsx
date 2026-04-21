@@ -32,6 +32,17 @@ export default function BudgetsPage() {
     }
   }, [accountId])
 
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
+
   async function loadData() {
     if (!accountId) return
     

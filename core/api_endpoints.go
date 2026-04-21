@@ -56,6 +56,7 @@ func RegisterRoutes(r chi.Router) {
 		/* ----------- ACCOUNTS ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/accounts", accounts.GETAccount)
+			r.Get("/accounts/my", accounts.GETMyAccount)
 			r.Post("/accounts", accounts.POSTAccount)
 			r.Patch("/accounts/{id}", accounts.PATCHAccount)
 		})

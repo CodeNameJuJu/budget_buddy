@@ -78,10 +78,10 @@ export default function PartnerInvitation() {
 
   async function loadData() {
     try {
-      // This would be implemented in your API
-      // const response = await couplesApi.getUserPartnerships()
-      // setPartnerships(response.data.partnerships)
-      // setPendingInvitations(response.data.pending_invitations)
+      // TODO: Implement couples API endpoints
+      // For now, show empty state with message
+      setPartnerships([])
+      setPendingInvitations([])
     } catch (error) {
       console.error("Failed to load partnerships", error)
     } finally {
@@ -179,11 +179,17 @@ export default function PartnerInvitation() {
                     <SelectValue placeholder="Select a partnership" />
                   </SelectTrigger>
                   <SelectContent>
-                    {partnerships.map((partnership) => (
-                      <SelectItem key={partnership.id} value={partnership.id.toString()}>
-                        {partnership.name}
+                    {partnerships.length === 0 ? (
+                      <SelectItem value="" disabled>
+                        No partnerships available - Create one first
                       </SelectItem>
-                    ))}
+                    ) : (
+                      partnerships.map((partnership) => (
+                        <SelectItem key={partnership.id} value={partnership.id.toString()}>
+                          {partnership.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>

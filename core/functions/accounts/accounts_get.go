@@ -30,3 +30,17 @@ func GETAccount(w http.ResponseWriter, r *http.Request) {
 
 	helpers.RespondData(w, accounts, count)
 }
+
+func GETMyAccount(w http.ResponseWriter, r *http.Request) {
+	// Get user ID from context (set by auth middleware)
+	userID := r.Context().Value("user_id").(int64)
+
+	// Query accounts for the current user only
+	accounts, count, err := db.QueryAccounts(nil, &userID)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not query user accounts")
+		return
+	}
+
+	helpers.RespondData(w, accounts, count)
+}
