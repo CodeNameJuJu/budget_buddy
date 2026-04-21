@@ -3,17 +3,11 @@ import { Plus, Trash2, PiggyBank, Target, Sparkles } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  budgetsApi,
-  categoriesApi,
-  type Budget,
-  type Category,
-} from "@/lib/api"
+import { budgetsApi, categoriesApi, accountsApi, type Budget, type Category, type Account } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
 
-const ACCOUNT_ID = 1
-
 export default function BudgetsPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -29,15 +23,23 @@ export default function BudgetsPage() {
   })
 
   useEffect(() => {
-    loadData()
+    loadUserAccount()
   }, [])
 
+  useEffect(() => {
+    if (accountId) {
+      loadData()
+    }
+  }, [accountId])
+
   async function loadData() {
+    if (!accountId) return
+    
     setLoading(true)
     try {
       const [budRes, catRes] = await Promise.all([
-        budgetsApi.list(ACCOUNT_ID),
-        categoriesApi.list(ACCOUNT_ID, "expense"),
+        budgetsApi.list(accountId),
+        categoriesApi.list(accountId, "expense"),
       ])
       setBudgets(budRes.data || [])
       setCategories(catRes.data || [])
@@ -50,9 +52,11 @@ export default function BudgetsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!accountId) return
+    
     try {
       await budgetsApi.create({
-        account_id: ACCOUNT_ID,
+        account_id: accountId,
         category_id: Number(form.category_id),
         name: form.name,
         amount: form.amount,

@@ -9,6 +9,7 @@ import CategoriesPage from "./pages/CategoriesPage"
 import SavingsPage from "./pages/SavingsPage"
 import AnalyticsPage from "./pages/AnalyticsPage"
 import AlertsPage from "./pages/AlertsPage"
+import PartnersPage from "./pages/PartnersPage"
 import { LoginForm } from "./components/auth/LoginForm"
 import { RegisterForm } from "./components/auth/RegisterForm"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
@@ -63,6 +64,11 @@ export default function App() {
           <Route path="/alerts" element={
             <ProtectedRoute>
               <AlertsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/partners" element={
+            <ProtectedRoute>
+              <PartnersPage />
             </ProtectedRoute>
           } />
         </Route>

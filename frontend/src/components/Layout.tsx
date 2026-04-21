@@ -9,6 +9,7 @@ import {
   Landmark,
   BarChart3,
   Bell,
+  Users,
   Menu,
   X,
   ChevronLeft,
@@ -23,6 +24,7 @@ const navItems = [
   { to: "/categories", icon: Tags, label: "Categories" },
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
+  { to: "/partners", icon: Users, label: "Partners" },
 ]
 
 export default function Layout() {

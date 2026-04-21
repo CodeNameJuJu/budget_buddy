@@ -84,9 +84,11 @@ export default function TransactionsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!accountId) return
+    
     try {
       await transactionsApi.create({
-        account_id: ACCOUNT_ID,
+        account_id: accountId,
         amount: form.amount,
         type: form.type,
         description: form.description || undefined,
