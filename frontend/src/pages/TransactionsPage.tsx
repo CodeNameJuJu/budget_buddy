@@ -129,7 +129,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* Quick Add Transaction - Always Visible */}
-      <div className="responsive-margin ml-auto">
+      <div className="responsive-margin justify-end">
         <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
       </div>
 
