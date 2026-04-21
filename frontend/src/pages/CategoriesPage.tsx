@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus, Trash2, Tags } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { categoriesApi, type Category } from "@/lib/api"
-
-const ACCOUNT_ID = 1
+import { categoriesApi, accountsApi, type Category, type Account } from "@/lib/api"
 
 const COLOUR_OPTIONS = [
   { label: "Blue", value: "#3b82f6" },
@@ -20,6 +18,7 @@ const COLOUR_OPTIONS = [
 ]
 
 export default function CategoriesPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -33,13 +32,32 @@ export default function CategoriesPage() {
   })
 
   useEffect(() => {
-    loadCategories()
-  }, [filterType])
+    loadUserAccount()
+  }, [])
+
+  useEffect(() => {
+    if (accountId) {
+      loadCategories()
+    }
+  }, [accountId, filterType])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
 
   async function loadCategories() {
+    if (!accountId) return
+    
     setLoading(true)
     try {
-      const res = await categoriesApi.list(ACCOUNT_ID, filterType || undefined)
+      const res = await categoriesApi.list(accountId, filterType || undefined)
       setCategories(res.data || [])
     } catch {
       console.error("Failed to load categories")
@@ -50,9 +68,11 @@ export default function CategoriesPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!accountId) return
+    
     try {
       await categoriesApi.create({
-        account_id: ACCOUNT_ID,
+        account_id: accountId,
         name: form.name,
         type: form.type,
         colour: form.colour || undefined,

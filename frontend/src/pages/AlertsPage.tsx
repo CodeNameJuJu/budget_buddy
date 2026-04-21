@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react"
-import { Bell, BellOff, Check, Settings, Info, AlertTriangle, AlertCircle, X } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Bell, CheckCircle, AlertTriangle, Info } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { alertsApi, type Alert, type AlertPreference } from "@/lib/api"
+import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
 
-const ACCOUNT_ID = 1
-
 export default function AlertsPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [preferences, setPreferences] = useState<AlertPreference[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,21 +16,40 @@ export default function AlertsPage() {
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
-    loadData()
+    loadUserAccount()
   }, [])
 
+  useEffect(() => {
+    if (accountId) {
+      loadData()
+    }
+  }, [accountId])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
+
   async function loadData() {
+    if (!accountId) return
+    
     setLoading(true)
     try {
       const [alertsRes, prefsRes] = await Promise.all([
-        alertsApi.list(ACCOUNT_ID),
-        alertsApi.getPreferences(ACCOUNT_ID),
+        alertsApi.list(accountId),
+        alertsApi.getPreferences(accountId),
       ])
       setAlerts(alertsRes.data || [])
       setPreferences(prefsRes.data || [])
       setUnreadCount(alertsRes.data?.filter(a => !a.is_read).length || 0)
-    } catch (error) {
-      console.error("Failed to load alerts", error)
+    } catch {
+      console.error("Failed to load alerts")
     } finally {
       setLoading(false)
     }
@@ -52,25 +68,29 @@ export default function AlertsPage() {
   }
 
   async function markAllAsRead() {
+    if (!accountId) return
+    
     try {
-      await alertsApi.markAllAsRead(ACCOUNT_ID)
+      await alertsApi.markAllAsRead(accountId)
       setAlerts(alerts.map(alert => ({ ...alert, is_read: true })))
       setUnreadCount(0)
     } catch (error) {
-      console.error("Failed to mark all alerts as read", error)
+      console.error("Failed to mark all as read", error)
     }
   }
 
   async function updatePreference(preference: AlertPreference) {
+    if (!accountId) return
+    
     try {
       const updated = await alertsApi.updatePreference({
-        account_id: ACCOUNT_ID,
+        account_id: accountId,
         type: preference.type,
         enabled: preference.enabled,
         threshold: preference.threshold,
       })
       setPreferences(preferences.map(p => 
-        p.type === preference.type ? updated.data : p
+        p.id === preference.id ? updated.data : p
       ))
     } catch (error) {
       console.error("Failed to update preference", error)
@@ -78,8 +98,10 @@ export default function AlertsPage() {
   }
 
   async function triggerAlerts() {
+    if (!accountId) return
+    
     try {
-      await alertsApi.triggerAlerts(ACCOUNT_ID)
+      await alertsApi.triggerAlerts(accountId)
       loadData() // Reload alerts to show newly generated ones
     } catch (error) {
       console.error("Failed to trigger alerts", error)

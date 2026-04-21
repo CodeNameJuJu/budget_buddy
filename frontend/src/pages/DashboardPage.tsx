@@ -15,12 +15,11 @@ import {
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { dashboardApi, budgetsApi, savingsApi, alertsApi, type DashboardSummary, type Budget, type SavingsPot, type Alert } from "@/lib/api"
+import { dashboardApi, budgetsApi, savingsApi, alertsApi, accountsApi, type DashboardSummary, type Budget, type SavingsPot, type Alert, type Account } from "@/lib/api"
 import { formatCurrency, formatDate, formatPercentage } from "@/lib/utils"
 
-const ACCOUNT_ID = 1
-
 export default function DashboardPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [savings, setSavings] = useState<SavingsPot[]>([])
@@ -28,39 +27,51 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadSummary()
+    loadUserAccount()
   }, [])
 
+  useEffect(() => {
+    if (accountId) {
+      loadSummary()
+    }
+  }, [accountId])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
+
   async function loadSummary() {
+    if (!accountId) return
+    
     try {
       console.log("Loading dashboard data...")
       const [summaryRes, budgetsRes, savingsRes, alertsRes] = await Promise.all([
-        dashboardApi.summary(ACCOUNT_ID),
-        budgetsApi.list(ACCOUNT_ID),
-        savingsApi.listPots(ACCOUNT_ID),
-        alertsApi.list(ACCOUNT_ID, false, 5), // Get last 5 alerts
+        dashboardApi.summary(accountId),
+        budgetsApi.list(accountId),
+        savingsApi.listPots(accountId),
+        alertsApi.list(accountId, false, 5), // Get last 5 alerts
       ])
       
       console.log("API responses:", {
-        summary: summaryRes,
-        budgets: budgetsRes,
-        savings: savingsRes,
-        alerts: alertsRes
+        summary: summaryRes.data,
+        budgets: budgetsRes.data?.length,
+        savings: savingsRes.data?.length,
+        alerts: alertsRes.data?.length,
       })
       
       setSummary(summaryRes.data)
       setBudgets(budgetsRes.data || [])
       setSavings(savingsRes.data || [])
       setAlerts(alertsRes.data || [])
-      
-      console.log("State set:", {
-        summary: summaryRes.data,
-        budgets: budgetsRes.data,
-        savings: savingsRes.data,
-        alerts: alertsRes.data
-      })
     } catch (error) {
-      console.error("Failed to load dashboard", error)
+      console.error("Failed to load dashboard data", error)
     } finally {
       setLoading(false)
     }

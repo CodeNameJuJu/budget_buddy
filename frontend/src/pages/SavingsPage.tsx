@@ -1,29 +1,12 @@
-import { useEffect, useState } from "react"
-import {
-  Plus,
-  Trash2,
-  Landmark,
-  ArrowUpRight,
-  ArrowDownRight,
-  Check,
-  Pencil,
-  TrendingUp,
-  Calendar,
-} from "lucide-react"
+import { useState, useEffect } from "react"
+import { Plus, Trash2, PiggyBank, Target, TrendingUp } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import {
-  savingsApi,
-  type SavingsPot,
-  type SavingsAllocation,
-  type SavingsSummary,
-  type ForecastResponse,
-} from "@/lib/api"
+import { Progress } from "@/components/ui/progress"
+import { savingsApi, accountsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
-
-const ACCOUNT_ID = 1
 
 const COLOUR_OPTIONS = [
   { label: "Blue", value: "#3b82f6" },
@@ -37,6 +20,7 @@ const COLOUR_OPTIONS = [
 ]
 
 export default function SavingsPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [summary, setSummary] = useState<SavingsSummary | null>(null)
   const [allocations, setAllocations] = useState<SavingsAllocation[]>([])
   const [forecast, setForecast] = useState<ForecastResponse | null>(null)
@@ -70,16 +54,35 @@ export default function SavingsPage() {
   const [viewingPotID, setViewingPotID] = useState<number | null>(null)
 
   useEffect(() => {
-    loadData()
+    loadUserAccount()
   }, [])
 
+  useEffect(() => {
+    if (accountId) {
+      loadData()
+    }
+  }, [accountId])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
+
   async function loadData() {
+    if (!accountId) return
+    
     setLoading(true)
     try {
       const [summaryRes, allocRes, forecastRes] = await Promise.all([
-        savingsApi.summary(ACCOUNT_ID),
-        savingsApi.listAllocations(ACCOUNT_ID),
-        savingsApi.forecast(ACCOUNT_ID),
+        savingsApi.summary(accountId),
+        savingsApi.listAllocations(accountId),
+        savingsApi.forecast(accountId),
       ])
       setSummary(summaryRes.data)
       setAllocations(allocRes.data || [])
@@ -95,20 +98,24 @@ export default function SavingsPage() {
   }
 
   async function handleSaveBalance() {
+    if (!accountId) return
+    
     try {
-      await savingsApi.updateBalance(ACCOUNT_ID, balanceInput)
+      await savingsApi.updateBalance(accountId, balanceInput)
       setEditingBalance(false)
       loadData()
     } catch {
-      console.error("Failed to update savings balance")
+      console.error("Failed to update balance")
     }
   }
 
   async function handleCreatePot(e: React.FormEvent) {
     e.preventDefault()
+    if (!accountId) return
+    
     try {
       await savingsApi.createPot({
-        account_id: ACCOUNT_ID,
+        account_id: accountId,
         name: potForm.name,
         icon: potForm.icon || undefined,
         colour: potForm.colour || undefined,
@@ -142,7 +149,7 @@ export default function SavingsPage() {
         ? `-${allocForm.amount}`
         : allocForm.amount
       await savingsApi.createAllocation({
-        account_id: ACCOUNT_ID,
+        account_id: accountId,
         savings_pot_id: allocatingPotID,
         amount,
         notes: allocForm.notes || undefined,
