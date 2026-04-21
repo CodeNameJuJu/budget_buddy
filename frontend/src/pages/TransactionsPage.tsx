@@ -129,8 +129,10 @@ export default function TransactionsPage() {
       </div>
 
       {/* Quick Add Transaction - Always Visible */}
-      <div className="responsive-margin justify-end">
-        <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
+      <div className="responsive-margin flex justify-end">
+        <div className="w-full max-w-md">
+          <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
+        </div>
       </div>
 
       {/* Filters */}
