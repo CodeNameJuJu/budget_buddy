@@ -125,12 +125,14 @@ func RegisterRoutes(r chi.Router) {
 		/* ----------- GOALS ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/goals", goals.GETGoals)
+			r.Get("/goals/{id}", goals.GETGoals)
 			r.Post("/goals", goals.POSTGoal)
 			r.Patch("/goals/{id}", goals.PATCHGoal)
 			r.Delete("/goals/{id}", goals.DELETEGoal)
 		})
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/goals/contributions", goals.GETGoalContributions)
+			r.Get("/goals/contributions/{id}", goals.GETGoalContributions)
 			r.Post("/goals/contributions", goals.POSTGoalContribution)
 			r.Delete("/goals/contributions/{id}", goals.DELETEGoalContribution)
 			r.Get("/goals/summary", goals.GETGoalsSummary)
