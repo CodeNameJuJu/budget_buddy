@@ -79,7 +79,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	// Create associated account for the user
 	account := &types.Account{
-		UserID:   user.ID,
+		UserID:   int64(user.ID),
 		Name:     fmt.Sprintf("%s %s's Account", user.FirstName, user.LastName),
 		Email:    user.Email,
 		Currency: "ZAR",

@@ -29,7 +29,7 @@ func GetSharedAccountsForUser(userID int64) ([]types.SharedAccount, error) {
 // GetUserAccessibleAccounts returns both user's own accounts and shared accounts
 func GetUserAccessibleAccounts(userID int64) ([]types.Account, error) {
 	db := appcontext.GetDb()
-	
+
 	// Get user's own accounts
 	var ownAccounts []types.Account
 	err := db.NewSelect().
@@ -94,7 +94,7 @@ func ShareAccountWithPartnership(partnershipID int64, userID int64, accountID in
 		// Account already shared, update permissions
 		// Convert permissions to JSON string (simplified for now)
 		permissionsJSON := `{"can_view_accounts": true, "can_view_transactions": true, "can_add_transactions": true}`
-		
+
 		_, err = db.NewUpdate().
 			Model(&existingShared).
 			Set("permissions", permissionsJSON).
@@ -106,11 +106,11 @@ func ShareAccountWithPartnership(partnershipID int64, userID int64, accountID in
 
 	// Create new shared account entry
 	sharedAccount := &types.SharedAccount{
-		PartnershipID:  partnershipID,
-		AccountID:     accountID,
-		SharedByUserID: userID,
-		Permissions:   `{"can_view_accounts": true, "can_view_transactions": true, "can_add_transactions": true}`, // Default permissions
-		IsActive:      true,
+		PartnershipID:  int(partnershipID),
+		AccountID:      int(accountID),
+		SharedByUserID: int(userID),
+		Permissions:    `{"can_view_accounts": true, "can_view_transactions": true, "can_add_transactions": true}`, // Default permissions
+		IsActive:       true,
 	}
 
 	_, err = db.NewInsert().Model(sharedAccount).Exec(context.Background())
@@ -141,6 +141,6 @@ func CanUserAccessAccount(userID int64, accountID int64) (bool, error) {
 		Where("pm.user_id = ?", userID).
 		Where("shared_accounts.is_active = ?", true).
 		Scan(context.Background())
-	
+
 	return err == nil, nil
 }

@@ -64,6 +64,7 @@ func RegisterRoutes(r chi.Router) {
 		/* ----------- CATEGORIES ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/categories", categories.GETCategories)
+			r.Get("/categories/{id}", categories.GETCategories)
 			r.Post("/categories", categories.POSTCategory)
 			r.Patch("/categories/{id}", categories.PATCHCategory)
 			r.Delete("/categories/{id}", categories.DELETECategory)
@@ -72,6 +73,7 @@ func RegisterRoutes(r chi.Router) {
 		/* ----------- TRANSACTIONS ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/transactions", transactions.GETTransactions)
+			r.Get("/transactions/{id}", transactions.GETTransactions)
 			r.Post("/transactions", transactions.POSTTransaction)
 			r.Patch("/transactions/{id}", transactions.PATCHTransaction)
 			r.Delete("/transactions/{id}", transactions.DELETETransaction)
@@ -80,6 +82,7 @@ func RegisterRoutes(r chi.Router) {
 		/* ----------- BUDGETS ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/budgets", budgets.GETBudgets)
+			r.Get("/budgets/{id}", budgets.GETBudgets)
 			r.Post("/budgets", budgets.POSTBudget)
 			r.Patch("/budgets/{id}", budgets.PATCHBudget)
 			r.Delete("/budgets/{id}", budgets.DELETEBudget)
@@ -88,6 +91,7 @@ func RegisterRoutes(r chi.Router) {
 		/* ----------- SAVINGS ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/savings/pots", savings.GETSavingsPots)
+			r.Get("/savings/pots/{id}", savings.GETSavingsPots)
 			r.Post("/savings/pots", savings.POSTPot)
 			r.Patch("/savings/pots/{id}", savings.PATCHPot)
 			r.Delete("/savings/pots/{id}", savings.DELETEPot)
