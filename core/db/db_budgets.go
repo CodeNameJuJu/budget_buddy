@@ -30,7 +30,7 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 
 	// Calculate spent amount for each budget
 	for i := range budgets {
-		spent, calcErr := calculateBudgetSpent(budgets[i].ID, budgets[i].AccountID, budgets[i].StartDate, budgets[i].EndDate)
+		spent, calcErr := calculateBudgetSpent(budgets[i].CategoryID, budgets[i].AccountID, budgets[i].StartDate, budgets[i].EndDate)
 		if calcErr != nil {
 			continue
 		}
@@ -42,24 +42,14 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 	return budgets, count, nil
 }
 
-func calculateBudgetSpent(budgetID int64, accountID int64, startDate time.Time, endDate *time.Time) (decimal.Decimal, error) {
+func calculateBudgetSpent(categoryID int64, accountID int64, startDate time.Time, endDate *time.Time) (decimal.Decimal, error) {
 	db := appcontext.GetDb()
 	var spent decimal.Decimal
-
-	// First get the budget to find its category
-	var budget types.Budget
-	err := db.NewSelect().Model(&budget).
-		Where("id = ?", budgetID).
-		Where("account_id = ?", accountID).
-		Scan(context.Background())
-	if err != nil {
-		return decimal.Zero, err
-	}
 
 	query := db.NewSelect().
 		Model((*types.Transaction)(nil)).
 		ColumnExpr("COALESCE(SUM(amount), 0)").
-		Where("category_id = ?", budget.CategoryID).
+		Where("category_id = ?", categoryID).
 		Where("account_id = ?", accountID).
 		Where("type = ?", "expense").
 		Where("deleted_date IS NULL").
@@ -69,7 +59,7 @@ func calculateBudgetSpent(budgetID int64, accountID int64, startDate time.Time, 
 		query = query.Where("date <= ?", *endDate)
 	}
 
-	err = query.Scan(context.Background(), &spent)
+	err := query.Scan(context.Background(), &spent)
 	return spent, err
 }
 
