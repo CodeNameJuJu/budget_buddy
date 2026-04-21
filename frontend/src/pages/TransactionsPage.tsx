@@ -116,7 +116,7 @@ export default function TransactionsPage() {
           <h1 className="mobile-title tracking-tight text-slate-100">Transactions</h1>
           <p className="mobile-text text-slate-400">{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 ml-auto">
           <Button 
             variant="outline" 
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
@@ -259,7 +259,7 @@ export default function TransactionsPage() {
                   suggestions={popularTags.map(tag => tag.tag)}
                 />
               </div>
-              <div className="flex flex-col xs:flex-row gap-2">
+              <div className="flex flex-col xs:flex-row gap-2 justify-end">
                 <Button type="submit" className="mobile-button">Save transaction</Button>
                 <Button type="button" variant="outline" onClick={() => setShowAdvancedForm(false)} className="mobile-button">
                   Cancel

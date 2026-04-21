@@ -193,15 +193,17 @@ func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 		}
 
 		progress := 0.0
+		spentStr := "0"
 		if budget.Spent != nil {
 			percentage := budget.Spent.Div(budget.Amount).Mul(decimal.NewFromFloat(100))
 			progress = percentage.InexactFloat64()
+			spentStr = budget.Spent.String()
 		}
 
 		activeBudgets = append(activeBudgets, map[string]interface{}{
 			"id":       budget.ID,
 			"name":     budget.Name,
-			"spent":    budget.Spent.String(),
+			"spent":    spentStr,
 			"amount":   budget.Amount.String(),
 			"progress": progress,
 			"category": budget.Category.Name,
