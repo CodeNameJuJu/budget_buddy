@@ -577,12 +577,17 @@ func (s *CouplesService) hasPermission(partnershipID, userID int, permission str
 	var member types.PartnershipMember
 	err := database.NewSelect().
 		Model(&member).
+		ExcludeColumn("partnership").
+		ExcludeColumn("user").
 		Where("partnership_id = ? AND user_id = ?", partnershipID, userID).
 		Scan(context.Background())
 
 	if err != nil {
+		fmt.Printf("hasPermission: Member not found for partnershipID=%d userID=%d error=%v\n", partnershipID, userID, err)
 		return false
 	}
+
+	fmt.Printf("hasPermission: Found member role=%s for partnershipID=%d userID=%d checking permission=%s\n", member.Role, partnershipID, userID, permission)
 
 	// Owners have all permissions
 	if member.Role == "owner" {
