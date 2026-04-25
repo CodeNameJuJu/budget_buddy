@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/CodeNameJuJu/budget_buddy/core"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -34,8 +35,12 @@ func main() {
 		log.Println("Migrations completed successfully!")
 	}
 
-	// Initialize database
+	// Initialize database. There are two parallel db package globals
+	// (core/db and core/context); handlers query through core/context while
+	// the auth middleware uses core/db, so we must connect both or any DB
+	// query in a handler hits a nil *bun.DB and panics (502 to the client).
 	db.ConnectToDatabase()
+	appcontext.ConnectToDatabase()
 
 	// Create router
 	r := chi.NewRouter()
