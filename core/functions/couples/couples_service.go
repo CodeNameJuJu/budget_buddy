@@ -310,7 +310,7 @@ func (s *CouplesService) RespondToInvitation(userID int, token string, action st
 		return fmt.Errorf("user not found: %w", err)
 	}
 
-	if strings.ToLower(user.Email) != strings.ToLower(invitation.InvitedEmail) {
+	if strings.ToLower(strings.TrimSpace(user.Email)) != strings.ToLower(strings.TrimSpace(invitation.InvitedEmail)) {
 		return fmt.Errorf("invitation email does not match user email")
 	}
 
