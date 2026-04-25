@@ -15,7 +15,7 @@ name = "budget-buddy-backend"
 PORT = "8080"
 DB_SSLMODE = "disable"
 DB_DEBUG = "false"
-MIGRATE_ON_STARTUP = "true"
+MIGRATE_ON_STARTUP = "false"
 
 [[services.ports]]
 port = 8080
