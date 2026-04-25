@@ -205,6 +205,8 @@ func (s *CouplesService) InvitePartner(partnershipID, inviterUserID int, req *ty
 	var existingMember types.PartnershipMember
 	err := database.NewSelect().
 		Model(&existingMember).
+		ExcludeColumn("partnership").
+		ExcludeColumn("user").
 		Join("JOIN users u ON u.id = partnership_members.user_id").
 		Where("partnership_id = ? AND u.email = ?", partnershipID, req.Email).
 		Scan(context.Background())
@@ -238,21 +240,33 @@ func (s *CouplesService) InvitePartner(partnershipID, inviterUserID int, req *ty
 		ExpiresAt:       time.Now().Add(InvitationExpiry),
 	}
 
-	err = database.NewInsert().Model(invitation).Returning("*").Scan(context.Background())
+	err = database.NewInsert().Model(invitation).ExcludeColumn("partnership").ExcludeColumn("invited_by_user").Returning("*").Scan(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create invitation: %w", err)
 	}
 
-	// Load partnership details
+	// Manually load partnership details
+	var partnership types.Partnership
 	err = database.NewSelect().
-		Model(invitation).
-		Relation("Partnership").
-		Relation("InvitedByUser").
-		Where("id = ?", invitation.ID).
+		Model(&partnership).
+		ExcludeColumn("members").
+		ExcludeColumn("shared_accounts").
+		Where("id = ?", invitation.PartnershipID).
 		Scan(context.Background())
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to load invitation details: %w", err)
+	if err == nil {
+		invitation.Partnership = &partnership
+	}
+
+	// Manually load invited by user details
+	var user types.User
+	err = database.NewSelect().
+		Model(&user).
+		Where("id = ?", invitation.InvitedByUserID).
+		Scan(context.Background())
+
+	if err == nil {
+		invitation.InvitedByUser = &user
 	}
 
 	return invitation, nil
