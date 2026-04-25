@@ -1,12 +1,26 @@
 import { useEffect, useState } from "react"
 import { LayoutDashboard } from "lucide-react"
 import { useAuth } from "@/hooks"
+import WidgetRenderer from "@/components/widgets/WidgetRenderer"
+
+interface Widget {
+  id: string
+  type: string
+  title: string
+  size: string
+  position: { x: number; y: number; w: number; h: number }
+  is_visible: boolean
+  updated_at: string
+}
 
 export default function CustomDashboardPage() {
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
+  const [widgets, setWidgets] = useState<Widget[]>([])
 
   useEffect(() => {
+    // Load widgets
+    setWidgets(getCustomLayout())
     // Simulate loading
     setTimeout(() => {
       setLoading(false)
@@ -105,27 +119,16 @@ export default function CustomDashboardPage() {
         <p className="mobile-text text-slate-400">Your elegant financial overview</p>
       </div>
 
-      {/* Simple Welcome Card */}
-      <div className="grid-responsive">
-        <div className="bg-slate-800/50 backdrop-blur-md border border-blue-900/50 rounded-xl p-6 shadow-lg">
-          <h2 className="text-xl font-bold text-slate-100 mb-4">Welcome to Budget Buddy</h2>
-          <p className="text-slate-400 mb-4">
-            Hi {user?.email || 'User'}! Your elegant financial overview is ready to use.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-blue-800/30 to-teal-800/30 rounded-xl p-4 border border-blue-700/50 transform hover:scale-[1.02] transition-all duration-200">
-              <h3 className="text-blue-300 font-semibold mb-2">Track Expenses</h3>
-              <p className="text-slate-400 text-sm">Monitor your spending patterns with elegant charts</p>
-            </div>
-            <div className="bg-gradient-to-br from-teal-800/30 to-cyan-800/30 rounded-xl p-4 border border-teal-700/50 transform hover:scale-[1.02] transition-all duration-200">
-              <h3 className="text-teal-300 font-semibold mb-2">Set Budgets</h3>
-              <p className="text-slate-400 text-sm">Create and manage your budgets with precision</p>
-            </div>
-            <div className="bg-gradient-to-br from-cyan-800/30 to-blue-800/30 rounded-xl p-4 border border-cyan-700/50 transform hover:scale-[1.02] transition-all duration-200">
-              <h3 className="text-cyan-300 font-semibold mb-2">Save Money</h3>
-              <p className="text-slate-400 text-sm">Achieve your financial goals with clarity</p>
-            </div>
-          </div>
+      {/* Widget Grid */}
+      <div className="responsive-margin">
+        <div className="grid-responsive">
+          {widgets.map((widget) => (
+            <WidgetRenderer
+              key={widget.id}
+              widget={widget}
+              accountId={1} // Default account ID for now
+            />
+          ))}
         </div>
       </div>
     </div>
