@@ -27,7 +27,7 @@ export default function CustomDashboardPage() {
     }, 1000)
   }, [])
 
-  // Clean layout with full-width widgets for better readability
+  // Clean layout with proper widget sizing
   function getCustomLayout(): Widget[] {
     return [
       {
@@ -44,7 +44,7 @@ export default function CustomDashboardPage() {
         type: "getting_started",
         title: "Getting Started",
         size: "medium",
-        position: { x: 0, y: 4, w: 12, h: 3 },
+        position: { x: 0, y: 4, w: 6, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -53,7 +53,7 @@ export default function CustomDashboardPage() {
         type: "recent_transactions",
         title: "Recent Transactions",
         size: "medium",
-        position: { x: 0, y: 7, w: 12, h: 4 },
+        position: { x: 6, y: 4, w: 6, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -62,7 +62,7 @@ export default function CustomDashboardPage() {
         type: "savings_withdrawals",
         title: "Savings Withdrawals",
         size: "medium",
-        position: { x: 0, y: 11, w: 12, h: 4 },
+        position: { x: 0, y: 7, w: 6, h: 4 },
         is_visible: true,
         updated_at: ""
       },
@@ -71,7 +71,7 @@ export default function CustomDashboardPage() {
         type: "spending_trends",
         title: "Spending Trends",
         size: "medium",
-        position: { x: 0, y: 15, w: 12, h: 4 },
+        position: { x: 6, y: 7, w: 6, h: 4 },
         is_visible: true,
         updated_at: ""
       },
@@ -80,7 +80,7 @@ export default function CustomDashboardPage() {
         type: "goals_overview",
         title: "Savings Goals",
         size: "medium",
-        position: { x: 0, y: 19, w: 12, h: 4 },
+        position: { x: 0, y: 11, w: 12, h: 4 },
         is_visible: true,
         updated_at: ""
       }

@@ -112,27 +112,27 @@
     width: 100vw;
     margin-left: calc(-50vw + 50%);
   }
-  
+
   /* Responsive grid helpers */
   .grid-responsive {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(12, 1fr);
     gap: 1rem;
   }
-  
+
   .grid-responsive-xs {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 0.75rem;
   }
-  
+
   @media (max-width: 375px) {
     .grid-responsive-xs {
       grid-template-columns: 1fr;
       gap: 0.5rem;
     }
   }
-  
+
   @media (max-width: 640px) {
     .grid-responsive {
       grid-template-columns: 1fr;
