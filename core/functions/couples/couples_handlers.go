@@ -2,6 +2,7 @@ package couples
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -26,7 +27,7 @@ func NewCouplesHandler() *CouplesHandler {
 func (h *CouplesHandler) GetPartnerships(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
-			helpers.RespondError(w, http.StatusInternalServerError, "Internal server error")
+			helpers.RespondError(w, http.StatusInternalServerError, fmt.Sprintf("Panic: %v", r))
 		}
 	}()
 
@@ -34,7 +35,7 @@ func (h *CouplesHandler) GetPartnerships(w http.ResponseWriter, r *http.Request)
 
 	partnerships, err := h.couplesService.GetUserPartnerships(userID)
 	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to get partnerships")
+		helpers.RespondError(w, http.StatusInternalServerError, fmt.Sprintf("Failed to get partnerships: %v", err))
 		return
 	}
 
