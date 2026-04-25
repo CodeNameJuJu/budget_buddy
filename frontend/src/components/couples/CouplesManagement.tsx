@@ -81,6 +81,7 @@ export const CouplesManagement: React.FC = () => {
   const fetchPartnerships = async () => {
     try {
       const response = await couplesApi.list();
+      console.log('Partnerships response:', response.data);
       setPartnerships(response.data.partnerships || []);
       setPendingInvitations(response.data.pending_invitations || []);
     } catch (error) {
