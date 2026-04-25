@@ -36,6 +36,7 @@ func (s *CouplesService) CreatePartnership(userID int, req *types.CreatePartners
 		Description:     req.Description,
 		CreatedByUserID: userID,
 		IsActive:        true,
+		Members:         []types.PartnershipMember{},
 	}
 
 	err := database.NewInsert().Model(partnership).Returning("*").Scan(context.Background())
