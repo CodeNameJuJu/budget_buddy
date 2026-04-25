@@ -110,7 +110,7 @@ func (h *CouplesHandler) InvitePartner(w http.ResponseWriter, r *http.Request) {
 
 	invitation, err := h.couplesService.InvitePartner(partnershipID, userID, &req)
 	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Failed to invite partner")
+		helpers.RespondError(w, http.StatusBadRequest, fmt.Sprintf("Failed to invite partner: %v", err))
 		return
 	}
 
