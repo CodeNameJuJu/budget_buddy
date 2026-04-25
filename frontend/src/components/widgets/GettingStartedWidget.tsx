@@ -22,10 +22,9 @@ export default function GettingStartedWidget() {
               <TrendingUp className="h-4 w-4 text-blue-600" />
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-sm">Create Your First Account</h4>
-              <p className="text-xs text-muted-foreground">Set up your main financial account</p>
+              <h4 className="font-medium text-sm">Add Budgets</h4>
+              <p className="text-xs text-muted-foreground">Set up your budget limits</p>
             </div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
           </div>
           
           <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
@@ -36,7 +35,6 @@ export default function GettingStartedWidget() {
               <h4 className="font-medium text-sm">Add Categories</h4>
               <p className="text-xs text-muted-foreground">Organize your spending by category</p>
             </div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
           </div>
           
           <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
@@ -47,7 +45,6 @@ export default function GettingStartedWidget() {
               <h4 className="font-medium text-sm">Track Transactions</h4>
               <p className="text-xs text-muted-foreground">Start recording your income and expenses</p>
             </div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
           </div>
         </div>
         
