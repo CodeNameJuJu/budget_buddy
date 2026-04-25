@@ -437,6 +437,7 @@ export default function PartnerInvitation() {
                     <SelectValue placeholder="Select a partnership" />
                   </SelectTrigger>
                   <SelectContent>
+                    {console.log('Rendering partnerships in dropdown:', partnerships.length)}
                     {partnerships.map((p) => (
                       <SelectItem key={p.id} value={p.id.toString()}>
                         {p.name}
