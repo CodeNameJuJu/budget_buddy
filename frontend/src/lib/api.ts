@@ -502,6 +502,28 @@ export interface UserPartnershipsDTO {
   pending_invitations: PartnerInvitationDTO[]
 }
 
+// Auth API
+export const authApi = {
+  register: (data: { email: string; password: string; first_name?: string; last_name?: string }) =>
+    request<{ user: any; access_token: string; refresh_token: string; token_type: string; expires_in: number }>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  login: (data: { email: string; password: string }) =>
+    request<{ user: any; access_token: string; refresh_token: string; token_type: string; expires_in: number }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  refresh: (data: { refresh_token: string }) =>
+    request<{ user: any; access_token: string; refresh_token: string; token_type: string; expires_in: number }>('/auth/refresh', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
+  listDevices: () => request<any[]>('/auth/devices'),
+  revokeDevice: (deviceId: string) => request<{ message: string }>(`/auth/devices?device_id=${deviceId}`, { method: 'DELETE' }),
+}
+
 export const couplesApi = {
   list: () => get<APIResponse<UserPartnershipsDTO>>("/couples"),
   create: (data: { name: string; description?: string }) =>
