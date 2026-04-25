@@ -110,8 +110,15 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		Where("user_id = ?", userID).
 		Scan(context.Background(), &partnershipIDs)
 
+	// If partnership_members table doesn't exist, return empty result
 	if err != nil {
-		return nil, fmt.Errorf("failed to get partnership IDs: %w", err)
+		return &struct {
+			Partnerships       []types.Partnership       `json:"partnerships"`
+			PendingInvitations []types.PartnerInvitation `json:"pending_invitations"`
+		}{
+			Partnerships:       []types.Partnership{},
+			PendingInvitations: []types.PartnerInvitation{},
+		}, nil
 	}
 
 	var partnerships []types.Partnership
@@ -150,8 +157,9 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		Order("created_date DESC").
 		Scan(context.Background())
 
+	// If partner_invitations table doesn't exist, return empty invitations
 	if err != nil {
-		return nil, fmt.Errorf("failed to get pending invitations: %w", err)
+		invitations = []types.PartnerInvitation{}
 	}
 
 	return &struct {
