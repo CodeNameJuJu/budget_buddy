@@ -75,18 +75,14 @@ export const CouplesManagement: React.FC = () => {
   const [inviteForm, setInviteForm] = useState({ email: '', message: '', role: 'member' as 'admin' | 'member' });
 
   useEffect(() => {
-    console.log('CouplesManagement component mounted');
     fetchPartnerships();
   }, []);
 
   const fetchPartnerships = async () => {
-    console.log('fetchPartnerships called');
     try {
       const response = await couplesApi.list();
-      console.log('Partnerships response:', response.data);
       setPartnerships(response.data.partnerships || []);
       setPendingInvitations(response.data.pending_invitations || []);
-      console.log('Partnerships state set to:', response.data.partnerships || []);
     } catch (error) {
       console.error('Failed to fetch partnerships:', error);
     } finally {

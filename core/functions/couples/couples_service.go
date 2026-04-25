@@ -118,7 +118,6 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		Scan(context.Background())
 
 	if err != nil {
-		fmt.Printf("Error loading partnerships for user %d: %v\n", userID, err)
 		return &struct {
 			Partnerships       []types.Partnership       `json:"partnerships"`
 			PendingInvitations []types.PartnerInvitation `json:"pending_invitations"`
@@ -127,8 +126,6 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 			PendingInvitations: []types.PartnerInvitation{},
 		}, nil
 	}
-
-	fmt.Printf("Loaded %d partnerships for user %d\n", len(partnerships), userID)
 
 	// Manually load members for each partnership
 	for i := range partnerships {
@@ -310,10 +307,7 @@ func (s *CouplesService) RespondToInvitation(userID int, token string, action st
 		return fmt.Errorf("user not found: %w", err)
 	}
 
-	userEmail := strings.ToLower(strings.TrimSpace(user.Email))
-	inviteEmail := strings.ToLower(strings.TrimSpace(invitation.InvitedEmail))
-	fmt.Printf("Email comparison: user.Email='%s', invitation.InvitedEmail='%s'\n", userEmail, inviteEmail)
-	if userEmail != inviteEmail {
+	if strings.ToLower(strings.TrimSpace(user.Email)) != strings.ToLower(strings.TrimSpace(invitation.InvitedEmail)) {
 		return fmt.Errorf("invitation email does not match user email")
 	}
 
@@ -601,11 +595,8 @@ func (s *CouplesService) hasPermission(partnershipID, userID int, permission str
 		Scan(context.Background())
 
 	if err != nil {
-		fmt.Printf("hasPermission: Member not found for partnershipID=%d userID=%d error=%v\n", partnershipID, userID, err)
 		return false
 	}
-
-	fmt.Printf("hasPermission: Found member role=%s for partnershipID=%d userID=%d checking permission=%s\n", member.Role, partnershipID, userID, permission)
 
 	// Owners have all permissions
 	if member.Role == "owner" {
