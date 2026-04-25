@@ -141,7 +141,7 @@ func (h *CouplesHandler) RespondToInvitation(w http.ResponseWriter, r *http.Requ
 
 	err := h.couplesService.RespondToInvitation(userID, token, req.Action)
 	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Failed to respond to invitation")
+		helpers.RespondError(w, http.StatusBadRequest, fmt.Sprintf("Failed to respond to invitation: %v", err))
 		return
 	}
 
