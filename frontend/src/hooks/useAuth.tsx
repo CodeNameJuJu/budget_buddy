@@ -183,6 +183,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const setTokens = (data: AuthResponse, rememberMe: boolean = false) => {
+    // Clear any tokens from BOTH storages first. Leaving stale tokens behind
+    // (e.g. from a previous user who used a different rememberMe setting)
+    // caused the auth bootstrap to pick up the wrong user's session, which
+    // leaked another user's information onto the dashboard.
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('token_expires_at');
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('token_expires_at');
+
     const storage = rememberMe ? localStorage : sessionStorage;
     console.log('Setting tokens with rememberMe:', rememberMe, 'Using storage:', storage === localStorage ? 'localStorage' : 'sessionStorage');
     storage.setItem('access_token', data.access_token);

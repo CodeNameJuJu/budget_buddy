@@ -3,7 +3,12 @@ const API_BASE = import.meta.env.PROD
   : 'https://budgetbuddy-production-b70f.up.railway.app/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const token = localStorage.getItem('access_token')
+  // Read the access token from either storage. Login may persist to either
+  // localStorage (remember me) or sessionStorage; we must use whichever holds
+  // the *current* user's token. Reading from only one place caused stale
+  // tokens (from a previous login) to be sent, which leaked another user's
+  // information into the dashboard.
+  const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
   
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -21,8 +26,23 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
   // Handle 401 Unauthorized - token expired or invalid
   if (res.status === 401) {
-    // Try to refresh the token
-    const refreshToken = localStorage.getItem('refresh_token')
+    // Try to refresh the token. Read the refresh token from whichever storage
+    // currently holds it and remember which one so we can persist the new
+    // tokens back to the same location. Writing tokens to a different storage
+    // than they came from caused another user's session to take precedence.
+    const localRefresh = localStorage.getItem('refresh_token')
+    const refreshToken = localRefresh || sessionStorage.getItem('refresh_token')
+    const storage: Storage = localRefresh ? localStorage : sessionStorage
+
+    const clearAllTokens = () => {
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('token_expires_at')
+      sessionStorage.removeItem('access_token')
+      sessionStorage.removeItem('refresh_token')
+      sessionStorage.removeItem('token_expires_at')
+    }
+
     if (refreshToken) {
       try {
         const refreshResponse = await fetch(`${API_BASE}/auth/refresh`, {
@@ -35,36 +55,35 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json()
-          localStorage.setItem('access_token', refreshData.access_token)
-          localStorage.setItem('refresh_token', refreshData.refresh_token)
-          localStorage.setItem('token_expires_at', (Date.now() + refreshData.expires_in * 1000).toString())
-          
+          // Clear both storages first so we don't leave behind tokens from a
+          // previous user session.
+          clearAllTokens()
+          storage.setItem('access_token', refreshData.access_token)
+          storage.setItem('refresh_token', refreshData.refresh_token)
+          storage.setItem('token_expires_at', (Date.now() + refreshData.expires_in * 1000).toString())
+
           // Retry the original request with new token
           headers["Authorization"] = `Bearer ${refreshData.access_token}`
           const retryResponse = await fetch(`${API_BASE}${path}`, {
             headers,
             ...options,
           })
-          
+
           if (!retryResponse.ok) {
             const body = await retryResponse.json().catch(() => null)
             throw new Error(body?.error || `Request failed: ${retryResponse.status}`)
           }
-          
+
           return retryResponse.json()
         } else {
           // Refresh failed, clear tokens and redirect to login
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('refresh_token')
-          localStorage.removeItem('token_expires_at')
+          clearAllTokens()
           window.location.href = '/login'
           throw new Error('Session expired. Please log in again.')
         }
       } catch (error) {
         // Refresh failed, clear tokens and redirect to login
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
-        localStorage.removeItem('token_expires_at')
+        clearAllTokens()
         window.location.href = '/login'
         throw new Error('Session expired. Please log in again.')
       }
