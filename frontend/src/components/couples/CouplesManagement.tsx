@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Users, Plus, Mail, Settings, UserPlus, Shield, Eye, Edit, User } from 'lucide-react';
+import { couplesApi } from '@/lib/api';
 
 // Types for couples system
 interface Partnership {
@@ -47,6 +48,7 @@ interface PartnerInvitation {
   role: string;
   message?: string;
   expires_at: string;
+  invitation_token?: string;
   partnership?: {
     id: number;
     name: string;
@@ -59,8 +61,6 @@ interface PartnerInvitation {
   };
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
-
 export const CouplesManagement: React.FC = () => {
   const [partnerships, setPartnerships] = useState<Partnership[]>([]);
   const [pendingInvitations, setPendingInvitations] = useState<PartnerInvitation[]>([]);
@@ -72,7 +72,7 @@ export const CouplesManagement: React.FC = () => {
 
   // Form states
   const [newPartnership, setNewPartnership] = useState({ name: '', description: '' });
-  const [inviteForm, setInviteForm] = useState({ email: '', message: '', role: 'member' });
+  const [inviteForm, setInviteForm] = useState({ email: '', message: '', role: 'member' as 'admin' | 'member' });
 
   useEffect(() => {
     fetchPartnerships();
@@ -80,10 +80,9 @@ export const CouplesManagement: React.FC = () => {
 
   const fetchPartnerships = async () => {
     try {
-      const response = await fetch(`${API_BASE}/couples`);
-      const data = await response.json();
-      setPartnerships(data.data.partnerships || []);
-      setPendingInvitations(data.data.pending_invitations || []);
+      const response = await couplesApi.list();
+      setPartnerships(response.data.partnerships || []);
+      setPendingInvitations(response.data.pending_invitations || []);
     } catch (error) {
       console.error('Failed to fetch partnerships:', error);
     } finally {
@@ -94,17 +93,10 @@ export const CouplesManagement: React.FC = () => {
   const createPartnership = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_BASE}/couples`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newPartnership),
-      });
-      
-      if (response.ok) {
-        setShowCreateForm(false);
-        setNewPartnership({ name: '', description: '' });
-        fetchPartnerships();
-      }
+      await couplesApi.create(newPartnership);
+      setShowCreateForm(false);
+      setNewPartnership({ name: '', description: '' });
+      fetchPartnerships();
     } catch (error) {
       console.error('Failed to create partnership:', error);
     }
@@ -113,35 +105,21 @@ export const CouplesManagement: React.FC = () => {
   const invitePartner = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPartnership) return;
-    
+
     try {
-      const response = await fetch(`${API_BASE}/couples/invite?partnership_id=${selectedPartnership.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(inviteForm),
-      });
-      
-      if (response.ok) {
-        setShowInviteForm(false);
-        setInviteForm({ email: '', message: '', role: 'member' });
-        fetchPartnerships();
-      }
+      await couplesApi.invite(selectedPartnership.id, inviteForm);
+      setShowInviteForm(false);
+      setInviteForm({ email: '', message: '', role: 'member' });
+      fetchPartnerships();
     } catch (error) {
       console.error('Failed to invite partner:', error);
     }
   };
 
-  const respondToInvitation = async (invitationId: number, action: 'accept' | 'decline') => {
+  const respondToInvitation = async (token: string, action: 'accept' | 'decline') => {
     try {
-      const response = await fetch(`${API_BASE}/couples/respond`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
-      });
-      
-      if (response.ok) {
-        fetchPartnerships();
-      }
+      await couplesApi.respond(token, action);
+      fetchPartnerships();
     } catch (error) {
       console.error('Failed to respond to invitation:', error);
     }
@@ -358,13 +336,13 @@ export const CouplesManagement: React.FC = () => {
 
                   <div className="mt-4 flex gap-2">
                     <button
-                      onClick={() => respondToInvitation(invitation.id, 'accept')}
+                      onClick={() => respondToInvitation(invitation.invitation_token || '', 'accept')}
                       className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                     >
                       Accept
                     </button>
                     <button
-                      onClick={() => respondToInvitation(invitation.id, 'decline')}
+                      onClick={() => respondToInvitation(invitation.invitation_token || '', 'decline')}
                       className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50"
                     >
                       Decline
