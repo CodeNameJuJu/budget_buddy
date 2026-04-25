@@ -10,7 +10,6 @@ import (
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
-	"github.com/uptrace/bun"
 )
 
 const (
@@ -140,20 +139,19 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 			Where("partnership_id = ?", partnerships[i].ID).
 			Scan(context.Background())
 
-			if err == nil {
-				// Load User data for each member
-				for j := range members {
-					var user types.User
-					err := database.NewSelect().
-						Model(&user).
-						Where("id = ?", members[j].UserID).
-						Scan(context.Background())
-					if err == nil {
-						members[j].User = &user
-					}
+		if err == nil {
+			// Load User data for each member
+			for j := range members {
+				var user types.User
+				err := database.NewSelect().
+					Model(&user).
+					Where("id = ?", members[j].UserID).
+					Scan(context.Background())
+				if err == nil {
+					members[j].User = &user
 				}
-				partnerships[i].Members = members
 			}
+			partnerships[i].Members = members
 		}
 	}
 
