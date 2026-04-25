@@ -80,8 +80,18 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		return nil, fmt.Errorf("database not connected")
 	}
 
-	var partnerships []types.Partnership
+	// Get user email first for pending invitations query
+	var user types.User
 	err := database.NewSelect().
+		Model(&user).
+		Where("id = ?", userID).
+		Scan(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user: %w", err)
+	}
+
+	var partnerships []types.Partnership
+	err = database.NewSelect().
 		Model(&partnerships).
 		Relation("Members", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Where("user_id = ?", userID)
@@ -95,12 +105,12 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		return nil, fmt.Errorf("failed to get user partnerships: %w", err)
 	}
 
-	// Get pending invitations
+	// Get pending invitations using user email
 	var invitations []types.PartnerInvitation
 	err = database.NewSelect().
 		Model(&invitations).
 		Relation("Partnership").
-		Where("invited_email = (SELECT email FROM users WHERE id = ?) AND status = ?", userID, "pending").
+		Where("invited_email = ? AND status = ?", user.Email, "pending").
 		Order("created_date DESC").
 		Scan(context.Background())
 
