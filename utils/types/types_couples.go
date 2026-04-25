@@ -35,8 +35,8 @@ type PartnershipMember struct {
 	InvitedByUserID *int      `json:"invited_by_user_id,omitempty" bun:"invited_by_user_id"`
 
 	// Relations
-	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
-	User        *User        `json:"user,omitempty" bun:"rel:has-one,join:on=user_id"`
+	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:belongs-to,join:on=partnership_id"`
+	User        *User        `json:"user,omitempty" bun:"rel:belongs-to,join:on=user_id"`
 }
 
 // PartnerInvitation represents an invitation to join a partnership
@@ -56,8 +56,8 @@ type PartnerInvitation struct {
 	CreatedAt       time.Time  `json:"created_at" bun:"created_date"`
 
 	// Relations
-	Partnership   *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
-	InvitedByUser *User        `json:"invited_by_user,omitempty" bun:"rel:has-one,join:on=invited_by_user_id"`
+	Partnership   *Partnership `json:"partnership,omitempty" bun:"rel:belongs-to,join:on=partnership_id"`
+	InvitedByUser *User        `json:"invited_by_user,omitempty" bun:"rel:belongs-to,join:on=invited_by_user_id"`
 }
 
 // SharedAccount represents an account shared between partners
@@ -71,8 +71,8 @@ type SharedAccount struct {
 	CreatedAt      time.Time `json:"created_at" bun:"created_date"`
 
 	// Relations
-	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
-	Account     *Account     `json:"account,omitempty" bun:"rel:has-one,join:on=account_id"`
+	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:belongs-to,join:on=partnership_id"`
+	Account     *Account     `json:"account,omitempty" bun:"rel:belongs-to,join:on=account_id"`
 }
 
 // PartnershipPermissions represents granular permissions for partnership members
