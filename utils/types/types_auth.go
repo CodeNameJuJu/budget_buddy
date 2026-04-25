@@ -4,16 +4,19 @@ import "time"
 
 // User represents a user in the system
 type User struct {
-	ID           int       `json:"id" bun:"id,pk,autoincrement"`
-	Email        string    `json:"email" bun:"email,unique"`
-	PasswordHash string    `json:"-" bun:"password_hash"`
-	FirstName    *string   `json:"first_name,omitempty" bun:"first_name"`
-	LastName     *string   `json:"last_name,omitempty" bun:"last_name"`
-	IsActive     bool      `json:"is_active" bun:"is_active"`
-	EmailVerified bool     `json:"email_verified" bun:"email_verified"`
-	LastLogin    *time.Time `json:"last_login,omitempty" bun:"last_login"`
-	CreatedAt    time.Time `json:"created_at" bun:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at" bun:"updated_at"`
+	ID            int        `json:"id" bun:"id,pk,autoincrement"`
+	Email         string     `json:"email" bun:"email,unique"`
+	PasswordHash  string     `json:"-" bun:"password_hash"`
+	FirstName     *string    `json:"first_name,omitempty" bun:"first_name"`
+	LastName      *string    `json:"last_name,omitempty" bun:"last_name"`
+	IsActive      bool       `json:"is_active" bun:"is_active"`
+	EmailVerified bool       `json:"email_verified" bun:"email_verified"`
+	LastLogin     *time.Time `json:"last_login,omitempty" bun:"last_login"`
+	CreatedAt     time.Time  `json:"created_at" bun:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at" bun:"updated_at"`
+
+	// Relations
+	PartnershipMembers []PartnershipMember `json:"partnership_members,omitempty" bun:"rel:has-many,join:on=user_id"`
 }
 
 // RefreshToken represents a refresh token for JWT sessions
