@@ -53,7 +53,7 @@ func (s *CouplesService) CreatePartnership(userID int, req *types.CreatePartners
 		JoinedAt:      time.Now(),
 	}
 
-	err = database.NewInsert().Model(member).Scan(context.Background())
+	err = database.NewInsert().Model(member).ExcludeColumn("partnership").ExcludeColumn("user").Scan(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to add creator as member: %w", err)
 	}
