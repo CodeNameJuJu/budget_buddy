@@ -138,6 +138,10 @@
       grid-template-columns: 1fr;
       gap: 0.75rem;
     }
+
+    .grid-responsive > div {
+      grid-column: span 1 !important;
+    }
   }
   
   /* Responsive card improvements */
