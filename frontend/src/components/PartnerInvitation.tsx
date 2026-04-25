@@ -462,27 +462,23 @@ export default function PartnerInvitation() {
                 <label className="block text-sm font-medium text-slate-300 mb-1">
                   Role
                 </label>
-                <Select
+                <select
                   value={inviteForm.role}
-                  onValueChange={(value) =>
+                  onChange={(e) =>
                     setInviteForm({
                       ...inviteForm,
-                      role: value as "admin" | "member",
+                      role: e.target.value as "admin" | "member",
                     })
                   }
+                  className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="member">
-                      Member (view &amp; add transactions)
-                    </SelectItem>
-                    <SelectItem value="admin">
-                      Admin (full access except managing partners)
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                  <option value="member">
+                    Member (view & add transactions)
+                  </option>
+                  <option value="admin">
+                    Admin (full access except managing partners)
+                  </option>
+                </select>
               </div>
 
               <div>
