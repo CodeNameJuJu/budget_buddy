@@ -75,15 +75,18 @@ export const CouplesManagement: React.FC = () => {
   const [inviteForm, setInviteForm] = useState({ email: '', message: '', role: 'member' as 'admin' | 'member' });
 
   useEffect(() => {
+    console.log('CouplesManagement component mounted');
     fetchPartnerships();
   }, []);
 
   const fetchPartnerships = async () => {
+    console.log('fetchPartnerships called');
     try {
       const response = await couplesApi.list();
       console.log('Partnerships response:', response.data);
       setPartnerships(response.data.partnerships || []);
       setPendingInvitations(response.data.pending_invitations || []);
+      console.log('Partnerships state set to:', response.data.partnerships || []);
     } catch (error) {
       console.error('Failed to fetch partnerships:', error);
     } finally {
@@ -429,12 +432,19 @@ export const CouplesManagement: React.FC = () => {
                     required
                   >
                     <option value="">Select a partnership</option>
-                    {partnerships.map((partnership) => (
-                      <option key={partnership.id} value={partnership.id}>
-                        {partnership.name}
-                      </option>
-                    ))}
+                    {partnerships && partnerships.length > 0 ? (
+                      partnerships.map((partnership) => (
+                        <option key={partnership.id} value={partnership.id}>
+                          {partnership.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">No partnerships available</option>
+                    )}
                   </select>
+                  {(!partnerships || partnerships.length === 0) && (
+                    <p className="text-xs text-red-500 mt-1">No partnerships found. Create one first.</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
