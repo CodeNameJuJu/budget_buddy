@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react"
-import { Plus, Trash2, PiggyBank, Target, TrendingUp } from "lucide-react"
+import {
+  Plus,
+  Trash2,
+  PiggyBank,
+  Target,
+  TrendingUp,
+  Check,
+  Landmark,
+  ArrowUpRight,
+  ArrowDownRight,
+  Calendar,
+  Pencil,
+} from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { savingsApi, accountsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account } from "@/lib/api"
+import { savingsApi, accountsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account, type ForecastResponse } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
 
 const COLOUR_OPTIONS = [

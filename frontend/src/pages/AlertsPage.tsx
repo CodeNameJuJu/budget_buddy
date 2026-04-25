@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react"
-import { Bell, CheckCircle, AlertTriangle, Info } from "lucide-react"
+import {
+  Bell,
+  BellOff,
+  CheckCircle,
+  AlertCircle,
+  AlertTriangle,
+  Info,
+  Check,
+  Settings,
+} from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
 
