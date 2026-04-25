@@ -409,14 +409,32 @@ export const CouplesManagement: React.FC = () => {
       )}
 
       {/* Invite Partner Modal */}
-      {showInviteForm && selectedPartnership && (
+      {showInviteForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Invite Partner to {selectedPartnership.name}
+              Invite Partner
             </h3>
             <form onSubmit={invitePartner}>
               <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Partnership
+                  </label>
+                  <select
+                    value={selectedPartnership?.id || ''}
+                    onChange={(e) => setSelectedPartnership(partnerships.find(p => p.id === parseInt(e.target.value)) || null)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  >
+                    <option value="">Select a partnership</option>
+                    {partnerships.map((partnership) => (
+                      <option key={partnership.id} value={partnership.id}>
+                        {partnership.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Partner's Email
@@ -436,7 +454,7 @@ export const CouplesManagement: React.FC = () => {
                   </label>
                   <select
                     value={inviteForm.role}
-                    onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
+                    onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value as 'admin' | 'member' })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="member">Member</option>
