@@ -105,11 +105,12 @@ func ShareAccountWithPartnership(partnershipID int64, userID int64, accountID in
 	}
 
 	// Create new shared account entry
+	defaultPermissions := `{"can_view_accounts": true, "can_view_transactions": true, "can_add_transactions": true}`
 	sharedAccount := &types.SharedAccount{
 		PartnershipID:  int(partnershipID),
 		AccountID:      int(accountID),
 		SharedByUserID: int(userID),
-		Permissions:    `{"can_view_accounts": true, "can_view_transactions": true, "can_add_transactions": true}`, // Default permissions
+		Permissions:    &defaultPermissions, // Default permissions
 		IsActive:       true,
 	}
 

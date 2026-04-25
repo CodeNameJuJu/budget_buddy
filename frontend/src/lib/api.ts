@@ -440,3 +440,109 @@ export const dashboardApi = {
   getWidgetData: (accountID: number, widgetType: string) =>
     get<APIResponse<any>>("/dashboard/widget-data", { account_id: String(accountID), widget_type: widgetType }),
 }
+
+// =====================================================================
+// Couples / Partnerships API
+// =====================================================================
+
+export interface PartnershipUser {
+  id: number
+  email: string
+  first_name?: string | null
+  last_name?: string | null
+}
+
+export interface PartnershipMemberDTO {
+  id: number
+  partnership_id: number
+  user_id: number
+  role: "owner" | "admin" | "member"
+  permissions?: string | null
+  joined_at: string
+  invited_by_user_id?: number | null
+  user?: PartnershipUser
+}
+
+export interface SharedAccountDTO {
+  id: number
+  partnership_id: number
+  account_id: number
+  shared_by_user_id: number
+  is_active: boolean
+  account?: { id: number; name: string; email: string }
+}
+
+export interface PartnershipDTO {
+  id: number
+  name: string
+  description?: string | null
+  is_active: boolean
+  created_at: string
+  members: PartnershipMemberDTO[]
+  shared_accounts: SharedAccountDTO[]
+}
+
+export interface PartnerInvitationDTO {
+  id: number
+  partnership_id: number
+  invited_email: string
+  invited_by_user_id: number
+  invitation_token: string
+  status: "pending" | "accepted" | "declined" | "expired"
+  message?: string | null
+  expires_at: string
+  created_at: string
+  partnership?: { id: number; name: string }
+  invited_by_user?: PartnershipUser
+}
+
+export interface UserPartnershipsDTO {
+  partnerships: PartnershipDTO[]
+  pending_invitations: PartnerInvitationDTO[]
+}
+
+export const couplesApi = {
+  list: () => get<APIResponse<UserPartnershipsDTO>>("/couples"),
+  create: (data: { name: string; description?: string }) =>
+    post<APIResponse<PartnershipDTO>>("/couples", data),
+  details: (partnershipID: number) =>
+    get<APIResponse<PartnershipDTO>>("/couples/details", {
+      partnership_id: String(partnershipID),
+    }),
+  invite: (
+    partnershipID: number,
+    data: { email: string; role: "admin" | "member"; message?: string }
+  ) =>
+    post<APIResponse<PartnerInvitationDTO>>(
+      `/couples/invite?partnership_id=${partnershipID}`,
+      data
+    ),
+  invitationDetails: (token: string) =>
+    get<APIResponse<PartnerInvitationDTO>>("/couples/invitation", { token }),
+  respond: (token: string, action: "accept" | "decline") =>
+    post<APIResponse<{ message: string }>>(
+      `/couples/respond?token=${encodeURIComponent(token)}`,
+      { action }
+    ),
+  shareAccount: (
+    partnershipID: number,
+    data: { account_id: number; permissions?: Record<string, boolean> }
+  ) =>
+    post<APIResponse<{ message: string }>>(
+      `/couples/share-account?partnership_id=${partnershipID}`,
+      data
+    ),
+  removeMember: (partnershipID: number, memberUserID: number) =>
+    del<APIResponse<{ message: string }>>(
+      `/couples/remove-member?partnership_id=${partnershipID}&member_id=${memberUserID}`
+    ),
+  updateMemberRole: (
+    partnershipID: number,
+    memberUserID: number,
+    data: { role: "owner" | "admin" | "member" }
+  ) =>
+    patch<APIResponse<{ message: string }>>(
+      `/couples/update-role?partnership_id=${partnershipID}&member_id=${memberUserID}`,
+      data
+    ),
+}

@@ -88,7 +88,7 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		}).
 		Join("JOIN partnership_members pm ON pm.partnership_id = partnerships.id").
 		Where("pm.user_id = ? AND partnerships.is_active = ?", userID, true).
-		Order("partnerships.created_at DESC").
+		Order("partnerships.created_date DESC").
 		Scan(context.Background())
 
 	if err != nil {
@@ -101,7 +101,7 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		Model(&invitations).
 		Relation("Partnership").
 		Where("invited_email = (SELECT email FROM users WHERE id = ?) AND status = ?", userID, "pending").
-		Order("created_at DESC").
+		Order("created_date DESC").
 		Scan(context.Background())
 
 	if err != nil {
@@ -317,7 +317,7 @@ func (s *CouplesService) ShareAccount(partnershipID, userID, accountID int, perm
 		PartnershipID:  partnershipID,
 		AccountID:      accountID,
 		SharedByUserID: userID,
-		Permissions:    permStr,
+		Permissions:    &permStr,
 		IsActive:       true,
 	}
 
@@ -491,9 +491,8 @@ func (s *CouplesService) hasPermission(partnershipID, userID int, permission str
 
 	// Parse permissions JSON
 	var permissions types.PartnershipPermissions
-	if member.Permissions != "" {
-		err = json.Unmarshal([]byte(member.Permissions), &permissions)
-		if err != nil {
+	if member.Permissions != nil && *member.Permissions != "" {
+		if err := json.Unmarshal([]byte(*member.Permissions), &permissions); err != nil {
 			return false
 		}
 	} else {
