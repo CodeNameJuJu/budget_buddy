@@ -70,10 +70,13 @@ export default function PartnerInvitation() {
     setLoading(true)
     setError(null)
     try {
+      console.log('PartnerInvitation: Loading partnerships')
       const res = await couplesApi.list()
       const data = res.data ?? { partnerships: [], pending_invitations: [] }
+      console.log('PartnerInvitation: Partnerships response:', data)
       setPartnerships(data.partnerships ?? [])
       setPendingInvitations(data.pending_invitations ?? [])
+      console.log('PartnerInvitation: Partnerships state set to:', data.partnerships ?? [])
       // Default the invite form to the first partnership the user owns/admins.
       if (
         data.partnerships?.length &&
