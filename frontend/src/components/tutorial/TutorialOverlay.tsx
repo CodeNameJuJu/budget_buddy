@@ -123,7 +123,7 @@ export default function TutorialOverlay() {
         style={{
           position: "fixed",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
           zIndex: 40,
           pointerEvents: "none",
         }}
@@ -139,7 +139,7 @@ export default function TutorialOverlay() {
               left: targetElement.getBoundingClientRect().left - 4,
               width: targetElement.getBoundingClientRect().width + 8,
               height: targetElement.getBoundingClientRect().height + 8,
-              boxShadow: "0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.7)",
+              boxShadow: "0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.3)",
               zIndex: 41,
               pointerEvents: "none",
               borderRadius: "12px",
@@ -149,10 +149,10 @@ export default function TutorialOverlay() {
           <style>{`
             @keyframes pulse {
               0%, 100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.7);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.3);
               }
               50% {
-                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.7);
+                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.3);
               }
             }
           `}</style>
