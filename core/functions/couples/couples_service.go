@@ -37,9 +37,10 @@ func (s *CouplesService) CreatePartnership(userID int, req *types.CreatePartners
 		CreatedByUserID: userID,
 		IsActive:        true,
 		Members:         []types.PartnershipMember{},
+		SharedAccounts:  []types.SharedAccount{},
 	}
 
-	err := database.NewInsert().Model(partnership).ExcludeColumn("members").Returning("*").Scan(context.Background())
+	err := database.NewInsert().Model(partnership).ExcludeColumn("members").ExcludeColumn("shared_accounts").Returning("*").Scan(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create partnership: %w", err)
 	}
