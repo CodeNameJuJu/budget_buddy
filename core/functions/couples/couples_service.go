@@ -110,7 +110,7 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 	// Simplify partnership query - avoid complex relation loading
 	var partnershipIDs []int
 	err = database.NewSelect().
-		Column("partnership_id").
+		Column("DISTINCT partnership_id").
 		Model((*types.PartnershipMember)(nil)).
 		ExcludeColumn("partnership").
 		ExcludeColumn("user").
