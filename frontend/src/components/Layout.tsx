@@ -15,6 +15,7 @@ import {
   ChevronLeft,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import TutorialOverlay from "@/components/tutorial/TutorialOverlay"
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -128,7 +129,7 @@ export default function Layout() {
     <div className="flex h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 relative mobile-safe-area">
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
-        <div 
+        <div
           className={cn(
             "fixed inset-0 bg-black/60 mobile-backdrop z-40 lg:hidden transition-opacity duration-300",
             isClosing ? "opacity-0" : "opacity-100"
@@ -143,7 +144,7 @@ export default function Layout() {
       )}
 
       {/* Sidebar */}
-      <aside 
+      <aside
         ref={sidebarRef}
         className={cn(
           "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-slate-800/95 backdrop-blur-xl border-r border-blue-900/50 shadow-2xl transform transition-all duration-300 ease-out",
@@ -250,6 +251,9 @@ export default function Layout() {
           </div>
         </div>
       </main>
+
+      {/* Tutorial Overlay */}
+      <TutorialOverlay />
     </div>
   )
 }

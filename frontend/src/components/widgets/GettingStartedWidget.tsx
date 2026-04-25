@@ -2,9 +2,17 @@ import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, PlusCircle, TrendingUp, PiggyBank } from "lucide-react"
+import { useTutorial } from "@/contexts/TutorialContext"
+import { setupTutorialSteps } from "@/lib/tutorialSteps"
 
 export default function GettingStartedWidget() {
   const navigate = useNavigate()
+  const { startTutorial } = useTutorial()
+
+  const handleStartSetup = () => {
+    startTutorial(setupTutorialSteps)
+    navigate("/")
+  }
 
   return (
     <Card>
@@ -63,7 +71,7 @@ export default function GettingStartedWidget() {
           </div>
         </div>
 
-        <Button className="w-full mt-4" size="sm" onClick={() => navigate("/budgets")}>
+        <Button className="w-full mt-4" size="sm" onClick={handleStartSetup}>
           Start Setup
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
