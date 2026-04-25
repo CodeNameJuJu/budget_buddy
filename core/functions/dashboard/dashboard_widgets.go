@@ -152,7 +152,13 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 
 	summary, err := db.GetDashboardSummary(accountID, startOfMonth, endOfMonth)
 	if err != nil {
-		return nil, err
+		// Return empty data instead of error
+		return map[string]interface{}{
+			"balance":  "0",
+			"income":   "0",
+			"expenses": "0",
+			"period":   "this month",
+		}, nil
 	}
 
 	return map[string]interface{}{
@@ -170,7 +176,11 @@ func getRecentTransactionsWidgetData(accountID int64) (interface{}, error) {
 
 	summary, err := db.GetDashboardSummary(accountID, startOfMonth, endOfMonth)
 	if err != nil {
-		return nil, err
+		// Return empty data instead of error
+		return map[string]interface{}{
+			"transactions": []interface{}{},
+			"count":        0,
+		}, nil
 	}
 
 	return map[string]interface{}{
@@ -182,7 +192,11 @@ func getRecentTransactionsWidgetData(accountID int64) (interface{}, error) {
 func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 	budgets, _, err := db.QueryBudgets(accountID, nil)
 	if err != nil {
-		return nil, err
+		// Return empty data instead of error
+		return map[string]interface{}{
+			"budgets": []interface{}{},
+			"count":   0,
+		}, nil
 	}
 
 	// Filter active budgets and calculate progress
@@ -219,7 +233,11 @@ func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 func getGoalsOverviewWidgetData(accountID int64) (interface{}, error) {
 	goals, _, err := db.QuerySavingsGoals(accountID, nil)
 	if err != nil {
-		return nil, err
+		// Return empty data instead of error
+		return map[string]interface{}{
+			"goals": []interface{}{},
+			"count": 0,
+		}, nil
 	}
 
 	var activeGoals []map[string]interface{}
@@ -248,7 +266,11 @@ func getSpendingTrendsWidgetData(accountID int64) (interface{}, error) {
 	// Get last 6 months of spending trends
 	trends, err := db.GetSpendingTrends(accountID, 6)
 	if err != nil {
-		return nil, err
+		// Return empty data instead of error
+		return map[string]interface{}{
+			"trends": []interface{}{},
+			"period": "6 months",
+		}, nil
 	}
 
 	return map[string]interface{}{
@@ -299,7 +321,12 @@ func getAlertsWidgetData(accountID int64) (interface{}, error) {
 func getSavingsSummaryWidgetData(accountID int64) (interface{}, error) {
 	summary, err := db.GetSavingsSummary(accountID)
 	if err != nil {
-		return nil, err
+		// Return empty data instead of error
+		return map[string]interface{}{
+			"total_balance": "0",
+			"total_pots":    0,
+			"pots":          []interface{}{},
+		}, nil
 	}
 
 	return summary, nil
