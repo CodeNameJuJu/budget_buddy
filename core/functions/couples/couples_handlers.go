@@ -24,6 +24,12 @@ func NewCouplesHandler() *CouplesHandler {
 
 // GetPartnerships gets all partnerships for the current user
 func (h *CouplesHandler) GetPartnerships(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Internal server error")
+		}
+	}()
+
 	userID := r.Context().Value("user_id").(int)
 
 	partnerships, err := h.couplesService.GetUserPartnerships(userID)
