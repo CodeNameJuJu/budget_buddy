@@ -130,7 +130,8 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 	if len(partnershipIDs) > 0 {
 		err = database.NewSelect().
 			Model(&partnerships).
-			Relation("Members").
+			ExcludeColumn("members").
+			ExcludeColumn("shared_accounts").
 			Where("id IN (?) AND is_active = ?", bun.In(partnershipIDs), true).
 			Order("created_date DESC").
 			Scan(context.Background())
@@ -139,17 +140,29 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 			return nil, fmt.Errorf("failed to get user partnerships: %w", err)
 		}
 
-		// Load User data for each member separately to avoid complex relation issues
+		// Manually load members for each partnership
 		for i := range partnerships {
-			for j := range partnerships[i].Members {
-				var user types.User
-				err := database.NewSelect().
-					Model(&user).
-					Where("id = ?", partnerships[i].Members[j].UserID).
-					Scan(context.Background())
-				if err == nil {
-					partnerships[i].Members[j].User = &user
+			var members []types.PartnershipMember
+			err := database.NewSelect().
+				Model(&members).
+				ExcludeColumn("partnership").
+				ExcludeColumn("user").
+				Where("partnership_id = ?", partnerships[i].ID).
+				Scan(context.Background())
+
+			if err == nil {
+				// Load User data for each member
+				for j := range members {
+					var user types.User
+					err := database.NewSelect().
+						Model(&user).
+						Where("id = ?", members[j].UserID).
+						Scan(context.Background())
+					if err == nil {
+						members[j].User = &user
+					}
 				}
+				partnerships[i].Members = members
 			}
 		}
 	}
