@@ -107,19 +107,18 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		return nil, fmt.Errorf("failed to get user: %w", err)
 	}
 
-	// Simplify partnership query - avoid complex relation loading
-	var partnershipIDs []int
+	// Query partnerships directly by created_by_user_id
+	var partnerships []types.Partnership
 	err = database.NewSelect().
-		Column("DISTINCT partnership_id").
-		Model((*types.PartnershipMember)(nil)).
-		ExcludeColumn("partnership").
-		ExcludeColumn("user").
-		Where("user_id = ?", userID).
-		Scan(context.Background(), &partnershipIDs)
+		Model(&partnerships).
+		ExcludeColumn("members").
+		ExcludeColumn("shared_accounts").
+		Where("created_by_user_id = ? AND is_active = ?", userID, true).
+		Order("created_date DESC").
+		Scan(context.Background())
 
-	// If partnership_members table doesn't exist or query fails, return empty result
 	if err != nil {
-		fmt.Printf("Error fetching partnership IDs for user %d: %v\n", userID, err)
+		fmt.Printf("Error loading partnerships for user %d: %v\n", userID, err)
 		return &struct {
 			Partnerships       []types.Partnership       `json:"partnerships"`
 			PendingInvitations []types.PartnerInvitation `json:"pending_invitations"`
@@ -129,34 +128,17 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		}, nil
 	}
 
-	fmt.Printf("Found %d partnership IDs for user %d: %v\n", len(partnershipIDs), userID, partnershipIDs)
+	fmt.Printf("Loaded %d partnerships for user %d\n", len(partnerships), userID)
 
-	var partnerships []types.Partnership
-	if len(partnershipIDs) > 0 {
-		err = database.NewSelect().
-			Model(&partnerships).
-			ExcludeColumn("members").
-			ExcludeColumn("shared_accounts").
-			Where("id IN (?) AND is_active = ?", bun.In(partnershipIDs), true).
-			Order("created_date DESC").
+	// Manually load members for each partnership
+	for i := range partnerships {
+		var members []types.PartnershipMember
+		err := database.NewSelect().
+			Model(&members).
+			ExcludeColumn("partnership").
+			ExcludeColumn("user").
+			Where("partnership_id = ?", partnerships[i].ID).
 			Scan(context.Background())
-
-		if err != nil {
-			fmt.Printf("Error loading partnerships: %v\n", err)
-			return nil, fmt.Errorf("failed to get user partnerships: %w", err)
-		}
-
-		fmt.Printf("Loaded %d partnerships from database\n", len(partnerships))
-
-		// Manually load members for each partnership
-		for i := range partnerships {
-			var members []types.PartnershipMember
-			err := database.NewSelect().
-				Model(&members).
-				ExcludeColumn("partnership").
-				ExcludeColumn("user").
-				Where("partnership_id = ?", partnerships[i].ID).
-				Scan(context.Background())
 
 			if err == nil {
 				// Load User data for each member
