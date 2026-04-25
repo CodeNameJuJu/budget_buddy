@@ -62,6 +62,8 @@ func (s *CouplesService) CreatePartnership(userID int, req *types.CreatePartners
 	var members []types.PartnershipMember
 	err = database.NewSelect().
 		Model(&members).
+		ExcludeColumn("partnership").
+		ExcludeColumn("user").
 		Where("partnership_id = ?", partnership.ID).
 		Scan(context.Background())
 
