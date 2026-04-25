@@ -60,7 +60,7 @@ func (h *CouplesHandler) CreatePartnership(w http.ResponseWriter, r *http.Reques
 
 	partnership, err := h.couplesService.CreatePartnership(userID, &req)
 	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create partnership")
+		helpers.RespondError(w, http.StatusInternalServerError, fmt.Sprintf("Failed to create partnership: %v", err))
 		return
 	}
 
