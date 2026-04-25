@@ -18,8 +18,8 @@ type Partnership struct {
 	DeletedAt       *time.Time `json:"deleted_at,omitempty" bun:"deleted_date,soft_delete"`
 
 	// Relations
-	Members        []PartnershipMember `json:"members,omitempty" bun:"rel:has-many,join:on=partnership_id"`
-	SharedAccounts []SharedAccount     `json:"shared_accounts,omitempty" bun:"rel:has-many,join:on=partnership_id"`
+	Members        []PartnershipMember `json:"members,omitempty"`
+	SharedAccounts []SharedAccount     `json:"shared_accounts,omitempty"`
 }
 
 // PartnershipMember represents a user in a partnership.
@@ -35,8 +35,8 @@ type PartnershipMember struct {
 	InvitedByUserID *int      `json:"invited_by_user_id,omitempty" bun:"invited_by_user_id"`
 
 	// Relations
-	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:belongs-to,join:on=partnership_id"`
-	User        *User        `json:"user,omitempty" bun:"rel:belongs-to,join:on=user_id"`
+	Partnership *Partnership `json:"partnership,omitempty"`
+	User        *User        `json:"user,omitempty"`
 }
 
 // PartnerInvitation represents an invitation to join a partnership
@@ -56,8 +56,8 @@ type PartnerInvitation struct {
 	CreatedAt       time.Time  `json:"created_at" bun:"created_date"`
 
 	// Relations
-	Partnership   *Partnership `json:"partnership,omitempty" bun:"rel:belongs-to,join:on=partnership_id"`
-	InvitedByUser *User        `json:"invited_by_user,omitempty" bun:"rel:belongs-to,join:on=invited_by_user_id"`
+	Partnership   *Partnership `json:"partnership,omitempty"`
+	InvitedByUser *User        `json:"invited_by_user,omitempty"`
 }
 
 // SharedAccount represents an account shared between partners
@@ -71,8 +71,8 @@ type SharedAccount struct {
 	CreatedAt      time.Time `json:"created_at" bun:"created_date"`
 
 	// Relations
-	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:belongs-to,join:on=partnership_id"`
-	Account     *Account     `json:"account,omitempty" bun:"rel:belongs-to,join:on=account_id"`
+	Partnership *Partnership `json:"partnership,omitempty"`
+	Account     *Account     `json:"account,omitempty"`
 }
 
 // PartnershipPermissions represents granular permissions for partnership members
