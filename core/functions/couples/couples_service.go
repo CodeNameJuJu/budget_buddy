@@ -142,8 +142,11 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 			Scan(context.Background())
 
 		if err != nil {
+			fmt.Printf("Error loading partnerships: %v\n", err)
 			return nil, fmt.Errorf("failed to get user partnerships: %w", err)
 		}
+
+		fmt.Printf("Loaded %d partnerships from database\n", len(partnerships))
 
 		// Manually load members for each partnership
 		for i := range partnerships {
