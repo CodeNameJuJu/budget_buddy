@@ -36,7 +36,6 @@ type PartnershipMember struct {
 	InvitedByUserID *int      `json:"invited_by_user_id,omitempty" bun:"invited_by_user_id"`
 
 	// Relations
-	User          *User        `json:"user,omitempty" bun:"rel:has-one,join:on=user_id"`
 	InvitedByUser *User        `json:"invited_by_user,omitempty" bun:"rel:has-one,join:on=invited_by_user_id"`
 	Partnership   *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
 }

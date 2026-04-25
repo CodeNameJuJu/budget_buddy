@@ -14,9 +14,6 @@ type User struct {
 	LastLogin     *time.Time `json:"last_login,omitempty" bun:"last_login"`
 	CreatedAt     time.Time  `json:"created_at" bun:"created_at"`
 	UpdatedAt     time.Time  `json:"updated_at" bun:"updated_at"`
-
-	// Relations
-	PartnershipMembers []PartnershipMember `json:"partnership_members,omitempty" bun:"rel:has-many,join:on=user_id"`
 }
 
 // RefreshToken represents a refresh token for JWT sessions
