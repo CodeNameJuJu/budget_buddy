@@ -271,12 +271,26 @@ func (s *CouplesService) RespondToInvitation(userID int, token string, action st
 	var invitation types.PartnerInvitation
 	err := database.NewSelect().
 		Model(&invitation).
-		Relation("Partnership").
+		ExcludeColumn("partnership").
+		ExcludeColumn("invited_by_user").
 		Where("invitation_token = ? AND status = ? AND expires_at > ?", token, "pending", time.Now()).
 		Scan(context.Background())
 
 	if err != nil {
 		return fmt.Errorf("invalid or expired invitation: %w", err)
+	}
+
+	// Manually load partnership
+	var partnership types.Partnership
+	err = database.NewSelect().
+		Model(&partnership).
+		ExcludeColumn("members").
+		ExcludeColumn("shared_accounts").
+		Where("id = ?", invitation.PartnershipID).
+		Scan(context.Background())
+
+	if err == nil {
+		invitation.Partnership = &partnership
 	}
 
 	// Verify that the invitation is for this user
