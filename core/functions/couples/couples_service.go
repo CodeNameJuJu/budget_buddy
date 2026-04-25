@@ -90,26 +90,35 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		return nil, fmt.Errorf("failed to get user: %w", err)
 	}
 
-	var partnerships []types.Partnership
+	// Simplify partnership query - avoid complex relation loading
+	var partnershipIDs []int
 	err = database.NewSelect().
-		Model(&partnerships).
-		Relation("Members", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Where("user_id = ?", userID)
-		}).
-		Join("JOIN partnership_members pm ON pm.partnership_id = partnerships.id").
-		Where("pm.user_id = ? AND partnerships.is_active = ?", userID, true).
-		Order("partnerships.created_date DESC").
-		Scan(context.Background())
+		Column("partnership_id").
+		Model((*types.PartnershipMember)(nil)).
+		Where("user_id = ?", userID).
+		Scan(context.Background(), &partnershipIDs)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to get user partnerships: %w", err)
+		return nil, fmt.Errorf("failed to get partnership IDs: %w", err)
+	}
+
+	var partnerships []types.Partnership
+	if len(partnershipIDs) > 0 {
+		err = database.NewSelect().
+			Model(&partnerships).
+			Where("id IN (?) AND is_active = ?", bun.In(partnershipIDs), true).
+			Order("created_date DESC").
+			Scan(context.Background())
+
+		if err != nil {
+			return nil, fmt.Errorf("failed to get user partnerships: %w", err)
+		}
 	}
 
 	// Get pending invitations using user email
 	var invitations []types.PartnerInvitation
 	err = database.NewSelect().
 		Model(&invitations).
-		Relation("Partnership").
 		Where("invited_email = ? AND status = ?", user.Email, "pending").
 		Order("created_date DESC").
 		Scan(context.Background())
