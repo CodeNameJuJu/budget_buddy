@@ -370,10 +370,6 @@ func (s *CouplesService) GetPartnershipDetails(partnershipID, userID int) (*type
 	var partnership types.Partnership
 	err = database.NewSelect().
 		Model(&partnership).
-		Relation("Members", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Order("joined_at ASC")
-		}).
-		Relation("Members.User").
 		Relation("SharedAccounts").
 		Relation("SharedAccounts.Account").
 		Where("id = ?", partnershipID).
@@ -383,6 +379,18 @@ func (s *CouplesService) GetPartnershipDetails(partnershipID, userID int) (*type
 		return nil, fmt.Errorf("failed to get partnership details: %w", err)
 	}
 
+	// Load members manually
+	var members []types.PartnershipMember
+	err = database.NewSelect().
+		Model(&members).
+		Where("partnership_id = ?", partnershipID).
+		Order("joined_at ASC").
+		Scan(context.Background())
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to get partnership members: %w", err)
+	}
+
 	// Convert to summary
 	summary := &types.PartnershipSummary{
 		ID:              partnership.ID,
@@ -390,9 +398,9 @@ func (s *CouplesService) GetPartnershipDetails(partnershipID, userID int) (*type
 		Description:     partnership.Description,
 		IsActive:        partnership.IsActive,
 		CreatedAt:       partnership.CreatedAt,
-		MemberCount:     len(partnership.Members),
+		MemberCount:     len(members),
 		CurrentUserRole: member.Role,
-		Members:         partnership.Members,
+		Members:         members,
 		SharedAccounts:  partnership.SharedAccounts,
 	}
 

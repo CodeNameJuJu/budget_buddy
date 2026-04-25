@@ -18,9 +18,7 @@ type Partnership struct {
 	DeletedAt       *time.Time `json:"deleted_at,omitempty" bun:"deleted_date,soft_delete"`
 
 	// Relations
-	CreatedByUser  *User               `json:"created_by_user,omitempty" bun:"rel:has-one,join:on=created_by_user_id"`
-	Members        []PartnershipMember `json:"members,omitempty" bun:"rel:has-many,join:on=partnership_id"`
-	SharedAccounts []SharedAccount     `json:"shared_accounts,omitempty" bun:"rel:has-many,join:on=partnership_id"`
+	SharedAccounts []SharedAccount `json:"shared_accounts,omitempty" bun:"rel:has-many,join:on=partnership_id"`
 }
 
 // PartnershipMember represents a user in a partnership.
