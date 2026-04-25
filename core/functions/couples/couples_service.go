@@ -112,6 +112,8 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 	err = database.NewSelect().
 		Column("partnership_id").
 		Model((*types.PartnershipMember)(nil)).
+		ExcludeColumn("partnership").
+		ExcludeColumn("user").
 		Where("user_id = ?", userID).
 		Scan(context.Background(), &partnershipIDs)
 
