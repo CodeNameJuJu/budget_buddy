@@ -120,7 +120,7 @@ export default function BudgetsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" data-tutorial="budgets-page">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-100">Budgets</h1>
           <p className="text-slate-400">Track your spending limits</p>

@@ -118,21 +118,45 @@ export default function TutorialOverlay() {
 
   return (
     <>
+      {/* Dimmed background */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          zIndex: 40,
+          pointerEvents: "none",
+        }}
+      />
+
       {/* Highlight overlay */}
       {targetElement && (
-        <div
-          style={{
-            position: "fixed",
-            top: targetElement.getBoundingClientRect().top,
-            left: targetElement.getBoundingClientRect().left,
-            width: targetElement.getBoundingClientRect().width,
-            height: targetElement.getBoundingClientRect().height,
-            boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.5)",
-            zIndex: 40,
-            pointerEvents: "none",
-            borderRadius: "8px",
-          }}
-        />
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: targetElement.getBoundingClientRect().top - 4,
+              left: targetElement.getBoundingClientRect().left - 4,
+              width: targetElement.getBoundingClientRect().width + 8,
+              height: targetElement.getBoundingClientRect().height + 8,
+              boxShadow: "0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.7)",
+              zIndex: 41,
+              pointerEvents: "none",
+              borderRadius: "12px",
+              animation: "pulse 2s ease-in-out infinite",
+            }}
+          />
+          <style>{`
+            @keyframes pulse {
+              0%, 100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.7);
+              }
+              50% {
+                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.7);
+              }
+            }
+          `}</style>
+        </>
       )}
 
       {/* Tutorial Bubble */}

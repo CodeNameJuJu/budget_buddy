@@ -101,7 +101,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" data-tutorial="categories-page">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-100">Categories</h1>
           <p className="text-slate-400">Organise your transactions</p>

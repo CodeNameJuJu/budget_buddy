@@ -111,7 +111,7 @@ export default function CustomDashboardPage() {
 
   return (
     <div className="space-y-4 xs:space-y-6">
-      <div className="responsive-margin">
+      <div className="responsive-margin" data-tutorial="dashboard">
         <h1 className="mobile-title flex items-center gap-2 text-slate-100">
           <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
           Dashboard
