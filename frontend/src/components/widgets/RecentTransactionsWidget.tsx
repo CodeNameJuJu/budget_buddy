@@ -73,7 +73,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
     )
   }
 
-  if (!data || data.transactions.length === 0) {
+  if (!data || !data.transactions || data.transactions.length === 0) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
