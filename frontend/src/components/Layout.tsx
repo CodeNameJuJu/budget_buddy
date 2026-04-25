@@ -176,7 +176,7 @@ export default function Layout() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 xs:p-5 lg:p-6 space-y-1 overflow-y-auto mobile-scroll">
+          <nav className="flex-1 p-4 xs:p-5 lg:p-6 space-y-1 overflow-y-auto mobile-scroll flex flex-col justify-end">
             <div className="space-y-1">
               {navItems.map((item) => (
                 <NavLink
