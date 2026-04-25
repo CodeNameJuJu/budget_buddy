@@ -117,8 +117,9 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 		Where("user_id = ?", userID).
 		Scan(context.Background(), &partnershipIDs)
 
-	// If partnership_members table doesn't exist, return empty result
+	// If partnership_members table doesn't exist or query fails, return empty result
 	if err != nil {
+		fmt.Printf("Error fetching partnership IDs for user %d: %v\n", userID, err)
 		return &struct {
 			Partnerships       []types.Partnership       `json:"partnerships"`
 			PendingInvitations []types.PartnerInvitation `json:"pending_invitations"`
@@ -127,6 +128,8 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 			PendingInvitations: []types.PartnerInvitation{},
 		}, nil
 	}
+
+	fmt.Printf("Found %d partnership IDs for user %d: %v\n", len(partnershipIDs), userID, partnershipIDs)
 
 	var partnerships []types.Partnership
 	if len(partnershipIDs) > 0 {
