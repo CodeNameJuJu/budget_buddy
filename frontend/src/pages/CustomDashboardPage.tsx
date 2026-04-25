@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { LayoutDashboard } from "lucide-react"
 import { useAuth } from "@/hooks"
 import WidgetRenderer from "@/components/widgets/WidgetRenderer"
+import { accountsApi } from "@/lib/api"
 
 interface Widget {
   id: string
@@ -17,15 +18,33 @@ export default function CustomDashboardPage() {
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
   const [widgets, setWidgets] = useState<Widget[]>([])
+  const [accountId, setAccountId] = useState<number | null>(null)
 
   useEffect(() => {
-    // Load widgets
-    setWidgets(getCustomLayout())
-    // Simulate loading
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
+    loadUserAccount()
   }, [])
+
+  useEffect(() => {
+    if (accountId) {
+      // Load widgets
+      setWidgets(getCustomLayout())
+      // Simulate loading
+      setTimeout(() => {
+        setLoading(false)
+      }, 1000)
+    }
+  }, [accountId])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load user account", error)
+    }
+  }
 
   // Clean layout with proper widget sizing
   function getCustomLayout(): Widget[] {
@@ -122,11 +141,11 @@ export default function CustomDashboardPage() {
       {/* Widget Grid */}
       <div className="responsive-margin">
         <div className="grid-responsive">
-          {widgets.map((widget) => (
+          {accountId && widgets.map((widget) => (
             <WidgetRenderer
               key={widget.id}
               widget={widget}
-              accountId={1} // Default account ID for now
+              accountId={accountId}
             />
           ))}
         </div>
