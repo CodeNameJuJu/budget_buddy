@@ -71,8 +71,8 @@ export default function App() {
             <Route path="/partners" element={
               <ProtectedRoute>
                 <PartnersPage />
-              </ProtectedRoute
-          } />
+              </ProtectedRoute>
+            } />
         </Route>
       </Routes>
     </TutorialProvider>
