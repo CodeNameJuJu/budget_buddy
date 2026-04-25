@@ -56,29 +56,30 @@ func (s *CouplesService) CreatePartnership(userID int, req *types.CreatePartners
 		return nil, fmt.Errorf("failed to add creator as member: %w", err)
 	}
 
-	// Load partnership with members
+	// Manually load members
+	var members []types.PartnershipMember
 	err = database.NewSelect().
-		Model(partnership).
-		Relation("Members").
-		Where("id = ?", partnership.ID).
+		Model(&members).
+		Where("partnership_id = ?", partnership.ID).
 		Scan(context.Background())
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to load partnership details: %w", err)
+		return nil, fmt.Errorf("failed to load partnership members: %w", err)
 	}
 
-	// Load User data for each member separately
-	for i := range partnership.Members {
+	// Load User data for each member
+	for i := range members {
 		var user types.User
 		err := database.NewSelect().
 			Model(&user).
-			Where("id = ?", partnership.Members[i].UserID).
+			Where("id = ?", members[i].UserID).
 			Scan(context.Background())
 		if err == nil {
-			partnership.Members[i].User = &user
+			members[i].User = &user
 		}
 	}
 
+	partnership.Members = members
 	return partnership, nil
 }
 
