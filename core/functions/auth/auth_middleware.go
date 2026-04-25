@@ -40,6 +40,13 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		// Validate session (check device_id)
+		err = h.authService.ValidateSession(claims.UserID, claims.DeviceID)
+		if err != nil {
+			helpers.RespondError(w, http.StatusUnauthorized, "Invalid or expired session")
+			return
+		}
+
 		// Get user from database
 		database := db.GetDb()
 		if database == nil {

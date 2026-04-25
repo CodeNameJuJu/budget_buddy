@@ -4,11 +4,17 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+)
+
+const (
+	AccessTokenDuration  = 15 * time.Minute
+	RefreshTokenDuration = 7 * 24 * time.Hour
 )
 
 // AuthHandler handles authentication requests
@@ -91,8 +97,15 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate device ID
+	deviceID, err := h.authService.GenerateDeviceID()
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate device ID")
+		return
+	}
+
 	// Generate tokens
-	accessToken, refreshToken, err := h.authService.GenerateTokens(user)
+	accessToken, refreshToken, err := h.authService.GenerateTokens(user, deviceID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate tokens")
 		return
@@ -108,6 +121,15 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	err = h.authService.StoreRefreshToken(user.ID, refreshTokenHash, time.Now().Add(RefreshTokenDuration))
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to store refresh token")
+		return
+	}
+
+	// Create user session
+	userAgent := r.UserAgent()
+	ipAddress := r.RemoteAddr
+	err = h.authService.CreateOrUpdateSession(user.ID, deviceID, "", "", userAgent, ipAddress, time.Now().Add(RefreshTokenDuration))
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create session")
 		return
 	}
 
@@ -174,8 +196,15 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate device ID
+	deviceID, err := h.authService.GenerateDeviceID()
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate device ID")
+		return
+	}
+
 	// Generate tokens
-	accessToken, refreshToken, err := h.authService.GenerateTokens(&user)
+	accessToken, refreshToken, err := h.authService.GenerateTokens(&user, deviceID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate tokens")
 		return
@@ -191,6 +220,15 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	err = h.authService.StoreRefreshToken(user.ID, refreshTokenHash, time.Now().Add(RefreshTokenDuration))
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to store refresh token")
+		return
+	}
+
+	// Create user session
+	userAgent := r.UserAgent()
+	ipAddress := r.RemoteAddr
+	err = h.authService.CreateOrUpdateSession(user.ID, deviceID, "", "", userAgent, ipAddress, time.Now().Add(RefreshTokenDuration))
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create session")
 		return
 	}
 
@@ -252,8 +290,30 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get device_id from current access token if available
+	authHeader := r.Header.Get("Authorization")
+	deviceID := ""
+	if authHeader != "" {
+		parts := strings.Split(authHeader, " ")
+		if len(parts) == 2 && parts[0] == "Bearer" {
+			claims, err := h.authService.ValidateToken(parts[1])
+			if err == nil && claims.DeviceID != "" {
+				deviceID = claims.DeviceID
+			}
+		}
+	}
+
+	// If no device_id, generate a new one
+	if deviceID == "" {
+		deviceID, err = h.authService.GenerateDeviceID()
+		if err != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate device ID")
+			return
+		}
+	}
+
 	// Generate new tokens
-	accessToken, newRefreshToken, err := h.authService.GenerateTokens(&user)
+	accessToken, newRefreshToken, err := h.authService.GenerateTokens(&user, deviceID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate tokens")
 		return
@@ -382,4 +442,66 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.RespondData(w, map[string]string{"message": "Password changed successfully"}, http.StatusOK)
+}
+
+// ListDevices lists all devices/sessions for the current user
+func (h *AuthHandler) ListDevices(w http.ResponseWriter, r *http.Request) {
+	userID, ok := GetUserIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	var sessions []types.UserSession
+	err := database.NewSelect().
+		Model(&sessions).
+		Where("user_id = ?", userID).
+		Order("last_active DESC").
+		Scan(context.Background())
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to fetch devices")
+		return
+	}
+
+	helpers.RespondData(w, sessions, http.StatusOK)
+}
+
+// RevokeDevice revokes a specific device/session
+func (h *AuthHandler) RevokeDevice(w http.ResponseWriter, r *http.Request) {
+	userID, ok := GetUserIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	deviceID := r.URL.Query().Get("device_id")
+	if deviceID == "" {
+		helpers.RespondError(w, http.StatusBadRequest, "device_id is required")
+		return
+	}
+
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	_, err := database.NewDelete().
+		Model((*types.UserSession)(nil)).
+		Where("user_id = ? AND device_id = ?", userID, deviceID).
+		Exec(context.Background())
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to revoke device")
+		return
+	}
+
+	helpers.RespondData(w, map[string]string{"message": "Device revoked successfully"}, http.StatusOK)
 }

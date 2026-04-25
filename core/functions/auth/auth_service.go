@@ -53,15 +53,15 @@ func (s *AuthService) VerifyPassword(password, hash string) bool {
 }
 
 // GenerateTokens generates both access and refresh tokens
-func (s *AuthService) GenerateTokens(user *types.User) (string, string, error) {
+func (s *AuthService) GenerateTokens(user *types.User, deviceID string) (string, string, error) {
 	// Generate access token
-	accessToken, err := s.generateToken(user, "access", AccessTokenDuration)
+	accessToken, err := s.generateToken(user, "access", AccessTokenDuration, deviceID)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to generate access token: %w", err)
 	}
 
 	// Generate refresh token
-	refreshToken, err := s.generateToken(user, "refresh", RefreshTokenDuration)
+	refreshToken, err := s.generateToken(user, "refresh", RefreshTokenDuration, deviceID)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to generate refresh token: %w", err)
 	}
@@ -70,13 +70,14 @@ func (s *AuthService) GenerateTokens(user *types.User) (string, string, error) {
 }
 
 // generateToken generates a JWT token
-func (s *AuthService) generateToken(user *types.User, tokenType string, duration time.Duration) (string, error) {
+func (s *AuthService) generateToken(user *types.User, tokenType string, duration time.Duration, deviceID string) (string, error) {
 	claims := jwt.MapClaims{
-		"user_id": user.ID,
-		"email":   user.Email,
-		"type":    tokenType,
-		"exp":     time.Now().Add(duration).Unix(),
-		"iat":     time.Now().Unix(),
+		"user_id":   user.ID,
+		"email":     user.Email,
+		"type":      tokenType,
+		"device_id": deviceID,
+		"exp":       time.Now().Add(duration).Unix(),
+		"iat":       time.Now().Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -112,10 +113,16 @@ func (s *AuthService) ValidateToken(tokenString string) (*types.JWTClaims, error
 			return nil, fmt.Errorf("invalid token type in token")
 		}
 
+		deviceID, ok := claims["device_id"].(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid device_id in token")
+		}
+
 		return &types.JWTClaims{
-			UserID: int(userID),
-			Email:  email,
-			Type:   tokenType,
+			UserID:   int(userID),
+			Email:    email,
+			Type:     tokenType,
+			DeviceID: deviceID,
 		}, nil
 	}
 
@@ -232,4 +239,83 @@ func getEnv(key, defaultValue string) string {
 // getEnvDirect gets an environment variable
 func getEnvDirect(key string) string {
 	return os.Getenv(key)
+}
+
+// GenerateDeviceID generates a unique device ID
+func (s *AuthService) GenerateDeviceID() (string, error) {
+	return s.GenerateSecureToken(32)
+}
+
+// CreateOrUpdateSession creates or updates a user session in the database
+func (s *AuthService) CreateOrUpdateSession(userID int, deviceID, deviceName, deviceType, userAgent, ipAddress string, expiresAt time.Time) error {
+	database := db.GetDb()
+	if database == nil {
+		return fmt.Errorf("database not connected")
+	}
+
+	// Check if session already exists
+	var session types.UserSession
+	err := database.NewSelect().
+		Model(&session).
+		Where("user_id = ? AND device_id = ?", userID, deviceID).
+		Scan(context.Background())
+
+	if err == nil {
+		// Update existing session
+		_, err = database.NewUpdate().
+			Model(&session).
+			Set("last_active = ?", time.Now()).
+			Set("expires_at = ?", expiresAt).
+			Set("is_active = ?", true).
+			Where("id = ?", session.ID).
+			Exec(context.Background())
+		if err != nil {
+			return fmt.Errorf("failed to update session: %w", err)
+		}
+	} else {
+		// Create new session
+		session = types.UserSession{
+			UserID:     userID,
+			DeviceID:   deviceID,
+			DeviceName: deviceName,
+			DeviceType: deviceType,
+			UserAgent:  userAgent,
+			IPAddress:  ipAddress,
+			ExpiresAt:  expiresAt,
+			IsActive:   true,
+		}
+		_, err = database.NewInsert().Model(&session).Exec(context.Background())
+		if err != nil {
+			return fmt.Errorf("failed to create session: %w", err)
+		}
+	}
+
+	return nil
+}
+
+// ValidateSession validates that the device_id in the token is valid for the user
+func (s *AuthService) ValidateSession(userID int, deviceID string) error {
+	database := db.GetDb()
+	if database == nil {
+		return fmt.Errorf("database not connected")
+	}
+
+	var session types.UserSession
+	err := database.NewSelect().
+		Model(&session).
+		Where("user_id = ? AND device_id = ? AND is_active = ? AND expires_at > ?", userID, deviceID, true, time.Now()).
+		Scan(context.Background())
+
+	if err != nil {
+		return fmt.Errorf("invalid or expired session")
+	}
+
+	// Update last_active
+	_, err = database.NewUpdate().
+		Model(&session).
+		Set("last_active = ?", time.Now()).
+		Where("id = ?", session.ID).
+		Exec(context.Background())
+
+	return err
 }

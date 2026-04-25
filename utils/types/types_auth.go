@@ -81,7 +81,23 @@ type ChangePasswordRequest struct {
 
 // JWT Claims represents the JWT token claims
 type JWTClaims struct {
-	UserID int    `json:"user_id"`
-	Email  string `json:"email"`
-	Type   string `json:"type"` // "access" or "refresh"
+	UserID   int    `json:"user_id"`
+	Email    string `json:"email"`
+	Type     string `json:"type"` // "access" or "refresh"
+	DeviceID string `json:"device_id"`
+}
+
+// UserSession represents a user's device/session
+type UserSession struct {
+	ID         int       `json:"id" bun:"id,pk,autoincrement"`
+	UserID     int       `json:"user_id" bun:"user_id"`
+	DeviceID   string    `json:"device_id" bun:"device_id"`
+	DeviceName string    `json:"device_name" bun:"device_name"`
+	DeviceType string    `json:"device_type" bun:"device_type"`
+	UserAgent  string    `json:"user_agent" bun:"user_agent"`
+	IPAddress  string    `json:"ip_address" bun:"ip_address"`
+	LastActive time.Time `json:"last_active" bun:"last_active"`
+	CreatedAt  time.Time `json:"created_at" bun:"created_at"`
+	ExpiresAt  time.Time `json:"expires_at" bun:"expires_at"`
+	IsActive   bool      `json:"is_active" bun:"is_active"`
 }

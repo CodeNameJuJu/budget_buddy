@@ -37,6 +37,8 @@ func RegisterRoutes(r chi.Router) {
 			r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 				r.Get("/profile", authHandler.GetProfile)
 				r.Post("/change-password", authHandler.ChangePassword)
+				r.Get("/devices", authHandler.ListDevices)
+				r.Delete("/devices", authHandler.RevokeDevice)
 			})
 		})
 
