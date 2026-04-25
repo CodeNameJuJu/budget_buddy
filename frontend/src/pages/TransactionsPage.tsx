@@ -10,6 +10,7 @@ import {
   transactionsApi,
   categoriesApi,
   tagsApi,
+  accountsApi,
   type Transaction,
   type Category,
   type PopularTag,
