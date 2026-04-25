@@ -16,6 +16,7 @@ RUN go mod download
 COPY main.go ./
 COPY core/ ./core/
 COPY utils/ ./utils/
+COPY backend/migrations/ ./backend/migrations/
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o budget-buddy .
