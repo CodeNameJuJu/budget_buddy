@@ -427,24 +427,20 @@ export default function PartnerInvitation() {
                 <label className="block text-sm font-medium text-slate-300 mb-1">
                   Partnership
                 </label>
-                <Select
+                <select
                   value={inviteForm.partnershipId}
-                  onValueChange={(value) =>
-                    setInviteForm({ ...inviteForm, partnershipId: value })
+                  onChange={(e) =>
+                    setInviteForm({ ...inviteForm, partnershipId: e.target.value })
                   }
+                  className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a partnership" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {console.log('Rendering partnerships in dropdown:', partnerships.length)}
-                    {partnerships.map((p) => (
-                      <SelectItem key={p.id} value={p.id.toString()}>
-                        {p.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <option value="">Select a partnership</option>
+                  {partnerships.map((p) => (
+                    <option key={p.id} value={p.id.toString()}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
