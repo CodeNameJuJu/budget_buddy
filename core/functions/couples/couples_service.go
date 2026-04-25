@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
@@ -309,7 +310,7 @@ func (s *CouplesService) RespondToInvitation(userID int, token string, action st
 		return fmt.Errorf("user not found: %w", err)
 	}
 
-	if user.Email != invitation.InvitedEmail {
+	if strings.ToLower(user.Email) != strings.ToLower(invitation.InvitedEmail) {
 		return fmt.Errorf("invitation email does not match user email")
 	}
 
