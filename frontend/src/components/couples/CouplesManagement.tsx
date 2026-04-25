@@ -44,6 +44,7 @@ interface PartnerInvitation {
   partnership_id: number;
   invited_email: string;
   status: string;
+  role: string;
   message?: string;
   expires_at: string;
   partnership?: {

@@ -489,6 +489,7 @@ export interface PartnerInvitationDTO {
   invited_by_user_id: number
   invitation_token: string
   status: "pending" | "accepted" | "declined" | "expired"
+  role: "admin" | "member"
   message?: string | null
   expires_at: string
   created_at: string

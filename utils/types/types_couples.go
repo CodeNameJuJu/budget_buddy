@@ -18,7 +18,8 @@ type Partnership struct {
 	DeletedAt       *time.Time `json:"deleted_at,omitempty" bun:"deleted_date,soft_delete"`
 
 	// Relations
-	SharedAccounts []SharedAccount `json:"shared_accounts,omitempty" bun:"rel:has-many,join:on=partnership_id"`
+	Members        []PartnershipMember `json:"members,omitempty" bun:"rel:has-many,join:on=partnership_id"`
+	SharedAccounts []SharedAccount     `json:"shared_accounts,omitempty" bun:"rel:has-many,join:on=partnership_id"`
 }
 
 // PartnershipMember represents a user in a partnership.
@@ -35,6 +36,7 @@ type PartnershipMember struct {
 
 	// Relations
 	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
+	User        *User        `json:"user,omitempty" bun:"rel:has-one,join:on=user_id"`
 }
 
 // PartnerInvitation represents an invitation to join a partnership
@@ -46,6 +48,7 @@ type PartnerInvitation struct {
 	InvitedByUserID int        `json:"invited_by_user_id" bun:"invited_by_user_id"`
 	InvitationToken string     `json:"invitation_token" bun:"invitation_token"`
 	Status          string     `json:"status" bun:"status"` // 'pending', 'accepted', 'declined', 'expired'
+	Role            string     `json:"role" bun:"role"`     // 'admin', 'member'
 	Message         *string    `json:"message,omitempty" bun:"message"`
 	ExpiresAt       time.Time  `json:"expires_at" bun:"expires_at"`
 	AcceptedAt      *time.Time `json:"accepted_at,omitempty" bun:"accepted_at"`
@@ -53,7 +56,8 @@ type PartnerInvitation struct {
 	CreatedAt       time.Time  `json:"created_at" bun:"created_date"`
 
 	// Relations
-	Partnership *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
+	Partnership   *Partnership `json:"partnership,omitempty" bun:"rel:has-one,join:on=partnership_id"`
+	InvitedByUser *User        `json:"invited_by_user,omitempty" bun:"rel:has-one,join:on=invited_by_user_id"`
 }
 
 // SharedAccount represents an account shared between partners

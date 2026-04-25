@@ -43,12 +43,13 @@ CREATE TABLE IF NOT EXISTS partner_invitations (
     invited_by_user_id INT NOT NULL,
     invitation_token VARCHAR(255) NOT NULL UNIQUE,
     status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'declined', 'expired')),
+    role VARCHAR(50) NOT NULL DEFAULT 'member' CHECK (role IN ('admin', 'member')),
     message TEXT,
     expires_at TIMESTAMP NOT NULL,
     accepted_at TIMESTAMP,
     declined_at TIMESTAMP,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     FOREIGN KEY (partnership_id) REFERENCES partnerships(id) ON DELETE CASCADE,
     FOREIGN KEY (invited_user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (invited_by_user_id) REFERENCES users(id) ON DELETE CASCADE

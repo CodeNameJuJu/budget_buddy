@@ -67,6 +67,18 @@ func (s *CouplesService) CreatePartnership(userID int, req *types.CreatePartners
 		return nil, fmt.Errorf("failed to load partnership details: %w", err)
 	}
 
+	// Load User data for each member separately
+	for i := range partnership.Members {
+		var user types.User
+		err := database.NewSelect().
+			Model(&user).
+			Where("id = ?", partnership.Members[i].UserID).
+			Scan(context.Background())
+		if err == nil {
+			partnership.Members[i].User = &user
+		}
+	}
+
 	return partnership, nil
 }
 
@@ -106,12 +118,27 @@ func (s *CouplesService) GetUserPartnerships(userID int) (*struct {
 	if len(partnershipIDs) > 0 {
 		err = database.NewSelect().
 			Model(&partnerships).
+			Relation("Members").
 			Where("id IN (?) AND is_active = ?", bun.In(partnershipIDs), true).
 			Order("created_date DESC").
 			Scan(context.Background())
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to get user partnerships: %w", err)
+		}
+
+		// Load User data for each member separately to avoid complex relation issues
+		for i := range partnerships {
+			for j := range partnerships[i].Members {
+				var user types.User
+				err := database.NewSelect().
+					Model(&user).
+					Where("id = ?", partnerships[i].Members[j].UserID).
+					Scan(context.Background())
+				if err == nil {
+					partnerships[i].Members[j].User = &user
+				}
+			}
 		}
 	}
 
@@ -168,13 +195,19 @@ func (s *CouplesService) InvitePartner(partnershipID, inviterUserID int, req *ty
 
 	// Note: Permissions will be set when the invitation is accepted
 
-	// Create invitation
+	// Create invitation with requested role
+	role := "member" // default
+	if req.Role != "" {
+		role = req.Role
+	}
+
 	invitation := &types.PartnerInvitation{
 		PartnershipID:   partnershipID,
 		InvitedEmail:    req.Email,
 		InvitedByUserID: inviterUserID,
 		InvitationToken: token,
 		Status:          "pending",
+		Role:            role,
 		Message:         req.Message,
 		ExpiresAt:       time.Now().Add(InvitationExpiry),
 	}
@@ -239,11 +272,11 @@ func (s *CouplesService) RespondToInvitation(userID int, token string, action st
 	}
 
 	if action == "accept" {
-		// Add user to partnership
+		// Add user to partnership with the role from the invitation
 		member := &types.PartnershipMember{
 			PartnershipID: invitation.PartnershipID,
 			UserID:        userID,
-			Role:          "member", // Default role, can be changed later
+			Role:          invitation.Role,
 			JoinedAt:      time.Now(),
 		}
 
@@ -389,6 +422,18 @@ func (s *CouplesService) GetPartnershipDetails(partnershipID, userID int) (*type
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to get partnership members: %w", err)
+	}
+
+	// Load User data for each member separately
+	for i := range members {
+		var user types.User
+		err := database.NewSelect().
+			Model(&user).
+			Where("id = ?", members[i].UserID).
+			Scan(context.Background())
+		if err == nil {
+			members[i].User = &user
+		}
 	}
 
 	// Convert to summary
