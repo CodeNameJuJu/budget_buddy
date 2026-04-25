@@ -137,10 +137,25 @@
     .grid-responsive {
       grid-template-columns: 1fr;
       gap: 0.75rem;
+      max-width: 100%;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     .grid-responsive > div {
       grid-column: span 1 !important;
+      max-width: 100%;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .responsive-margin {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin-left: 0;
+      margin-right: 0;
+      max-width: 100%;
+      overflow-x: hidden;
     }
   }
   
