@@ -320,7 +320,7 @@ func (s *CouplesService) RespondToInvitation(userID int, token string, action st
 			JoinedAt:      time.Now(),
 		}
 
-		err = database.NewInsert().Model(member).ExcludeColumn("partnership").ExcludeColumn("user").Exec(context.Background())
+		_, err = database.NewInsert().Model(member).ExcludeColumn("partnership").ExcludeColumn("user").Exec(context.Background())
 		if err != nil {
 			return fmt.Errorf("failed to add user to partnership: %w", err)
 		}
