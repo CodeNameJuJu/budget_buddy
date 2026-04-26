@@ -41,27 +41,36 @@ export default function CustomDashboardPage() {
   }, [accountId])
 
   async function loadWidgets() {
+    console.log("Loading widgets for account:", accountId)
     try {
       const response = await dashboardApi.getLayout(accountId)
+      console.log("Layout API response:", response)
       if (response.data && response.data.layout) {
         // Parse layout from JSON string
         const layout = JSON.parse(response.data.layout)
+        console.log("Loaded layout from API:", layout)
         setWidgets(layout)
       } else {
+        console.log("No layout in API response, trying localStorage")
         // Try localStorage as fallback
         const localLayout = localStorage.getItem(`dashboard-layout-${accountId}`)
         if (localLayout) {
+          console.log("Loaded layout from localStorage:", localLayout)
           setWidgets(JSON.parse(localLayout))
         } else {
+          console.log("No layout in localStorage, using default")
           setWidgets(getCustomLayout())
         }
       }
-    } catch {
+    } catch (error) {
+      console.error("Failed to load layout from API:", error)
       // Try localStorage as fallback
       const localLayout = localStorage.getItem(`dashboard-layout-${accountId}`)
       if (localLayout) {
+        console.log("Loaded layout from localStorage after API error:", localLayout)
         setWidgets(JSON.parse(localLayout))
       } else {
+        console.log("No layout in localStorage after API error, using default")
         setWidgets(getCustomLayout())
       }
     }
@@ -84,12 +93,14 @@ export default function CustomDashboardPage() {
     // Auto-save to localStorage and database
     if (accountId) {
       localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(updatedWidgets))
+      console.log("Saved to localStorage:", JSON.stringify(updatedWidgets))
       try {
-        await dashboardApi.saveLayout({
+        const saveResponse = await dashboardApi.saveLayout({
           account_id: accountId,
           name: "Default",
           layout: JSON.stringify(updatedWidgets)
         })
+        console.log("Saved to database:", saveResponse)
       } catch (error) {
         console.error("Failed to save layout to database", error)
       }
@@ -134,12 +145,14 @@ export default function CustomDashboardPage() {
     // Auto-save to localStorage and database
     if (accountId) {
       localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(updatedWidgets))
+      console.log("Added widget, saved to localStorage:", JSON.stringify(updatedWidgets))
       try {
-        await dashboardApi.saveLayout({
+        const saveResponse = await dashboardApi.saveLayout({
           account_id: accountId,
           name: "Default",
           layout: JSON.stringify(updatedWidgets)
         })
+        console.log("Added widget, saved to database:", saveResponse)
       } catch (error) {
         console.error("Failed to save layout to database", error)
       }
@@ -152,12 +165,14 @@ export default function CustomDashboardPage() {
     // Auto-save to localStorage and database
     if (accountId) {
       localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(updatedWidgets))
+      console.log("Removed widget, saved to localStorage:", JSON.stringify(updatedWidgets))
       try {
-        await dashboardApi.saveLayout({
+        const saveResponse = await dashboardApi.saveLayout({
           account_id: accountId,
           name: "Default",
           layout: JSON.stringify(updatedWidgets)
         })
+        console.log("Removed widget, saved to database:", saveResponse)
       } catch (error) {
         console.error("Failed to save layout to database", error)
       }
