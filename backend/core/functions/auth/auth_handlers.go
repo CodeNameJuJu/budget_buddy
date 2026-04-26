@@ -32,7 +32,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Basic validation
+	// Validate request
 	if req.Email == "" || req.Password == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "Email and password are required")
 		return
@@ -52,7 +52,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		Scan(context.Background())
 
 	if err == nil {
-		helpers.RespondError(w, http.StatusConflict, "User with this email already exists")
+		helpers.RespondError(w, http.StatusConflict, "User already exists")
 		return
 	}
 
@@ -130,6 +130,11 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.RespondJSON(w, http.StatusCreated, response)
+}
+
+// POSTProfilePicture updates the user's profile picture URL
+func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request) {
+	POSTProfilePicture(w, r)
 }
 
 // Login handles user login
