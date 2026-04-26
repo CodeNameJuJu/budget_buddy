@@ -12,8 +12,8 @@ import (
 	appcontext "github.com/julian/budget-buddy/core/context"
 )
 
-// PATCHProfilePicture updates the user's profile picture URL
-func PATCHProfilePicture(w http.ResponseWriter, r *http.Request) {
+// POSTProfilePicture updates the user's profile picture URL
+func POSTProfilePicture(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	db := appcontext.GetDb()
 	userID := appcontext.GetUserID(ctx)

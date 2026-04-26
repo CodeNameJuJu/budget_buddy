@@ -32,7 +32,7 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/auth/login", authHandler.Login)
 		r.Post("/auth/refresh", authHandler.RefreshToken)
 		r.Get("/auth/me", authHandler.GetProfile)
-		r.Post("/auth/profile-picture", auth.PATCHProfilePicture)
+		r.Post("/auth/profile-picture", auth.POSTProfilePicture)
 
 		/* ----------- ACCOUNTS ----------- */
 		r.Get("/accounts", accounts.GETAccount)
