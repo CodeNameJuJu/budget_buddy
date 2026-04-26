@@ -412,7 +412,19 @@ func alertExistsForPeriod(accountID int64, alertType types.AlertType, period str
 	dbConn := appcontext.GetDb()
 	var count int
 
-	// Get the start of the period as a date string
+	if alertType == types.AlertWeeklySummary {
+		// For weekly, check if alert created in last 7 days
+		sevenDaysAgo := time.Now().AddDate(0, 0, -7)
+		count, err := dbConn.NewSelect().
+			Model((*types.Alert)(nil)).
+			Where("account_id = ?", accountID).
+			Where("type = ?", alertType).
+			Where("created_date >= ?", sevenDaysAgo).
+			Count(context.Background())
+		return count > 0, err
+	}
+
+	// For monthly, check if alert created this month
 	count, err := dbConn.NewSelect().
 		Model((*types.Alert)(nil)).
 		Where("account_id = ?", accountID).
