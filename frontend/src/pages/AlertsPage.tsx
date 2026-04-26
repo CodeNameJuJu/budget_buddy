@@ -25,7 +25,7 @@ export default function AlertsPage() {
   const [preferences, setPreferences] = useState<AlertPreference[]>([])
   const [loading, setLoading] = useState(true)
   const [showPreferences, setShowPreferences] = useState(false)
-  const [alertType, setAlertType] = useState<string>("")
+  const [alertType, setAlertType] = useState<string>("all")
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
@@ -114,7 +114,8 @@ export default function AlertsPage() {
     if (!accountId) return
     
     try {
-      await alertsApi.triggerAlerts(accountId, alertType)
+      const alertTypeToSend = alertType === "all" ? "" : alertType
+      await alertsApi.triggerAlerts(accountId, alertTypeToSend)
       loadData() // Reload alerts to show newly generated ones
     } catch (error) {
       console.error("Failed to trigger alerts", error)
@@ -178,7 +179,7 @@ export default function AlertsPage() {
               <SelectValue placeholder="All Alerts" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Alerts</SelectItem>
+              <SelectItem value="all">All Alerts</SelectItem>
               <SelectItem value="weekly">Weekly Summary</SelectItem>
               <SelectItem value="monthly">Monthly Summary</SelectItem>
             </SelectContent>
