@@ -111,13 +111,7 @@ export default function WidgetRenderer({ widget, accountId }: WidgetRendererProp
   }
 
   return (
-    <div 
-      className="transition-all duration-200"
-      style={{
-        gridColumn: `span ${widget.position.w}`,
-        gridRow: `span ${widget.position.h}`,
-      }}
-    >
+    <div className="transition-all duration-200">
       {renderWidget()}
     </div>
   )

@@ -198,8 +198,7 @@ export default function CustomDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950/20 to-slate-950">
-      <div className="responsive-margin py-6 xs:py-8">
+    <div className="responsive-margin py-6 xs:py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 xs:mb-8" data-tutorial="dashboard">
           <div>
@@ -320,7 +319,7 @@ export default function CustomDashboardPage() {
         )}
 
         {/* Widget Grid */}
-        <div className="grid-responsive">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
@@ -332,6 +331,5 @@ export default function CustomDashboardPage() {
           ))}
         </div>
       </div>
-    </div>
   )
 }
