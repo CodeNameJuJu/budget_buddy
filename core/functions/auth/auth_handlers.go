@@ -500,7 +500,7 @@ func (h *AuthHandler) SendVerificationEmail(w http.ResponseWriter, r *http.Reque
 	// Send verification email using email service
 	err = h.emailService.SendVerificationEmail(user.ID, user.Email, verificationToken)
 	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to send verification email")
+		helpers.RespondError(w, http.StatusInternalServerError, fmt.Sprintf("Failed to send verification email: %v", err))
 		return
 	}
 
