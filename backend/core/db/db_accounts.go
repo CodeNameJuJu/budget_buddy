@@ -18,9 +18,13 @@ func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 
 	// If user is authenticated, include their own accounts and shared accounts
 	if userID != 0 {
-		query = query.Where("a.user_id = ? OR a.id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?))", userID, userID)
+		// Get user's own accounts
+		query = query.Where("a.email IN (SELECT email FROM users WHERE id = ?)", userID)
+
+		// Also include shared accounts from partnerships
+		query = query.WhereOr("a.id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?))", userID)
 	} else {
-		query = query.Where("a.user_id = ?", userID)
+		query = query.Where("a.email IN (SELECT email FROM users WHERE id = ?)", userID)
 	}
 
 	if accountID != nil {

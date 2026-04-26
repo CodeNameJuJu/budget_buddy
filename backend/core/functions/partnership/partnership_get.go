@@ -16,7 +16,7 @@ import (
 // GETPartnerships returns all partnerships for the current user
 func GETPartnerships(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := context.GetDB(ctx)
+	db := context.GetDb()
 	userID := context.GetUserID(ctx)
 
 	if db == nil {

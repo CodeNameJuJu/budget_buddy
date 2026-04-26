@@ -17,7 +17,7 @@ import (
 // POSTPartnerships creates a new partnership
 func POSTPartnerships(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := context.GetDB(ctx)
+	db := context.GetDb()
 	userID := context.GetUserID(ctx)
 
 	if db == nil {
@@ -74,7 +74,7 @@ func POSTPartnerships(w http.ResponseWriter, r *http.Request) {
 // POSTInvitePartner sends an invitation to a partner
 func POSTInvitePartner(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := context.GetDB(ctx)
+	db := context.GetDb()
 	userID := context.GetUserID(ctx)
 
 	if db == nil {
@@ -150,7 +150,7 @@ func POSTInvitePartner(w http.ResponseWriter, r *http.Request) {
 // POSTRespondToInvitation accepts or declines a partnership invitation
 func POSTRespondToInvitation(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := context.GetDB(ctx)
+	db := context.GetDb()
 	userID := context.GetUserID(ctx)
 
 	if db == nil {

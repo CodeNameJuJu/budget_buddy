@@ -33,9 +33,13 @@ func QueryTransactions(filters TransactionFilters) ([]types.Transaction, int, er
 
 	// If user is authenticated, include transactions from their own accounts and shared accounts
 	if userID != 0 {
-		query = query.Where("t.account_id IN (SELECT id FROM accounts WHERE user_id = ? OR id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?)))", userID, userID)
+		// Get transactions from user's own accounts
+		query = query.Where("t.account_id IN (SELECT id FROM accounts WHERE email IN (SELECT email FROM users WHERE id = ?))", userID)
+
+		// Also include transactions from shared accounts
+		query = query.WhereOr("t.account_id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?))", userID)
 	} else {
-		query = query.Where("t.account_id IN (SELECT id FROM accounts WHERE user_id = ?)", userID)
+		query = query.Where("t.account_id IN (SELECT id FROM accounts WHERE email IN (SELECT email FROM users WHERE id = ?))", userID)
 	}
 
 	if filters.AccountID != 0 {
