@@ -172,7 +172,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 relative mobile-safe-area">
+    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 relative mobile-safe-area">
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
         <div
@@ -193,21 +193,21 @@ export default function Layout() {
       <aside
         ref={sidebarRef}
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-slate-800/95 backdrop-blur-xl border-r border-blue-900/50 shadow-2xl transform transition-all duration-300 ease-out",
+          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-slate-800/95 backdrop-blur-xl border-r border-emerald-900/50 shadow-2xl transform transition-all duration-300 ease-out",
           sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          "lg:w-64 lg:bg-slate-800/90 lg:backdrop-blur-md lg:shadow-xl lg:border-blue-900/30"
+          "lg:w-64 lg:bg-slate-800/90 lg:backdrop-blur-md lg:shadow-xl lg:border-emerald-900/30"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-4 xs:p-5 lg:p-6 border-b border-blue-900/50">
+          <div className="p-4 xs:p-5 lg:p-6 border-b border-emerald-900/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
-                <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-blue-400 to-teal-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
+                <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
                   <Wallet className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
                 <div>
-                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-300 to-teal-300 bg-clip-text text-transparent">Budget Buddy</h1>
+                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">Budget Buddy</h1>
                   <p className="text-xs xs:text-sm text-slate-400 hidden md:block">Your elegant financial companion</p>
                 </div>
               </div>
@@ -238,15 +238,15 @@ export default function Layout() {
                     cn(
                       "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
-                        ? "bg-gradient-to-r from-blue-500 to-teal-500 text-white shadow-lg transform scale-[1.02]"
-                        : "text-slate-300 hover:bg-blue-900/30 hover:text-blue-200 hover:shadow-md hover:transform hover:translate-x-1"
+                        ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg transform scale-[1.02]"
+                        : "text-slate-300 hover:bg-emerald-900/30 hover:text-emerald-200 hover:shadow-md hover:transform hover:translate-x-1"
                     )
                   }
                 >
                   <div className={cn(
                     "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
-                    "group-hover:bg-blue-900/30 group-hover:scale-110",
-                    "group-[.active]:bg-blue-800/50"
+                    "group-hover:bg-emerald-900/30 group-hover:scale-110",
+                    "group-[.active]:bg-emerald-800/50"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                   </div>
@@ -257,12 +257,12 @@ export default function Layout() {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 xs:p-5 lg:p-6 border-t border-blue-900/50 relative" ref={profileDropdownRef}>
+          <div className="p-4 xs:p-5 lg:p-6 border-t border-emerald-900/50 relative" ref={profileDropdownRef}>
             <button
               onClick={handleProfileClick}
-              className="group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button bg-gradient-to-r from-blue-900/50 to-teal-900/50 hover:from-blue-800/50 hover:to-teal-800/50 text-blue-200 hover:text-white shadow-lg hover:shadow-xl border border-blue-800/50 hover:border-blue-700/50"
+              className="group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button bg-gradient-to-r from-emerald-900/50 to-green-900/50 hover:from-emerald-800/50 hover:to-green-800/50 text-emerald-200 hover:text-white shadow-lg hover:shadow-xl border border-emerald-800/50 hover:border-emerald-700/50"
             >
-              <div className="p-2 rounded-lg bg-blue-800/50 group-hover:bg-blue-700/50 transition-all duration-200 flex-shrink-0 group-hover:scale-110">
+              <div className="p-2 rounded-lg bg-emerald-800/50 group-hover:bg-emerald-700/50 transition-all duration-200 flex-shrink-0 group-hover:scale-110">
                 <User className="h-5 w-5 xs:h-6 xs:w-6" />
               </div>
               <span className="truncate font-medium flex-1 text-left">Profile</span>
@@ -274,15 +274,15 @@ export default function Layout() {
 
             {/* Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 bg-slate-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-blue-900/50 overflow-hidden z-50">
+              <div className="absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 bg-slate-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-emerald-900/50 overflow-hidden z-50">
                 <button
                   onClick={handleViewProfile}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-300 hover:bg-blue-900/30 hover:text-white transition-all duration-200"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-300 hover:bg-emerald-900/30 hover:text-white transition-all duration-200"
                 >
                   <User className="h-4 w-4" />
                   <span className="font-medium">View Profile</span>
                 </button>
-                <div className="border-t border-blue-900/50" />
+                <div className="border-t border-emerald-900/50" />
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
@@ -299,16 +299,16 @@ export default function Layout() {
       {/* Main content */}
       <main className="flex-1 overflow-auto mobile-scroll">
         {/* Mobile header with enhanced design */}
-        <div className="lg:hidden sticky top-0 z-30 bg-slate-800/90 backdrop-blur-md border-b border-blue-900/50 responsive-padding">
+        <div className="lg:hidden sticky top-0 z-30 bg-slate-800/90 backdrop-blur-md border-b border-emerald-900/50 responsive-padding">
           <div className="flex items-center justify-between">
             <button
               onClick={openSidebar}
-              className="p-2.5 xs:p-3 rounded-full hover:bg-blue-900/30 transition-all duration-200 mobile-app-button group text-slate-300"
+              className="p-2.5 xs:p-3 rounded-full hover:bg-emerald-900/30 transition-all duration-200 mobile-app-button group text-slate-300"
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
             </button>
             <div className="flex items-center gap-2 xs:gap-3">
-              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-blue-400 to-teal-400 text-white shadow-md transition-transform duration-300 hover:scale-110">
+              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-md transition-transform duration-300 hover:scale-110">
                 <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
               </div>
               <span className="font-bold text-sm xs:text-base text-slate-200">Budget Buddy</span>
