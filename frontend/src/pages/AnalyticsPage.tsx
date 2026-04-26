@@ -2,15 +2,14 @@ import { useEffect, useState } from "react"
 import { TrendingUp, TrendingDown, DollarSign, Target, AlertCircle, CheckCircle, BarChart3 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { analyticsApi, type SpendingTrend, type CategoryBreakdown, type FinancialHealth } from "@/lib/analytics"
+import { analyticsApi, accountsApi, type SpendingTrend, type CategoryBreakdown, type FinancialHealth, type Account } from "@/lib/analytics"
 import { formatCurrency, formatPercentage } from "@/lib/utils"
 import SpendingTrendsChart from "@/components/charts/SpendingTrendsChart"
 import CategoryBreakdownChart from "@/components/charts/CategoryBreakdownChart"
 import FinancialHealthGauge from "@/components/charts/FinancialHealthGauge"
 
-const ACCOUNT_ID = 1
-
 export default function AnalyticsPage() {
+  const [accountId, setAccountId] = useState<number | null>(null)
   const [trends, setTrends] = useState<SpendingTrend[]>([])
   const [categoryBreakdown, setCategoryBreakdown] = useState<CategoryBreakdown[]>([])
   const [financialHealth, setFinancialHealth] = useState<FinancialHealth | null>(null)
@@ -18,16 +17,35 @@ export default function AnalyticsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("current_month")
 
   useEffect(() => {
-    loadAnalytics()
-  }, [selectedPeriod])
+    loadUserAccount()
+  }, [])
+
+  useEffect(() => {
+    if (accountId) {
+      loadAnalytics()
+    }
+  }, [accountId, selectedPeriod])
+
+  async function loadUserAccount() {
+    try {
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        setAccountId(response.data[0].id)
+      }
+    } catch (error) {
+      console.error("Failed to load account", error)
+    }
+  }
 
   async function loadAnalytics() {
+    if (!accountId) return
+    
     setLoading(true)
     try {
       const [trendsRes, categoryRes, healthRes] = await Promise.all([
-        analyticsApi.trends(ACCOUNT_ID, 6),
-        analyticsApi.categoryBreakdown(ACCOUNT_ID, selectedPeriod),
-        analyticsApi.financialHealth(ACCOUNT_ID),
+        analyticsApi.trends(accountId, 6),
+        analyticsApi.categoryBreakdown(accountId, selectedPeriod),
+        analyticsApi.financialHealth(accountId),
       ])
       
       setTrends(trendsRes.data || [])
