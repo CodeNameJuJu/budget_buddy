@@ -35,6 +35,7 @@ export default function TutorialOverlay() {
     if (!element) {
       switch (currentStep.target) {
         case "dashboard":
+        case "dashboard-summary":
           element = document.querySelector(".mobile-title") as HTMLElement
           break
         case "budgets-page":
@@ -48,6 +49,30 @@ export default function TutorialOverlay() {
           break
         case "quick-add-button":
           element = document.querySelector("button:has(.Plus)") as HTMLElement
+          break
+        case "savings-page":
+        case "savings-pots":
+        case "savings-allocations":
+          element = document.querySelector("h1") as HTMLElement
+          break
+        case "savings-forecast":
+          element = document.querySelector('[data-tutorial="savings-forecast"]') as HTMLElement
+          break
+        case "analytics-page":
+        case "analytics-trends":
+        case "analytics-breakdown":
+        case "analytics-health":
+          element = document.querySelector("h1") as HTMLElement
+          break
+        case "alerts-page":
+        case "alerts-preferences":
+          element = document.querySelector("h1") as HTMLElement
+          break
+        case "partners-page":
+          element = document.querySelector("h1") as HTMLElement
+          break
+        case "profile-page":
+          element = document.querySelector("h1") as HTMLElement
           break
       }
     }

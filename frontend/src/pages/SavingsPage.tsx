@@ -199,7 +199,7 @@ export default function SavingsPage() {
   const pots = summary?.pots || []
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" data-tutorial="savings-page">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-100">Savings</h1>
@@ -367,7 +367,7 @@ export default function SavingsPage() {
 
       {/* Forecast panel */}
       {forecast && parseFloat(forecast.total_monthly) > 0 && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-slate-800/50 border-slate-700" data-tutorial="savings-forecast">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-primary" />

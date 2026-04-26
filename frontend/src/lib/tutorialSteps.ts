@@ -141,9 +141,9 @@ export const setupTutorialSteps: TutorialStep[] = [
     id: "dashboard-widgets",
     title: "Customize Your Dashboard",
     description: "Add, remove, and rearrange widgets to create a dashboard that shows exactly what you need.",
-    target: "custom-dashboard",
+    target: "dashboard",
     position: "bottom",
-    route: "/dashboard/custom",
+    route: "/",
   },
   {
     id: "profile-settings",
