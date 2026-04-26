@@ -12,6 +12,7 @@ import (
 	"github.com/julian/budget-buddy/core/functions/dashboard"
 	"github.com/julian/budget-buddy/core/functions/debug"
 	"github.com/julian/budget-buddy/core/functions/goals"
+	"github.com/julian/budget-buddy/core/functions/partnership"
 	"github.com/julian/budget-buddy/core/functions/savings"
 	"github.com/julian/budget-buddy/core/functions/tags"
 	"github.com/julian/budget-buddy/core/functions/transactions"
@@ -103,5 +104,11 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/alerts/preferences", alerts.POSTAlertPreference)
 		r.Post("/alerts/trigger", alerts.POSTTriggerAlerts)
 		r.Post("/alerts/init", alerts.POSTInitializeAlerts)
+
+		/* ----------- PARTNERSHIPS ----------- */
+		r.Get("/partnerships", partnership.GETPartnerships)
+		r.Post("/partnerships", partnership.POSTPartnerships)
+		r.Post("/partnerships/{partnershipID}/invite", partnership.POSTInvitePartner)
+		r.Post("/partnerships/invitations/{token}/respond", partnership.POSTRespondToInvitation)
 	})
 }
