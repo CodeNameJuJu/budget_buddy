@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
-import { LayoutDashboard } from "lucide-react"
+import { LayoutDashboard, Settings, Plus, X, Check } from "lucide-react"
 import { useAuth } from "@/hooks"
 import WidgetRenderer from "@/components/widgets/WidgetRenderer"
-import { accountsApi } from "@/lib/api"
+import { accountsApi, dashboardApi } from "@/lib/api"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface Widget {
   id: string
@@ -19,6 +21,9 @@ export default function CustomDashboardPage() {
   const { user } = useAuth()
   const [widgets, setWidgets] = useState<Widget[]>([])
   const [accountId, setAccountId] = useState<number | null>(null)
+  const [isCustomizing, setIsCustomizing] = useState(false)
+  const [availableWidgets, setAvailableWidgets] = useState<any[]>([])
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     loadUserAccount()
@@ -26,14 +31,78 @@ export default function CustomDashboardPage() {
 
   useEffect(() => {
     if (accountId) {
-      // Load widgets
-      setWidgets(getCustomLayout())
+      loadWidgets()
+      loadAvailableWidgets()
       // Simulate loading
       setTimeout(() => {
         setLoading(false)
       }, 1000)
     }
   }, [accountId])
+
+  async function loadWidgets() {
+    try {
+      const response = await dashboardApi.getLayout(accountId)
+      if (response.data) {
+        // Parse layout from JSON string
+        const layout = JSON.parse(response.data.layout)
+        setWidgets(layout)
+      } else {
+        setWidgets(getCustomLayout())
+      }
+    } catch {
+      setWidgets(getCustomLayout())
+    }
+  }
+
+  async function loadAvailableWidgets() {
+    try {
+      const response = await dashboardApi.getAvailableWidgets()
+      setAvailableWidgets(response.data || [])
+    } catch (error) {
+      console.error("Failed to load available widgets", error)
+    }
+  }
+
+  function toggleWidgetVisibility(widgetId: string) {
+    setWidgets(widgets.map(w =>
+      w.id === widgetId ? { ...w, is_visible: !w.is_visible } : w
+    ))
+  }
+
+  async function saveLayout() {
+    if (!accountId) return
+    setIsSaving(true)
+    try {
+      await dashboardApi.saveLayout({
+        account_id: accountId,
+        name: "Default",
+        layout: JSON.stringify(widgets)
+      })
+      setIsCustomizing(false)
+    } catch (error) {
+      console.error("Failed to save layout", error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  function addWidget(widgetType: string, widgetTitle: string) {
+    const newWidget: Widget = {
+      id: `${widgetType}-${Date.now()}`,
+      type: widgetType,
+      title: widgetTitle,
+      size: "medium",
+      position: { x: 0, y: widgets.length * 3, w: 6, h: 3 },
+      is_visible: true,
+      updated_at: new Date().toISOString()
+    }
+    setWidgets([...widgets, newWidget])
+  }
+
+  function removeWidget(widgetId: string) {
+    setWidgets(widgets.filter(w => w.id !== widgetId))
+  }
 
   async function loadUserAccount() {
     try {
@@ -130,18 +199,113 @@ export default function CustomDashboardPage() {
 
   return (
     <div className="space-y-4 xs:space-y-6">
-      <div className="responsive-margin" data-tutorial="dashboard">
-        <h1 className="mobile-title flex items-center gap-2 text-slate-100">
-          <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
-          Dashboard
-        </h1>
-        <p className="mobile-text text-slate-400">Your elegant financial overview</p>
+      <div className="responsive-margin flex items-center justify-between" data-tutorial="dashboard">
+        <div>
+          <h1 className="mobile-title flex items-center gap-2 text-slate-100">
+            <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
+            Dashboard
+          </h1>
+          <p className="mobile-text text-slate-400">Your elegant financial overview</p>
+        </div>
+        <Button
+          onClick={() => setIsCustomizing(!isCustomizing)}
+          variant={isCustomizing ? "default" : "outline"}
+          className={isCustomizing ? "bg-emerald-600 hover:bg-emerald-700" : "border-slate-600 text-slate-300"}
+        >
+          {isCustomizing ? (
+            <>
+              <Check className="h-4 w-4 mr-2" />
+              Done
+            </>
+          ) : (
+            <>
+              <Settings className="h-4 w-4 mr-2" />
+              Customize
+            </>
+          )}
+        </Button>
       </div>
+
+      {/* Customization Panel */}
+      {isCustomizing && (
+        <div className="responsive-margin">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-slate-100">Customize Dashboard</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Current Widgets */}
+              <div>
+                <h3 className="text-sm font-medium text-slate-400 mb-3">Current Widgets</h3>
+                <div className="grid gap-2">
+                  {widgets.map((widget) => (
+                    <div
+                      key={widget.id}
+                      className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={widget.is_visible}
+                          onChange={() => toggleWidgetVisibility(widget.id)}
+                          className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-emerald-600 focus:ring-emerald-500"
+                        />
+                        <span className="text-slate-200">{widget.title}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeWidget(widget.id)}
+                        className="text-slate-400 hover:text-red-400 h-8 w-8"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Available Widgets */}
+              {availableWidgets.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-400 mb-3">Add Widgets</h3>
+                  <div className="grid gap-2">
+                    {availableWidgets
+                      .filter(aw => !widgets.some(w => w.type === aw.type))
+                      .map((availableWidget) => (
+                        <Button
+                          key={availableWidget.type}
+                          variant="outline"
+                          onClick={() => addWidget(availableWidget.type, availableWidget.name)}
+                          className="justify-start border-slate-600 text-slate-300 hover:bg-slate-800"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          {availableWidget.name}
+                        </Button>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Save Button */}
+              <Button
+                onClick={saveLayout}
+                disabled={isSaving}
+                className="w-full bg-emerald-600 hover:bg-emerald-700"
+              >
+                {isSaving ? "Saving..." : "Save Layout"}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Widget Grid */}
       <div className="responsive-margin">
         <div className="grid-responsive">
-          {accountId && widgets.map((widget) => (
+          {accountId && widgets
+            .filter(w => w.is_visible)
+            .map((widget) => (
             <WidgetRenderer
               key={widget.id}
               widget={widget}
