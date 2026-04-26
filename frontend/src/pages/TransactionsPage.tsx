@@ -151,9 +151,7 @@ export default function TransactionsPage() {
 
       {/* Quick Add Transaction - Always Visible */}
       <div className="responsive-margin flex justify-end" data-tutorial="quick-add-button">
-        <div className="w-full max-w-md">
-          <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
-        </div>
+        <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
       </div>
 
       {/* Filters */}
