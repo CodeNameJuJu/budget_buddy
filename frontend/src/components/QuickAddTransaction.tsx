@@ -73,15 +73,15 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
   }
 
   return (
-    <Card className="border-2 border-dashed border-blue-800/50 bg-slate-800/30">
+    <Card className="border-2 border-dashed border-emerald-800/50 bg-slate-800/30">
       <CardContent className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-blue-400" />
+              <Sparkles className="h-4 w-4 text-emerald-400" />
               <h3 className="font-semibold text-slate-100">Quick Add Transaction</h3>
               {suggestedCategory && (
-                <Badge variant="secondary" className="text-xs bg-blue-800/30 text-blue-300 border border-blue-700/50">
+                <Badge variant="secondary" className="text-xs bg-emerald-800/30 text-emerald-300 border border-emerald-700/50">
                   Auto-categorized as {suggestedCategory.category}
                 </Badge>
               )}
