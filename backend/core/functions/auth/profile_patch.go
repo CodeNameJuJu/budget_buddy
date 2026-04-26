@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,13 +9,14 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/julian/budget-buddy/core/context"
+	appcontext "github.com/julian/budget-buddy/core/context"
 )
 
 // PATCHProfilePicture updates the user's profile picture URL
 func PATCHProfilePicture(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := context.GetDb()
-	userID := context.GetUserID(ctx)
+	db := appcontext.GetDb()
+	userID := appcontext.GetUserID(ctx)
 
 	if db == nil {
 		http.Error(w, "Database connection not available", http.StatusInternalServerError)

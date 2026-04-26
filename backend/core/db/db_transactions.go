@@ -23,7 +23,7 @@ type TransactionFilters struct {
 func QueryTransactions(filters TransactionFilters) ([]types.Transaction, int, error) {
 	db := appcontext.GetDb()
 	var transactions []types.Transaction
-	userID := appcontext.GetUserID()
+	userID := appcontext.GetUserID(context.Background())
 
 	query := db.NewSelect().Model(&transactions).
 		Relation("Category").

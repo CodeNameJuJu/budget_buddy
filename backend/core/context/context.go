@@ -1,10 +1,10 @@
 package context
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -20,18 +20,41 @@ const DatabaseName = "budget_buddy"
 
 func ConnectToDatabase() {
 	var dsn string
+	var sqlDB *sql.DB
 
 	// Check if DATABASE_URL is provided (preferred for Railway/Supabase)
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
-			} else {
-				sqlDB := pgdriver.NewConnector(pgdriver.WithDSN(databaseURL))
-				db = bun.NewDB(sqlDB, pgdialect.New())
-			}
+		// Use Railway's DATABASE_URL
+		if os.Getenv("RAILWAY_ENVIRONMENT") != "" {
+			// Railway provides SSL by default
+			connector := pgdriver.NewConnector(
+				pgdriver.WithDSN(databaseURL),
+				pgdriver.WithTLSConfig(nil),
+			)
+			sqlDB = sql.OpenDB(connector)
 		} else {
-			// Use individual DB settings
-			sslmode := os.Getenv("DB_SSLMODE")
-			if sslmode == "" {
-				sslmode = "disable"
+			connector := pgdriver.NewConnector(pgdriver.WithDSN(databaseURL))
+			sqlDB = sql.OpenDB(connector)
+		}
+	} else {
+		// Use individual DB settings
+		sslmode := os.Getenv("DB_SSLMODE")
+		if sslmode == "" {
+			sslmode = "disable"
+		}
+		dsn = fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_USERNAME"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_NAME"),
+			sslmode,
+		)
+		fmt.Printf("Using individual DB settings, host: %s\n", os.Getenv("DB_HOST"))
+		connector := pgdriver.NewConnector(pgdriver.WithDSN(dsn))
+		sqlDB = sql.OpenDB(connector)
+	}
 
 	db = bun.NewDB(sqlDB, pgdialect.New(), bun.WithDiscardUnknownColumns())
 

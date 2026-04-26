@@ -11,7 +11,7 @@ import (
 func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 	db := appcontext.GetDb()
 	var accounts []types.Account
-	userID := appcontext.GetUserID()
+	userID := appcontext.GetUserID(context.Background())
 
 	query := db.NewSelect().Model(&accounts).
 		Where("a.deleted_date IS NULL")

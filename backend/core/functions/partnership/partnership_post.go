@@ -1,7 +1,6 @@
 package partnership
 
 import (
-	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -103,26 +102,6 @@ func POSTInvitePartner(w http.ResponseWriter, r *http.Request) {
 	tokenBytes := make([]byte, 32)
 	rand.Read(tokenBytes)
 	token := hex.EncodeToString(tokenBytes)
-
-	// Serialize permissions
-	var permissionsJSON string
-	if req.Permissions != nil {
-		permBytes, err := json.Marshal(req.Permissions)
-		if err != nil {
-			http.Error(w, "Failed to serialize permissions", http.StatusInternalServerError)
-			return
-		}
-		permissionsJSON = string(permBytes)
-	} else {
-		// Use default permissions for the role
-		defaultPerms := types.DefaultPermissionsForRole(req.Role)
-		permBytes, err := json.Marshal(defaultPerms)
-		if err != nil {
-			http.Error(w, "Failed to serialize default permissions", http.StatusInternalServerError)
-			return
-		}
-		permissionsJSON = string(permBytes)
-	}
 
 	invitation := types.PartnerInvitation{
 		PartnershipID:   parseInt(partnershipID),
