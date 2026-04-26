@@ -75,6 +75,7 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), "user", &user)
 		ctx = context.WithValue(ctx, "user_id", user.ID)
 		ctx = context.WithValue(ctx, "user_email", user.Email)
+		ctx = context.WithValue(ctx, "device_id", claims.DeviceID)
 
 		// Call next handler with updated context
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -139,6 +140,7 @@ func (h *AuthHandler) OptionalAuthMiddleware(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), "user", &user)
 		ctx = context.WithValue(ctx, "user_id", user.ID)
 		ctx = context.WithValue(ctx, "user_email", user.Email)
+		ctx = context.WithValue(ctx, "device_id", claims.DeviceID)
 
 		// Call next handler with updated context
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -185,4 +187,10 @@ func GetUserIDFromContext(r *http.Request) (int, bool) {
 func GetUserEmailFromContext(r *http.Request) (string, bool) {
 	email, ok := r.Context().Value("user_email").(string)
 	return email, ok
+}
+
+// GetDeviceIDFromContext gets the device ID from the request context
+func GetDeviceIDFromContext(r *http.Request) (string, bool) {
+	deviceID, ok := r.Context().Value("device_id").(string)
+	return deviceID, ok
 }

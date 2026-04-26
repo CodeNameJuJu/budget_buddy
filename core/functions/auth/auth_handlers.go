@@ -350,7 +350,7 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	helpers.RespondJSON(w, http.StatusOK, response)
 }
 
-// Logout handles user logout
+// Logout handles user logout for the current device
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	// Get user from context (set by auth middleware)
 	user, ok := r.Context().Value("user").(*types.User)
@@ -359,8 +359,38 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Revoke all user tokens
-	err := h.authService.RevokeAllUserTokens(user.ID)
+	// Get device_id from token
+	userID, ok := GetUserIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	deviceID, ok := GetDeviceIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "Device ID not found")
+		return
+	}
+
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	// Delete the specific session for this device
+	_, err := database.NewDelete().
+		Model((*types.UserSession)(nil)).
+		Where("user_id = ? AND device_id = ?", userID, deviceID).
+		Exec(context.Background())
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to revoke session")
+		return
+	}
+
+	// Revoke refresh tokens for this user (optional - could be device-specific)
+	err = h.authService.RevokeAllUserTokens(user.ID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to revoke tokens")
 		return
