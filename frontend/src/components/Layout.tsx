@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { NavLink, Outlet, useLocation } from "react-router-dom"
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -14,9 +14,12 @@ import {
   X,
   ChevronLeft,
   User,
+  LogOut,
+  ChevronUp,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import TutorialOverlay from "@/components/tutorial/TutorialOverlay"
+import { useAuth } from "@/hooks"
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -32,8 +35,12 @@ const navItems = [
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const sidebarRef = useRef<HTMLElement>(null)
+  const profileDropdownRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
 
   // Close sidebar on route change
   useEffect(() => {
@@ -87,16 +94,36 @@ export default function Layout() {
       if (e.key === 'Escape' && sidebarOpen) {
         closeSidebar()
       }
+      if (e.key === 'Escape' && profileDropdownOpen) {
+        setProfileDropdownOpen(false)
+      }
     }
 
-    if (sidebarOpen) {
+    if (sidebarOpen || profileDropdownOpen) {
       document.addEventListener('keydown', handleEscape)
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [sidebarOpen])
+  }, [sidebarOpen, profileDropdownOpen])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false)
+      }
+    }
+
+    if (profileDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [profileDropdownOpen])
 
   const closeSidebar = () => {
     // Simulate haptic feedback
@@ -117,6 +144,24 @@ export default function Layout() {
     }
     setSidebarOpen(true)
     setIsClosing(false)
+  }
+
+  const handleProfileClick = () => {
+    setProfileDropdownOpen(!profileDropdownOpen)
+  }
+
+  const handleViewProfile = () => {
+    setProfileDropdownOpen(false)
+    navigate('/profile')
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      setProfileDropdownOpen(false)
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   const handleNavClick = () => {
@@ -212,31 +257,41 @@ export default function Layout() {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 xs:p-5 lg:p-6 border-t border-blue-900/50">
-            <NavLink
-              to="/profile"
-              onClick={() => {
-                closeSidebar()
-                handleNavClick()
-              }}
-              className={({ isActive }) =>
-                cn(
-                  "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
-                  isActive
-                    ? "bg-gradient-to-r from-blue-500 to-teal-500 text-white shadow-lg transform scale-[1.02]"
-                    : "text-slate-300 hover:bg-blue-900/30 hover:text-blue-200 hover:shadow-md hover:transform hover:translate-x-1"
-                )
-              }
+          <div className="p-4 xs:p-5 lg:p-6 border-t border-blue-900/50 relative" ref={profileDropdownRef}>
+            <button
+              onClick={handleProfileClick}
+              className="group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button bg-gradient-to-r from-blue-900/50 to-teal-900/50 hover:from-blue-800/50 hover:to-teal-800/50 text-blue-200 hover:text-white shadow-lg hover:shadow-xl border border-blue-800/50 hover:border-blue-700/50"
             >
-              <div className={cn(
-                "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
-                "group-hover:bg-blue-900/30 group-hover:scale-110",
-                "group-[.active]:bg-blue-800/50"
-              )}>
+              <div className="p-2 rounded-lg bg-blue-800/50 group-hover:bg-blue-700/50 transition-all duration-200 flex-shrink-0 group-hover:scale-110">
                 <User className="h-5 w-5 xs:h-6 xs:w-6" />
               </div>
-              <span className="truncate font-medium">Profile</span>
-            </NavLink>
+              <span className="truncate font-medium flex-1 text-left">Profile</span>
+              <ChevronUp className={cn(
+                "h-4 w-4 xs:h-5 xs:w-5 transition-transform duration-200 flex-shrink-0",
+                profileDropdownOpen ? "rotate-180" : ""
+              )} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {profileDropdownOpen && (
+              <div className="absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 bg-slate-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-blue-900/50 overflow-hidden z-50">
+                <button
+                  onClick={handleViewProfile}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-300 hover:bg-blue-900/30 hover:text-white transition-all duration-200"
+                >
+                  <User className="h-4 w-4" />
+                  <span className="font-medium">View Profile</span>
+                </button>
+                <div className="border-t border-blue-900/50" />
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </aside>
