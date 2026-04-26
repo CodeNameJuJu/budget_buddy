@@ -8,7 +8,6 @@ import {
   Info,
   Check,
   Settings,
-  ChevronDown,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,12 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
 
@@ -179,19 +173,16 @@ export default function AlertsPage() {
           <p className="text-slate-400">Stay informed about your finances</p>
         </div>
         <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                {alertType === "" ? "All Alerts" : alertType === "weekly" ? "Weekly" : alertType === "monthly" ? "Monthly" : alertType}
-                <ChevronDown className="h-4 w-4 ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setAlertType("")}>All Alerts</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAlertType("weekly")}>Weekly Summary</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setAlertType("monthly")}>Monthly Summary</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Select value={alertType} onValueChange={setAlertType}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="All Alerts" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All Alerts</SelectItem>
+              <SelectItem value="weekly">Weekly Summary</SelectItem>
+              <SelectItem value="monthly">Monthly Summary</SelectItem>
+            </SelectContent>
+          </Select>
           <Button onClick={triggerAlerts} variant="outline" size="sm">
             Check for New Alerts
           </Button>
