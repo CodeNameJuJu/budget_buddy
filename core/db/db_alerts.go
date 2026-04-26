@@ -245,7 +245,7 @@ func UpdateAlertPreference(preference *types.AlertPreference) error {
 
 	if err != nil {
 		// Preference doesn't exist, create it
-		preference.CreatedDate = &now
+		preference.CreatedDate = now
 		_, err = db.NewInsert().Model(preference).Exec(context.Background())
 		return err
 	}
