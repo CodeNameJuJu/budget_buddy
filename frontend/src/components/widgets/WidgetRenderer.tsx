@@ -167,7 +167,7 @@ export default function WidgetRenderer({ widget, accountId }: WidgetRendererProp
   }
 
   return (
-    <div className="transition-all duration-200">
+    <div className="transition-all duration-200 h-full">
       {renderWidget()}
     </div>
   )
