@@ -235,7 +235,25 @@ func UpdateAlertPreference(preference *types.AlertPreference) error {
 	now := time.Now()
 	preference.ModifiedDate = &now
 
-	_, err := db.NewUpdate().Model(preference).
+	// Check if preference exists
+	var existing types.AlertPreference
+	err := db.NewSelect().
+		Model(&existing).
+		Where("account_id = ?", preference.AccountID).
+		Where("type = ?", preference.Type).
+		Scan(context.Background())
+
+	if err != nil {
+		// Preference doesn't exist, create it
+		preference.CreatedDate = &now
+		_, err = db.NewInsert().Model(preference).Exec(context.Background())
+		return err
+	}
+
+	// Preference exists, update it
+	preference.ID = existing.ID
+	preference.CreatedDate = existing.CreatedDate
+	_, err = db.NewUpdate().Model(preference).
 		WherePK().
 		OmitZero().
 		Returning("*").
