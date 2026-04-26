@@ -218,32 +218,45 @@ func POSTRespondToInvitation(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get the inviter's account to share with the new partner
-		var inviterAccount struct {
-			ID     int `bun:"id"`
-			UserID int `bun:"user_id"`
+		// First get the inviter's email
+		var inviterUser struct {
+			Email string `bun:"email"`
 		}
 		err = db.NewSelect().
-			Model(&inviterAccount).
-			TableExpr("accounts").
-			Where("user_id = ?", invitation.InvitedByUserID).
-			Order("created_at ASC").
-			Limit(1).
+			Model(&inviterUser).
+			TableExpr("users").
+			Where("id = ?", invitation.InvitedByUserID).
 			Scan(ctx)
 
-		if err == nil && inviterAccount.ID != 0 {
-			// Share the inviter's account with the new partner
-			sharedAccount := types.SharedAccount{
-				PartnershipID:  invitation.PartnershipID,
-				AccountID:      inviterAccount.ID,
-				SharedByUserID: invitation.InvitedByUserID,
-				Permissions:    "", // Will use default member permissions
-				IsActive:       true,
-				CreatedAt:      now,
+		if err == nil && inviterUser.Email != "" {
+			// Now get the account with this email
+			var inviterAccount struct {
+				ID    int    `bun:"id"`
+				Email string `bun:"email"`
 			}
+			err = db.NewSelect().
+				Model(&inviterAccount).
+				TableExpr("accounts").
+				Where("email = ?", inviterUser.Email).
+				Order("created_date ASC").
+				Limit(1).
+				Scan(ctx)
 
-			if _, err := db.NewInsert().Model(&sharedAccount).Exec(ctx); err != nil {
-				// Log error but don't fail - the partnership is still created
-				fmt.Printf("Failed to share account: %v", err)
+			if err == nil && inviterAccount.ID != 0 {
+				// Share the inviter's account with the new partner
+				sharedAccount := types.SharedAccount{
+					PartnershipID:  invitation.PartnershipID,
+					AccountID:      inviterAccount.ID,
+					SharedByUserID: invitation.InvitedByUserID,
+					Permissions:    "", // Will use default member permissions
+					IsActive:       true,
+					CreatedAt:      now,
+				}
+
+				if _, err := db.NewInsert().Model(&sharedAccount).Exec(ctx); err != nil {
+					// Log error but don't fail - the partnership is still created
+					fmt.Printf("Failed to share account: %v", err)
+				}
 			}
 		}
 
