@@ -11,10 +11,10 @@ import (
 )
 
 type CreateAlertPreferenceRequest struct {
-	AccountID int64     `json:"account_id"`
-	Type      string    `json:"type"`
-	Enabled   bool      `json:"enabled"`
-	Threshold *int      `json:"threshold,omitempty"`
+	AccountID int64  `json:"account_id"`
+	Type      string `json:"type"`
+	Enabled   bool   `json:"enabled"`
+	Threshold *int   `json:"threshold,omitempty"`
 }
 
 func POSTMarkAlertAsRead(w http.ResponseWriter, r *http.Request) {
@@ -132,6 +132,18 @@ func POSTTriggerAlerts(w http.ResponseWriter, r *http.Request) {
 	// Generate goal achievement alerts
 	if err := db.GenerateGoalAchievementAlerts(req.AccountID); err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate goal alerts")
+		return
+	}
+
+	// Generate weekly summary alerts
+	if err := db.GenerateWeeklySummaryAlerts(req.AccountID); err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate weekly summary alerts")
+		return
+	}
+
+	// Generate monthly summary alerts
+	if err := db.GenerateMonthlySummaryAlerts(req.AccountID); err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate monthly summary alerts")
 		return
 	}
 

@@ -216,6 +216,102 @@ func GenerateGoalAchievementAlerts(accountID int64) error {
 	return nil
 }
 
+func GenerateWeeklySummaryAlerts(accountID int64) error {
+	preferences, err := GetAlertPreferences(accountID)
+	if err != nil {
+		return err
+	}
+
+	weeklySummaryPref := getPreferenceByType(preferences, types.AlertWeeklySummary)
+	if weeklySummaryPref == nil || !weeklySummaryPref.Enabled {
+		return nil
+	}
+
+	now := time.Now()
+	startOfWeek := now.AddDate(0, 0, -7)
+	endOfWeek := now
+
+	transactions, _, err := QueryTransactions(accountID, nil, &startOfWeek, &endOfWeek, nil)
+	if err != nil {
+		return err
+	}
+
+	var totalIncome, totalExpenses decimal.Decimal
+	for _, t := range transactions {
+		if t.Type == "income" {
+			totalIncome = totalIncome.Add(t.Amount)
+		} else if t.Type == "expense" {
+			totalExpenses = totalExpenses.Add(t.Amount)
+		}
+	}
+
+	alert := &types.Alert{
+		AccountID: accountID,
+		Type:      types.AlertWeeklySummary,
+		Title:     "Weekly Summary",
+		Message: fmt.Sprintf("This week: Income %s | Expenses %s | Net %s",
+			formatCurrency(totalIncome.String()),
+			formatCurrency(totalExpenses.String()),
+			formatCurrency(totalIncome.Sub(totalExpenses).String())),
+		Severity: types.SeverityInfo,
+	}
+
+	err = CreateAlert(alert)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GenerateMonthlySummaryAlerts(accountID int64) error {
+	preferences, err := GetAlertPreferences(accountID)
+	if err != nil {
+		return err
+	}
+
+	monthlySummaryPref := getPreferenceByType(preferences, types.AlertMonthlySummary)
+	if monthlySummaryPref == nil || !monthlySummaryPref.Enabled {
+		return nil
+	}
+
+	now := time.Now()
+	startOfMonth := now.AddDate(0, -1, 0)
+	endOfMonth := now
+
+	transactions, _, err := QueryTransactions(accountID, nil, &startOfMonth, &endOfMonth, nil)
+	if err != nil {
+		return err
+	}
+
+	var totalIncome, totalExpenses decimal.Decimal
+	for _, t := range transactions {
+		if t.Type == "income" {
+			totalIncome = totalIncome.Add(t.Amount)
+		} else if t.Type == "expense" {
+			totalExpenses = totalExpenses.Add(t.Amount)
+		}
+	}
+
+	alert := &types.Alert{
+		AccountID: accountID,
+		Type:      types.AlertMonthlySummary,
+		Title:     "Monthly Summary",
+		Message: fmt.Sprintf("This month: Income %s | Expenses %s | Net %s",
+			formatCurrency(totalIncome.String()),
+			formatCurrency(totalExpenses.String()),
+			formatCurrency(totalIncome.Sub(totalExpenses).String())),
+		Severity: types.SeverityInfo,
+	}
+
+	err = CreateAlert(alert)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetAlertPreferences(accountID int64) ([]types.AlertPreference, error) {
 	db := appcontext.GetDb()
 	var preferences []types.AlertPreference
