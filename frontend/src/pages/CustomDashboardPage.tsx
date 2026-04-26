@@ -191,8 +191,8 @@ export default function CustomDashboardPage() {
         id: "welcome-1",
         type: "welcome",
         title: "Welcome to Budget Buddy",
-        size: "medium",
-        position: { x: 0, y: 0, w: 1, h: 1 },
+        size: "large",
+        position: { x: 0, y: 0, w: 2, h: 1 },
         is_visible: true,
         updated_at: ""
       },
@@ -392,11 +392,12 @@ export default function CustomDashboardPage() {
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
-            <WidgetRenderer
-              key={widget.id}
-              widget={widget}
-              accountId={accountId}
-            />
+              <div key={widget.id} className={widget.type === "welcome" ? "md:col-span-2" : ""}>
+                <WidgetRenderer
+                  widget={widget}
+                  accountId={accountId}
+                />
+              </div>
           ))}
         </div>
       </div>
