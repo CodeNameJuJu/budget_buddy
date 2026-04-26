@@ -90,16 +90,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">
+    <div className="responsive-margin">
+      <div className="mb-6 xs:mb-8">
+        <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">
           Profile
         </h1>
         <p className="text-slate-400 mt-1">Manage your account settings</p>
       </div>
       
-      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-6 mb-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
+        <div className="flex items-center justify-between mb-4 xs:mb-6">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
             <UserIcon className="h-5 w-5 text-emerald-400" />
             User Information

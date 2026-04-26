@@ -135,7 +135,7 @@
 
   @media (max-width: 640px) {
     .grid-responsive {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr !important;
       gap: 0.75rem;
       max-width: 100%;
       overflow-x: hidden;
@@ -144,14 +144,15 @@
 
     .grid-responsive > div {
       grid-column: span 1 !important;
+      grid-row: auto !important;
       max-width: 100%;
       overflow: hidden;
       width: 100%;
     }
 
     .responsive-margin {
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
       margin-left: 0;
       margin-right: 0;
       max-width: 100%;
