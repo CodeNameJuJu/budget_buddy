@@ -135,6 +135,12 @@ func POSTTriggerAlerts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate goal milestone alerts
+	if err := db.GenerateGoalMilestoneAlerts(req.AccountID); err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate goal milestone alerts")
+		return
+	}
+
 	// Generate weekly summary alerts
 	if err := db.GenerateWeeklySummaryAlerts(req.AccountID); err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate weekly summary alerts")

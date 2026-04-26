@@ -312,6 +312,74 @@ func GenerateMonthlySummaryAlerts(accountID int64) error {
 	return nil
 }
 
+func GenerateGoalMilestoneAlerts(accountID int64) error {
+	preferences, err := GetAlertPreferences(accountID)
+	if err != nil {
+		return err
+	}
+
+	milestonePref := getPreferenceByType(preferences, types.AlertGoalMilestone)
+	if milestonePref == nil || !milestonePref.Enabled {
+		return nil
+	}
+
+	goals, _, err := QuerySavingsGoals(accountID, nil)
+	if err != nil {
+		return err
+	}
+
+	milestones := []int{25, 50, 75}
+
+	for _, goal := range goals {
+		if !goal.IsActive {
+			continue
+		}
+
+		percentageInt := int(goal.ProgressPercentage.IntPart())
+
+		for _, milestone := range milestones {
+			if percentageInt >= milestone && percentageInt < milestone+25 {
+				// Check if alert already exists for this milestone
+				exists, err := alertExistsForMilestone(accountID, types.AlertGoalMilestone, goal.ID, milestone)
+				if err != nil || exists {
+					continue
+				}
+
+				alert := &types.Alert{
+					AccountID: accountID,
+					Type:      types.AlertGoalMilestone,
+					Title:     "Goal Milestone Reached! 🎯",
+					Message: fmt.Sprintf("You've reached %d%% of your '%s' goal by saving %s!",
+						milestone, goal.Name, formatCurrency(goal.CurrentAmount.String())),
+					Severity:    types.SeverityInfo,
+					ReferenceID: &goal.ID,
+				}
+
+				if err := CreateAlert(alert); err != nil {
+					continue
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func alertExistsForMilestone(accountID int64, alertType types.AlertType, referenceID int64, milestone int) (bool, error) {
+	dbConn := appcontext.GetDb()
+	var count int
+
+	count, err := dbConn.NewSelect().
+		Model((*types.Alert)(nil)).
+		Where("account_id = ?", accountID).
+		Where("type = ?", alertType).
+		Where("reference_id = ?", referenceID).
+		Where("message LIKE ?", fmt.Sprintf("%%%d%%", milestone)).
+		Count(context.Background())
+
+	return count > 0, err
+}
+
 func GetAlertPreferences(accountID int64) ([]types.AlertPreference, error) {
 	db := appcontext.GetDb()
 	var preferences []types.AlertPreference
