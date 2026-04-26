@@ -134,7 +134,7 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
     )
   }
 
-  const displayMetrics = size === "small" ? data.metrics.slice(0, 3) : data.metrics
+  const displayMetrics = data.metrics ? (size === "small" ? data.metrics.slice(0, 3) : data.metrics) : []
 
   return (
     <Card className="h-full flex flex-col">
