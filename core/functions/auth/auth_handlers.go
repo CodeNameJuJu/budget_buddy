@@ -12,11 +12,6 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
-const (
-	AccessTokenDuration  = 15 * time.Minute
-	RefreshTokenDuration = 7 * 24 * time.Hour
-)
-
 // AuthHandler handles authentication requests
 type AuthHandler struct {
 	authService *AuthService
