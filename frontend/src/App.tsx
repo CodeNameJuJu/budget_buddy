@@ -12,6 +12,7 @@ import AnalyticsPage from "./pages/AnalyticsPage"
 import AlertsPage from "./pages/AlertsPage"
 import PartnersPage from "./pages/PartnersPage"
 import ProfilePage from "./pages/ProfilePage"
+import VerifyEmailPage from "./pages/VerifyEmailPage"
 import { LoginForm } from "./components/auth/LoginForm"
 import { RegisterForm } from "./components/auth/RegisterForm"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
@@ -79,6 +80,7 @@ export default function App() {
                 <ProfilePage />
               </ProtectedRoute>
             } />
+            <Route path="/verify" element={<VerifyEmailPage />} />
         </Route>
       </Routes>
     </TutorialProvider>
