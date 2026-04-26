@@ -27,7 +27,6 @@ const navItems = [
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
   { to: "/partners", icon: Users, label: "Partners" },
-  { to: "/profile", icon: User, label: "Profile" },
 ]
 
 export default function Layout() {
@@ -214,10 +213,30 @@ export default function Layout() {
 
           {/* Sidebar Footer */}
           <div className="p-4 xs:p-5 lg:p-6 border-t border-blue-900/50">
-            <div className="status-indicator online">
-              <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse shadow-lg shadow-teal-400/50"></div>
-              <span className="text-xs xs:text-sm text-slate-400">Connected and ready to serve</span>
-            </div>
+            <NavLink
+              to="/profile"
+              onClick={() => {
+                closeSidebar()
+                handleNavClick()
+              }}
+              className={({ isActive }) =>
+                cn(
+                  "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
+                  isActive
+                    ? "bg-gradient-to-r from-blue-500 to-teal-500 text-white shadow-lg transform scale-[1.02]"
+                    : "text-slate-300 hover:bg-blue-900/30 hover:text-blue-200 hover:shadow-md hover:transform hover:translate-x-1"
+                )
+              }
+            >
+              <div className={cn(
+                "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
+                "group-hover:bg-blue-900/30 group-hover:scale-110",
+                "group-[.active]:bg-blue-800/50"
+              )}>
+                <User className="h-5 w-5 xs:h-6 xs:w-6" />
+              </div>
+              <span className="truncate font-medium">Profile</span>
+            </NavLink>
           </div>
         </div>
       </aside>
