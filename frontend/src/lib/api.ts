@@ -110,7 +110,10 @@ export function get<T>(path: string, params?: Record<string, string>): Promise<T
   return request<T>(path + query)
 }
 
-export function post<T>(path: string, body: unknown): Promise<T> {
+export function post<T>(path: string, body: unknown, isFormData?: boolean): Promise<T> {
+  if (isFormData) {
+    return request<T>(path, { method: "POST", body: body as BodyInit }, true)
+  }
   return request<T>(path, { method: "POST", body: JSON.stringify(body) })
 }
 
@@ -532,7 +535,7 @@ export const authApi = {
     post<APIResponse<{ access_token: string; refresh_token: string }>>("/auth/refresh", data),
   getProfile: () => get<APIResponse<User>>("/auth/me"),
   updateProfilePicture: (data: FormData) =>
-    patch<APIResponse<{ profile_picture_url: string }>>("/auth/profile-picture", data, true),
+    post<APIResponse<{ profile_picture_url: string }>>("/auth/profile-picture", data, true),
   logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
   listDevices: () => request<any[]>('/auth/devices'),
   revokeDevice: (deviceId: string) => request<{ message: string }>(`/auth/devices?device_id=${deviceId}`, { method: 'DELETE' }),
