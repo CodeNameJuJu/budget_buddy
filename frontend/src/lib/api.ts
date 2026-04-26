@@ -505,21 +505,15 @@ export interface UserPartnershipsDTO {
 
 // Auth API
 export const authApi = {
-  register: (data: { email: string; password: string; first_name?: string; last_name?: string }) =>
-    request<{ user: any; access_token: string; refresh_token: string; token_type: string; expires_in: number }>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-  login: (data: { email: string; password: string }) =>
-    request<{ user: any; access_token: string; refresh_token: string; token_type: string; expires_in: number }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+  register: (data: RegisterRequest) =>
+    post<APIResponse<{ user: User; access_token: string; refresh_token: string }>>("/auth/register", data),
+  login: (data: LoginRequest) =>
+    post<APIResponse<{ user: User; access_token: string; refresh_token: string }>>("/auth/login", data),
   refresh: (data: { refresh_token: string }) =>
-    request<{ user: any; access_token: string; refresh_token: string; token_type: string; expires_in: number }>('/auth/refresh', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    post<APIResponse<{ access_token: string; refresh_token: string }>>("/auth/refresh", data),
+  getProfile: () => get<APIResponse<User>>("/auth/me"),
+  updateProfilePicture: (data: { profile_picture_url: string }) =>
+    patch<APIResponse<{ profile_picture_url: string }>>("/auth/profile-picture", data),
   logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
   listDevices: () => request<any[]>('/auth/devices'),
   revokeDevice: (deviceId: string) => request<{ message: string }>(`/auth/devices?device_id=${deviceId}`, { method: 'DELETE' }),

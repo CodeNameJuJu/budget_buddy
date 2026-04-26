@@ -1,6 +1,6 @@
 import { useAuth } from '../hooks';
 import { Button } from '../components/ui/button';
-import { LogOut, Mail, User as UserIcon, Shield, Calendar, Clock, Edit, Check, Globe, DollarSign } from 'lucide-react';
+import { LogOut, Mail, User as UserIcon, Shield, Calendar, Clock, Edit, Check, Globe, DollarSign, Camera, Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { authApi, accountsApi, type Account } from '../lib/api';
 
@@ -13,6 +13,8 @@ export default function ProfilePage() {
   const [verificationToken, setVerificationToken] = useState('');
   const [showVerification, setShowVerification] = useState(false);
   const [account, setAccount] = useState<Account | null>(null);
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
 
   const CURRENCY_OPTIONS = [
     { code: 'USD', symbol: '$', name: 'US Dollar' },
@@ -41,7 +43,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     loadAccount();
-  }, []);
+    setProfilePictureUrl(user.profile_picture_url || '');
+  }, [user]);
 
   async function loadAccount() {
     try {
@@ -132,6 +135,42 @@ export default function ProfilePage() {
     }
   };
 
+  const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPicture(true);
+    try {
+      // For now, we'll use a simple approach - in production, you'd upload to a cloud storage service
+      // and get back a URL. For this implementation, we'll use a placeholder approach
+      // In a real app, you'd upload to S3, Cloudinary, or similar service
+      
+      // Simulating upload - in production, replace with actual upload logic
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        // In production, upload to cloud storage and get URL
+        // For now, we'll use a data URL (not recommended for production)
+        const dataUrl = reader.result as string;
+        
+        try {
+          await authApi.updateProfilePicture({ profile_picture_url: dataUrl });
+          setProfilePictureUrl(dataUrl);
+          setSaveMessage({ type: 'success', text: 'Profile picture updated successfully' });
+          setTimeout(() => setSaveMessage(null), 3000);
+        } catch (error: any) {
+          setSaveMessage({ type: 'error', text: error.message || 'Failed to update profile picture' });
+          setTimeout(() => setSaveMessage(null), 3000);
+        }
+        setIsUploadingPicture(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      setSaveMessage({ type: 'error', text: 'Failed to upload profile picture' });
+      setTimeout(() => setSaveMessage(null), 3000);
+      setIsUploadingPicture(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900">
@@ -149,6 +188,44 @@ export default function ProfilePage() {
         <p className="text-slate-400 mt-1">Manage your account settings</p>
       </div>
       
+      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
+        <h2 className="text-xl font-semibold text-white mb-4 xs:mb-6">Profile Picture</h2>
+        
+        <div className="flex items-center gap-4 xs:gap-6">
+          <div className="relative">
+            {profilePictureUrl ? (
+              <img 
+                src={profilePictureUrl} 
+                alt="Profile" 
+                className="w-20 h-20 xs:w-24 xs:h-24 rounded-full object-cover border-4 border-emerald-600"
+              />
+            ) : (
+              <div className="w-20 h-20 xs:w-24 xs:h-24 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-600">
+                <UserIcon className="h-10 w-10 xs:h-12 xs:w-12 text-white" />
+              </div>
+            )}
+            <label className="absolute bottom-0 right-0 bg-emerald-600 hover:bg-emerald-700 rounded-full p-2 cursor-pointer transition-colors">
+              <Camera className="h-4 w-4 text-white" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePictureUpload}
+                className="hidden"
+                disabled={isUploadingPicture}
+              />
+            </label>
+          </div>
+          
+          <div className="flex-1">
+            <p className="text-slate-300 text-sm">Upload a profile picture to personalize your account</p>
+            <p className="text-slate-500 text-xs mt-1">Recommended: Square image, at least 200x200 pixels</p>
+            {isUploadingPicture && (
+              <p className="text-emerald-400 text-sm mt-2">Uploading...</p>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
         <div className="flex items-center justify-between mb-4 xs:mb-6">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
