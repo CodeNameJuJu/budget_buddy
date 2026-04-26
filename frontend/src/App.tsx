@@ -24,6 +24,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
+          <Route path="/verify" element={<VerifyEmailPage />} />
           <Route element={<Layout />}>
             <Route path="/" element={
               <ProtectedRoute>
@@ -80,7 +81,6 @@ export default function App() {
                 <ProfilePage />
               </ProtectedRoute>
             } />
-            <Route path="/verify" element={<VerifyEmailPage />} />
         </Route>
       </Routes>
     </TutorialProvider>
