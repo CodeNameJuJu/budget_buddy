@@ -63,7 +63,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="w-full"
+        className="w-auto"
         size="lg"
       >
         <Plus className="h-4 w-4 mr-2" />
