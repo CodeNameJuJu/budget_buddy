@@ -91,6 +91,19 @@ type VerifyEmailRequest struct {
 	Token string `json:"token" validate:"required"`
 }
 
+// VerificationToken represents a verification token
+type VerificationToken struct {
+	ID        int        `bun:"id,pk,autoincrement" json:"id"`
+	UserID    int        `bun:"user_id" json:"user_id"`
+	Token     string     `bun:"token" json:"token"`
+	TokenType string     `bun:"token_type" json:"token_type"`
+	Email     string     `bun:"email" json:"email"`
+	ExpiresAt time.Time  `bun:"expires_at" json:"expires_at"`
+	UsedAt    *time.Time `bun:"used_at" json:"used_at"`
+	CreatedAt time.Time  `bun:"created_at" json:"created_at"`
+	UpdatedAt time.Time  `bun:"updated_at" json:"updated_at"`
+}
+
 // JWT Claims represents the JWT token claims
 type JWTClaims struct {
 	UserID   int    `json:"user_id"`

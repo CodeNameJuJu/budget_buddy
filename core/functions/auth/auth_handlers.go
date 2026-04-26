@@ -14,12 +14,14 @@ import (
 
 // AuthHandler handles authentication requests
 type AuthHandler struct {
-	authService *AuthService
+	authService  *AuthService
+	emailService *EmailService
 }
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		authService: NewAuthService(),
+		authService:  NewAuthService(),
+		emailService: NewEmailService(),
 	}
 }
 
@@ -495,21 +497,16 @@ func (h *AuthHandler) SendVerificationEmail(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	database := db.GetDb()
-	if database == nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+	// Send verification email using email service
+	err = h.emailService.SendVerificationEmail(user.ID, user.Email, verificationToken)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to send verification email")
 		return
 	}
 
-	// In a real implementation, you would:
-	// 1. Store the verification token in a database table with expiry
-	// 2. Send an email to user.Email with the verification token/link
-	// For now, we'll just return the token for testing purposes
-
 	helpers.RespondData(w, map[string]string{
-		"message":            "Verification email sent",
-		"email":              user.Email,
-		"verification_token": verificationToken, // Remove this in production
+		"message": "Verification email sent",
+		"email":   user.Email,
 	}, http.StatusOK)
 }
 
@@ -526,13 +523,10 @@ func (h *AuthHandler) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// For now, we'll just verify the token format
-	// In a real implementation, you'd check against stored tokens in the database
-
-	// Get user from context (set by auth middleware)
-	user, ok := r.Context().Value("user").(*types.User)
-	if !ok {
-		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+	// Verify token using email service
+	userID, err := h.emailService.VerifyToken(req.Token, "email_verification")
+	if err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "Invalid or expired token")
 		return
 	}
 
@@ -543,11 +537,11 @@ func (h *AuthHandler) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Mark user as verified
-	_, err := database.NewUpdate().
+	_, err = database.NewUpdate().
 		Model(&types.User{}).
 		Set("email_verified = ?", true).
 		Set("updated_at = ?", time.Now()).
-		Where("id = ?", user.ID).
+		Where("id = ?", userID).
 		Exec(context.Background())
 
 	if err != nil {
