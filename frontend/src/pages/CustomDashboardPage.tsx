@@ -319,7 +319,7 @@ export default function CustomDashboardPage() {
         )}
 
         {/* Widget Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
