@@ -43,15 +43,27 @@ export default function CustomDashboardPage() {
   async function loadWidgets() {
     try {
       const response = await dashboardApi.getLayout(accountId)
-      if (response.data) {
+      if (response.data && response.data.layout) {
         // Parse layout from JSON string
         const layout = JSON.parse(response.data.layout)
         setWidgets(layout)
       } else {
-        setWidgets(getCustomLayout())
+        // Try localStorage as fallback
+        const localLayout = localStorage.getItem(`dashboard-layout-${accountId}`)
+        if (localLayout) {
+          setWidgets(JSON.parse(localLayout))
+        } else {
+          setWidgets(getCustomLayout())
+        }
       }
     } catch {
-      setWidgets(getCustomLayout())
+      // Try localStorage as fallback
+      const localLayout = localStorage.getItem(`dashboard-layout-${accountId}`)
+      if (localLayout) {
+        setWidgets(JSON.parse(localLayout))
+      } else {
+        setWidgets(getCustomLayout())
+      }
     }
   }
 
@@ -65,15 +77,24 @@ export default function CustomDashboardPage() {
   }
 
   function toggleWidgetVisibility(widgetId: string) {
-    setWidgets(widgets.map(w =>
+    const updatedWidgets = widgets.map(w =>
       w.id === widgetId ? { ...w, is_visible: !w.is_visible } : w
-    ))
+    )
+    setWidgets(updatedWidgets)
+    // Auto-save to localStorage
+    if (accountId) {
+      localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(updatedWidgets))
+    }
   }
 
   async function saveLayout() {
     if (!accountId) return
     setIsSaving(true)
     try {
+      // Save to localStorage as fallback
+      localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(widgets))
+      
+      // Save to API
       await dashboardApi.saveLayout({
         account_id: accountId,
         name: "Default",
@@ -82,6 +103,8 @@ export default function CustomDashboardPage() {
       setIsCustomizing(false)
     } catch (error) {
       console.error("Failed to save layout", error)
+      // Still saved to localStorage, so proceed
+      setIsCustomizing(false)
     } finally {
       setIsSaving(false)
     }
@@ -97,11 +120,21 @@ export default function CustomDashboardPage() {
       is_visible: true,
       updated_at: new Date().toISOString()
     }
-    setWidgets([...widgets, newWidget])
+    const updatedWidgets = [...widgets, newWidget]
+    setWidgets(updatedWidgets)
+    // Auto-save to localStorage
+    if (accountId) {
+      localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(updatedWidgets))
+    }
   }
 
   function removeWidget(widgetId: string) {
-    setWidgets(widgets.filter(w => w.id !== widgetId))
+    const updatedWidgets = widgets.filter(w => w.id !== widgetId)
+    setWidgets(updatedWidgets)
+    // Auto-save to localStorage
+    if (accountId) {
+      localStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(updatedWidgets))
+    }
   }
 
   async function loadUserAccount() {
