@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 import { Tag, ChevronDown, ChevronUp } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -16,7 +15,6 @@ interface CategoryData {
   name: string
   amount: string
   percentage: number
-  color: string
 }
 
 interface CategoryBreakdownData {
@@ -133,26 +131,18 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
       </CardHeader>
       <CardContent className="flex-1 overflow-hidden flex flex-col">
         <div className="space-y-4 flex-1 overflow-auto">
-          {/* Pie Chart */}
-          <div className="h-32">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={30}
-                  outerRadius={50}
-                  paddingAngle={2}
-                  dataKey="value"
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value: number) => formatCurrency(value.toString())} />
-              </PieChart>
-            </ResponsiveContainer>
+          {/* Simple CSS Pie Chart */}
+          <div className="h-32 flex items-center justify-center">
+            <div className="relative w-32 h-32 rounded-full" style={{
+              background: `conic-gradient(${chartData.map((cat, i) => `${cat.color} 0 ${(cat.value / parseFloat(data.total_spent)) * 100}%`).join(', ')})`
+            }}>
+              <div className="absolute inset-4 bg-slate-800 rounded-full flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-xs text-muted-foreground">Total</div>
+                  <div className="text-lg font-bold">{formatCurrency(data.total_spent)}</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Total Spent */}
@@ -169,7 +159,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: category.color || COLORS[index % COLORS.length] }}
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   />
                   <span className="text-sm">{category.name}</span>
                 </div>

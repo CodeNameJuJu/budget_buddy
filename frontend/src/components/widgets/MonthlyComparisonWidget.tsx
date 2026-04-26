@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { BarChart2, TrendingUp, TrendingDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { dashboardApi } from "@/lib/api"
@@ -129,28 +128,45 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
             </div>
           )}
 
-          {/* Bar Chart */}
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fill: '#94a3b8', fontSize: 11 }}
-                  axisLine={{ stroke: '#334155' }}
-                />
-                <YAxis 
-                  tick={{ fill: '#94a3b8', fontSize: 11 }}
-                  axisLine={{ stroke: '#334155' }}
-                />
-                <Tooltip 
-                  formatter={(value: number) => formatCurrency(value.toString())}
-                  contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }}
-                />
-                <Bar dataKey="income" fill="#10b981" name="Income" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="expenses" fill="#ef4444" name="Expenses" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          {/* Simple CSS Bar Chart */}
+          <div className="space-y-3">
+            {data.months.map((trend, index) => {
+              const income = parseFloat(trend.income) || 0
+              const expenses = parseFloat(trend.expenses) || 0
+              const net = parseFloat(trend.net) || (income - expenses)
+              const maxValue = Math.max(...data.months.map(m => Math.max(parseFloat(m.income), parseFloat(m.expenses))))
+              const incomeHeight = maxValue > 0 ? (income / maxValue) * 100 : 0
+              const expenseHeight = maxValue > 0 ? (expenses / maxValue) * 100 : 0
+
+              return (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{trend.month}</span>
+                    <span className={`font-semibold ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {formatCurrency(net.toString())}
+                    </span>
+                  </div>
+                  <div className="flex gap-2 h-16 items-end">
+                    <div className="flex-1 flex flex-col items-center">
+                      <div
+                        className="w-full bg-emerald-500 rounded-t"
+                        style={{ height: `${Math.max(incomeHeight, 0)}%` }}
+                        title={`Income: ${formatCurrency(trend.income)}`}
+                      />
+                      <span className="text-xs text-muted-foreground mt-1">{formatCurrency(trend.income)}</span>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center">
+                      <div
+                        className="w-full bg-red-500 rounded-t"
+                        style={{ height: `${Math.max(expenseHeight, 0)}%` }}
+                        title={`Expenses: ${formatCurrency(trend.expenses)}`}
+                      />
+                      <span className="text-xs text-muted-foreground mt-1">{formatCurrency(trend.expenses)}</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
           <div className="text-xs text-muted-foreground text-center">
