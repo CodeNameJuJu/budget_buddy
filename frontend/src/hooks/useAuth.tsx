@@ -13,6 +13,7 @@ interface User {
   last_login?: string | null;
   created_at: string;
   updated_at: string;
+  profile_picture_url?: string | null;
 }
 
 interface AuthResponse {

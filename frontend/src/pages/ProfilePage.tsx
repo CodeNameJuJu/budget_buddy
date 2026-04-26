@@ -146,6 +146,12 @@ export default function ProfilePage() {
       
       const response = await authApi.updateProfilePicture(formData);
       setProfilePictureUrl(response.profile_picture_url);
+      
+      // Update user in auth context
+      if (user) {
+        (user as any).profile_picture_url = response.profile_picture_url;
+      }
+      
       setSaveMessage({ type: 'success', text: 'Profile picture updated successfully' });
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (error: any) {
