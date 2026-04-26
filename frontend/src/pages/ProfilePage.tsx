@@ -202,44 +202,6 @@ export default function ProfilePage() {
           <p className="text-slate-400 mt-1">Manage your account settings</p>
         </div>
       </div>
-      
-      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
-        <h2 className="text-xl font-semibold text-white mb-4 xs:mb-6">Profile Picture</h2>
-        
-        <div className="flex items-center gap-4 xs:gap-6">
-          <div className="relative">
-            {profilePictureUrl ? (
-              <img 
-                src={profilePictureUrl} 
-                alt="Profile" 
-                className="w-20 h-20 xs:w-24 xs:h-24 rounded-full object-cover border-4 border-emerald-600"
-              />
-            ) : (
-              <div className="w-20 h-20 xs:w-24 xs:h-24 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-600">
-                <UserIcon className="h-10 w-10 xs:h-12 xs:w-12 text-white" />
-              </div>
-            )}
-            <label className="absolute bottom-0 right-0 bg-emerald-600 hover:bg-emerald-700 rounded-full p-2 cursor-pointer transition-colors">
-              <Camera className="h-4 w-4 text-white" />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleProfilePictureUpload}
-                className="hidden"
-                disabled={isUploadingPicture}
-              />
-            </label>
-          </div>
-          
-          <div className="flex-1">
-            <p className="text-slate-300 text-sm">Upload a profile picture to personalize your account</p>
-            <p className="text-slate-500 text-xs mt-1">Recommended: Square image, at least 200x200 pixels</p>
-            {isUploadingPicture && (
-              <p className="text-emerald-400 text-sm mt-2">Uploading...</p>
-            )}
-          </div>
-        </div>
-      </div>
 
       <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
         <div className="flex items-center justify-between mb-4 xs:mb-6">
