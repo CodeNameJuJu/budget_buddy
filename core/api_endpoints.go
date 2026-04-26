@@ -42,6 +42,7 @@ func RegisterRoutes(r chi.Router) {
 				r.Post("/verify-email", authHandler.VerifyEmail)
 				r.Get("/devices", authHandler.ListDevices)
 				r.Delete("/devices", authHandler.RevokeDevice)
+				r.Post("/profile-picture", authHandler.POSTProfilePicture)
 			})
 		})
 
