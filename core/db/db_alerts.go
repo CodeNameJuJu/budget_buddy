@@ -231,7 +231,11 @@ func GenerateWeeklySummaryAlerts(accountID int64) error {
 	startOfWeek := now.AddDate(0, 0, -7)
 	endOfWeek := now
 
-	transactions, _, err := QueryTransactions(accountID, nil, &startOfWeek, &endOfWeek, nil)
+	transactions, _, err := QueryTransactions(TransactionFilters{
+		AccountID: accountID,
+		DateFrom:  &startOfWeek,
+		DateTo:    &endOfWeek,
+	})
 	if err != nil {
 		return err
 	}
@@ -279,7 +283,11 @@ func GenerateMonthlySummaryAlerts(accountID int64) error {
 	startOfMonth := now.AddDate(0, -1, 0)
 	endOfMonth := now
 
-	transactions, _, err := QueryTransactions(accountID, nil, &startOfMonth, &endOfMonth, nil)
+	transactions, _, err := QueryTransactions(TransactionFilters{
+		AccountID: accountID,
+		DateFrom:  &startOfMonth,
+		DateTo:    &endOfMonth,
+	})
 	if err != nil {
 		return err
 	}
