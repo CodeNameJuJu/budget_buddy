@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { TrendingUp, TrendingDown, DollarSign, Target, AlertCircle, CheckCircle, BarChart3 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { analyticsApi, accountsApi, type SpendingTrend, type CategoryBreakdown, type FinancialHealth, type Account } from "@/lib/analytics"
+import { analyticsApi, accountsApi, type SpendingTrend, type CategoryBreakdown, type FinancialHealth } from "@/lib/analytics"
+import { accountsApi as mainAccountsApi, type Account } from "@/lib/api"
 import { formatCurrency, formatPercentage } from "@/lib/utils"
 import SpendingTrendsChart from "@/components/charts/SpendingTrendsChart"
 import CategoryBreakdownChart from "@/components/charts/CategoryBreakdownChart"
@@ -28,7 +29,7 @@ export default function AnalyticsPage() {
 
   async function loadUserAccount() {
     try {
-      const response = await accountsApi.getMyAccount()
+      const response = await mainAccountsApi.getMyAccount()
       if (response.data && response.data.length > 0) {
         setAccountId(response.data[0].id)
       }
