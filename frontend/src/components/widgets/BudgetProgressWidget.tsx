@@ -271,7 +271,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                           </div>
                         </div>
                         <div className={`font-semibold ${
-                          transaction.type === "income" ? "text-teal-400" : "text-red-400"
+                          transaction.type === "income" ? "text-emerald-400" : "text-red-400"
                         }`}>
                           {transaction.type === "income" ? "+" : "-"}{formatCurrency(transaction.amount)}
                         </div>

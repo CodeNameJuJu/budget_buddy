@@ -311,7 +311,7 @@ export default function TransactionsPage() {
                           <p className="mobile-text font-medium truncate">
                             {t.description || "Untitled transaction"}
                           </p>
-                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={t.type === "income" ? "bg-teal-800/30 text-teal-300 border border-teal-700/50 text-xs" : "bg-red-800/30 text-red-300 border border-red-700/50 text-xs"}>
+                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={t.type === "income" ? "bg-emerald-800/30 text-emerald-300 border border-emerald-700/50 text-xs" : "bg-red-800/30 text-red-300 border border-red-700/50 text-xs"}>
                             {t.type}
                           </Badge>
                         </div>
@@ -346,7 +346,7 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={`mobile-text font-semibold ${t.type === "income" ? "text-teal-400" : "text-red-400"}`}>
+                        <span className={`mobile-text font-semibold ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}>
                           {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                         </span>
                         <Button

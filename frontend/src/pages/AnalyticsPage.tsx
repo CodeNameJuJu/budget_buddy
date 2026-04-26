@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-teal-600 text-white transition-colors duration-200">
+              <div className="p-2 rounded-full bg-emerald-600 text-white transition-colors duration-200">
                 <DollarSign className="h-4 w-4" />
               </div>
               Category Breakdown

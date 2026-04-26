@@ -383,7 +383,7 @@ export default function DashboardPage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-teal-600 text-white transition-colors duration-200">
+              <div className="p-2 rounded-full bg-emerald-600 text-white transition-colors duration-200">
                 <PiggyBank className="h-4 w-4" />
               </div>
               Savings Summary
@@ -398,7 +398,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-teal-400">
+                    <div className="text-2xl font-bold text-emerald-400">
                       {formatCurrency(savings.reduce((sum, pot) => sum + parseFloat(pot.allocated || "0"), 0))}
                     </div>
                     <p className="text-xs text-muted-foreground">Total Allocated</p>
@@ -414,7 +414,7 @@ export default function DashboardPage() {
                   {savings.slice(0, 3).map((pot) => (
                     <div key={pot.id} className="flex items-center justify-between p-2 rounded-lg bg-zinc-800/50">
                       <span className="text-sm font-medium">{pot.name}</span>
-                      <span className="text-sm text-teal-400">
+                      <span className="text-sm text-emerald-400">
                         {formatCurrency(parseFloat(pot.allocated || "0"))}
                       </span>
                     </div>

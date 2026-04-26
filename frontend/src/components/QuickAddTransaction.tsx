@@ -138,7 +138,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
             </Button>
             
             {amount && (
-              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? "bg-teal-800/30 text-teal-300 border border-teal-700/50" : "bg-red-800/30 text-red-300 border border-red-700/50"}>
+              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? "bg-emerald-800/30 text-emerald-300 border border-emerald-700/50" : "bg-red-800/30 text-red-300 border border-red-700/50"}>
                 {getTransactionType() === "income" ? "Income" : "Expense"}
               </Badge>
             )}

@@ -235,7 +235,7 @@ export default function BudgetsPage() {
               <Card key={budget.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-200 group">
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
-                    <div className={`p-2 rounded-lg ${remaining >= 0 ? "bg-teal-500" : percentage >= 90 ? "bg-red-500" : "bg-blue-600"} text-white transition-colors duration-200`}>
+                    <div className={`p-2 rounded-lg ${remaining >= 0 ? "bg-emerald-500" : percentage >= 90 ? "bg-red-500" : "bg-blue-600"} text-white transition-colors duration-200`}>
                       {getProgressIcon(percentage)}
                     </div>
                     <div>

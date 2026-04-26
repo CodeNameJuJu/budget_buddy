@@ -278,7 +278,7 @@ export default function SavingsPage() {
               Unallocated
             </CardTitle>
             {unallocated >= 0 ? (
-              <ArrowUpRight className="h-4 w-4 text-teal-400" />
+              <ArrowUpRight className="h-4 w-4 text-emerald-400" />
             ) : (
               <ArrowDownRight className="h-4 w-4 text-red-400" />
             )}
@@ -286,7 +286,7 @@ export default function SavingsPage() {
           <CardContent>
             <div
               className={`text-2xl font-bold ${
-                unallocated >= 0 ? "text-teal-400" : "text-red-400"
+                unallocated >= 0 ? "text-emerald-400" : "text-red-400"
               }`}
             >
               {formatCurrency(Math.abs(unallocated))}
