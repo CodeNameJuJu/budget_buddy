@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -685,29 +686,37 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 	database := db.GetDb()
 	if database == nil {
+		log.Println("Database not connected")
 		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
 		return
 	}
 
 	user, ok := r.Context().Value("user").(*types.User)
 	if !ok {
+		log.Println("User not authenticated")
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
 	}
 
+	log.Printf("User ID: %d, attempting to upload profile picture", user.ID)
+
 	// Parse multipart form
 	err := r.ParseMultipartForm(10 << 20) // 10MB max
 	if err != nil {
+		log.Printf("Failed to parse multipart form: %v", err)
 		helpers.RespondError(w, http.StatusBadRequest, "Failed to parse form")
 		return
 	}
 
 	file, header, err := r.FormFile("file")
 	if err != nil {
+		log.Printf("Failed to get file from form: %v", err)
 		helpers.RespondError(w, http.StatusBadRequest, "No file provided")
 		return
 	}
 	defer file.Close()
+
+	log.Printf("File received: %s, Content-Type: %s", header.Filename, header.Header.Get("Content-Type"))
 
 	// Validate file type
 	allowedTypes := map[string]bool{
@@ -719,6 +728,7 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 
 	contentType := header.Header.Get("Content-Type")
 	if !allowedTypes[contentType] {
+		log.Printf("Invalid file type: %s", contentType)
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid file type. Only JPEG, PNG, and WebP are allowed")
 		return
 	}
@@ -728,7 +738,11 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 	apiKey := os.Getenv("CLOUDINARY_API_KEY")
 	apiSecret := os.Getenv("CLOUDINARY_API_SECRET")
 
+	log.Printf("Cloudinary config - CloudName: %s, APIKey set: %v, APISecret set: %v",
+		cloudName, apiKey != "", apiSecret != "")
+
 	if cloudName == "" || apiKey == "" || apiSecret == "" {
+		log.Println("Cloudinary not configured")
 		helpers.RespondError(w, http.StatusInternalServerError, "Cloudinary not configured")
 		return
 	}
@@ -736,6 +750,7 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 	// Upload to Cloudinary
 	cld, err := cloudinary.NewFromParams(cloudName, apiKey, apiSecret)
 	if err != nil {
+		log.Printf("Failed to initialize Cloudinary: %v", err)
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to initialize Cloudinary")
 		return
 	}
@@ -746,11 +761,16 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 		Transformation: "c_fill,w_200,h_200,q_80",
 	}
 
+	log.Printf("Uploading to Cloudinary with PublicID: %s", uploadParams.PublicID)
+
 	result, err := cld.Upload.Upload(ctx, file, uploadParams)
 	if err != nil {
+		log.Printf("Failed to upload image to Cloudinary: %v", err)
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to upload image")
 		return
 	}
+
+	log.Printf("Cloudinary upload successful, URL: %s", result.SecureURL)
 
 	// Update user's profile picture URL in database
 	_, err = database.NewUpdate().
@@ -760,9 +780,12 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 		Exec(ctx)
 
 	if err != nil {
+		log.Printf("Failed to update profile picture in database: %v", err)
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to update profile picture")
 		return
 	}
+
+	log.Printf("Profile picture updated successfully for user ID: %d", user.ID)
 
 	helpers.RespondData(w, map[string]interface{}{
 		"message":             "Profile picture updated successfully",
