@@ -20,6 +20,8 @@ import {
 import { cn } from "@/lib/utils"
 import TutorialOverlay from "@/components/tutorial/TutorialOverlay"
 import { useAuth } from "@/hooks"
+import { alertsApi, accountsApi, type Alert } from "@/lib/api"
+import { Badge } from "@/components/ui/badge"
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -36,11 +38,30 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
+  const [unreadAlertCount, setUnreadAlertCount] = useState(0)
   const sidebarRef = useRef<HTMLElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const navigate = useNavigate()
   const { logout } = useAuth()
+
+  // Load unread alert count
+  useEffect(() => {
+    async function loadUnreadAlerts() {
+      try {
+        const accountResponse = await accountsApi.getMyAccount()
+        if (accountResponse.data && accountResponse.data.length > 0) {
+          const accountId = accountResponse.data[0].id
+          const alertsResponse = await alertsApi.list(accountId)
+          const unreadCount = alertsResponse.data?.filter((a: Alert) => !a.is_read).length || 0
+          setUnreadAlertCount(unreadCount)
+        }
+      } catch (error) {
+        console.error('Failed to load unread alerts:', error)
+      }
+    }
+    loadUnreadAlerts()
+  }, [])
 
   // Close sidebar on route change
   useEffect(() => {
@@ -244,11 +265,16 @@ export default function Layout() {
                   }
                 >
                   <div className={cn(
-                    "p-2 rounded-lg transition-all duration-200 flex-shrink-0",
+                    "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
                     "group-hover:bg-emerald-900/30 group-hover:scale-110",
                     "group-[.active]:bg-emerald-800/50"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
+                    {item.to === "/alerts" && unreadAlertCount > 0 && (
+                      <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 hover:bg-red-600">
+                        {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
+                      </Badge>
+                    )}
                   </div>
                   <span className="truncate font-medium">{item.label}</span>
                 </NavLink>
