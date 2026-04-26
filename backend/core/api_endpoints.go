@@ -1,6 +1,8 @@
 package core
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/julian/budget-buddy/core/functions"
 	"github.com/julian/budget-buddy/core/functions/accounts"
@@ -32,7 +34,9 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/auth/login", authHandler.Login)
 		r.Post("/auth/refresh", authHandler.RefreshToken)
 		r.Get("/auth/me", authHandler.GetProfile)
-		r.Post("/auth/profile-picture", auth.POSTProfilePicture)
+		r.Post("/auth/profile-picture", func(w http.ResponseWriter, r *http.Request) {
+			auth.POSTProfilePicture(w, r)
+		})
 
 		/* ----------- ACCOUNTS ----------- */
 		r.Get("/accounts", accounts.GETAccount)
