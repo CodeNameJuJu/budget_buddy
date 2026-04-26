@@ -55,7 +55,7 @@ func (s *EmailService) SendVerificationEmail(userID int, email string, token str
 	// Send email using Resend
 	if s.client != nil {
 		params := &resend.SendEmailRequest{
-			From:    "Budget Buddy <noreply@budgetbuddy.app>",
+			From:    "onboarding@resend.dev", // Use Resend's default verified sender
 			To:      []string{email},
 			Subject: "Verify Your Email",
 			Html:    s.getVerificationEmailTemplate(token),
@@ -64,6 +64,7 @@ func (s *EmailService) SendVerificationEmail(userID int, email string, token str
 		_, err = s.client.Emails.Send(params)
 		if err != nil {
 			fmt.Printf("Failed to send email via Resend: %v\n", err)
+			// Return error but still log the token for testing
 			return fmt.Errorf("failed to send email: %w", err)
 		}
 
