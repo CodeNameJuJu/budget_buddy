@@ -1,17 +1,58 @@
 import { useAuth } from '../hooks';
 import { Button } from '../components/ui/button';
-import { LogOut, Mail, User as UserIcon, Shield, Calendar, Clock, Edit, Check } from 'lucide-react';
-import { useState } from 'react';
-import { authApi } from '../lib/api';
+import { LogOut, Mail, User as UserIcon, Shield, Calendar, Clock, Edit, Check, Globe, DollarSign } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { authApi, accountsApi, type Account } from '../lib/api';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ email: '', first_name: '', last_name: '' });
+  const [editForm, setEditForm] = useState({ email: '', first_name: '', last_name: '', currency: '', timezone: '' });
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [verificationToken, setVerificationToken] = useState('');
   const [showVerification, setShowVerification] = useState(false);
+  const [account, setAccount] = useState<Account | null>(null);
+
+  const CURRENCY_OPTIONS = [
+    { code: 'USD', symbol: '$', name: 'US Dollar' },
+    { code: 'EUR', symbol: '€', name: 'Euro' },
+    { code: 'GBP', symbol: '£', name: 'British Pound' },
+    { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
+    { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+    { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+    { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+    { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
+  ];
+
+  const TIMEZONE_OPTIONS = [
+    { value: 'UTC', label: 'UTC (Coordinated Universal Time)' },
+    { value: 'America/New_York', label: 'Eastern Time (US & Canada)' },
+    { value: 'America/Chicago', label: 'Central Time (US & Canada)' },
+    { value: 'America/Denver', label: 'Mountain Time (US & Canada)' },
+    { value: 'America/Los_Angeles', label: 'Pacific Time (US & Canada)' },
+    { value: 'Europe/London', label: 'London (GMT)' },
+    { value: 'Europe/Paris', label: 'Paris (CET)' },
+    { value: 'Europe/Berlin', label: 'Berlin (CET)' },
+    { value: 'Asia/Tokyo', label: 'Tokyo (JST)' },
+    { value: 'Asia/Shanghai', label: 'Shanghai (CST)' },
+    { value: 'Africa/Johannesburg', label: 'Johannesburg (SAST)' },
+  ];
+
+  useEffect(() => {
+    loadAccount();
+  }, []);
+
+  async function loadAccount() {
+    try {
+      const response = await accountsApi.getMyAccount();
+      if (response.data && response.data.length > 0) {
+        setAccount(response.data[0]);
+      }
+    } catch (error) {
+      console.error('Failed to load account', error);
+    }
+  }
 
   const handleLogout = async () => {
     try {
@@ -26,6 +67,8 @@ export default function ProfilePage() {
       email: user.email,
       first_name: user.first_name || '',
       last_name: user.last_name || '',
+      currency: account?.currency || 'USD',
+      timezone: account?.timezone || 'UTC',
     });
     setIsEditing(true);
     setSaveMessage(null);
@@ -35,16 +78,24 @@ export default function ProfilePage() {
     setIsSaving(true);
     try {
       const updatedUser = await authApi.updateProfile(editForm);
+      // Update account currency/timezone
+      if (account && (editForm.currency !== account.currency || editForm.timezone !== account.timezone)) {
+        await accountsApi.update(account.id, {
+          currency: editForm.currency,
+          timezone: editForm.timezone,
+        });
+        setAccount({ ...account, currency: editForm.currency, timezone: editForm.timezone });
+      }
       // Update local user state
       // Note: In a real app, you'd update the auth context
       setIsEditing(false);
       setSaveMessage({ type: 'success', text: 'Profile updated successfully' });
-      
+
       // If email changed, show verification UI
       if (editForm.email !== user.email) {
         setShowVerification(true);
       }
-      
+
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (error: any) {
       setSaveMessage({ type: 'error', text: error.message || 'Failed to update profile' });
@@ -164,6 +215,42 @@ export default function ProfilePage() {
               />
             </div>
 
+            <div className="bg-slate-900/50 rounded-xl p-4">
+              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+                <DollarSign className="h-4 w-4" />
+                Currency
+              </label>
+              <select
+                value={editForm.currency}
+                onChange={(e) => setEditForm({ ...editForm, currency: e.target.value })}
+                className="w-full bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+              >
+                {CURRENCY_OPTIONS.map((opt) => (
+                  <option key={opt.code} value={opt.code}>
+                    {opt.symbol} {opt.name} ({opt.code})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="bg-slate-900/50 rounded-xl p-4">
+              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                Timezone
+              </label>
+              <select
+                value={editForm.timezone}
+                onChange={(e) => setEditForm({ ...editForm, timezone: e.target.value })}
+                className="w-full bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+              >
+                {TIMEZONE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="flex gap-3">
               <Button
                 onClick={handleSave}
@@ -198,6 +285,26 @@ export default function ProfilePage() {
               </label>
               <p className="text-white font-medium">
                 {user.first_name || ''} {user.last_name || ''} {(user.first_name || user.last_name) ? '' : 'N/A'}
+              </p>
+            </div>
+
+            <div className="bg-slate-900/50 rounded-xl p-4">
+              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+                <DollarSign className="h-4 w-4" />
+                Currency
+              </label>
+              <p className="text-white font-medium">
+                {account?.currency || 'USD'}
+              </p>
+            </div>
+
+            <div className="bg-slate-900/50 rounded-xl p-4">
+              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                Timezone
+              </label>
+              <p className="text-white font-medium">
+                {account?.timezone || 'UTC'}
               </p>
             </div>
             

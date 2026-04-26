@@ -148,7 +148,7 @@ export const setupTutorialSteps: TutorialStep[] = [
   {
     id: "profile-settings",
     title: "Manage Your Profile",
-    description: "Update your account details, change your currency, timezone, and other personal preferences.",
+    description: "Update your email, name, currency, and timezone. Verify your email address and view your account status.",
     target: "profile-page",
     position: "bottom",
     route: "/profile",
