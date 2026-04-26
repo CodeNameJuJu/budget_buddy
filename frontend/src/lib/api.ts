@@ -419,8 +419,8 @@ export const alertsApi = {
     post<APIResponse<null>>("/alerts/mark-all-read", { account_id: accountID }),
   updatePreference: (data: { account_id: number; type: string; enabled: boolean; threshold?: number }) =>
     post<APIResponse<AlertPreference>>("/alerts/preferences", data),
-  triggerAlerts: (accountID: number) =>
-    post<APIResponse<{ message: string }>>("/alerts/trigger", { account_id: accountID }),
+  triggerAlerts: (accountID: number, alertType?: string) =>
+    post<APIResponse<{ message: string }>>("/alerts/trigger", { account_id: accountID, alert_type: alertType }),
 }
 
 // Dashboard API

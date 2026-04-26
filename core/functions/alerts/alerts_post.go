@@ -110,7 +110,8 @@ func POSTAlertPreference(w http.ResponseWriter, r *http.Request) {
 
 func POSTTriggerAlerts(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		AccountID int64 `json:"account_id"`
+		AccountID int64  `json:"account_id"`
+		AlertType string `json:"alert_type,omitempty"` // "weekly", "monthly", or empty for all
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -124,33 +125,41 @@ func POSTTriggerAlerts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate budget threshold alerts
-	if err := db.GenerateBudgetThresholdAlerts(req.AccountID); err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate budget alerts")
-		return
+	if req.AlertType == "" || req.AlertType == "budget" {
+		if err := db.GenerateBudgetThresholdAlerts(req.AccountID); err != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Could not generate budget alerts")
+			return
+		}
 	}
 
 	// Generate goal achievement alerts
-	if err := db.GenerateGoalAchievementAlerts(req.AccountID); err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate goal alerts")
-		return
-	}
+	if req.AlertType == "" || req.AlertType == "goal" {
+		if err := db.GenerateGoalAchievementAlerts(req.AccountID); err != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Could not generate goal alerts")
+			return
+		}
 
-	// Generate goal milestone alerts
-	if err := db.GenerateGoalMilestoneAlerts(req.AccountID); err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate goal milestone alerts")
-		return
+		// Generate goal milestone alerts
+		if err := db.GenerateGoalMilestoneAlerts(req.AccountID); err != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Could not generate goal milestone alerts")
+			return
+		}
 	}
 
 	// Generate weekly summary alerts
-	if err := db.GenerateWeeklySummaryAlerts(req.AccountID); err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate weekly summary alerts")
-		return
+	if req.AlertType == "" || req.AlertType == "weekly" {
+		if err := db.GenerateWeeklySummaryAlerts(req.AccountID); err != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Could not generate weekly summary alerts")
+			return
+		}
 	}
 
 	// Generate monthly summary alerts
-	if err := db.GenerateMonthlySummaryAlerts(req.AccountID); err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not generate monthly summary alerts")
-		return
+	if req.AlertType == "" || req.AlertType == "monthly" {
+		if err := db.GenerateMonthlySummaryAlerts(req.AccountID); err != nil {
+			helpers.RespondError(w, http.StatusInternalServerError, "Could not generate monthly summary alerts")
+			return
+		}
 	}
 
 	helpers.RespondData(w, map[string]string{"message": "Alerts generated successfully"}, 1)

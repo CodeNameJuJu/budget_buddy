@@ -8,6 +8,7 @@ import {
   Info,
   Check,
   Settings,
+  ChevronDown,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -15,6 +16,12 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
 
@@ -24,6 +31,7 @@ export default function AlertsPage() {
   const [preferences, setPreferences] = useState<AlertPreference[]>([])
   const [loading, setLoading] = useState(true)
   const [showPreferences, setShowPreferences] = useState(false)
+  const [alertType, setAlertType] = useState<string>("")
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
@@ -112,7 +120,7 @@ export default function AlertsPage() {
     if (!accountId) return
     
     try {
-      await alertsApi.triggerAlerts(accountId)
+      await alertsApi.triggerAlerts(accountId, alertType)
       loadData() // Reload alerts to show newly generated ones
     } catch (error) {
       console.error("Failed to trigger alerts", error)
@@ -171,6 +179,19 @@ export default function AlertsPage() {
           <p className="text-slate-400">Stay informed about your finances</p>
         </div>
         <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                {alertType === "" ? "All Alerts" : alertType === "weekly" ? "Weekly" : alertType === "monthly" ? "Monthly" : alertType}
+                <ChevronDown className="h-4 w-4 ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setAlertType("")}>All Alerts</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setAlertType("weekly")}>Weekly Summary</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setAlertType("monthly")}>Monthly Summary</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button onClick={triggerAlerts} variant="outline" size="sm">
             Check for New Alerts
           </Button>
