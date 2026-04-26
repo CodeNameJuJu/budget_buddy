@@ -128,7 +128,7 @@ export const CouplesManagement: React.FC = () => {
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'owner': return 'bg-purple-800/30 text-purple-300 border border-purple-700/50';
-      case 'admin': return 'bg-blue-800/30 text-blue-300 border border-blue-700/50';
+      case 'admin': return 'bg-emerald-800/30 text-emerald-300 border border-emerald-700/50';
       case 'member': return 'bg-slate-700/30 text-slate-300 border border-slate-600/50';
       default: return 'bg-slate-700/30 text-slate-300 border border-slate-600/50';
     }
@@ -146,7 +146,7 @@ export const CouplesManagement: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-400"></div>
       </div>
     );
   }
@@ -168,7 +168,7 @@ export const CouplesManagement: React.FC = () => {
             onClick={() => setActiveTab('partnerships')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'partnerships'
-                ? 'border-blue-500 text-blue-400'
+                ? 'border-emerald-500 text-emerald-400'
                 : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600'
             }`}
           >
@@ -178,7 +178,7 @@ export const CouplesManagement: React.FC = () => {
             onClick={() => setActiveTab('invitations')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'invitations'
-                ? 'border-blue-500 text-blue-400'
+                ? 'border-emerald-500 text-emerald-400'
                 : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600'
             }`}
           >
@@ -194,7 +194,7 @@ export const CouplesManagement: React.FC = () => {
             <h2 className="text-xl font-semibold text-slate-100">Your Partnerships</h2>
             <button
               onClick={() => setShowCreateForm(true)}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors duration-200"
             >
               <Plus className="h-4 w-4" />
               Create Partnership
@@ -209,7 +209,7 @@ export const CouplesManagement: React.FC = () => {
               <p className="text-slate-400 mb-4">Create your first partnership to start sharing finances with your partner</p>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors duration-200"
               >
                 Create Partnership
               </button>

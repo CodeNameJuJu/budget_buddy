@@ -35,7 +35,7 @@ export default function TutorialBubble({
   }
 
   return (
-    <Card className={`absolute z-50 w-80 shadow-2xl border-blue-500/50 bg-slate-800/95 backdrop-blur-md ${positionClasses[position]}`}>
+    <Card className={`absolute z-50 w-80 shadow-2xl border-emerald-500/50 bg-slate-800/95 backdrop-blur-md ${positionClasses[position]}`}>
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <h3 className="font-semibold text-slate-100 text-sm">{title}</h3>
@@ -69,7 +69,7 @@ export default function TutorialBubble({
               <Button
                 size="sm"
                 onClick={onNext}
-                className="h-7 px-3 text-xs bg-blue-600 hover:bg-blue-700"
+                className="h-7 px-3 text-xs bg-emerald-600 hover:bg-emerald-700"
               >
                 {isLastStep ? "Finish" : "Next"}
                 {!isLastStep && <ChevronRight className="h-3 w-3 ml-1" />}
