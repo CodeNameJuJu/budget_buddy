@@ -522,6 +522,19 @@ export const authApi = {
   logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
   listDevices: () => request<any[]>('/auth/devices'),
   revokeDevice: (deviceId: string) => request<{ message: string }>(`/auth/devices?device_id=${deviceId}`, { method: 'DELETE' }),
+  updateProfile: (data: { email: string; first_name?: string; last_name?: string }) =>
+    request<any>('/auth/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  sendVerificationEmail: () => request<{ message: string; verification_token?: string }>('/auth/verify-email/send', {
+    method: 'POST',
+  }),
+  verifyEmail: (data: { token: string }) =>
+    request<{ message: string }>('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 }
 
 export const couplesApi = {

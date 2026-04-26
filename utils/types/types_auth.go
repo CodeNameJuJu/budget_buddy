@@ -79,6 +79,18 @@ type ChangePasswordRequest struct {
 	NewPassword     string `json:"new_password" validate:"required,min=6"`
 }
 
+// UpdateProfileRequest represents an update profile request
+type UpdateProfileRequest struct {
+	Email     string `json:"email" validate:"required,email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
+// VerifyEmailRequest represents a verify email request
+type VerifyEmailRequest struct {
+	Token string `json:"token" validate:"required"`
+}
+
 // JWT Claims represents the JWT token claims
 type JWTClaims struct {
 	UserID   int    `json:"user_id"`

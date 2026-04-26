@@ -36,7 +36,10 @@ func RegisterRoutes(r chi.Router) {
 			// Protected routes
 			r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 				r.Get("/profile", authHandler.GetProfile)
+				r.Patch("/profile", authHandler.UpdateProfile)
 				r.Post("/change-password", authHandler.ChangePassword)
+				r.Post("/verify-email/send", authHandler.SendVerificationEmail)
+				r.Post("/verify-email", authHandler.VerifyEmail)
 				r.Get("/devices", authHandler.ListDevices)
 				r.Delete("/devices", authHandler.RevokeDevice)
 			})

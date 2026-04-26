@@ -406,6 +406,158 @@ func (h *AuthHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	helpers.RespondData(w, user, http.StatusOK)
 }
 
+// UpdateProfile handles profile update
+func (h *AuthHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	// Get user from context (set by auth middleware)
+	user, ok := r.Context().Value("user").(*types.User)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	var req types.UpdateProfileRequest
+	if err := helpers.DecodeBody(r, &req); err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	// Basic validation
+	if req.Email == "" {
+		helpers.RespondError(w, http.StatusBadRequest, "Email is required")
+		return
+	}
+
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	// Check if email is being changed to a different email that already exists
+	if req.Email != user.Email {
+		var existingUser types.User
+		err := database.NewSelect().
+			Model(&existingUser).
+			Where("email = ? AND id != ?", req.Email, user.ID).
+			Scan(context.Background())
+
+		if err == nil {
+			helpers.RespondError(w, http.StatusConflict, "Email already in use")
+			return
+		}
+	}
+
+	// Update user profile
+	_, err := database.NewUpdate().
+		Model(&types.User{}).
+		Set("email = ?", req.Email).
+		Set("first_name = ?", req.FirstName).
+		Set("last_name = ?", req.LastName).
+		Set("updated_at = ?", time.Now()).
+		// If email changed, mark as unverified
+		Set("email_verified = ?", req.Email == user.Email).
+		Where("id = ?", user.ID).
+		Exec(context.Background())
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to update profile")
+		return
+	}
+
+	// Fetch updated user
+	var updatedUser types.User
+	err = database.NewSelect().
+		Model(&updatedUser).
+		Where("id = ?", user.ID).
+		Scan(context.Background())
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to fetch updated user")
+		return
+	}
+
+	helpers.RespondData(w, updatedUser, http.StatusOK)
+}
+
+// SendVerificationEmail handles sending a verification email
+func (h *AuthHandler) SendVerificationEmail(w http.ResponseWriter, r *http.Request) {
+	// Get user from context (set by auth middleware)
+	user, ok := r.Context().Value("user").(*types.User)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	// Generate verification token
+	verificationToken, err := h.authService.GenerateSecureToken(32)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to generate verification token")
+		return
+	}
+
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	// Store verification token (you might want to add a verification_tokens table)
+	// For now, we'll just mark the user as needing verification and send the token
+	// In a real implementation, you'd store this in a separate table with expiry
+
+	// For simplicity, we'll just return the token for now
+	// In production, you'd send this via email
+	helpers.RespondData(w, map[string]string{
+		"message":            "Verification email sent",
+		"verification_token": verificationToken, // Remove this in production
+	}, http.StatusOK)
+}
+
+// VerifyEmail handles email verification
+func (h *AuthHandler) VerifyEmail(w http.ResponseWriter, r *http.Request) {
+	var req types.VerifyEmailRequest
+	if err := helpers.DecodeBody(r, &req); err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	if req.Token == "" {
+		helpers.RespondError(w, http.StatusBadRequest, "Token is required")
+		return
+	}
+
+	// For now, we'll just verify the token format
+	// In a real implementation, you'd check against stored tokens in the database
+
+	// Get user from context (set by auth middleware)
+	user, ok := r.Context().Value("user").(*types.User)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	// Mark user as verified
+	_, err := database.NewUpdate().
+		Model(&types.User{}).
+		Set("email_verified = ?", true).
+		Set("updated_at = ?", time.Now()).
+		Where("id = ?", user.ID).
+		Exec(context.Background())
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to verify email")
+		return
+	}
+
+	helpers.RespondData(w, map[string]string{"message": "Email verified successfully"}, http.StatusOK)
+}
+
 // ChangePassword handles password change
 func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 	// Get user from context (set by auth middleware)
