@@ -87,10 +87,10 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-teal-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
+          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
             <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
@@ -100,7 +100,7 @@ export const RegisterForm: React.FC = () => {
           </h2>
           <p className="mt-2 text-center text-sm text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-blue-300 hover:text-blue-200">
+            <Link to="/login" className="font-medium text-emerald-300 hover:text-emerald-200">
               Sign in
             </Link>
           </p>
@@ -118,7 +118,7 @@ export const RegisterForm: React.FC = () => {
                   name="firstName"
                   type="text"
                   autoComplete="given-name"
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-blue-800 rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm"
+                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-emerald-800 rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm"
                   placeholder="First name"
                   value={formData.firstName}
                   onChange={handleChange}
@@ -134,7 +134,7 @@ export const RegisterForm: React.FC = () => {
                   name="lastName"
                   type="text"
                   autoComplete="family-name"
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-blue-800 rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm"
+                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-emerald-800 rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm"
                   placeholder="Last name"
                   value={formData.lastName}
                   onChange={handleChange}
@@ -153,8 +153,8 @@ export const RegisterForm: React.FC = () => {
                 autoComplete="email"
                 required
                 className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  errors.email ? 'border-red-400' : 'border-blue-800'
-                } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm`}
+                  errors.email ? 'border-red-400' : 'border-emerald-800'
+                } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm`}
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
@@ -176,8 +176,8 @@ export const RegisterForm: React.FC = () => {
                   autoComplete="new-password"
                   required
                   className={`appearance-none relative block w-full px-3 py-2 pr-10 border ${
-                    errors.password ? 'border-red-400' : 'border-blue-800'
-                  } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm`}
+                    errors.password ? 'border-red-400' : 'border-emerald-800'
+                  } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm`}
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
@@ -219,8 +219,8 @@ export const RegisterForm: React.FC = () => {
                   autoComplete="new-password"
                   required
                   className={`appearance-none relative block w-full px-3 py-2 pr-10 border ${
-                    errors.confirmPassword ? 'border-red-400' : 'border-blue-800'
-                  } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm`}
+                    errors.confirmPassword ? 'border-red-400' : 'border-emerald-800'
+                  } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm`}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -254,15 +254,15 @@ export const RegisterForm: React.FC = () => {
               name="agree-terms"
               type="checkbox"
               required
-              className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-blue-800 rounded bg-slate-700"
+              className="h-4 w-4 text-emerald-500 focus:ring-emerald-400 border-emerald-800 rounded bg-slate-700"
             />
             <label htmlFor="agree-terms" className="ml-2 block text-sm text-slate-300">
               I agree to the{' '}
-              <Link to="/terms" className="text-blue-300 hover:text-blue-200">
+              <Link to="/terms" className="text-emerald-300 hover:text-emerald-200">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link to="/privacy" className="text-blue-300 hover:text-blue-200">
+              <Link to="/privacy" className="text-emerald-300 hover:text-emerald-200">
                 Privacy Policy
               </Link>
             </label>
@@ -272,7 +272,7 @@ export const RegisterForm: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200"
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

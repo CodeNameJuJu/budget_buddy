@@ -177,7 +177,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                         </>
                       )}
                     </div>
-                    <span className={isCompleted ? "text-teal-400 font-medium" : "text-blue-400"}>
+                    <span className={isCompleted ? "text-emerald-400 font-medium" : "text-green-400"}>
                       {progress.toFixed(0)}%
                     </span>
                   </div>

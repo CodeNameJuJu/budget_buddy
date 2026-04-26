@@ -32,8 +32,8 @@ export default function GettingStartedWidget() {
             className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/80 transition-colors"
             onClick={() => navigate("/budgets")}
           >
-            <div className="bg-blue-100 p-2 rounded-full">
-              <TrendingUp className="h-4 w-4 text-blue-600" />
+            <div className="bg-emerald-100 p-2 rounded-full">
+              <TrendingUp className="h-4 w-4 text-emerald-600" />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-sm">Add Budgets</h4>
@@ -60,8 +60,8 @@ export default function GettingStartedWidget() {
             className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/80 transition-colors"
             onClick={() => navigate("/transactions")}
           >
-            <div className="bg-purple-100 p-2 rounded-full">
-              <PlusCircle className="h-4 w-4 text-purple-600" />
+            <div className="bg-teal-100 p-2 rounded-full">
+              <PlusCircle className="h-4 w-4 text-teal-600" />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-sm">Track Transactions</h4>

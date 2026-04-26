@@ -4,9 +4,9 @@ import { CheckCircle, Sparkles } from "lucide-react"
 
 export default function WelcomeWidget() {
   return (
-    <Card className="bg-gradient-to-br from-blue-900/20 to-teal-900/20 border-blue-800/50">
+    <Card className="bg-gradient-to-br from-emerald-900/20 to-green-900/20 border-emerald-800/50">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-blue-300">
+        <CardTitle className="flex items-center gap-2 text-emerald-300">
           <Sparkles className="h-5 w-5" />
           Welcome to Budget Buddy!
         </CardTitle>
@@ -20,11 +20,11 @@ export default function WelcomeWidget() {
         </div>
         
         <div className="flex flex-wrap gap-2 pt-2">
-          <Badge variant="secondary" className="bg-blue-800/30 text-blue-300 border border-blue-700/50">
+          <Badge variant="secondary" className="bg-emerald-800/30 text-emerald-300 border border-emerald-700/50">
             <CheckCircle className="h-3 w-3 mr-1" />
             Account Created
           </Badge>
-          <Badge variant="secondary" className="bg-teal-800/30 text-teal-300 border border-teal-700/50">
+          <Badge variant="secondary" className="bg-green-800/30 text-green-300 border border-green-700/50">
             <CheckCircle className="h-3 w-3 mr-1" />
             Ready to Start
           </Badge>

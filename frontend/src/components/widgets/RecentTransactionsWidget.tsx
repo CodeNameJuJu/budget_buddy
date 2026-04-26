@@ -138,7 +138,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                     {t.description || t.category?.name || "Transaction"}
                   </p>
                   {t.account_type === "savings" && (
-                    <Badge variant="outline" className="text-xs text-blue-300 border-blue-700/50 bg-blue-800/20">
+                    <Badge variant="outline" className="text-xs text-emerald-300 border-emerald-700/50 bg-emerald-800/20">
                       Savings
                     </Badge>
                   )}
