@@ -166,11 +166,24 @@ export default function ProfilePage() {
 
   return (
     <div className="responsive-margin">
-      <div className="mb-6 xs:mb-8">
-        <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">
-          Profile
-        </h1>
-        <p className="text-slate-400 mt-1">Manage your account settings</p>
+      <div className="mb-6 xs:mb-8 flex items-center gap-4">
+        {profilePictureUrl ? (
+          <img 
+            src={profilePictureUrl} 
+            alt="Profile" 
+            className="w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 border-emerald-600"
+          />
+        ) : (
+          <div className="w-16 h-16 xs:w-20 xs:h-20 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-600">
+            <UserIcon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
+          </div>
+        )}
+        <div>
+          <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">
+            Profile
+          </h1>
+          <p className="text-slate-400 mt-1">Manage your account settings</p>
+        </div>
       </div>
       
       <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
