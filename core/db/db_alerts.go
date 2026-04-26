@@ -231,6 +231,16 @@ func GenerateWeeklySummaryAlerts(accountID int64) error {
 	startOfWeek := now.AddDate(0, 0, -7)
 	endOfWeek := now
 
+	// Check if weekly summary alert already exists for this week
+	weekStartStr := startOfWeek.Format("2006-01-02")
+	exists, err := alertExistsForPeriod(accountID, types.AlertWeeklySummary, weekStartStr)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return nil
+	}
+
 	transactions, _, err := QueryTransactions(TransactionFilters{
 		AccountID: accountID,
 		DateFrom:  &startOfWeek,
@@ -282,6 +292,16 @@ func GenerateMonthlySummaryAlerts(accountID int64) error {
 	now := time.Now()
 	startOfMonth := now.AddDate(0, -1, 0)
 	endOfMonth := now
+
+	// Check if monthly summary alert already exists for this month
+	monthStartStr := startOfMonth.Format("2006-01")
+	exists, err := alertExistsForPeriod(accountID, types.AlertMonthlySummary, monthStartStr)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return nil
+	}
 
 	transactions, _, err := QueryTransactions(TransactionFilters{
 		AccountID: accountID,
@@ -383,6 +403,21 @@ func alertExistsForMilestone(accountID int64, alertType types.AlertType, referen
 		Where("type = ?", alertType).
 		Where("reference_id = ?", referenceID).
 		Where("message LIKE ?", fmt.Sprintf("%%%d%%", milestone)).
+		Count(context.Background())
+
+	return count > 0, err
+}
+
+func alertExistsForPeriod(accountID int64, alertType types.AlertType, period string) (bool, error) {
+	dbConn := appcontext.GetDb()
+	var count int
+
+	// Get the start of the period as a date string
+	count, err := dbConn.NewSelect().
+		Model((*types.Alert)(nil)).
+		Where("account_id = ?", accountID).
+		Where("type = ?", alertType).
+		Where("created_date >= ?", period+"-01").
 		Count(context.Background())
 
 	return count > 0, err
