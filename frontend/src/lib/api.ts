@@ -2,7 +2,7 @@ const API_BASE = import.meta.env.PROD
   ? `${import.meta.env.RAILWAY_SERVICE_BUDGET_BUDDY_URL || 'https://budgetbuddy-production-b70f.up.railway.app'}/api`
   : 'https://budgetbuddy-production-b70f.up.railway.app/api'
 
-async function request<T>(path: string, options?: RequestInit): Promise<T> {
+async function request<T>(path: string, options?: RequestInit, isFormData?: boolean): Promise<T> {
   // Read the access token from either storage. Login may persist to either
   // localStorage (remember me) or sessionStorage; we must use whichever holds
   // the *current* user's token. Reading from only one place caused stale
@@ -10,13 +10,16 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   // information into the dashboard.
   const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
   
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  }
+  const headers: Record<string, string> = {}
   
   // Add authorization header if token exists
   if (token) {
     headers["Authorization"] = `Bearer ${token}`
+  }
+
+  // Only set Content-Type for non-FormData requests
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json"
   }
 
   const res = await fetch(`${API_BASE}${path}`, {
@@ -111,7 +114,10 @@ export function post<T>(path: string, body: unknown): Promise<T> {
   return request<T>(path, { method: "POST", body: JSON.stringify(body) })
 }
 
-export function patch<T>(path: string, body: unknown): Promise<T> {
+export function patch<T>(path: string, body: unknown, isFormData?: boolean): Promise<T> {
+  if (isFormData) {
+    return request<T>(path, { method: "PATCH", body: body as BodyInit }, true)
+  }
   return request<T>(path, { method: "PATCH", body: JSON.stringify(body) })
 }
 
@@ -124,6 +130,19 @@ export interface APIResponse<T> {
   data: T
   count: number
   error?: string
+}
+
+export interface User {
+  id: number
+  email: string
+  first_name?: string
+  last_name?: string
+  is_active: boolean
+  email_verified: boolean
+  profile_picture_url?: string
+  last_login?: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Account {
@@ -512,8 +531,8 @@ export const authApi = {
   refresh: (data: { refresh_token: string }) =>
     post<APIResponse<{ access_token: string; refresh_token: string }>>("/auth/refresh", data),
   getProfile: () => get<APIResponse<User>>("/auth/me"),
-  updateProfilePicture: (data: { profile_picture_url: string }) =>
-    patch<APIResponse<{ profile_picture_url: string }>>("/auth/profile-picture", data),
+  updateProfilePicture: (data: FormData) =>
+    patch<APIResponse<{ profile_picture_url: string }>>("/auth/profile-picture", data, true),
   logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
   listDevices: () => request<any[]>('/auth/devices'),
   revokeDevice: (deviceId: string) => request<{ message: string }>(`/auth/devices?device_id=${deviceId}`, { method: 'DELETE' }),

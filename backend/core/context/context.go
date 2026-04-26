@@ -23,50 +23,15 @@ func ConnectToDatabase() {
 
 	// Check if DATABASE_URL is provided (preferred for Railway/Supabase)
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
-		// For Railway, ensure SSL mode is properly set
-		if os.Getenv("RAILWAY_ENVIRONMENT") != "" {
-			// Railway environment - use require SSL for Railway PostgreSQL
-			if !strings.Contains(databaseURL, "sslmode=") {
-				dsn = databaseURL + "?sslmode=require"
 			} else {
-				// Replace existing sslmode with require
-				dsn = strings.Replace(databaseURL, "sslmode=disable", "sslmode=require", 1)
-				dsn = strings.Replace(dsn, "sslmode=allow", "sslmode=require", 1)
+				sqlDB := pgdriver.NewConnector(pgdriver.WithDSN(databaseURL))
+				db = bun.NewDB(sqlDB, pgdialect.New())
 			}
 		} else {
-			dsn = databaseURL
-		}
-		fmt.Printf("Using DATABASE_URL: %s\n", maskPassword(databaseURL))
-		fmt.Printf("Final DSN: %s\n", maskPassword(dsn))
-	} else {
-		// Build connection string from individual components
-		sslmode := os.Getenv("DB_SSLMODE")
-		if sslmode == "" {
-			sslmode = "disable" // Default for local development
-		}
-
-		dsn = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
-			os.Getenv("DB_USERNAME"),
-			os.Getenv("DB_PASSWORD"),
-			os.Getenv("DB_HOST"),
-			os.Getenv("DB_PORT"),
-			os.Getenv("DB_NAME"),
-			sslmode,
-		)
-		fmt.Printf("Using individual DB settings, host: %s\n", os.Getenv("DB_HOST"))
-	}
-
-	// Create SQL connection with Railway-compatible settings
-	sqlDB := sql.OpenDB(pgdriver.NewConnector(
-		pgdriver.WithDSN(dsn),
-		pgdriver.WithReadTimeout(30*time.Second),
-		pgdriver.WithWriteTimeout(30*time.Second),
-	))
-
-	// Configure connection pool for Railway
-	sqlDB.SetMaxOpenConns(25)
-	sqlDB.SetMaxIdleConns(25)
-	sqlDB.SetConnMaxLifetime(5 * time.Minute)
+			// Use individual DB settings
+			sslmode := os.Getenv("DB_SSLMODE")
+			if sslmode == "" {
+				sslmode = "disable"
 
 	db = bun.NewDB(sqlDB, pgdialect.New(), bun.WithDiscardUnknownColumns())
 
@@ -119,4 +84,15 @@ func maskPassword(dsn string) string {
 		return dsn[:20] + "***" + dsn[len(dsn)-10:]
 	}
 	return "***"
+}
+
+func GetUserID(c context.Context) int {
+	if userID, ok := c.Value("userID").(int); ok {
+		return userID
+	}
+	return 0
+}
+
+func GetEnv(key string) string {
+	return os.Getenv(key)
 }

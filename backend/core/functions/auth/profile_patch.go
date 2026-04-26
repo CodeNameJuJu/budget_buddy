@@ -7,14 +7,15 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/julian/budget-buddy/core/context"
-	"github.com/uptrace/bun"
 )
 
 // PATCHProfilePicture updates the user's profile picture URL
 func PATCHProfilePicture(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	db := context.GetDB(ctx)
+	db := context.GetDb()
 	userID := context.GetUserID(ctx)
 
 	if db == nil {
@@ -27,24 +28,62 @@ func PATCHProfilePicture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req struct {
-		ProfilePictureURL string `json:"profile_picture_url"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+	// Parse multipart form (up to 10MB)
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
 
-	if req.ProfilePictureURL == "" {
-		http.Error(w, "Profile picture URL is required", http.StatusBadRequest)
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "File is required", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Validate file type
+	contentType := header.Header.Get("Content-Type")
+	if contentType != "image/jpeg" && contentType != "image/png" && contentType != "image/jpg" && contentType != "image/webp" {
+		http.Error(w, "Invalid file type. Only JPEG, PNG, and WebP are allowed", http.StatusBadRequest)
 		return
 	}
 
-	// Update user's profile picture
+	// Initialize Cloudinary
+	cloudName := context.GetEnv("CLOUDINARY_CLOUD_NAME")
+	apiKey := context.GetEnv("CLOUDINARY_API_KEY")
+	apiSecret := context.GetEnv("CLOUDINARY_API_SECRET")
+
+	if cloudName == "" || apiKey == "" || apiSecret == "" {
+		http.Error(w, "Cloudinary configuration not set", http.StatusInternalServerError)
+		return
+	}
+
+	cld, err := cloudinary.NewFromParams(cloudName, apiKey, apiSecret)
+	if err != nil {
+		http.Error(w, "Failed to initialize Cloudinary", http.StatusInternalServerError)
+		return
+	}
+
+	// Upload to Cloudinary
+	uploadParams := uploader.UploadParams{
+		Folder:         "profile_pictures",
+		PublicID:       fmt.Sprintf("user_%d_%d", userID, time.Now().Unix()),
+		Transformation: "c_fill,w_200,h_200,q_80",
+		AllowedFormats: []string{"jpg", "jpeg", "png", "webp"},
+	}
+
+	result, err := cld.Upload.Upload(ctx, file, uploadParams)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to upload image: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Update user's profile picture in database
 	now := time.Now()
-	_, err := db.NewUpdate().
+	_, err = db.NewUpdate().
 		TableExpr("users").
-		Set("profile_picture_url = ?", req.ProfilePictureURL).
+		Set("profile_picture_url = ?", result.SecureURL).
 		Set("updated_at = ?", now).
 		Where("id = ?", userID).
 		Exec(ctx)
@@ -56,7 +95,7 @@ func PATCHProfilePicture(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"message": "Profile picture updated successfully",
-		"profile_picture_url": req.ProfilePictureURL,
+		"message":             "Profile picture updated successfully",
+		"profile_picture_url": result.SecureURL,
 	})
 }

@@ -141,32 +141,17 @@ export default function ProfilePage() {
 
     setIsUploadingPicture(true);
     try {
-      // For now, we'll use a simple approach - in production, you'd upload to a cloud storage service
-      // and get back a URL. For this implementation, we'll use a placeholder approach
-      // In a real app, you'd upload to S3, Cloudinary, or similar service
+      const formData = new FormData();
+      formData.append('file', file);
       
-      // Simulating upload - in production, replace with actual upload logic
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        // In production, upload to cloud storage and get URL
-        // For now, we'll use a data URL (not recommended for production)
-        const dataUrl = reader.result as string;
-        
-        try {
-          await authApi.updateProfilePicture({ profile_picture_url: dataUrl });
-          setProfilePictureUrl(dataUrl);
-          setSaveMessage({ type: 'success', text: 'Profile picture updated successfully' });
-          setTimeout(() => setSaveMessage(null), 3000);
-        } catch (error: any) {
-          setSaveMessage({ type: 'error', text: error.message || 'Failed to update profile picture' });
-          setTimeout(() => setSaveMessage(null), 3000);
-        }
-        setIsUploadingPicture(false);
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      setSaveMessage({ type: 'error', text: 'Failed to upload profile picture' });
+      const response = await authApi.updateProfilePicture(formData);
+      setProfilePictureUrl(response.profile_picture_url);
+      setSaveMessage({ type: 'success', text: 'Profile picture updated successfully' });
       setTimeout(() => setSaveMessage(null), 3000);
+    } catch (error: any) {
+      setSaveMessage({ type: 'error', text: error.message || 'Failed to update profile picture' });
+      setTimeout(() => setSaveMessage(null), 3000);
+    } finally {
       setIsUploadingPicture(false);
     }
   };
