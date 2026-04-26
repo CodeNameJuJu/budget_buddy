@@ -11,12 +11,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/CodeNameJuJu/budget_buddy/core"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
-	"github.com/julian/budget-buddy/core"
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/core/db"
 	"github.com/uptrace/bun"
 )
 

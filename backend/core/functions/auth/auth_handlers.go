@@ -9,9 +9,9 @@ import (
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"github.com/julian/budget-buddy/core/db"
-	"github.com/julian/budget-buddy/core/helpers"
-	"github.com/julian/budget-buddy/utils/types"
+	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 // AuthHandler handles authentication requests

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/shopspring/decimal"
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/utils/types"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func QuerySavingsGoals(accountID int64, goalID *int64) ([]types.SavingsGoal, int, error) {

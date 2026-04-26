@@ -1,13 +1,15 @@
-module github.com/julian/budget-buddy
+module github.com/CodeNameJuJu/budget_buddy
 
 go 1.23
 
 require (
+	github.com/cloudinary/cloudinary-go/v2 v2.15.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/cors v1.2.1
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.12.3
+	github.com/resendlabs/resend-go v1.7.0
 	github.com/shopspring/decimal v1.4.0
 	github.com/uptrace/bun v1.2.6
 	github.com/uptrace/bun/dialect/pgdialect v1.2.6
@@ -19,7 +21,6 @@ require (
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
-	github.com/cloudinary/cloudinary-go/v2 v2.15.0 // indirect
 	github.com/creasty/defaults v1.7.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
@@ -29,8 +30,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/puzpuzpuz/xsync/v3 v3.4.0 // indirect
-	github.com/resendlabs/resend-go v1.7.0 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect

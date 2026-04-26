@@ -11,8 +11,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/utils/types"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 const (

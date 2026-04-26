@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/utils/types"
+	"github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 // POSTPartnerships creates a new partnership

@@ -8,8 +8,8 @@ import (
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"github.com/julian/budget-buddy/core/context"
-	appcontext "github.com/julian/budget-buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core/context"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 )
 
 // POSTProfilePicture updates the user's profile picture URL

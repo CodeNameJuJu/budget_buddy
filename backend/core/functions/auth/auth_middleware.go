@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/core/helpers"
-	"github.com/julian/budget-buddy/utils/types"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 // AuthMiddleware creates a middleware for JWT authentication

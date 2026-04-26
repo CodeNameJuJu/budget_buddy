@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	appcontext "github.com/julian/budget-buddy/core/context"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/uptrace/bun"
 )
 

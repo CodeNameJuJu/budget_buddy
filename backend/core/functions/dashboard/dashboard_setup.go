@@ -3,8 +3,8 @@ package dashboard
 import (
 	"net/http"
 
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/core/helpers"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 )
 
 func POSTCreateTables(w http.ResponseWriter, r *http.Request) {

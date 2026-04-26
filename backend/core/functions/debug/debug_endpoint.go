@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	appcontext "github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/core/db"
-	"github.com/julian/budget-buddy/core/helpers"
-	"github.com/julian/budget-buddy/utils/types"
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 // DebugCategoryCreation bypasses all middleware to test database operations

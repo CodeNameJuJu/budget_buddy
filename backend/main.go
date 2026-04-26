@@ -10,10 +10,10 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
-	"github.com/julian/budget-buddy/core"
-	"github.com/julian/budget-buddy/core/context"
-	dbmiddleware "github.com/julian/budget-buddy/core/middleware"
-	"github.com/julian/budget-buddy/migrations"
+	"github.com/CodeNameJuJu/budget_buddy/core"
+	"github.com/CodeNameJuJu/budget_buddy/core/context"
+	dbmiddleware "github.com/CodeNameJuJu/budget_buddy/core/middleware"
+	"github.com/CodeNameJuJu/budget_buddy/migrations"
 )
 
 func main() {

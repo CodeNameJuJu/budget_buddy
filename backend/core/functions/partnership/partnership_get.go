@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/julian/budget-buddy/core/context"
-	"github.com/julian/budget-buddy/utils/types"
+	"github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/uptrace/bun"
 )
 
