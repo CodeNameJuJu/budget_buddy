@@ -1,6 +1,6 @@
 // Analytics types and API functions
 
-import { get } from "./api"
+import { get, APIResponse } from "./api"
 
 export interface SpendingTrend {
   month: string
@@ -42,10 +42,4 @@ export const analyticsApi = {
   
   financialHealth: (accountID: number) =>
     get<APIResponse<FinancialHealth>>("/analytics/financial-health", { account_id: String(accountID) }),
-}
-
-export interface APIResponse<T> {
-  data: T
-  count: number
-  error?: string
 }
