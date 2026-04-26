@@ -199,7 +199,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                       <span className={`
                         ${isOverBudget ? "text-red-400 font-medium" :
                           isNearLimit ? "text-yellow-400" :
-                          "text-teal-400"}
+                          "text-emerald-400"}
                       `}>
                         {budget.progress.toFixed(0)}%
                       </span>

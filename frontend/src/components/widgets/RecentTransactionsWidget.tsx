@@ -149,7 +149,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                 <Badge variant={t.type === "income" ? "default" : "destructive"} className="text-xs">
                   {t.type}
                 </Badge>
-                <span className={`text-sm font-semibold ${t.type === "income" ? "text-teal-400" : "text-red-400"}`}>
+                <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}>
                   {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                 </span>
               </div>

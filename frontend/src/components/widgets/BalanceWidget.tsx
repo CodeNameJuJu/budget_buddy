@@ -86,18 +86,18 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
       <CardContent>
         <div className="space-y-4">
           <div className="flex items-center justify-center py-2">
-            <div className={`text-3xl font-bold ${isPositive ? 'text-teal-400' : 'text-red-400'}`}>
+            <div className={`text-3xl font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
               {isPositive ? '+' : ''}{formatCurrency(data.balance)}
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-teal-500/10 border border-teal-500/20">
-              <div className="flex items-center gap-1 text-teal-400">
+            <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <div className="flex items-center gap-1 text-emerald-400">
                 <TrendingUp className="h-3 w-3" />
                 <span className="text-xs">Income</span>
               </div>
-              <span className="font-semibold text-teal-400">{formatCurrency(data.income)}</span>
+              <span className="font-semibold text-emerald-400">{formatCurrency(data.income)}</span>
             </div>
             <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
               <div className="flex items-center gap-1 text-red-400">
