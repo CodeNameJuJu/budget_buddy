@@ -26,6 +26,9 @@ const AccountSummaryWidget = lazy(() => import("./AccountSummaryWidget"))
 const CategoryBreakdownWidget = lazy(() => import("./CategoryBreakdownWidget"))
 const MonthlyComparisonWidget = lazy(() => import("./MonthlyComparisonWidget"))
 const UpcomingBillsWidget = lazy(() => import("./UpcomingBillsWidget"))
+const AlertsWidget = lazy(() => import("./AlertsWidget"))
+const SavingsSummaryWidget = lazy(() => import("./SavingsSummaryWidget"))
+const FinancialHealthWidget = lazy(() => import("./FinancialHealthWidget"))
 
 // Placeholder for widgets not yet implemented
 const PlaceholderWidget = ({ widgetType }: { widgetType: string }) => (
@@ -134,6 +137,27 @@ export default function WidgetRenderer({ widget, accountId }: WidgetRendererProp
         return (
           <Suspense fallback={<WidgetSkeleton title="Upcoming Bills" />}>
             <UpcomingBillsWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
+      case "alerts":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Alerts" />}>
+            <AlertsWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
+      case "savings_summary":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Savings Summary" />}>
+            <SavingsSummaryWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
+      case "financial_health":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Financial Health" />}>
+            <FinancialHealthWidget accountId={accountId} size={widget.size} />
           </Suspense>
         )
 
