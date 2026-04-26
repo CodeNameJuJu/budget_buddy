@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/julian/budget-buddy/core/db"
 	"github.com/julian/budget-buddy/core/helpers"
 	"github.com/julian/budget-buddy/utils/types"
@@ -134,7 +137,92 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 // POSTProfilePicture updates the user's profile picture URL
 func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request) {
-	POSTProfilePicture(w, r)
+	ctx := r.Context()
+	database := db.GetDb()
+	if database == nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
+		return
+	}
+
+	user, ok := r.Context().Value("user").(*types.User)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	// Parse multipart form
+	err := r.ParseMultipartForm(10 << 20) // 10MB max
+	if err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "Failed to parse form")
+		return
+	}
+
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "No file provided")
+		return
+	}
+	defer file.Close()
+
+	// Validate file type
+	allowedTypes := map[string]bool{
+		"image/jpeg": true,
+		"image/jpg":  true,
+		"image/png":  true,
+		"image/webp": true,
+	}
+
+	contentType := header.Header.Get("Content-Type")
+	if !allowedTypes[contentType] {
+		helpers.RespondError(w, http.StatusBadRequest, "Invalid file type. Only JPEG, PNG, and WebP are allowed")
+		return
+	}
+
+	// Get Cloudinary config
+	cloudName := os.Getenv("CLOUDINARY_CLOUD_NAME")
+	apiKey := os.Getenv("CLOUDINARY_API_KEY")
+	apiSecret := os.Getenv("CLOUDINARY_API_SECRET")
+
+	if cloudName == "" || apiKey == "" || apiSecret == "" {
+		helpers.RespondError(w, http.StatusInternalServerError, "Cloudinary not configured")
+		return
+	}
+
+	// Upload to Cloudinary
+	cld, err := cloudinary.NewFromParams(cloudName, apiKey, apiSecret)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to initialize Cloudinary")
+		return
+	}
+
+	uploadParams := uploader.UploadParams{
+		PublicID:       fmt.Sprintf("profile_pictures/user_%d_%d", user.ID, time.Now().Unix()),
+		Folder:         "profile_pictures",
+		Transformation: "c_fill,w_200,h_200,q_80",
+	}
+
+	result, err := cld.Upload.Upload(ctx, file, uploadParams)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to upload image")
+		return
+	}
+
+	// Update user's profile picture URL in database
+	_, err = database.NewUpdate().
+		Model(&types.User{}).
+		Set("profile_picture_url = ?", result.SecureURL).
+		Where("id = ?", user.ID).
+		Exec(ctx)
+
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to update profile picture")
+		return
+	}
+
+	helpers.RespondData(w, map[string]interface{}{
+		"message":             "Profile picture updated successfully",
+		"profile_picture_url": result.SecureURL,
+	}, http.StatusOK)
 }
 
 // Login handles user login
