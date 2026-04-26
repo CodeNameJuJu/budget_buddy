@@ -133,6 +133,7 @@ export interface Account {
   currency: string
   timezone?: string
   savings_balance?: string
+  dashboard_layout?: string
   created_date: string
 }
 
