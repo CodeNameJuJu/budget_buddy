@@ -11,6 +11,7 @@ import SavingsPage from "./pages/SavingsPage"
 import AnalyticsPage from "./pages/AnalyticsPage"
 import AlertsPage from "./pages/AlertsPage"
 import PartnersPage from "./pages/PartnersPage"
+import ProfilePage from "./pages/ProfilePage"
 import { LoginForm } from "./components/auth/LoginForm"
 import { RegisterForm } from "./components/auth/RegisterForm"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
@@ -71,6 +72,11 @@ export default function App() {
             <Route path="/partners" element={
               <ProtectedRoute>
                 <PartnersPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             } />
         </Route>
