@@ -501,14 +501,14 @@ func (h *AuthHandler) SendVerificationEmail(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Store verification token (you might want to add a verification_tokens table)
-	// For now, we'll just mark the user as needing verification and send the token
-	// In a real implementation, you'd store this in a separate table with expiry
+	// In a real implementation, you would:
+	// 1. Store the verification token in a database table with expiry
+	// 2. Send an email to user.Email with the verification token/link
+	// For now, we'll just return the token for testing purposes
 
-	// For simplicity, we'll just return the token for now
-	// In production, you'd send this via email
 	helpers.RespondData(w, map[string]string{
 		"message":            "Verification email sent",
+		"email":              user.Email,
 		"verification_token": verificationToken, // Remove this in production
 	}, http.StatusOK)
 }
