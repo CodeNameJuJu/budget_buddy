@@ -167,17 +167,34 @@ export default function ProfilePage() {
   return (
     <div className="responsive-margin">
       <div className="mb-6 xs:mb-8 flex items-center gap-4">
-        {profilePictureUrl ? (
-          <img 
-            src={profilePictureUrl} 
-            alt="Profile" 
-            className="w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 border-emerald-600"
-          />
-        ) : (
-          <div className="w-16 h-16 xs:w-20 xs:h-20 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-600">
-            <UserIcon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
-          </div>
-        )}
+        <div className="relative">
+          {profilePictureUrl ? (
+            <img 
+              src={profilePictureUrl} 
+              alt="Profile" 
+              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 border-emerald-600 cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => document.getElementById('header-profile-upload')?.click()}
+            />
+          ) : (
+            <div 
+              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-600 cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => document.getElementById('header-profile-upload')?.click()}
+            >
+              <UserIcon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
+            </div>
+          )}
+          <label className="absolute bottom-0 right-0 bg-emerald-600 hover:bg-emerald-700 rounded-full p-1.5 cursor-pointer transition-colors">
+            <Camera className="h-3 w-3 text-white" />
+            <input
+              id="header-profile-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureUpload}
+              className="hidden"
+              disabled={isUploadingPicture}
+            />
+          </label>
+        </div>
         <div>
           <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">
             Profile
