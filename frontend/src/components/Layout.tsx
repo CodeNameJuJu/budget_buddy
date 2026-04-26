@@ -43,7 +43,7 @@ export default function Layout() {
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const navigate = useNavigate()
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
 
   // Load unread alert count
   useEffect(() => {
@@ -288,10 +288,20 @@ export default function Layout() {
               onClick={handleProfileClick}
               className="group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button bg-gradient-to-r from-emerald-900/50 to-green-900/50 hover:from-emerald-800/50 hover:to-green-800/50 text-emerald-200 hover:text-white shadow-lg hover:shadow-xl border border-emerald-800/50 hover:border-emerald-700/50"
             >
-              <div className="p-2 rounded-lg bg-emerald-800/50 group-hover:bg-emerald-700/50 transition-all duration-200 flex-shrink-0 group-hover:scale-110">
-                <User className="h-5 w-5 xs:h-6 xs:w-6" />
-              </div>
-              <span className="truncate font-medium flex-1 text-left">Profile</span>
+              {user?.profile_picture_url ? (
+                <img 
+                  src={user.profile_picture_url} 
+                  alt="Profile" 
+                  className="w-8 h-8 xs:w-10 xs:h-10 rounded-full object-cover border-2 border-emerald-600 group-hover:scale-110 transition-all duration-200 flex-shrink-0"
+                />
+              ) : (
+                <div className="p-2 rounded-lg bg-emerald-800/50 group-hover:bg-emerald-700/50 transition-all duration-200 flex-shrink-0 group-hover:scale-110">
+                  <User className="h-5 w-5 xs:h-6 xs:w-6" />
+                </div>
+              )}
+              <span className="truncate font-medium flex-1 text-left">
+                {user?.first_name || user?.email || 'Profile'}
+              </span>
               <ChevronUp className={cn(
                 "h-4 w-4 xs:h-5 xs:w-5 transition-transform duration-200 flex-shrink-0",
                 profileDropdownOpen ? "rotate-180" : ""

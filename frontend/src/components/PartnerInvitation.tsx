@@ -533,7 +533,18 @@ export default function PartnerInvitation() {
                     {getStatusBadge(invitation.status)}
                   </div>
                   {invitation.invited_by_user && (
-                    <p className="text-sm text-slate-400 mb-1">
+                    <p className="text-sm text-slate-400 mb-1 flex items-center gap-2">
+                      {invitation.invited_by_user.profile_picture_url ? (
+                        <img 
+                          src={invitation.invited_by_user.profile_picture_url} 
+                          alt="Profile" 
+                          className="w-6 h-6 rounded-full object-cover border border-emerald-600"
+                        />
+                      ) : (
+                        <div className="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center">
+                          <Users className="h-3 w-3 text-white" />
+                        </div>
+                      )}
                       From{" "}
                       {invitation.invited_by_user.first_name ??
                         invitation.invited_by_user.email}{" "}
@@ -623,11 +634,19 @@ export default function PartnerInvitation() {
                           className="flex items-center justify-between"
                         >
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-medium">
-                              {member.user?.first_name?.[0]?.toUpperCase() ??
-                                member.user?.email?.[0]?.toUpperCase() ??
-                                "?"}
-                            </div>
+                            {member.user?.profile_picture_url ? (
+                              <img 
+                                src={member.user.profile_picture_url} 
+                                alt="Profile" 
+                                className="w-8 h-8 rounded-full object-cover border-2 border-emerald-600"
+                              />
+                            ) : (
+                              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-medium">
+                                {member.user?.first_name?.[0]?.toUpperCase() ??
+                                  member.user?.email?.[0]?.toUpperCase() ??
+                                  "?"}
+                              </div>
+                            )}
                             <div>
                               <p className="text-sm font-medium text-slate-100">
                                 {member.user?.first_name ?? ""}{" "}
