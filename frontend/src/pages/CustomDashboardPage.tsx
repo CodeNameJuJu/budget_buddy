@@ -198,65 +198,75 @@ export default function CustomDashboardPage() {
   }
 
   return (
-    <div className="space-y-4 xs:space-y-6">
-      <div className="responsive-margin flex items-center justify-between" data-tutorial="dashboard">
-        <div>
-          <h1 className="mobile-title flex items-center gap-2 text-slate-100">
-            <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
-            Dashboard
-          </h1>
-          <p className="mobile-text text-slate-400">Your elegant financial overview</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950/20 to-slate-950">
+      <div className="responsive-margin py-6 xs:py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 xs:mb-8" data-tutorial="dashboard">
+          <div>
+            <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent flex items-center gap-3">
+              <LayoutDashboard className="h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8 text-emerald-400" />
+              Dashboard
+            </h1>
+            <p className="text-slate-400 mt-1 text-sm xs:text-base">Your elegant financial overview</p>
+          </div>
+          <Button
+            onClick={() => setIsCustomizing(!isCustomizing)}
+            variant={isCustomizing ? "default" : "outline"}
+            className={isCustomizing 
+              ? "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-lg shadow-emerald-500/20" 
+              : "border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-slate-500"
+            }
+          >
+            {isCustomizing ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Done
+              </>
+            ) : (
+              <>
+                <Settings className="h-4 w-4 mr-2" />
+                Customize
+              </>
+            )}
+          </Button>
         </div>
-        <Button
-          onClick={() => setIsCustomizing(!isCustomizing)}
-          variant={isCustomizing ? "default" : "outline"}
-          className={isCustomizing ? "bg-emerald-600 hover:bg-emerald-700" : "border-slate-600 text-slate-300"}
-        >
-          {isCustomizing ? (
-            <>
-              <Check className="h-4 w-4 mr-2" />
-              Done
-            </>
-          ) : (
-            <>
-              <Settings className="h-4 w-4 mr-2" />
-              Customize
-            </>
-          )}
-        </Button>
-      </div>
 
-      {/* Customization Panel */}
-      {isCustomizing && (
-        <div className="responsive-margin">
-          <Card className="bg-slate-800/50 border-slate-700">
+        {/* Customization Panel */}
+        {isCustomizing && (
+          <Card className="mb-6 bg-slate-800/80 backdrop-blur-xl border-slate-700/50 shadow-xl">
             <CardHeader>
-              <CardTitle className="text-slate-100">Customize Dashboard</CardTitle>
+              <CardTitle className="text-slate-100 flex items-center gap-2">
+                <Settings className="h-5 w-5 text-emerald-400" />
+                Customize Dashboard
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               {/* Current Widgets */}
               <div>
-                <h3 className="text-sm font-medium text-slate-400 mb-3">Current Widgets</h3>
-                <div className="grid gap-2">
+                <h3 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                  Current Widgets
+                </h3>
+                <div className="grid gap-3">
                   {widgets.map((widget) => (
                     <div
                       key={widget.id}
-                      className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-slate-900/60 rounded-xl border border-slate-700/50 hover:border-slate-600 transition-all duration-200"
                     >
                       <div className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={widget.is_visible}
                           onChange={() => toggleWidgetVisibility(widget.id)}
-                          className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-emerald-600 focus:ring-emerald-500"
+                          className="w-5 h-5 rounded border-slate-600 bg-slate-800 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer"
                         />
-                        <span className="text-slate-200">{widget.title}</span>
+                        <span className="text-slate-200 font-medium">{widget.title}</span>
                       </div>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => removeWidget(widget.id)}
-                        className="text-slate-400 hover:text-red-400 h-8 w-8"
+                        className="text-slate-400 hover:text-red-400 hover:bg-red-500/10 h-9 w-9 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -268,8 +278,11 @@ export default function CustomDashboardPage() {
               {/* Available Widgets */}
               {availableWidgets.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-medium text-slate-400 mb-3">Add Widgets</h3>
-                  <div className="grid gap-2">
+                  <h3 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Add Widgets
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {availableWidgets
                       .filter(aw => !widgets.some(w => w.type === aw.type))
                       .map((availableWidget) => (
@@ -277,7 +290,7 @@ export default function CustomDashboardPage() {
                           key={availableWidget.type}
                           variant="outline"
                           onClick={() => addWidget(availableWidget.type, availableWidget.name)}
-                          className="justify-start border-slate-600 text-slate-300 hover:bg-slate-800"
+                          className="justify-start border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-emerald-500/50 hover:text-emerald-300 transition-all duration-200"
                         >
                           <Plus className="h-4 w-4 mr-2" />
                           {availableWidget.name}
@@ -291,17 +304,22 @@ export default function CustomDashboardPage() {
               <Button
                 onClick={saveLayout}
                 disabled={isSaving}
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium shadow-lg shadow-emerald-500/20 transition-all duration-200"
               >
-                {isSaving ? "Saving..." : "Save Layout"}
+                {isSaving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    Saving...
+                  </>
+                ) : (
+                  "Save Layout"
+                )}
               </Button>
             </CardContent>
           </Card>
-        </div>
-      )}
+        )}
 
-      {/* Widget Grid */}
-      <div className="responsive-margin">
+        {/* Widget Grid */}
         <div className="grid-responsive">
           {accountId && widgets
             .filter(w => w.is_visible)
