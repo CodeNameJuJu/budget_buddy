@@ -191,8 +191,8 @@ export default function CustomDashboardPage() {
         id: "welcome-1",
         type: "welcome",
         title: "Welcome to Budget Buddy",
-        size: "large",
-        position: { x: 0, y: 0, w: 12, h: 4 },
+        size: "medium",
+        position: { x: 0, y: 0, w: 1, h: 1 },
         is_visible: true,
         updated_at: ""
       },
