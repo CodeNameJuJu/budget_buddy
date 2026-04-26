@@ -27,7 +27,7 @@ const COLOUR_OPTIONS = [
   { label: "Purple", value: "#8b5cf6" },
   { label: "Pink", value: "#ec4899" },
   { label: "Slate", value: "#64748b" },
-  { label: "Teal", value: "#14b8a6" },
+  { label: "Emerald", value: "#10b981" },
   { label: "Orange", value: "#f97316" },
 ]
 

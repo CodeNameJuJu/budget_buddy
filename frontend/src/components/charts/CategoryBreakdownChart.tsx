@@ -20,7 +20,7 @@ const COLORS = [
   '#EF4444', // red
   '#8B5CF6', // violet
   '#EC4899', // pink
-  '#14B8A6', // teal
+  '#10B981', // emerald
   '#F97316', // orange
   '#6366F1', // indigo
   '#84CC16', // lime
