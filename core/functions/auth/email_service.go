@@ -3,17 +3,27 @@ package auth
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/resendlabs/resend-go"
 )
 
 // EmailService handles email-related operations
-type EmailService struct{}
+type EmailService struct {
+	client *resend.Client
+}
 
 func NewEmailService() *EmailService {
-	return &EmailService{}
+	apiKey := os.Getenv("RESEND_API_KEY")
+	if apiKey == "" {
+		fmt.Println("Warning: RESEND_API_KEY not set, emails will not be sent")
+	}
+	return &EmailService{
+		client: resend.NewClient(apiKey),
+	}
 }
 
 // SendVerificationEmail sends a verification email to the user
@@ -25,7 +35,7 @@ func (s *EmailService) SendVerificationEmail(userID int, email string, token str
 
 	// Store the verification token
 	expiresAt := time.Now().Add(24 * time.Hour) // Token expires in 24 hours
-	
+
 	verificationToken := types.VerificationToken{
 		UserID:    userID,
 		Token:     token,
@@ -42,17 +52,27 @@ func (s *EmailService) SendVerificationEmail(userID int, email string, token str
 		return fmt.Errorf("failed to store verification token: %w", err)
 	}
 
-	// In a real implementation, you would send an actual email here
-	// For now, we'll just log it
-	fmt.Printf("Verification email sent to %s with token: %s\n", email, token)
-	fmt.Printf("Verification link: https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s\n", token)
+	// Send email using Resend
+	if s.client != nil {
+		params := &resend.SendEmailRequest{
+			From:    "Budget Buddy <noreply@budgetbuddy.app>",
+			To:      []string{email},
+			Subject: "Verify Your Email",
+			Html:    s.getVerificationEmailTemplate(token),
+		}
 
-	// TODO: Integrate with an email service like SendGrid, AWS SES, or Mailgun
-	// Example:
-	// err = s.sendEmailViaSES(email, "Verify your email", s.getVerificationEmailTemplate(token))
-	// if err != nil {
-	//     return fmt.Errorf("failed to send email: %w", err)
-	// }
+		_, err = s.client.Emails.Send(params)
+		if err != nil {
+			fmt.Printf("Failed to send email via Resend: %v\n", err)
+			return fmt.Errorf("failed to send email: %w", err)
+		}
+
+		fmt.Printf("Verification email sent to %s via Resend\n", email)
+	} else {
+		// Fallback to logging if API key not set
+		fmt.Printf("Verification email would be sent to %s with token: %s\n", email, token)
+		fmt.Printf("Verification link: https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s\n", token)
+	}
 
 	return nil
 }
