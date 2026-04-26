@@ -15,7 +15,6 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
 
@@ -174,16 +173,15 @@ export default function AlertsPage() {
           <p className="text-slate-400">Stay informed about your finances</p>
         </div>
         <div className="flex gap-2">
-          <Select value={alertType} onValueChange={setAlertType}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="All Alerts" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Alerts</SelectItem>
-              <SelectItem value="weekly">Weekly Summary</SelectItem>
-              <SelectItem value="monthly">Monthly Summary</SelectItem>
-            </SelectContent>
-          </Select>
+          <select
+            value={alertType}
+            onChange={(e) => setAlertType(e.target.value)}
+            className="flex h-10 w-[140px] rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <option value="all">All Alerts</option>
+            <option value="weekly">Weekly Summary</option>
+            <option value="monthly">Monthly Summary</option>
+          </select>
           <Button onClick={triggerAlerts} variant="outline" size="sm">
             Check for New Alerts
           </Button>
