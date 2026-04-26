@@ -11,9 +11,17 @@ import (
 func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 	db := appcontext.GetDb()
 	var accounts []types.Account
+	userID := appcontext.GetUserID()
 
 	query := db.NewSelect().Model(&accounts).
 		Where("a.deleted_date IS NULL")
+
+	// If user is authenticated, include their own accounts and shared accounts
+	if userID != 0 {
+		query = query.Where("a.user_id = ? OR a.id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?))", userID, userID)
+	} else {
+		query = query.Where("a.user_id = ?", userID)
+	}
 
 	if accountID != nil {
 		query = query.Where("a.id = ?", *accountID)

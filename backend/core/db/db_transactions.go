@@ -23,14 +23,24 @@ type TransactionFilters struct {
 func QueryTransactions(filters TransactionFilters) ([]types.Transaction, int, error) {
 	db := appcontext.GetDb()
 	var transactions []types.Transaction
+	userID := appcontext.GetUserID()
 
 	query := db.NewSelect().Model(&transactions).
 		Relation("Category").
 		Relation("Budget").
-		Where("t.account_id = ?", filters.AccountID).
 		Where("t.deleted_date IS NULL").
 		Order("t.date DESC")
 
+	// If user is authenticated, include transactions from their own accounts and shared accounts
+	if userID != 0 {
+		query = query.Where("t.account_id IN (SELECT id FROM accounts WHERE user_id = ? OR id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?)))", userID, userID)
+	} else {
+		query = query.Where("t.account_id IN (SELECT id FROM accounts WHERE user_id = ?)", userID)
+	}
+
+	if filters.AccountID != 0 {
+		query = query.Where("t.account_id = ?", filters.AccountID)
+	}
 	if filters.TransactionID != nil {
 		query = query.Where("t.id = ?", *filters.TransactionID)
 	}
