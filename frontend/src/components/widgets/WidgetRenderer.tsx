@@ -22,6 +22,10 @@ const BudgetProgressWidget = lazy(() => import("./BudgetProgressWidget"))
 const GoalsOverviewWidget = lazy(() => import("./GoalsOverviewWidget"))
 const SpendingTrendsWidget = lazy(() => import("./SpendingTrendsWidget"))
 const SavingsWithdrawalsWidget = lazy(() => import("./SavingsWithdrawalsWidget"))
+const AccountSummaryWidget = lazy(() => import("./AccountSummaryWidget"))
+const CategoryBreakdownWidget = lazy(() => import("./CategoryBreakdownWidget"))
+const MonthlyComparisonWidget = lazy(() => import("./MonthlyComparisonWidget"))
+const UpcomingBillsWidget = lazy(() => import("./UpcomingBillsWidget"))
 
 // Placeholder for widgets not yet implemented
 const PlaceholderWidget = ({ widgetType }: { widgetType: string }) => (
@@ -104,7 +108,35 @@ export default function WidgetRenderer({ widget, accountId }: WidgetRendererProp
             <SavingsWithdrawalsWidget accountId={accountId} size={widget.size} />
           </Suspense>
         )
-      
+
+      case "account_summary":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Account Summary" />}>
+            <AccountSummaryWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
+      case "category_breakdown":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Category Breakdown" />}>
+            <CategoryBreakdownWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
+      case "monthly_comparison":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Monthly Comparison" />}>
+            <MonthlyComparisonWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
+      case "upcoming_bills":
+        return (
+          <Suspense fallback={<WidgetSkeleton title="Upcoming Bills" />}>
+            <UpcomingBillsWidget accountId={accountId} size={widget.size} />
+          </Suspense>
+        )
+
       default:
         return <PlaceholderWidget widgetType={widget.type} />
     }
