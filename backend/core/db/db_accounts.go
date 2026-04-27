@@ -54,5 +54,14 @@ func UpdateAccount(account *types.Account) error {
 		Column("name", "email", "currency", "timezone", "savings_balance", "dashboard_layout", "modified_date").
 		Returning("*").
 		Exec(context.Background())
+
+	// Re-query the account to ensure all fields are populated
+	if err == nil {
+		err = db.NewSelect().Model(account).
+			WherePK().
+			Column("a.*").
+			Scan(context.Background())
+	}
+
 	return err
 }
