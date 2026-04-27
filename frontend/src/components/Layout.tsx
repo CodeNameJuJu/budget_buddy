@@ -242,14 +242,6 @@ export default function Layout() {
           )}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
-                <div className={cn(
-                  "p-1.5 xs:p-2 rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
-                  theme === "light" 
-                    ? "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]" 
-                    : "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
-                )}>
-                  <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8 object-cover rounded-full" />
-                </div>
                 <div>
                   <h1 className={cn(
                     "text-lg xs:text-xl lg:text-2xl font-bold bg-clip-text text-transparent",
