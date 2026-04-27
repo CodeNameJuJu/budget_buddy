@@ -46,36 +46,36 @@
     /* Dark mode - Kalahari theme */
     --background: 150 15% 5%; /* #0F1512 - Kalahari background */
     --foreground: 150 20% 90%; /* #E7EFEA - light text */
-    --card: 150 15% 10%; /* #18231D - surface */
+    --card: 150 12% 8%; /* #18231D - surface with slight hue shift */
     --card-foreground: 150 20% 90%; /* #E7EFEA - light text */
     --primary: 150 35% 50%; /* #5E9C7E - primary green */
     --primary-foreground: 150 20% 95%; /* #E7EFEA - light text */
-    --secondary: 150 30% 65%; /* #88B39B - secondary green */
+    --secondary: 160 25% 60%; /* #88B39B - secondary green with different hue */
     --secondary-foreground: 150 20% 90%; /* #E7EFEA - light text */
-    --muted: 150 15% 10%; /* #18231D - surface */
+    --muted: 140 10% 12%; /* #18231D - muted surface with different hue */
     --muted-foreground: 150 15% 70%; /* #A7B3AD - muted text */
     --accent: 150 35% 50%; /* #5E9C7E - primary green */
     --accent-foreground: 150 20% 95%; /* #E7EFEA - light text */
     --destructive: 15 50% 55%; /* #B46B52 - warning */
     --destructive-foreground: 150 20% 95%; /* light text */
-    --border: 150 15% 18%; /* #2E3B35 - border */
-    --input: 150 15% 10%; /* #18231D - surface */
+    --border: 150 15% 12%; /* Darker border for dark mode */
+    --input: 140 12% 8%; /* Input with different hue */
     --ring: 150 35% 50%; /* #5E9C7E - primary green */
     --radius: 0.75rem;
-    --popover: 150 15% 10%;
+    --popover: 160 12% 8%; /* Popover with different hue */
     --popover-foreground: 150 20% 90%;
     --chart-1: 30 20% 95%;
     --chart-2: 160 10% 45%;
     --chart-3: 180 20% 15%;
     --chart-4: 180 20% 15%;
     --chart-5: 180 20% 15%;
-    --sidebar: 150 15% 10%;
+    --sidebar: 140 12% 8%; /* Sidebar with different hue */
     --sidebar-foreground: 150 20% 90%;
     --sidebar-primary: 150 35% 50%;
     --sidebar-primary-foreground: 150 20% 95%;
-    --sidebar-accent: 150 30% 65%;
+    --sidebar-accent: 160 30% 65%;
     --sidebar-accent-foreground: 150 20% 90%;
-    --sidebar-border: 150 15% 18%;
+    --sidebar-border: 150 15% 12%;
     --sidebar-ring: 150 35% 50%;
   }
   .theme {
