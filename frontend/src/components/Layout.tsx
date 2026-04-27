@@ -29,14 +29,14 @@ import { useTheme } from "@/contexts/ThemeContext"
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+  { to: "/guide", icon: BookOpen, label: "User Guide" },
   { to: "/transactions", icon: ArrowLeftRight, label: "Transactions" },
+  { to: "/categories", icon: Tags, label: "Categories" },
   { to: "/budgets", icon: PiggyBank, label: "Budgets" },
   { to: "/savings", icon: Landmark, label: "Savings" },
-  { to: "/categories", icon: Tags, label: "Categories" },
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
   { to: "/partners", icon: Users, label: "Partners" },
-  { to: "/guide", icon: BookOpen, label: "User Guide" },
 ]
 
 export default function Layout() {
