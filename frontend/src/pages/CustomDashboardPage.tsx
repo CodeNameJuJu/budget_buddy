@@ -287,22 +287,22 @@ export default function CustomDashboardPage() {
   return (
     <div className="responsive-margin py-6 xs:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 xs:mb-8" data-tutorial="dashboard">
-          <div>
+        <div className="flex items-center justify-between gap-3 mb-6 xs:mb-8" data-tutorial="dashboard">
+          <div className="flex-1 min-w-0">
             <h1 className={cn(
-              "text-2xl xs:text-3xl font-bold bg-clip-text text-transparent flex items-center gap-3",
+              "text-xl xs:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent flex items-center gap-2 xs:gap-3",
               theme === "light"
                 ? "bg-gradient-to-r from-[#5E9C7E] to-[#6BAF92]"
                 : "bg-gradient-to-r from-[#A8D5BA] to-[#6BAF92]"
             )}>
               <LayoutDashboard className={cn(
-                "h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8",
+                "h-5 w-5 xs:h-6 xs:w-6 lg:h-8 lg:w-8 flex-shrink-0",
                 theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
               )} />
-              Dashboard
+              <span className="truncate">Dashboard</span>
             </h1>
             <p className={cn(
-              "mt-1 text-sm xs:text-base",
+              "mt-1 text-xs xs:text-sm",
               theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
             )}>Your elegant financial overview</p>
           </div>
@@ -310,6 +310,7 @@ export default function CustomDashboardPage() {
             onClick={() => setIsCustomizing(!isCustomizing)}
             variant={isCustomizing ? "default" : "outline"}
             className={cn(
+              "flex-shrink-0 text-xs xs:text-sm px-3 xs:px-4 py-2",
               isCustomizing
                 ? "text-white shadow-lg"
                 : cn(theme === "light" ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5] hover:border-[#6BAF92]" : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D] hover:border-[#6BAF92]"),
@@ -320,16 +321,18 @@ export default function CustomDashboardPage() {
           >
             {isCustomizing ? (
               <>
-                <Check className="h-4 w-4 mr-2" />
-                Done
+                <Check className="h-4 w-4 mr-1 xs:mr-2" />
+                <span className="hidden xs:inline">Done</span>
+                <span className="xs:hidden">Done</span>
               </>
             ) : (
               <>
                 <Settings className={cn(
-                  "h-5 w-5 mr-2",
+                  "h-4 w-4 xs:h-5 xs:w-5 mr-1 xs:mr-2",
                   theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
                 )} />
-                Customize
+                <span className="hidden xs:inline">Customize</span>
+                <span className="xs:hidden">Customize</span>
               </>
             )}
           </Button>
@@ -426,13 +429,13 @@ export default function CustomDashboardPage() {
         )}
 
         {/* Widget Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6">
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
               <div
                 key={widget.id}
-                className={widget.size === "large" ? "lg:col-span-3" : ""}
+                className={widget.size === "large" ? "lg:col-span-3 sm:col-span-2" : ""}
               >
                 <WidgetRenderer
                   widget={widget}

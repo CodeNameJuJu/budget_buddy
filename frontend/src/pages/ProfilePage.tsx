@@ -180,14 +180,14 @@ export default function ProfilePage() {
 
   return (
     <div className="responsive-margin">
-      <div className="mb-6 xs:mb-8 flex items-center gap-4">
-        <div className="relative">
+      <div className="mb-6 xs:mb-8 flex items-center gap-3 xs:gap-4">
+        <div className="relative flex-shrink-0">
           {profilePictureUrl ? (
             <img 
               src={profilePictureUrl} 
               alt="Profile" 
               className={cn(
-                "w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 cursor-pointer hover:opacity-90 transition-opacity",
+                "w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 cursor-pointer hover:opacity-90 transition-opacity",
                 theme === "light" ? "border-[#6BAF92]" : "border-[#6BAF92]"
               )}
               onClick={() => document.getElementById('header-profile-upload')?.click()}
@@ -195,12 +195,12 @@ export default function ProfilePage() {
           ) : (
             <div 
               className={cn(
-                "w-16 h-16 xs:w-20 xs:h-20 rounded-full flex items-center justify-center border-4 cursor-pointer hover:opacity-90 transition-opacity",
+                "w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center border-4 cursor-pointer hover:opacity-90 transition-opacity",
                 theme === "light" ? "bg-[#6BAF92] border-[#6BAF92]" : "bg-[#6BAF92] border-[#6BAF92]"
               )}
               onClick={() => document.getElementById('header-profile-upload')?.click()}
             >
-              <UserIcon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
+              <UserIcon className="h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 text-white" />
             </div>
           )}
           <label className={cn(
@@ -218,9 +218,9 @@ export default function ProfilePage() {
             />
           </label>
         </div>
-        <div>
+        <div className="flex-1 min-w-0">
           <h1 className={cn(
-            "text-2xl xs:text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
+            "text-xl xs:text-2xl lg:text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent truncate",
             theme === "light"
               ? "from-[#6BAF92] to-[#A8D5BA]"
               : "from-[#88B39B] to-[#A8D5BA]"
@@ -228,7 +228,7 @@ export default function ProfilePage() {
             Profile
           </h1>
           <p className={cn(
-            "mt-1",
+            "mt-1 text-xs xs:text-sm",
             theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
           )}>Manage your account settings</p>
         </div>
@@ -240,29 +240,30 @@ export default function ProfilePage() {
           ? "bg-[#E8DCC5]/90 border-[#E6E0D6]/30"
           : "bg-[#18231D]/90 border-[#2E3B35]/30"
       )}>
-        <div className="flex items-center justify-between mb-4 xs:mb-6">
+        <div className="flex items-center justify-between mb-4 xs:mb-6 gap-3">
           <h2 className={cn(
-            "text-xl font-semibold flex items-center gap-2",
+            "text-lg xs:text-xl font-semibold flex items-center gap-2",
             theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
           )}>
             <UserIcon className={cn(
-              "h-5 w-5",
+              "h-5 w-5 flex-shrink-0",
               theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
             )} />
-            User Information
+            <span className="truncate">User Information</span>
           </h2>
           {!isEditing && (
             <Button
               onClick={handleEditClick}
               className={cn(
-                "text-white",
+                "flex-shrink-0 text-xs xs:text-sm px-3 xs:px-4 py-2",
                 theme === "light"
                   ? "bg-[#6BAF92] hover:bg-[#5E9C7E]"
                   : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
               )}
             >
-              <Edit className="h-4 w-4 mr-2" />
-              Edit
+              <Edit className="h-4 w-4 mr-1 xs:mr-2" />
+              <span className="hidden xs:inline">Edit</span>
+              <span className="xs:hidden">Edit</span>
             </Button>
           )}
         </div>
@@ -279,9 +280,9 @@ export default function ProfilePage() {
         )}
 
         {isEditing ? (
-          <div className="space-y-4">
+          <div className="space-y-3 xs:space-y-4">
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -296,7 +297,7 @@ export default function ProfilePage() {
                 value={editForm.email}
                 onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
                 className={cn(
-                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#6BAF92]"
                     : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#6BAF92]"
@@ -305,7 +306,7 @@ export default function ProfilePage() {
             </div>
             
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -320,7 +321,7 @@ export default function ProfilePage() {
                 value={editForm.first_name}
                 onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
                 className={cn(
-                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
                     : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
@@ -329,7 +330,7 @@ export default function ProfilePage() {
             </div>
 
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -344,7 +345,7 @@ export default function ProfilePage() {
                 value={editForm.last_name}
                 onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
                 className={cn(
-                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
                     : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
@@ -353,7 +354,7 @@ export default function ProfilePage() {
             </div>
 
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -367,7 +368,7 @@ export default function ProfilePage() {
                 value={editForm.currency}
                 onChange={(e) => setEditForm({ ...editForm, currency: e.target.value })}
                 className={cn(
-                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
                     : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
@@ -382,7 +383,7 @@ export default function ProfilePage() {
             </div>
 
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -396,7 +397,7 @@ export default function ProfilePage() {
                 value={editForm.timezone}
                 onChange={(e) => setEditForm({ ...editForm, timezone: e.target.value })}
                 className={cn(
-                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
                     : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
@@ -410,12 +411,12 @@ export default function ProfilePage() {
               </select>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2 xs:gap-3 flex-wrap">
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
                 className={cn(
-                  "text-white font-medium",
+                  "text-white font-medium text-sm xs:text-base px-4 xs:px-6",
                   theme === "light"
                     ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#88B39B]"
                     : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#88B39B]"
@@ -427,7 +428,7 @@ export default function ProfilePage() {
                 onClick={() => setIsEditing(false)}
                 variant="outline"
                 className={cn(
-                  "border transition-colors",
+                  "border transition-colors text-sm xs:text-base px-4 xs:px-6",
                   theme === "light"
                     ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5]"
                     : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D]"
@@ -438,9 +439,9 @@ export default function ProfilePage() {
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 xs:space-y-4">
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -451,13 +452,13 @@ export default function ProfilePage() {
                 Email
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base break-all",
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>{user.email}</p>
             </div>
             
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -468,7 +469,7 @@ export default function ProfilePage() {
                 Name
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base",
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 {user.first_name || ''} {user.last_name || ''} {(user.first_name || user.last_name) ? '' : 'N/A'}
@@ -476,7 +477,7 @@ export default function ProfilePage() {
             </div>
 
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -487,7 +488,7 @@ export default function ProfilePage() {
                 Currency
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base",
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 {account?.currency || 'USD'}
@@ -495,7 +496,7 @@ export default function ProfilePage() {
             </div>
 
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -506,7 +507,7 @@ export default function ProfilePage() {
                 Timezone
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base",
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 {account?.timezone || 'UTC'}
@@ -514,7 +515,7 @@ export default function ProfilePage() {
             </div>
             
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -525,7 +526,7 @@ export default function ProfilePage() {
                 Account Status
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base",
                 user.is_active
                   ? theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
                   : "text-red-400"
@@ -535,7 +536,7 @@ export default function ProfilePage() {
             </div>
             
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -545,9 +546,9 @@ export default function ProfilePage() {
                 <Shield className="h-4 w-4" />
                 Email Verified
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <p className={cn(
-                  "font-medium",
+                  "font-medium text-sm xs:text-base",
                   theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
                 )}>
                   {user.email_verified ? 'Yes' : 'No'}
@@ -570,7 +571,7 @@ export default function ProfilePage() {
             
             {showVerification && (
               <div className={cn(
-                "rounded-xl p-4",
+                "rounded-xl p-3 xs:p-4",
                 theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
               )}>
                 <label className={cn(
@@ -586,7 +587,7 @@ export default function ProfilePage() {
                     onChange={(e) => setVerificationToken(e.target.value)}
                     placeholder="Enter verification token"
                     className={cn(
-                      "flex-1 border rounded-lg px-4 py-2 focus:outline-none",
+                      "flex-1 border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                       theme === "light"
                         ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
                         : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
@@ -608,7 +609,7 @@ export default function ProfilePage() {
             )}
             
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -619,7 +620,7 @@ export default function ProfilePage() {
                 Last Login
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base",
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 {user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}
@@ -627,7 +628,7 @@ export default function ProfilePage() {
             </div>
             
             <div className={cn(
-              "rounded-xl p-4",
+              "rounded-xl p-3 xs:p-4",
               theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
             )}>
               <label className={cn(
@@ -638,7 +639,7 @@ export default function ProfilePage() {
                 Account Created
               </label>
               <p className={cn(
-                "font-medium",
+                "font-medium text-sm xs:text-base",
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 {new Date(user.created_at).toLocaleString()}
