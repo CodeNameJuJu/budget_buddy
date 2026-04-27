@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface UpcomingBillsWidgetProps {
   accountId: number
@@ -30,6 +32,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
   const [data, setData] = useState<UpcomingBillsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -64,7 +67,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Calendar className="h-4 w-4" />
             Upcoming Bills
           </CardTitle>
@@ -93,7 +96,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Calendar className="h-4 w-4" />
             Upcoming Bills
           </CardTitle>
@@ -117,7 +120,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Upcoming Bills
@@ -150,15 +153,18 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
       <CardContent className="flex-1 overflow-hidden flex flex-col">
         <div className="space-y-4 flex-1 overflow-auto">
           {/* Total Due */}
-          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <div className={cn(
+            "border rounded-lg p-4",
+            theme === "light" ? "bg-[#6BAF92]/10 border-[#6BAF92]/20" : "bg-[#6BAF92]/10 border-[#6BAF92]/20"
+          )}>
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0 flex-1">
-                <Calendar className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                <span className="text-sm font-medium text-blue-700 dark:text-blue-300 truncate">
+                <Calendar className={cn("h-4 w-4 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
+                <span className={cn("text-sm font-medium truncate", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                   Total Due
                 </span>
               </div>
-              <div className="text-lg font-bold text-blue-600 dark:text-blue-400 flex-shrink-0">
+              <div className={cn("text-lg font-bold flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                 {formatCurrency(data.total_due)}
               </div>
             </div>

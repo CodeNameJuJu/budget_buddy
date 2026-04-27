@@ -19,19 +19,22 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { savingsApi, accountsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account, type ForecastResponse } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 const COLOUR_OPTIONS = [
-  { label: "Blue", value: "#3b82f6" },
-  { label: "Amber", value: "#f59e0b" },
-  { label: "Amber", value: "#f59e0b" },
-  { label: "Purple", value: "#8b5cf6" },
-  { label: "Pink", value: "#ec4899" },
-  { label: "Slate", value: "#64748b" },
-  { label: "Amber", value: "#f59e0b" },
-  { label: "Orange", value: "#f97316" },
+  { label: "Primary Green", value: "#6BAF92" },
+  { label: "Light Green", value: "#88B39B" },
+  { label: "Accent Gold", value: "#D9B44A" },
+  { label: "Warning", value: "#C97C5D" },
+  { label: "Muted", value: "#6C7A73" },
+  { label: "Dark Muted", value: "#A7B3AD" },
+  { label: "Border", value: "#E6E0D6" },
+  { label: "Dark Border", value: "#2E3B35" },
 ]
 
 export default function SavingsPage() {
+  const { theme } = useTheme()
   const [accountId, setAccountId] = useState<number | null>(null)
   const [summary, setSummary] = useState<SavingsSummary | null>(null)
   const [allocations, setAllocations] = useState<SavingsAllocation[]>([])
@@ -48,7 +51,7 @@ export default function SavingsPage() {
   const [potForm, setPotForm] = useState({
     name: "",
     icon: "",
-    colour: "#3b82f6",
+    colour: "#6BAF92",
     target: "",
     contribution: "",
     contribution_period: "monthly",
@@ -135,7 +138,7 @@ export default function SavingsPage() {
         contribution: potForm.contribution || undefined,
         contribution_period: potForm.contribution ? potForm.contribution_period : undefined,
       })
-      setPotForm({ name: "", icon: "", colour: "#3b82f6", target: "", contribution: "", contribution_period: "monthly" })
+      setPotForm({ name: "", icon: "", colour: "#6BAF92", target: "", contribution: "", contribution_period: "monthly" })
       setShowPotForm(false)
       loadData()
     } catch {
@@ -186,7 +189,7 @@ export default function SavingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-slate-400">Loading savings...</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Loading savings...</p>
       </div>
     )
   }
@@ -202,8 +205,11 @@ export default function SavingsPage() {
     <div className="space-y-8" data-tutorial="savings-page">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100">Savings</h1>
-          <p className="text-slate-400">
+          <h1 className={cn(
+            "text-2xl font-bold tracking-tight",
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          )}>Savings</h1>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>
             Break your savings into pots and track allocations
           </p>
         </div>
@@ -215,14 +221,17 @@ export default function SavingsPage() {
 
       {/* Balance comparison panel */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               Actual savings balance
             </CardTitle>
             <button
               onClick={() => setEditingBalance(!editingBalance)}
-              className="text-slate-400 hover:text-slate-300"
+              className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")}
             >
               <Pencil className="h-3.5 w-3.5" />
             </button>
@@ -243,55 +252,63 @@ export default function SavingsPage() {
                 </Button>
               </div>
             ) : (
-              <div className="text-2xl font-bold">
+              <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
                 {summary?.savings_balance
                   ? formatCurrency(savingsBalance)
                   : "Not set"}
               </div>
             )}
-            <p className="text-xs text-slate-400 mt-1">
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               Enter your actual bank savings balance
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               Total allocated
             </CardTitle>
-            <Landmark className="h-4 w-4 text-blue-400" />
+            <Landmark className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-400">
+            <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
               {formatCurrency(totalAllocated)}
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               Sum of all pot allocations
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               Unallocated
             </CardTitle>
             {unallocated >= 0 ? (
-              <ArrowUpRight className="h-4 w-4 text-amber-400" />
+              <ArrowUpRight className={cn("h-4 w-4", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
             ) : (
               <ArrowDownRight className="h-4 w-4 text-red-400" />
             )}
           </CardHeader>
           <CardContent>
             <div
-              className={`text-2xl font-bold ${
-                unallocated >= 0 ? "text-amber-400" : "text-red-400"
-              }`}
+              className={cn("text-2xl font-bold",
+                unallocated >= 0
+                  ? theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]"
+                  : "text-red-400"
+              )}
             >
               {formatCurrency(Math.abs(unallocated))}
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               {unallocated >= 0
                 ? "Savings not yet assigned to a pot"
                 : "You've allocated more than your balance"}
@@ -302,9 +319,12 @@ export default function SavingsPage() {
 
       {/* Allocation bar — visual breakdown */}
       {pots.length > 0 && savingsBalance > 0 && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Allocation breakdown</CardTitle>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Allocation breakdown</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-6 bg-secondary rounded-full overflow-hidden flex">
@@ -318,7 +338,7 @@ export default function SavingsPage() {
                     className="h-full transition-all relative group"
                     style={{
                       width: `${Math.min(pct, 100)}%`,
-                      backgroundColor: pot.colour || "#3b82f6",
+                      backgroundColor: pot.colour || "#6BAF92",
                     }}
                     title={`${pot.name}: ${formatCurrency(allocated)}`}
                   >
@@ -348,7 +368,7 @@ export default function SavingsPage() {
                   <div key={pot.id} className="flex items-center gap-1.5 text-xs">
                     <div
                       className="h-2.5 w-2.5 rounded-full"
-                      style={{ backgroundColor: pot.colour || "#3b82f6" }}
+                      style={{ backgroundColor: pot.colour || "#6BAF92" }}
                     />
                     <span className="text-muted-foreground">{pot.name}</span>
                   </div>
@@ -367,10 +387,16 @@ export default function SavingsPage() {
 
       {/* Forecast panel */}
       {forecast && parseFloat(forecast.total_monthly) > 0 && (
-        <Card className="bg-slate-800/50 border-slate-700" data-tutorial="savings-forecast">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )} data-tutorial="savings-forecast">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
+            <CardTitle className={cn(
+              "flex items-center gap-2",
+              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            )}>
+              <TrendingUp className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
               Savings forecast
             </CardTitle>
             <Button
@@ -403,7 +429,7 @@ export default function SavingsPage() {
               </div>
               <div className="text-center p-3 rounded-lg bg-secondary/50">
                 <p className="text-xs text-muted-foreground mb-1">Projected in 12 months</p>
-                <p className="text-lg font-bold text-amber-600">
+                <p className={cn("text-lg font-bold", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")}>
                   {formatCurrency(forecast.projected_total_12mo)}
                 </p>
               </div>
@@ -435,7 +461,7 @@ export default function SavingsPage() {
                         </td>
                         <td className="p-3 text-right">{formatCurrency(f.projections[0])}</td>
                         <td className="p-3 text-right">{formatCurrency(f.projections[1])}</td>
-                        <td className="p-3 text-right font-medium text-amber-600">
+                        <td className={cn("p-3 text-right font-medium", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")}>
                           {formatCurrency(f.projections[2])}
                         </td>
                         <td className="p-3 text-right">
@@ -463,9 +489,12 @@ export default function SavingsPage() {
 
       {/* New pot form */}
       {showPotForm && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader>
-            <CardTitle>New savings pot</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New savings pot</CardTitle>
           </CardHeader>
           <CardContent>
             <form
@@ -473,7 +502,7 @@ export default function SavingsPage() {
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
             >
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
                 <Input
                   placeholder="e.g. Emergency fund"
                   value={potForm.name}
@@ -484,7 +513,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                   Target amount (optional)
                 </label>
                 <Input
@@ -498,7 +527,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Colour</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
                 <div className="flex gap-1.5 flex-wrap">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -519,7 +548,7 @@ export default function SavingsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                   Contribution (optional)
                 </label>
                 <Input
@@ -533,7 +562,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                   Contribution period
                 </label>
                 <select
@@ -549,7 +578,7 @@ export default function SavingsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Icon (emoji)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 🏦"
                   value={potForm.icon}
@@ -577,9 +606,15 @@ export default function SavingsPage() {
       {/* Savings pots grid */}
       {pots.length === 0 ? (
         <div className="text-center py-16">
-          <Landmark className="h-12 w-12 mx-auto text-slate-500 mb-4" />
-          <h2 className="text-lg font-semibold mb-1 text-slate-100">No savings pots yet</h2>
-          <p className="text-slate-400 text-sm">
+          <Landmark className={cn(
+            "h-12 w-12 mx-auto mb-4",
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+          )} />
+          <h2 className={cn(
+            "text-lg font-semibold mb-1",
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          )}>No savings pots yet</h2>
+          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
             Create pots to break your savings into categories.
           </p>
         </div>
@@ -598,21 +633,24 @@ export default function SavingsPage() {
             const potForecast = forecast?.pots.find((f) => f.pot_id === pot.id)
 
             return (
-              <Card key={pot.id} className="bg-slate-800/50 border-slate-700">
+              <Card key={pot.id} className={cn(
+                "border",
+                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+              )}>
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
                     <div
                       className="h-9 w-9 rounded-full flex items-center justify-center text-sm text-white font-bold"
                       style={{
-                        backgroundColor: pot.colour || "#3b82f6",
+                        backgroundColor: pot.colour || "#6BAF92",
                       }}
                     >
                       {pot.icon || pot.name[0]}
                     </div>
                     <div>
-                      <CardTitle className="text-base">{pot.name}</CardTitle>
+                      <CardTitle className={cn("text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{pot.name}</CardTitle>
                       {target !== null && (
-                        <p className="text-xs text-slate-400">
+                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                           Target: {formatCurrency(target)}
                         </p>
                       )}
@@ -621,14 +659,14 @@ export default function SavingsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-slate-400 hover:text-red-400 -mt-1"
+                    className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
                     onClick={() => handleDeletePot(pot.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="text-2xl font-bold">
+                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
                     {formatCurrency(allocated)}
                   </div>
 
@@ -640,7 +678,7 @@ export default function SavingsPage() {
                           className="h-full rounded-full transition-all"
                           style={{
                             width: `${progressPct}%`,
-                            backgroundColor: pot.colour || "#3b82f6",
+                            backgroundColor: pot.colour || "#6BAF92",
                           }}
                         />
                       </div>
@@ -662,7 +700,7 @@ export default function SavingsPage() {
                       {potForecast.months_to_target != null && (
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-muted-foreground">Target reached in</span>
-                          <span className="font-medium text-amber-600 flex items-center gap-1">
+                          <span className={cn("font-medium flex items-center gap-1", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")}>
                             <Calendar className="h-3 w-3" />
                             {potForecast.months_to_target} month{potForecast.months_to_target !== 1 ? "s" : ""}
                           </span>
@@ -813,7 +851,7 @@ export default function SavingsPage() {
                             >
                               <div className="flex items-center gap-1.5">
                                 {isDeposit ? (
-                                  <ArrowUpRight className="h-3 w-3 text-amber-500" />
+                                  <ArrowUpRight className={cn("h-3 w-3", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
                                 ) : (
                                   <ArrowDownRight className="h-3 w-3 text-red-500" />
                                 )}

@@ -16,6 +16,8 @@ import {
   type PopularTag,
 } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function TransactionsPage() {
   const [accountId, setAccountId] = useState<number | null>(null)
@@ -26,6 +28,7 @@ export default function TransactionsPage() {
   const [loading, setLoading] = useState(true)
   const [showAdvancedForm, setShowAdvancedForm] = useState(false)
   const [filterType, setFilterType] = useState<string>("")
+  const { theme } = useTheme()
 
   const [form, setForm] = useState({
     amount: "",
@@ -134,8 +137,8 @@ export default function TransactionsPage() {
     <div className="space-y-3 xs:space-y-4 lg:space-y-6">
       <div className="responsive-flex responsive-margin">
         <div>
-          <h1 className="mobile-title tracking-tight text-slate-100">Transactions</h1>
-          <p className="mobile-text text-slate-400">{count} transaction{count !== 1 ? "s" : ""}</p>
+          <h1 className={cn("mobile-title tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Transactions</h1>
+          <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2 ml-auto">
           <Button 
@@ -192,7 +195,7 @@ export default function TransactionsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Amount</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
                   <Input
                     type="number"
                     step="0.01"
@@ -204,9 +207,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Type</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
                   <select
-                    className="flex responsive-input rounded-md border border-slate-600 bg-slate-700 px-3 py-1 mobile-text text-slate-300 shadow-sm"
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
                     value={form.type}
                     onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
                   >
@@ -215,7 +218,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Date</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
                   <Input
                     type="date"
                     value={form.date}
@@ -225,9 +228,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Account Type</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Account Type</label>
                   <select
-                    className="flex responsive-input rounded-md border border-slate-600 bg-slate-700 px-3 py-1 mobile-text text-slate-300 shadow-sm"
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
                     value={form.account_type}
                     onChange={(e) => setForm({ ...form, account_type: e.target.value as "checking" | "savings" })}
                   >
@@ -236,7 +239,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Description</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
                   <Input
                     placeholder="e.g. Grocery shopping"
                     value={form.description}
@@ -245,9 +248,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Category</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
                   <select
-                    className="flex responsive-input rounded-md border border-slate-600 bg-slate-700 px-3 py-1 mobile-text text-slate-300 shadow-sm"
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
                     value={form.category_id}
                     onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                   >
@@ -262,7 +265,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="mobile-text font-medium text-slate-300">Notes</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
                   <Input
                     placeholder="Optional notes"
                     value={form.notes}
@@ -272,7 +275,7 @@ export default function TransactionsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="mobile-text font-medium text-slate-300">Tags</label>
+                <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
                 <TagInput
                   value={form.tags}
                   onChange={(tags) => setForm({ ...form, tags })}
@@ -295,13 +298,13 @@ export default function TransactionsPage() {
       <Card className="mobile-card">
         <CardContent className="p-0">
           {loading ? (
-            <p className="mobile-text text-slate-400 text-center py-6 xs:py-8">Loading...</p>
+            <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading...</p>
           ) : transactions.length === 0 ? (
-            <p className="mobile-text text-slate-400 text-center py-6 xs:py-8">No transactions found</p>
+            <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found</p>
           ) : (
             <div className="divide-y">
               {transactions.map((t) => (
-                <div key={t.id} className="px-3 xs:px-4 lg:px-6 py-3 xs:py-4 hover:bg-blue-900/20 transition-colors">
+                <div key={t.id} className={cn("px-3 xs:px-4 lg:px-6 py-3 xs:py-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/20" : "hover:bg-[#2E3B35]/20")}>
                   <div className="flex flex-col gap-2 xs:gap-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -309,11 +312,11 @@ export default function TransactionsPage() {
                           <p className="mobile-text font-medium truncate">
                             {t.description || "Untitled transaction"}
                           </p>
-                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={t.type === "income" ? "bg-amber-800/30 text-amber-300 border border-amber-700/50 text-xs" : "bg-red-800/30 text-red-300 border border-red-700/50 text-xs"}>
+                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={cn("text-xs", t.type === "income" ? (theme === "light" ? "bg-[#D9B44A]/30 text-[#D9B44A] border-[#D9B44A]/50" : "bg-[#C9A24A]/30 text-[#C9A24A] border-[#C9A24A]/50") : "bg-red-800/30 text-red-300 border-red-700/50")}>
                             {t.type}
                           </Badge>
                         </div>
-                        <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
+                        <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                           <span>{formatDate(t.date)}</span>
                           {t.category && (
                             <>
@@ -344,13 +347,13 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={`mobile-text font-semibold ${t.type === "income" ? "text-amber-400" : "text-red-400"}`}>
+                        <span className={cn("mobile-text font-semibold", t.type === "income" ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400")}>
                           {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-slate-400 hover:text-red-400 mobile-button-sm"
+                          className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")}
                           onClick={() => handleDelete(t.id)}
                         >
                           <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />

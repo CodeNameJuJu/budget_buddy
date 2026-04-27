@@ -5,19 +5,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { categoriesApi, accountsApi, type Category, type Account } from "@/lib/api"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 const COLOUR_OPTIONS = [
-  { label: "Blue", value: "#3b82f6" },
-  { label: "Amber", value: "#f59e0b" },
-  { label: "Amber", value: "#f59e0b" },
-  { label: "Red", value: "#ef4444" },
-  { label: "Purple", value: "#8b5cf6" },
-  { label: "Pink", value: "#ec4899" },
-  { label: "Slate", value: "#64748b" },
-  { label: "Orange", value: "#f97316" },
+  { label: "Primary Green", value: "#6BAF92" },
+  { label: "Light Green", value: "#88B39B" },
+  { label: "Accent Gold", value: "#D9B44A" },
+  { label: "Warning", value: "#C97C5D" },
+  { label: "Muted", value: "#6C7A73" },
+  { label: "Dark Muted", value: "#A7B3AD" },
+  { label: "Border", value: "#E6E0D6" },
+  { label: "Dark Border", value: "#2E3B35" },
 ]
 
 export default function CategoriesPage() {
+  const { theme } = useTheme()
   const [accountId, setAccountId] = useState<number | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -27,7 +30,7 @@ export default function CategoriesPage() {
   const [form, setForm] = useState({
     name: "",
     type: "expense" as "income" | "expense",
-    colour: "#3b82f6",
+    colour: "#6BAF92",
     icon: "",
   })
 
@@ -78,7 +81,7 @@ export default function CategoriesPage() {
         colour: form.colour || undefined,
         icon: form.icon || undefined,
       })
-      setForm({ name: "", type: "expense", colour: "#3b82f6", icon: "" })
+      setForm({ name: "", type: "expense", colour: "#6BAF92", icon: "" })
       setShowForm(false)
       loadCategories()
     } catch {
@@ -103,8 +106,11 @@ export default function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between" data-tutorial="categories-page">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100">Categories</h1>
-          <p className="text-slate-400">Organise your transactions</p>
+          <h1 className={cn(
+            "text-2xl font-bold tracking-tight",
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          )}>Categories</h1>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Organise your transactions</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -139,14 +145,17 @@ export default function CategoriesPage() {
 
       {/* Add category form */}
       {showForm && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader>
-            <CardTitle>New category</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New category</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
                 <Input
                   placeholder="e.g. Groceries"
                   value={form.name}
@@ -155,9 +164,14 @@ export default function CategoriesPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Type</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
                 <select
-                  className="flex h-9 w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-1 text-sm text-slate-300 shadow-sm"
+                  className={cn(
+                    "flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm",
+                    theme === "light"
+                      ? "border-[#E6E0D6] bg-white text-[#1F2A24]"
+                      : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]"
+                  )}
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
                 >
@@ -166,7 +180,7 @@ export default function CategoriesPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Colour</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
                 <div className="flex gap-1.5 flex-wrap">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -183,7 +197,7 @@ export default function CategoriesPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Icon (emoji)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 🛒"
                   value={form.icon}
@@ -204,20 +218,32 @@ export default function CategoriesPage() {
 
       {/* Categories */}
       {loading ? (
-        <p className="text-slate-400 text-center py-8">Loading...</p>
+        <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading...</p>
       ) : categories.length === 0 ? (
         <div className="text-center py-16">
-          <Tags className="h-12 w-12 mx-auto text-slate-500 mb-4" />
-          <h2 className="text-lg font-semibold mb-1 text-slate-100">No categories yet</h2>
-          <p className="text-slate-400 text-sm">Create categories to organise your transactions.</p>
+          <Tags className={cn(
+            "h-12 w-12 mx-auto mb-4",
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+          )} />
+          <h2 className={cn(
+            "text-lg font-semibold mb-1",
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          )}>No categories yet</h2>
+          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create categories to organise your transactions.</p>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Income categories */}
           {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className={cn(
+              "border",
+              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+            )}>
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className={cn(
+                  "text-base flex items-center gap-2",
+                  theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                )}>
                   <Badge variant="income">Income</Badge>
                   <span>{incomeCategories.length} categories</span>
                 </CardTitle>
@@ -227,21 +253,28 @@ export default function CategoriesPage() {
                   {incomeCategories.map((cat) => (
                     <div
                       key={cat.id}
-                      className="flex items-center justify-between p-3 rounded-md border border-slate-700 hover:bg-blue-900/20 transition-colors"
+                      className={cn(
+                        "flex items-center justify-between p-3 rounded-md border transition-colors",
+                        theme === "light"
+                          ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20"
+                          : "border-[#2E3B35] hover:bg-[#6BAF92]/20"
+                      )}
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className="h-8 w-8 rounded-full flex items-center justify-center text-sm"
-                          style={{ backgroundColor: cat.colour || "#10b981" }}
+                          style={{ backgroundColor: cat.colour || "#6BAF92" }}
                         >
                           {cat.icon || cat.name[0]}
                         </div>
-                        <span className="text-sm font-medium">{cat.name}</span>
+                        <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
                       </div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-slate-400 hover:text-red-400"
+                        className={cn(
+                          theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
+                        )}
                         onClick={() => handleDelete(cat.id)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -255,9 +288,15 @@ export default function CategoriesPage() {
 
           {/* Expense categories */}
           {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className={cn(
+              "border",
+              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+            )}>
               <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className={cn(
+                  "text-base flex items-center gap-2",
+                  theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                )}>
                   <Badge variant="expense">Expense</Badge>
                   <span>{expenseCategories.length} categories</span>
                 </CardTitle>
@@ -267,21 +306,28 @@ export default function CategoriesPage() {
                   {expenseCategories.map((cat) => (
                     <div
                       key={cat.id}
-                      className="flex items-center justify-between p-3 rounded-md border border-slate-700 hover:bg-blue-900/20 transition-colors"
+                      className={cn(
+                        "flex items-center justify-between p-3 rounded-md border transition-colors",
+                        theme === "light"
+                          ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20"
+                          : "border-[#2E3B35] hover:bg-[#6BAF92]/20"
+                      )}
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white"
-                          style={{ backgroundColor: cat.colour || "#ef4444" }}
+                          style={{ backgroundColor: cat.colour || "#C97C5D" }}
                         >
                           {cat.icon || cat.name[0]}
                         </div>
-                        <span className="text-sm font-medium">{cat.name}</span>
+                        <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
                       </div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-slate-400 hover:text-red-400"
+                        className={cn(
+                          theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
+                        )}
                         onClick={() => handleDelete(cat.id)}
                       >
                         <Trash2 className="h-4 w-4" />

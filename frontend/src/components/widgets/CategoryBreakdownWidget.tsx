@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface CategoryBreakdownWidgetProps {
   accountId: number
@@ -23,12 +25,13 @@ interface CategoryBreakdownData {
   period: string
 }
 
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16']
+const COLORS = ['#6BAF92', '#88B39B', '#D9B44A', '#C97C5D', '#6C7A73', '#A7B3AD', '#E6E0D6', '#2E3B35']
 
 export default function CategoryBreakdownWidget({ accountId, size }: CategoryBreakdownWidgetProps) {
   const [data, setData] = useState<CategoryBreakdownData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -49,7 +52,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Tag className="h-4 w-4" />
             Category Breakdown
           </CardTitle>
@@ -72,7 +75,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Tag className="h-4 w-4" />
             Category Breakdown
           </CardTitle>
@@ -102,7 +105,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4" />
             Category Breakdown
@@ -136,7 +139,10 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
             <div className="relative w-32 h-32 rounded-full" style={{
               background: `conic-gradient(${chartData.map((cat, i) => `${cat.color} 0 ${(cat.value / parseFloat(data.total_spent)) * 100}%`).join(', ')})`
             }}>
-              <div className="absolute inset-4 bg-slate-800 rounded-full flex items-center justify-center">
+              <div className={cn(
+                "absolute inset-4 rounded-full flex items-center justify-center",
+                theme === "light" ? "bg-white" : "bg-[#18231D]"
+              )}>
                 <div className="text-center">
                   <div className="text-xs text-muted-foreground">Total</div>
                   <div className="text-lg font-bold">{formatCurrency(data.total_spent)}</div>

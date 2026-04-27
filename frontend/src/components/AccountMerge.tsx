@@ -87,7 +87,7 @@ export default function AccountMerge() {
     switch (status) {
       case "pending":
         return (
-          <Badge variant="secondary" className="bg-yellow-800/30 text-yellow-300">
+          <Badge variant="secondary" className={cn(theme === "light" ? "bg-[#D9B44A]/30 text-[#D9B44A]" : "bg-[#C9A24A]/30 text-[#C9A24A]")}>
             <Clock className="w-3 h-3 mr-1" />
             Pending
           </Badge>
@@ -126,7 +126,7 @@ export default function AccountMerge() {
 
   if (loading) {
     return (
-      <div className="p-6 text-center text-slate-400">
+      <div className={cn("p-6 text-center", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
         Loading account merge requests...
       </div>
     )
@@ -136,8 +136,8 @@ export default function AccountMerge() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-blue-400" />
-          <h2 className="text-xl font-semibold text-slate-100">
+          <Users className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
+          <h2 className={cn("text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             Account Merge
           </h2>
         </div>
@@ -165,7 +165,7 @@ export default function AccountMerge() {
       {mergeToken && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100">
+            <CardTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
               You have a pending account merge request
             </CardTitle>
           </CardHeader>
@@ -199,12 +199,12 @@ export default function AccountMerge() {
       {lastToken && lastToken.status === "pending" && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100">
+            <CardTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
               Merge link for {lastToken.to_email}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-slate-400 mb-2">
+            <p className={cn("text-xs mb-2", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
               Copy this link and send it to your partner. It expires{" "}
               {new Date(lastToken.expires_at).toLocaleDateString()}.
             </p>
@@ -233,14 +233,14 @@ export default function AccountMerge() {
       {showCreateForm && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100">
+            <CardTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
               Merge accounts with partner
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCreateMergeToken} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
+                <label className={cn("block text-sm font-medium mb-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                   Partner email
                 </label>
                 <Input
@@ -252,7 +252,7 @@ export default function AccountMerge() {
                   }
                   required
                 />
-                <p className="text-xs text-slate-400 mt-1">
+                <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                   Your partner must have an account with this email address.
                 </p>
               </div>
@@ -278,7 +278,7 @@ export default function AccountMerge() {
       {pendingTokens.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100">
+            <CardTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
               Pending merge requests
             </CardTitle>
           </CardHeader>
@@ -286,16 +286,16 @@ export default function AccountMerge() {
             {pendingTokens.map((token) => (
               <div
                 key={token.id}
-                className="flex items-center justify-between p-4 border border-slate-700 rounded-lg"
+                className={cn("flex items-center justify-between p-4 border rounded-lg", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]")}
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-slate-100">
+                    <span className={cn("font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
                       Merge request from {token.from_email}
                     </span>
                     {getStatusBadge(token.status)}
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                     Expires: {new Date(token.expires_at).toLocaleDateString()}
                   </p>
                 </div>

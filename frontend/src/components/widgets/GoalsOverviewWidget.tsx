@@ -52,9 +52,12 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
 
   if (loading) {
     return (
-      <Card className="h-full bg-slate-800/50 border-slate-700">
+      <Card className={cn(
+        "h-full border",
+        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+      )}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Target className="h-4 w-4" />
             Savings Goals
           </CardTitle>
@@ -64,10 +67,10 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="animate-pulse bg-slate-700 h-4 w-24 rounded"></div>
-                  <div className="animate-pulse bg-slate-700 h-4 w-12 rounded"></div>
+                  <div className={cn("animate-pulse h-4 w-24 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}></div>
+                  <div className={cn("animate-pulse h-4 w-12 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}></div>
                 </div>
-                <div className="animate-pulse bg-slate-700 h-2 w-full rounded"></div>
+                <div className={cn("animate-pulse h-2 w-full rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}></div>
               </div>
             ))}
           </div>
@@ -78,16 +81,19 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
 
   if (!data || !data.goals || data.goals.length === 0) {
     return (
-      <Card className="h-full bg-slate-800/50 border-slate-700">
+      <Card className={cn(
+        "h-full border",
+        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+      )}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Target className="h-4 w-4" />
             Savings Goals
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-slate-400 py-8">
-            <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <div className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <Target className={cn("h-8 w-8 mx-auto mb-2 opacity-50", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
             <p className="text-sm mb-2">No active goals</p>
             <p className="text-xs">Set savings goals to track your progress</p>
           </div>
@@ -104,7 +110,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
           <div className="flex items-center gap-2">
             <Target className="h-4 w-4" />
             Savings Goals
@@ -160,7 +166,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                     <div className="text-sm font-medium">
                       {formatCurrency(goal.current_amount)}
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                       of {formatCurrency(goal.target_amount)}
                     </div>
                   </div>
@@ -171,7 +177,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                     value={progress} 
                     className="h-2"
                   />
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                  <div className={cn("flex items-center justify-between text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                     <div className="flex items-center gap-1">
                       {goal.deadline && (
                         <>
@@ -196,7 +202,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
           
           {!isExpanded && hasMore && (
             <div className="text-center pt-2">
-              <p className="text-xs text-slate-400">
+              <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                 {data.count - defaultDisplayCount} more goals
               </p>
             </div>

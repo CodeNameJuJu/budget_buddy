@@ -54,7 +54,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <PiggyBank className="h-4 w-4" />
             Savings Summary
           </CardTitle>
@@ -83,7 +83,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <PiggyBank className="h-4 w-4" />
             Savings Summary
           </CardTitle>
@@ -110,7 +110,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
           <div className="flex items-center gap-2">
             <PiggyBank className="h-4 w-4" />
             Savings Summary
@@ -160,7 +160,10 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
                 : "bg-[#18231D]/50 border-[#2E3B35]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Allocated</div>
-              <div className="text-sm font-bold text-blue-400 truncate">{formatCurrency(data.total_allocated)}</div>
+              <div className={cn(
+                "text-sm font-bold truncate",
+                theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
+              )}>{formatCurrency(data.total_allocated)}</div>
             </div>
             <div className={cn(
               "text-center p-2 rounded-lg border",
@@ -220,7 +223,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
                     <div className="flex items-center gap-2">
                       <div
                         className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: pot.colour || '#3b82f6' }}
+                        style={{ backgroundColor: pot.colour || '#6BAF92' }}
                       />
                       <span className="text-sm font-medium truncate max-w-[100px]">{pot.name}</span>
                     </div>

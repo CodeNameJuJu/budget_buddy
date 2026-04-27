@@ -34,15 +34,15 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
 
   function getStatusColor(score: number): string {
     if (score >= 80) return theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
-    if (score >= 60) return "text-yellow-400"
-    if (score >= 40) return "text-orange-400"
+    if (score >= 60) return theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]"
+    if (score >= 40) return theme === "light" ? "text-[#C97C5D]" : "text-[#B46B52]"
     return "text-red-400"
   }
 
   function getStatusBgColor(score: number): string {
     if (score >= 80) return theme === "light" ? "bg-[#6BAF92]/20 border-[#6BAF92]/50" : "bg-[#6BAF92]/20 border-[#6BAF92]/50"
-    if (score >= 60) return "bg-yellow-500/20 border-yellow-500/50"
-    if (score >= 40) return "bg-orange-500/20 border-orange-500/50"
+    if (score >= 60) return theme === "light" ? "bg-[#D9B44A]/20 border-[#D9B44A]/50" : "bg-[#C9A24A]/20 border-[#C9A24A]/50"
+    if (score >= 40) return theme === "light" ? "bg-[#C97C5D]/20 border-[#C97C5D]/50" : "bg-[#B46B52]/20 border-[#B46B52]/50"
     return "bg-red-500/20 border-red-500/50"
   }
 
@@ -56,8 +56,8 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
   function getMetricColor(value: string): string {
     const numValue = parseFloat(value)
     if (numValue >= 80) return theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
-    if (numValue >= 60) return "text-yellow-400"
-    if (numValue >= 40) return "text-orange-400"
+    if (numValue >= 60) return theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]"
+    if (numValue >= 40) return theme === "light" ? "text-[#C97C5D]" : "text-[#B46B52]"
     return "text-red-400"
   }
 
@@ -65,7 +65,7 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Heart className="h-4 w-4" />
             Financial Health
           </CardTitle>
@@ -94,7 +94,7 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Heart className="h-4 w-4" />
             Financial Health
           </CardTitle>
@@ -173,11 +173,11 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
           {/* Recommendations */}
           {data.recommendations && data.recommendations.length > 0 && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-slate-300">Recommendations:</p>
+              <p className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Recommendations:</p>
               <ul className="space-y-1">
                 {data.recommendations.map((rec, index) => (
-                  <li key={index} className="text-xs text-slate-400 flex items-start gap-2">
-                    <span className="text-blue-400 mt-1">•</span>
+                  <li key={index} className={cn("text-xs flex items-start gap-2", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                    <span className={cn("mt-1", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>•</span>
                     <span>{rec}</span>
                   </li>
                 ))}

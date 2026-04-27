@@ -261,17 +261,17 @@ export default function CustomDashboardPage() {
     return (
       <div className="space-y-4 xs:space-y-6">
         <div className="responsive-margin">
-          <h1 className="mobile-title flex items-center gap-2 text-slate-100">
+          <h1 className={cn("mobile-title flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
             Dashboard
           </h1>
-          <p className="mobile-text text-slate-400">Your elegant financial overview</p>
+          <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Your elegant financial overview</p>
         </div>
         
         <div className="grid-responsive-xs">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-24 xs:h-32 lg:h-40">
-              <div className="h-full bg-blue-800/30 rounded-lg animate-pulse"></div>
+              <div className={cn("h-full rounded-lg animate-pulse", theme === "light" ? "bg-[#6BAF92]/30" : "bg-[#6BAF92]/30")}></div>
             </div>
           ))}
         </div>
@@ -307,7 +307,7 @@ export default function CustomDashboardPage() {
             className={cn(
               isCustomizing
                 ? "text-white shadow-lg"
-                : "border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-slate-500",
+                : cn(theme === "light" ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5] hover:border-[#6BAF92]" : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D] hover:border-[#6BAF92]"),
               theme === "light"
                 ? isCustomizing ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] shadow-[#6BAF92]/20" : ""
                 : isCustomizing ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] shadow-[#6BAF92]/20" : ""

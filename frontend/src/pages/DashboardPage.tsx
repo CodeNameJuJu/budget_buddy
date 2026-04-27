@@ -96,9 +96,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Debug Info */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-slate-300 mb-2">Debug Info:</h3>
-        <div className="text-xs text-slate-400 space-y-1">
+      <div className={cn("border rounded-lg p-4", theme === "light" ? "bg-[#E8DCC5] border-[#E6E0D6]" : "bg-[#18231D] border-[#2E3B35]")}>
+        <h3 className={cn("text-sm font-medium mb-2", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Debug Info:</h3>
+        <div className={cn("text-xs space-y-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
           <p>Loading: {loading ? 'Yes' : 'No'}</p>
           <p>Summary: {summary ? 'Loaded' : 'Null'}</p>
           <p>Budgets: {budgets.length} items</p>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-400">
+            <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
               {formatCurrency(income)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Great progress this month</p>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${balance >= 0 ? "text-amber-400" : "text-red-400"}`}>
+            <div className={cn(`text-2xl font-bold`, balance >= 0 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]") : "text-red-400")}>
               {formatCurrency(balance)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Healthy balance</p>
@@ -197,7 +197,7 @@ export default function DashboardPage() {
                       <Badge variant={t.type === "income" ? "income" : "expense"}>
                         {t.type}
                       </Badge>
-                      <span className={`text-sm font-semibold ${t.type === "income" ? "text-amber-400" : "text-red-400"}`}>
+                      <span className={cn("text-sm font-semibold", t.type === "income" ? (theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]") : "text-red-400")}>
                         {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                       </span>
                     </div>
@@ -255,7 +255,7 @@ export default function DashboardPage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-orange-600 text-white transition-colors duration-200">
+              <div className={cn("p-2 rounded-full text-white transition-colors duration-200", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")}>
                 <Target className="h-4 w-4" />
               </div>
               Budget Progress
@@ -282,7 +282,7 @@ export default function DashboardPage() {
                       <div className="h-2 bg-zinc-600 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-700 ease-out ${
-                            percentage > 80 ? 'bg-red-500' : percentage > 60 ? 'bg-orange-500' : 'bg-amber-500'
+                            percentage > 80 ? 'bg-red-500' : percentage > 60 ? (theme === "light" ? "bg-[#C97C5D]" : "bg-[#B46B52]") : (theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")
                           }`}
                           style={{ width: `${Math.min(percentage, 100)}%` }}
                         />
@@ -299,7 +299,7 @@ export default function DashboardPage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-purple-600 text-white transition-colors duration-200">
+              <div className={cn("p-2 rounded-full text-white transition-colors duration-200", theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]")}>
                 <Activity className="h-4 w-4" />
               </div>
               Quick Stats
@@ -309,13 +309,13 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-400">
+                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                     {summary?.recent_transactions?.length || 0}
                   </div>
                   <p className="text-xs text-muted-foreground">Transactions</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">
+                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                     {summary?.top_categories?.length || 0}
                   </div>
                   <p className="text-xs text-muted-foreground">Categories</p>
@@ -324,7 +324,7 @@ export default function DashboardPage() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Avg Transaction</span>
-                  <span className="text-blue-400">
+                  <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                     {formatCurrency(
                       (parseFloat(summary?.total_expenses || "0") + parseFloat(summary?.total_income || "0")) / 
                       Math.max(1, (summary?.recent_transactions?.length || 0))
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Savings Rate</span>
-                  <span className="text-amber-400">
+                  <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                     {formatPercentage(
                       parseFloat(summary?.total_income || "0") > 0 
                         ? (parseFloat(summary?.total_income || "0") - parseFloat(summary?.total_expenses || "0")) / parseFloat(summary?.total_income || "1") * 100
@@ -386,7 +386,7 @@ export default function DashboardPage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-amber-600 text-white transition-colors duration-200">
+              <div className={cn("p-2 rounded-full text-white transition-colors duration-200", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")}>
                 <PiggyBank className="h-4 w-4" />
               </div>
               Savings Summary
@@ -401,13 +401,13 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-amber-400">
+                    <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                       {formatCurrency(savings.reduce((sum, pot) => sum + parseFloat(pot.allocated || "0"), 0))}
                     </div>
                     <p className="text-xs text-muted-foreground">Total Allocated</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-400">
+                    <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                       {savings.length}
                     </div>
                     <p className="text-xs text-muted-foreground">Active Pots</p>
@@ -417,7 +417,7 @@ export default function DashboardPage() {
                   {savings.slice(0, 3).map((pot) => (
                     <div key={pot.id} className="flex items-center justify-between p-2 rounded-lg bg-zinc-800/50">
                       <span className="text-sm font-medium">{pot.name}</span>
-                      <span className="text-sm text-amber-400">
+                      <span className={cn("text-sm", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                         {formatCurrency(parseFloat(pot.allocated || "0"))}
                       </span>
                     </div>
@@ -432,7 +432,7 @@ export default function DashboardPage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-blue-600 text-white transition-colors duration-200">
+              <div className={cn("p-2 rounded-full text-white transition-colors duration-200", theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]")}>
                 <BarChart3 className="h-4 w-4" />
               </div>
               Spending Trends
@@ -442,7 +442,7 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-lg font-bold text-amber-400">+12%</div>
+                  <div className={cn("text-lg font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>+12%</div>
                   <p className="text-xs text-muted-foreground">vs Last Month</p>
                 </div>
                 <div>
@@ -450,7 +450,7 @@ export default function DashboardPage() {
                   <p className="text-xs text-muted-foreground">vs Budget</p>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-blue-400">R2,450</div>
+                  <div className={cn("text-lg font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>R2,450</div>
                   <p className="text-xs text-muted-foreground">Avg Daily</p>
                 </div>
               </div>
@@ -458,7 +458,7 @@ export default function DashboardPage() {
                 {[65, 80, 45, 90, 70, 85, 60, 75, 55, 88, 72, 68].map((height, i) => (
                   <div
                     key={i}
-                    className="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-300 hover:from-blue-500 hover:to-blue-300"
+                    className="flex-1 bg-gradient-to-t from-[#6BAF92] to-[#88B39B] rounded-t transition-all duration-300 hover:from-[#5E9C7E] hover:to-[#6BAF92]"
                     style={{ height: `${height}%` }}
                   />
                 ))}
@@ -498,15 +498,15 @@ export default function DashboardPage() {
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Savings Rate</span>
-                    <span className="text-amber-400">+15%</span>
+                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>+15%</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Budget Adherence</span>
-                    <span className="text-blue-400">92%</span>
+                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>92%</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Income Stability</span>
-                    <span className="text-purple-400">Stable</span>
+                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>Stable</span>
                   </div>
                 </div>
               </div>

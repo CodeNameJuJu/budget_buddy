@@ -3,9 +3,12 @@ import { Button } from '../components/ui/button';
 import { LogOut, Mail, User as UserIcon, Shield, Calendar, Clock, Edit, Check, Globe, DollarSign, Camera, Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { authApi, accountsApi, type Account } from '../lib/api';
+import { useTheme } from '../contexts/ThemeContext';
+import { cn } from '../lib/utils';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
+  const { theme } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ email: '', first_name: '', last_name: '', currency: '', timezone: '' });
   const [isSaving, setIsSaving] = useState(false);
@@ -164,8 +167,13 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-amber-950 to-slate-900">
-        <div className="text-white">Loading...</div>
+      <div className={cn(
+        "flex items-center justify-center min-h-screen",
+        theme === "light"
+          ? "bg-gradient-to-br from-[#F6F4EF] via-[#E8DCC5] to-[#F6F4EF]"
+          : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
+      )}>
+        <div className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>Loading...</div>
       </div>
     );
   }
@@ -178,18 +186,27 @@ export default function ProfilePage() {
             <img 
               src={profilePictureUrl} 
               alt="Profile" 
-              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 border-amber-600 cursor-pointer hover:opacity-90 transition-opacity"
+              className={cn(
+                "w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 cursor-pointer hover:opacity-90 transition-opacity",
+                theme === "light" ? "border-[#6BAF92]" : "border-[#6BAF92]"
+              )}
               onClick={() => document.getElementById('header-profile-upload')?.click()}
             />
           ) : (
             <div 
-              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full bg-amber-600 flex items-center justify-center border-4 border-amber-600 cursor-pointer hover:opacity-90 transition-opacity"
+              className={cn(
+                "w-16 h-16 xs:w-20 xs:h-20 rounded-full flex items-center justify-center border-4 cursor-pointer hover:opacity-90 transition-opacity",
+                theme === "light" ? "bg-[#6BAF92] border-[#6BAF92]" : "bg-[#6BAF92] border-[#6BAF92]"
+              )}
               onClick={() => document.getElementById('header-profile-upload')?.click()}
             >
               <UserIcon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
             </div>
           )}
-          <label className="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 rounded-full p-1.5 cursor-pointer transition-colors">
+          <label className={cn(
+            "absolute bottom-0 right-0 rounded-full p-1.5 cursor-pointer transition-colors",
+            theme === "light" ? "bg-[#6BAF92] hover:bg-[#5E9C7E]" : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+          )}>
             <Camera className="h-3 w-3 text-white" />
             <input
               id="header-profile-upload"
@@ -202,23 +219,47 @@ export default function ProfilePage() {
           </label>
         </div>
         <div>
-          <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-amber-300 to-yellow-300 bg-clip-text text-transparent">
+          <h1 className={cn(
+            "text-2xl xs:text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
+            theme === "light"
+              ? "from-[#6BAF92] to-[#A8D5BA]"
+              : "from-[#88B39B] to-[#A8D5BA]"
+          )}>
             Profile
           </h1>
-          <p className="text-slate-400 mt-1">Manage your account settings</p>
+          <p className={cn(
+            "mt-1",
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+          )}>Manage your account settings</p>
         </div>
       </div>
 
-      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-amber-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
+      <div className={cn(
+        "backdrop-blur-md rounded-2xl shadow-xl border p-4 xs:p-6 mb-4 xs:mb-6 w-full",
+        theme === "light"
+          ? "bg-[#E8DCC5]/90 border-[#E6E0D6]/30"
+          : "bg-[#18231D]/90 border-[#2E3B35]/30"
+      )}>
         <div className="flex items-center justify-between mb-4 xs:mb-6">
-          <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-            <UserIcon className="h-5 w-5 text-amber-400" />
+          <h2 className={cn(
+            "text-xl font-semibold flex items-center gap-2",
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          )}>
+            <UserIcon className={cn(
+              "h-5 w-5",
+              theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
+            )} />
             User Information
           </h2>
           {!isEditing && (
             <Button
               onClick={handleEditClick}
-              className="bg-amber-600 hover:bg-amber-700 text-white"
+              className={cn(
+                "text-white",
+                theme === "light"
+                  ? "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                  : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+              )}
             >
               <Edit className="h-4 w-4 mr-2" />
               Edit
@@ -227,17 +268,26 @@ export default function ProfilePage() {
         </div>
 
         {saveMessage && (
-          <div className={`mb-4 p-3 rounded-lg ${
-            saveMessage.type === 'success' ? 'bg-amber-900/50 text-amber-300' : 'bg-red-900/50 text-red-300'
-          }`}>
+          <div className={cn(
+            "mb-4 p-3 rounded-lg",
+            saveMessage.type === 'success'
+              ? theme === "light" ? "bg-[#6BAF92]/50 text-[#6BAF92]" : "bg-[#6BAF92]/50 text-[#88B39B]"
+              : "bg-red-900/50 text-red-300"
+          )}>
             {saveMessage.text}
           </div>
         )}
 
         {isEditing ? (
           <div className="space-y-4">
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-2 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Mail className="h-4 w-4" />
                 Email
               </label>
@@ -245,12 +295,23 @@ export default function ProfilePage() {
                 type="email"
                 value={editForm.email}
                 onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                className="w-full bg-slate-800 border border-blue-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                className={cn(
+                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  theme === "light"
+                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#6BAF92]"
+                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#6BAF92]"
+                )}
               />
             </div>
             
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-2 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <UserIcon className="h-4 w-4" />
                 First Name
               </label>
@@ -258,12 +319,23 @@ export default function ProfilePage() {
                 type="text"
                 value={editForm.first_name}
                 onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
-                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
+                className={cn(
+                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  theme === "light"
+                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
+                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                )}
               />
             </div>
 
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-2 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <UserIcon className="h-4 w-4" />
                 Last Name
               </label>
@@ -271,19 +343,35 @@ export default function ProfilePage() {
                 type="text"
                 value={editForm.last_name}
                 onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
-                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
+                className={cn(
+                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  theme === "light"
+                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
+                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                )}
               />
             </div>
 
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-2 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <DollarSign className="h-4 w-4" />
                 Currency
               </label>
               <select
                 value={editForm.currency}
                 onChange={(e) => setEditForm({ ...editForm, currency: e.target.value })}
-                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
+                className={cn(
+                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  theme === "light"
+                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
+                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                )}
               >
                 {CURRENCY_OPTIONS.map((opt) => (
                   <option key={opt.code} value={opt.code}>
@@ -293,15 +381,26 @@ export default function ProfilePage() {
               </select>
             </div>
 
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-2 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Globe className="h-4 w-4" />
                 Timezone
               </label>
               <select
                 value={editForm.timezone}
                 onChange={(e) => setEditForm({ ...editForm, timezone: e.target.value })}
-                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
+                className={cn(
+                  "w-full border rounded-lg px-4 py-2 focus:outline-none",
+                  theme === "light"
+                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
+                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                )}
               >
                 {TIMEZONE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -315,14 +414,24 @@ export default function ProfilePage() {
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white font-medium"
+                className={cn(
+                  "text-white font-medium",
+                  theme === "light"
+                    ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#88B39B]"
+                    : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#88B39B]"
+                )}
               >
                 {isSaving ? 'Saving...' : 'Save Changes'}
               </Button>
               <Button
                 onClick={() => setIsEditing(false)}
                 variant="outline"
-                className="border border-slate-600 text-slate-300 hover:bg-slate-800"
+                className={cn(
+                  "border transition-colors",
+                  theme === "light"
+                    ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5]"
+                    : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D]"
+                )}
               >
                 Cancel
               </Button>
@@ -330,67 +439,128 @@ export default function ProfilePage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Mail className="h-4 w-4" />
                 Email
               </label>
-              <p className="text-white font-medium">{user.email}</p>
+              <p className={cn(
+                "font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>{user.email}</p>
             </div>
             
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <UserIcon className="h-4 w-4" />
                 Name
               </label>
-              <p className="text-white font-medium">
+              <p className={cn(
+                "font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>
                 {user.first_name || ''} {user.last_name || ''} {(user.first_name || user.last_name) ? '' : 'N/A'}
               </p>
             </div>
 
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <DollarSign className="h-4 w-4" />
                 Currency
               </label>
-              <p className="text-white font-medium">
+              <p className={cn(
+                "font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>
                 {account?.currency || 'USD'}
               </p>
             </div>
 
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Globe className="h-4 w-4" />
                 Timezone
               </label>
-              <p className="text-white font-medium">
+              <p className={cn(
+                "font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>
                 {account?.timezone || 'UTC'}
               </p>
             </div>
             
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Shield className="h-4 w-4" />
                 Account Status
               </label>
-              <p className={`font-medium ${user.is_active ? 'text-amber-400' : 'text-red-400'}`}>
+              <p className={cn(
+                "font-medium",
+                user.is_active
+                  ? theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
+                  : "text-red-400"
+              )}>
                 {user.is_active ? 'Active' : 'Inactive'}
               </p>
             </div>
             
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Shield className="h-4 w-4" />
                 Email Verified
               </label>
               <div className="flex items-center gap-2">
-                <p className={`font-medium ${user.email_verified ? 'text-amber-400' : 'text-amber-400'}`}>
+                <p className={cn(
+                  "font-medium",
+                  theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
+                )}>
                   {user.email_verified ? 'Yes' : 'No'}
                 </p>
                 {!user.email_verified && (
                   <Button
                     onClick={handleSendVerification}
-                    className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1"
+                    className={cn(
+                      "text-xs text-white px-3 py-1",
+                      theme === "light"
+                        ? "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                        : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                    )}
                   >
                     Verify
                   </Button>
@@ -399,8 +569,14 @@ export default function ProfilePage() {
             </div>
             
             {showVerification && (
-              <div className="bg-slate-900/50 rounded-xl p-4">
-                <label className="block text-sm font-medium text-slate-400 mb-2">
+              <div className={cn(
+                "rounded-xl p-4",
+                theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              )}>
+                <label className={cn(
+                  "block text-sm font-medium mb-2",
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                )}>
                   Verification Token
                 </label>
                 <div className="flex gap-2">
@@ -409,11 +585,21 @@ export default function ProfilePage() {
                     value={verificationToken}
                     onChange={(e) => setVerificationToken(e.target.value)}
                     placeholder="Enter verification token"
-                    className="flex-1 bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
+                    className={cn(
+                      "flex-1 border rounded-lg px-4 py-2 focus:outline-none",
+                      theme === "light"
+                        ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
+                        : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                    )}
                   />
                   <Button
                     onClick={handleVerifyEmail}
-                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                    className={cn(
+                      "text-white",
+                      theme === "light"
+                        ? "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                        : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                    )}
                   >
                     <Check className="h-4 w-4" />
                   </Button>
@@ -421,22 +607,40 @@ export default function ProfilePage() {
               </div>
             )}
             
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Clock className="h-4 w-4" />
                 Last Login
               </label>
-              <p className="text-white font-medium">
+              <p className={cn(
+                "font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>
                 {user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}
               </p>
             </div>
             
-            <div className="bg-slate-900/50 rounded-xl p-4">
-              <label className="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-2">
+            <div className={cn(
+              "rounded-xl p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 <Calendar className="h-4 w-4" />
                 Account Created
               </label>
-              <p className="text-white font-medium">
+              <p className={cn(
+                "font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>
                 {new Date(user.created_at).toLocaleString()}
               </p>
             </div>

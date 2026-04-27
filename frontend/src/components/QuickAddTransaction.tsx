@@ -6,12 +6,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { transactionsApi, type Transaction } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface QuickAddTransactionProps {
   onTransactionAdded: (transaction: Transaction) => void
 }
 
 export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTransactionProps) {
+  const { theme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [amount, setAmount] = useState("")
   const [description, setDescription] = useState("")
@@ -73,15 +76,15 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
   }
 
   return (
-    <Card className="border-2 border-dashed border-amber-800/50 bg-slate-800/30">
+    <Card className={cn("border-2 border-dashed", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/30" : "border-[#C9A24A]/50 bg-[#18231D]/30")}>
       <CardContent className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-amber-400" />
-              <h3 className="font-semibold text-slate-100">Quick Add Transaction</h3>
+              <Sparkles className={cn("h-4 w-4", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
+              <h3 className={cn("font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Quick Add Transaction</h3>
               {suggestedCategory && (
-                <Badge variant="secondary" className="text-xs bg-amber-800/30 text-amber-300 border border-amber-700/50">
+                <Badge variant="secondary" className={cn("text-xs", theme === "light" ? "bg-[#D9B44A]/30 text-[#D9B44A] border-[#D9B44A]/50" : "bg-[#C9A24A]/30 text-[#C9A24A] border-[#C9A24A]/50")}>
                   Auto-categorized as {suggestedCategory.category}
                 </Badge>
               )}
@@ -98,7 +101,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Amount</label>
+              <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
               <Input
                 type="number"
                 step="0.01"
@@ -111,7 +114,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Description</label>
+              <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
               <Input
                 placeholder="e.g. Grocery shopping at Woolworths"
                 value={description}
@@ -127,7 +130,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               variant="ghost"
               size="sm"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-slate-400"
+              className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}
             >
               {showAdvanced ? (
                 <ChevronUp className="h-4 w-4 mr-1" />
@@ -138,7 +141,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
             </Button>
             
             {amount && (
-              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? "bg-amber-800/30 text-amber-300 border border-amber-700/50" : "bg-red-800/30 text-red-300 border border-red-700/50"}>
+              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? cn(theme === "light" ? "bg-[#D9B44A]/30 text-[#D9B44A] border-[#D9B44A]/50" : "bg-[#C9A24A]/30 text-[#C9A24A] border-[#C9A24A]/50") : "bg-red-800/30 text-red-300 border-red-700/50"}>
                 {getTransactionType() === "income" ? "Income" : "Expense"}
               </Badge>
             )}
@@ -147,7 +150,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
           {showAdvanced && (
             <div className="space-y-4 pt-4 border-t">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Notes (optional)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes (optional)</label>
                 <Input
                   placeholder="Additional notes..."
                   value={notes}

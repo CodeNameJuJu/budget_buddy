@@ -50,7 +50,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
   function getAlertIcon(type: string) {
     switch (type) {
       case "warning":
-        return <AlertTriangle className="h-4 w-4 text-yellow-400" />
+        return <AlertTriangle className={cn("h-4 w-4", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
       case "error":
         return <AlertTriangle className="h-4 w-4 text-red-400" />
       case "success":
@@ -59,14 +59,14 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
           theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
         )} />
       default:
-        return <Info className="h-4 w-4 text-blue-400" />
+        return <Info className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
     }
   }
 
   function getAlertBadge(type: string) {
     switch (type) {
       case "warning":
-        return <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50">Warning</Badge>
+        return <Badge variant="secondary" className={cn(theme === "light" ? "bg-[#D9B44A]/20 text-[#D9B44A] border-[#D9B44A]/50" : "bg-[#C9A24A]/20 text-[#C9A24A] border-[#C9A24A]/50")}>Warning</Badge>
       case "error":
         return <Badge variant="destructive">Error</Badge>
       case "success":
@@ -82,7 +82,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Bell className="h-4 w-4" />
             Alerts
           </CardTitle>
@@ -105,7 +105,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <Bell className="h-4 w-4" />
             Alerts
           </CardTitle>
@@ -129,7 +129,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
           <div className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
             Alerts
@@ -166,11 +166,11 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
           {alerts.map((alert) => (
             <div
               key={alert.id}
-              className={`p-3 rounded-lg border ${
+              className={cn("p-3 rounded-lg border",
                 alert.is_read
-                  ? "bg-slate-800/30 border-slate-700/50"
-                  : "bg-slate-800/60 border-slate-600"
-              }`}
+                  ? (theme === "light" ? "bg-[#E8DCC5]/30 border-[#E6E0D6]/50" : "bg-[#18231D]/30 border-[#2E3B35]/50")
+                  : (theme === "light" ? "bg-[#E8DCC5]/60 border-[#E6E0D6]" : "bg-[#18231D]/60 border-[#2E3B35]")
+              )}
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 flex-shrink-0">{getAlertIcon(alert.type)}</div>

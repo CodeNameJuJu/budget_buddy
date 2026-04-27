@@ -80,14 +80,14 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
             <ArrowLeftRight className="h-4 w-4" />
             Recent Transactions
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-slate-400 py-8">
-            <ArrowLeftRight className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <div className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <ArrowLeftRight className={cn("h-8 w-8 mx-auto mb-2 opacity-50", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
             <p className="text-sm mb-2">No transactions yet</p>
             <p className="text-xs">Start tracking your expenses to see them here</p>
           </div>
@@ -104,7 +104,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
           <div className="flex items-center gap-2">
             <ArrowLeftRight className="h-4 w-4" />
             Recent Transactions
@@ -151,7 +151,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-slate-400">{formatDate(t.date)}</p>
+                <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{formatDate(t.date)}</p>
               </div>
               <div className="flex items-center gap-2 ml-4">
                 <Badge variant={t.type === "income" ? "default" : "destructive"} className="text-xs">
@@ -171,7 +171,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
           
           {!isExpanded && hasMore && (
             <div className="text-center pt-2">
-              <p className="text-xs text-slate-400">
+              <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                 {data.count - defaultDisplayCount} more transactions
               </p>
             </div>

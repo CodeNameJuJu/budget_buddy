@@ -17,8 +17,11 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function AlertsPage() {
+  const { theme } = useTheme()
   const [accountId, setAccountId] = useState<number | null>(null)
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [preferences, setPreferences] = useState<AlertPreference[]>([])
@@ -124,16 +127,22 @@ export default function AlertsPage() {
   function getAlertIcon(severity: string) {
     switch (severity) {
       case "critical": return <AlertTriangle className="h-4 w-4 text-red-400" />
-      case "warning": return <AlertCircle className="h-4 w-4 text-yellow-400" />
-      default: return <Info className="h-4 w-4 text-blue-400" />
+      case "warning": return <AlertCircle className={cn(
+        "h-4 w-4",
+        theme === "light" ? "text-[#C97C5D]" : "text-[#B46B52]"
+      )} />
+      default: return <Info className={cn(
+        "h-4 w-4",
+        theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
+      )} />
     }
   }
 
   function getSeverityColor(severity: string) {
     switch (severity) {
       case "critical": return "border-red-500/50 bg-red-900/20"
-      case "warning": return "border-yellow-500/50 bg-yellow-900/20"
-      default: return "border-blue-500/50 bg-blue-900/20"
+      case "warning": return theme === "light" ? "border-[#C97C5D]/50 bg-[#C97C5D]/20" : "border-[#B46B52]/50 bg-[#B46B52]/20"
+      default: return theme === "light" ? "border-[#6BAF92]/50 bg-[#6BAF92]/20" : "border-[#6BAF92]/50 bg-[#6BAF92]/20"
     }
   }
 
@@ -152,7 +161,7 @@ export default function AlertsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-slate-400">Loading alerts...</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Loading alerts...</p>
       </div>
     )
   }
@@ -161,7 +170,10 @@ export default function AlertsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
+          <h1 className={cn(
+            "text-2xl font-bold tracking-tight flex items-center gap-2",
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          )}>
             <Bell className="h-6 w-6" />
             Alerts
             {unreadCount > 0 && (
@@ -170,13 +182,18 @@ export default function AlertsPage() {
               </Badge>
             )}
           </h1>
-          <p className="text-slate-400">Stay informed about your finances</p>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Stay informed about your finances</p>
         </div>
         <div className="flex gap-2">
           <select
             value={alertType}
             onChange={(e) => setAlertType(e.target.value)}
-            className="flex h-10 w-[140px] rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className={cn(
+              "flex h-10 w-[140px] rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2",
+              theme === "light"
+                ? "border-[#E6E0D6] bg-white text-[#1F2A24] focus:ring-[#D9B44A]"
+                : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA] focus:ring-[#C9A24A]"
+            )}
           >
             <option value="all">All Alerts</option>
             <option value="weekly">Weekly Summary</option>
@@ -199,16 +216,25 @@ export default function AlertsPage() {
 
       {/* Alert Preferences */}
       {showPreferences && (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className={cn(
+          "border",
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        )}>
           <CardHeader>
-            <CardTitle>Alert Preferences</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>Alert Preferences</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {preferences.map((pref) => (
-              <div key={pref.id} className="flex items-center justify-between p-3 border border-slate-600 rounded-lg">
+              <div key={pref.id} className={cn(
+                "flex items-center justify-between p-3 border rounded-lg",
+                theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+              )}>
                 <div className="flex-1">
-                  <Label className="font-medium">{getAlertTypeLabel(pref.type)}</Label>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <Label className={cn("font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{getAlertTypeLabel(pref.type)}</Label>
+                  <p className={cn(
+                    "text-sm mt-1",
+                    theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                  )}>
                     {pref.type === "budget_threshold" && 
                       "Get notified when you reach a certain percentage of your budget"
                     }
@@ -220,7 +246,7 @@ export default function AlertsPage() {
                 <div className="flex items-center gap-4">
                   {pref.type === "budget_threshold" && (
                     <div className="flex items-center gap-2">
-                      <Label htmlFor={`threshold-${pref.id}`} className="text-sm">Threshold:</Label>
+                      <Label htmlFor={`threshold-${pref.id}`} className={cn("text-sm", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Threshold:</Label>
                       <Input
                         id={`threshold-${pref.id}`}
                         type="number"
@@ -234,7 +260,7 @@ export default function AlertsPage() {
                         }}
                         className="w-16 h-8 text-sm"
                       />
-                      <span className="text-sm text-slate-400">%</span>
+                      <span className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>%</span>
                     </div>
                   )}
                   <Switch
@@ -255,11 +281,23 @@ export default function AlertsPage() {
       {/* Alerts List */}
       <div className="space-y-4">
         {alerts.length === 0 ? (
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className={cn(
+            "border",
+            theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          )}>
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <BellOff className="h-12 w-12 text-slate-500 mb-4" />
-              <h3 className="text-lg font-medium text-slate-100">No alerts</h3>
-              <p className="text-slate-400 text-center mt-2">
+              <BellOff className={cn(
+                "h-12 w-12 mb-4",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )} />
+              <h3 className={cn(
+                "text-lg font-medium",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>No alerts</h3>
+              <p className={cn(
+                "text-center mt-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
                 You're all caught up! Check back later for new notifications.
               </p>
             </CardContent>
@@ -283,8 +321,14 @@ export default function AlertsPage() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-slate-400 mb-2">{alert.message}</p>
-                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                      <p className={cn(
+                        "text-sm mb-2",
+                        theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                      )}>{alert.message}</p>
+                      <div className={cn(
+                        "flex items-center gap-2 text-xs",
+                        theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                      )}>
                         <span>{formatDate(alert.created_date)}</span>
                         <span>•</span>
                         <span>{getAlertTypeLabel(alert.type)}</span>
