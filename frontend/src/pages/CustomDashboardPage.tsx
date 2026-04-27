@@ -100,10 +100,12 @@ export default function CustomDashboardPage() {
     setIsSaving(true)
     try {
       const layoutJson = JSON.stringify(widgets)
+      console.log("Saving layout with JSON:", layoutJson)
       // Save to session storage
       sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
       // Save to account
       await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+      console.log("Layout saved successfully")
       setIsCustomizing(false)
     } catch (error) {
       console.error("Failed to save layout", error)

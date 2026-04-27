@@ -19,7 +19,6 @@ export default function WelcomeWidget() {
           "flex items-center gap-2",
           theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
         )}>
-          <Sparkles className="h-5 w-5" />
           <span className={cn(
             "brand-name text-2xl xs:text-3xl lg:text-4xl",
             theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
