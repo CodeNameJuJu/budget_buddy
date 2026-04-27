@@ -70,13 +70,11 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/auth/profile-picture", authHandler.POSTProfilePicture)
 
 		/* ----------- ACCOUNTS ----------- */
+		r.Get("/accounts/{accountId}/dashboard-layout", accounts.GETDashboardLayout)
+		r.Post("/accounts/{accountId}/dashboard-layout", accounts.POSTDashboardLayout)
 		r.Get("/accounts", accounts.GETAccount)
 		r.Post("/accounts", accounts.POSTAccount)
 		r.Patch("/accounts/{id}", accounts.PATCHAccount)
-
-		/* ----------- DASHBOARD LAYOUTS ----------- */
-		r.Get("/accounts/{accountId}/dashboard-layout", accounts.GETDashboardLayout)
-		r.Post("/accounts/{accountId}/dashboard-layout", accounts.POSTDashboardLayout)
 
 		/* ----------- CATEGORIES ----------- */
 		r.Get("/categories", categories.GETCategories)
