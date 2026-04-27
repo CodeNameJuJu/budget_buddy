@@ -7,76 +7,76 @@
 @layer base {
   :root {
     /* Light mode - Savanna theme */
-    --background: oklch(1 0 0); /* #F6F4EF - Savanna background */
-    --foreground: oklch(0.145 0 0); /* #1F2A24 - dark text */
-    --card: oklch(1 0 0); /* #E8DCC5 - surface */
-    --card-foreground: oklch(0.145 0 0); /* #1F2A24 - dark text */
-    --primary: oklch(0.205 0 0); /* #6BAF92 - primary green */
-    --primary-foreground: oklch(0.985 0 0); /* #F6F4EF - Savanna background */
-    --secondary: oklch(0.97 0 0); /* #A8D5BA - secondary green */
-    --secondary-foreground: oklch(0.205 0 0); /* #1F2A24 - dark text */
-    --muted: oklch(0.97 0 0); /* #E8DCC5 - surface */
-    --muted-foreground: oklch(0.556 0 0); /* #6C7A73 - muted text */
-    --accent: oklch(0.97 0 0); /* #6BAF92 - primary green */
-    --accent-foreground: oklch(0.205 0 0); /* #F6F4EF - Savanna background */
-    --destructive: oklch(0.577 0.245 27.325); /* #C97C5D - warning */
+    --background: 30 20% 95%; /* #F6F4EF - Savanna background */
+    --foreground: 180 20% 15%; /* #1F2A24 - dark text */
+    --card: 30 15% 90%; /* #E8DCC5 - surface */
+    --card-foreground: 180 20% 15%; /* #1F2A24 - dark text */
+    --primary: 145 35% 60%; /* #6BAF92 - primary green */
+    --primary-foreground: 30 20% 95%; /* #F6F4EF - Savanna background */
+    --secondary: 160 30% 80%; /* #A8D5BA - secondary green */
+    --secondary-foreground: 180 20% 15%; /* #1F2A24 - dark text */
+    --muted: 30 15% 90%; /* #E8DCC5 - surface */
+    --muted-foreground: 160 10% 45%; /* #6C7A73 - muted text */
+    --accent: 145 35% 60%; /* #6BAF92 - primary green */
+    --accent-foreground: 30 20% 95%; /* #F6F4EF - Savanna background */
+    --destructive: 15 60% 60%; /* #C97C5D - warning */
     --destructive-foreground: 30 20% 95%; /* Savanna background */
-    --border: oklch(0.922 0 0); /* #E6E0D6 - border */
-    --input: oklch(0.922 0 0); /* #E8DCC5 - surface */
-    --ring: oklch(0.708 0 0); /* #6BAF92 - primary green */
-    --radius: 0.625rem;
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --border: 30 10% 88%; /* #E6E0D6 - border */
+    --input: 30 15% 90%; /* #E8DCC5 - surface */
+    --ring: 145 35% 60%; /* #6BAF92 - primary green */
+    --radius: 0.75rem;
+    --popover: 30 15% 90%;
+    --popover-foreground: 180 20% 15%;
+    --chart-1: 30 20% 95%;
+    --chart-2: 160 10% 45%;
+    --chart-3: 180 20% 15%;
+    --chart-4: 180 20% 15%;
+    --chart-5: 180 20% 15%;
+    --sidebar: 30 20% 95%;
+    --sidebar-foreground: 180 20% 15%;
+    --sidebar-primary: 145 35% 60%;
+    --sidebar-primary-foreground: 30 20% 95%;
+    --sidebar-accent: 160 30% 80%;
+    --sidebar-accent-foreground: 180 20% 15%;
+    --sidebar-border: 30 10% 88%;
+    --sidebar-ring: 145 35% 60%;
   }
 
   .dark {
     /* Dark mode - Kalahari theme */
-    --background: oklch(0.145 0 0); /* #0F1512 - Kalahari background */
-    --foreground: oklch(0.985 0 0); /* #E7EFEA - light text */
-    --card: oklch(0.205 0 0); /* #18231D - surface */
-    --card-foreground: oklch(0.985 0 0); /* #E7EFEA - light text */
-    --primary: oklch(0.922 0 0); /* #5E9C7E - primary green */
-    --primary-foreground: oklch(0.205 0 0); /* #E7EFEA - light text */
-    --secondary: oklch(0.269 0 0); /* #88B39B - secondary green */
-    --secondary-foreground: oklch(0.985 0 0); /* #E7EFEA - light text */
-    --muted: oklch(0.269 0 0); /* #18231D - surface */
-    --muted-foreground: oklch(0.708 0 0); /* #A7B3AD - muted text */
-    --accent: oklch(0.269 0 0); /* #5E9C7E - primary green */
-    --accent-foreground: oklch(0.985 0 0); /* #E7EFEA - light text */
-    --destructive: oklch(0.704 0.191 22.216); /* #B46B52 - warning */
+    --background: 150 15% 5%; /* #0F1512 - Kalahari background */
+    --foreground: 150 20% 90%; /* #E7EFEA - light text */
+    --card: 150 15% 10%; /* #18231D - surface */
+    --card-foreground: 150 20% 90%; /* #E7EFEA - light text */
+    --primary: 150 35% 50%; /* #5E9C7E - primary green */
+    --primary-foreground: 150 20% 95%; /* #E7EFEA - light text */
+    --secondary: 150 30% 65%; /* #88B39B - secondary green */
+    --secondary-foreground: 150 20% 90%; /* #E7EFEA - light text */
+    --muted: 150 15% 10%; /* #18231D - surface */
+    --muted-foreground: 150 15% 70%; /* #A7B3AD - muted text */
+    --accent: 150 35% 50%; /* #5E9C7E - primary green */
+    --accent-foreground: 150 20% 95%; /* #E7EFEA - light text */
+    --destructive: 15 50% 55%; /* #B46B52 - warning */
     --destructive-foreground: 150 20% 95%; /* light text */
-    --border: oklch(1 0 0 / 10%); /* #2E3B35 - border */
-    --input: oklch(1 0 0 / 15%); /* #18231D - surface */
-    --ring: oklch(0.556 0 0); /* #5E9C7E - primary green */
+    --border: 150 15% 18%; /* #2E3B35 - border */
+    --input: 150 15% 10%; /* #18231D - surface */
+    --ring: 150 35% 50%; /* #5E9C7E - primary green */
     --radius: 0.75rem;
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --popover: 150 15% 10%;
+    --popover-foreground: 150 20% 90%;
+    --chart-1: 30 20% 95%;
+    --chart-2: 160 10% 45%;
+    --chart-3: 180 20% 15%;
+    --chart-4: 180 20% 15%;
+    --chart-5: 180 20% 15%;
+    --sidebar: 150 15% 10%;
+    --sidebar-foreground: 150 20% 90%;
+    --sidebar-primary: 150 35% 50%;
+    --sidebar-primary-foreground: 150 20% 95%;
+    --sidebar-accent: 150 30% 65%;
+    --sidebar-accent-foreground: 150 20% 90%;
+    --sidebar-border: 150 15% 18%;
+    --sidebar-ring: 150 35% 50%;
   }
   .theme {
     --font-heading: var(--font-sans);
