@@ -41,18 +41,14 @@ func InsertCategory(category *types.Category) error {
 	category.CreatedDate = now
 	category.ModifiedDate = &now
 
-	fmt.Printf("Attempting to insert category: %+v\n", category)
-
 	_, err := db.NewInsert().Model(category).
 		Returning("*").
 		Exec(context.Background())
 
 	if err != nil {
-		fmt.Printf("Database insertion error: %v\n", err)
 		return fmt.Errorf("failed to insert category: %w", err)
 	}
 
-	fmt.Printf("Category inserted successfully: %+v\n", category)
 	return nil
 }
 

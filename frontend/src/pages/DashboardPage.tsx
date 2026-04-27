@@ -54,20 +54,12 @@ export default function DashboardPage() {
     if (!accountId) return
     
     try {
-      console.log("Loading dashboard data...")
       const [summaryRes, budgetsRes, savingsRes, alertsRes] = await Promise.all([
         dashboardApi.summary(accountId),
         budgetsApi.list(accountId),
         savingsApi.listPots(accountId),
         alertsApi.list(accountId, false, 5), // Get last 5 alerts
       ])
-      
-      console.log("API responses:", {
-        summary: summaryRes.data,
-        budgets: budgetsRes.data?.length,
-        savings: savingsRes.data?.length,
-        alerts: alertsRes.data?.length,
-      })
       
       setSummary(summaryRes.data)
       setBudgets(budgetsRes.data || [])

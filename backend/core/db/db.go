@@ -22,7 +22,6 @@ func ConnectToDatabase() {
 	// Check if DATABASE_URL is provided (preferred for Supabase)
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
 		dsn = databaseURL
-		fmt.Printf("Using DATABASE_URL: %s\n", maskPassword(databaseURL))
 	} else {
 		// Build connection string from individual components
 		sslmode := os.Getenv("DB_SSLMODE")
@@ -38,7 +37,6 @@ func ConnectToDatabase() {
 			os.Getenv("DB_NAME"),
 			sslmode,
 		)
-		fmt.Printf("Using individual DB settings, host: %s\n", os.Getenv("DB_HOST"))
 	}
 
 	sqlDB := sql.OpenDB(pgdriver.NewConnector(
@@ -63,12 +61,10 @@ func ConnectToDatabase() {
 			lastErr = err
 			if i < maxRetries-1 {
 				waitTime := time.Duration(i+1) * time.Second
-				fmt.Printf("Database connection attempt %d failed, retrying in %v: %s\n", i+1, waitTime, err)
 				time.Sleep(waitTime)
 				continue
 			}
 		} else {
-			fmt.Println("Connected to database")
 			return
 		}
 	}

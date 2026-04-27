@@ -45,7 +45,6 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
   async function loadData() {
     try {
       const response = await dashboardApi.getWidgetData(accountId, "budget_progress")
-      console.log("Budget widget data:", response.data)
       setData(response.data)
     } catch (error) {
       console.error("Failed to load budget progress widget data", error)

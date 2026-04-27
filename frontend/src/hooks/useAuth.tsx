@@ -62,8 +62,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Check for existing tokens on mount
   useEffect(() => {
     const initAuth = async () => {
-      console.log('Initializing auth...');
-      
       // Check both localStorage and sessionStorage for tokens
       const localStorageToken = localStorage.getItem('access_token');
       const sessionStorageToken = sessionStorage.getItem('access_token');
@@ -73,34 +71,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const sessionStorageRefresh = sessionStorage.getItem('refresh_token');
       const refreshToken = localStorageRefresh || sessionStorageRefresh;
 
-      console.log('Token check:', {
-        localStorageToken: localStorageToken ? 'exists' : 'none',
-        sessionStorageToken: sessionStorageToken ? 'exists' : 'none',
-        accessToken: accessToken ? 'found' : 'none',
-        refreshToken: refreshToken ? 'found' : 'none'
-      });
-
       if (accessToken && refreshToken) {
         try {
-          console.log('Validating access token...');
           // Validate access token
           const userData = await validateToken(accessToken);
-          console.log('Token validation successful, user:', userData.email);
           setUser(userData);
         } catch (error) {
-          console.log('Access token invalid, trying refresh...', error);
           // Access token invalid, try refresh
           try {
             await refreshAccessToken();
-            console.log('Token refresh successful');
           } catch (refreshError) {
-            console.log('Token refresh failed, clearing tokens', refreshError);
             // Refresh failed, clear tokens
             clearTokens();
           }
         }
-      } else {
-        console.log('No tokens found, user not authenticated');
       }
       setIsLoading(false);
     };
@@ -109,17 +93,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const validateToken = async (token: string): Promise<User> => {
-    console.log('Validating token with API:', `${API_BASE}/auth/profile`);
-    
     const response = await fetch(`${API_BASE}/auth/profile`, {
+      method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
       },
     });
-
-    console.log('Token validation response status:', response.status);
-    console.log('Token validation response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       throw new Error(`Token validation failed: ${response.status} ${response.statusText}`);
@@ -127,16 +106,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     // Check content type before parsing JSON
     const contentType = response.headers.get('content-type');
-    console.log('Response content type:', contentType);
     
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
-      console.log('Non-JSON response from token validation:', text);
       throw new Error('Token validation returned non-JSON response');
     }
 
     const data = await response.json();
-    console.log('Token validation data:', data);
     return data.data || data;
   };
 
@@ -149,8 +125,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Determine which storage type to use based on where the token was found
     const useLocalStorage = localStorage.getItem('refresh_token') === refreshToken;
 
-    console.log('Refreshing token with API:', `${API_BASE}/auth/refresh`);
-
     const response = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
       headers: {
@@ -159,25 +133,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
 
-    console.log('Token refresh response status:', response.status);
-    console.log('Token refresh response headers:', Object.fromEntries(response.headers.entries()));
-
     if (!response.ok) {
       throw new Error(`Token refresh failed: ${response.status} ${response.statusText}`);
     }
 
     // Check content type before parsing JSON
     const contentType = response.headers.get('content-type');
-    console.log('Token refresh content type:', contentType);
     
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
-      console.log('Non-JSON response from token refresh:', text);
       throw new Error('Token refresh returned non-JSON response');
     }
 
     const data: AuthResponse = await response.json();
-    console.log('Token refresh data:', data);
     // Use the same storage type as before
     setTokens(data, useLocalStorage);
     setUser(data.user);
@@ -196,11 +164,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     sessionStorage.removeItem('token_expires_at');
 
     const storage = rememberMe ? localStorage : sessionStorage;
-    console.log('Setting tokens with rememberMe:', rememberMe, 'Using storage:', storage === localStorage ? 'localStorage' : 'sessionStorage');
     storage.setItem('access_token', data.access_token);
     storage.setItem('refresh_token', data.refresh_token);
     storage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
-    console.log('Tokens stored successfully');
   };
 
   const clearTokens = () => {
@@ -217,11 +183,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
     setIsLoading(true);
     try {
-      console.log('Login attempt for:', email, 'Remember me:', rememberMe);
-      
       const data = await authApi.login({ email, password });
-      console.log('Login successful, user:', data.user.email);
-      
       setTokens(data, rememberMe);
       setUser(data.user);
     } catch (error) {
@@ -235,10 +197,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (credentials: RegisterCredentials): Promise<void> => {
     setIsLoading(true);
     try {
-      console.log('Register attempt for:', credentials.email);
-      
       const data = await authApi.register(credentials);
-      console.log('Registration successful, user:', data.user.email);
       
       // For registration, we'll use localStorage by default (remember me = true)
       setTokens(data, true);
@@ -317,28 +276,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
     return () => clearInterval(interval);
   }, [user]);
-
-  // Test function to verify remember me functionality
-  const testRememberMe = () => {
-    console.log('=== REMEMBER ME TEST ===');
-    console.log('localStorage tokens:', {
-      access: localStorage.getItem('access_token') ? 'exists' : 'none',
-      refresh: localStorage.getItem('refresh_token') ? 'exists' : 'none',
-      expires: localStorage.getItem('token_expires_at') ? 'exists' : 'none'
-    });
-    console.log('sessionStorage tokens:', {
-      access: sessionStorage.getItem('access_token') ? 'exists' : 'none',
-      refresh: sessionStorage.getItem('refresh_token') ? 'exists' : 'none',
-      expires: sessionStorage.getItem('token_expires_at') ? 'exists' : 'none'
-    });
-    console.log('User authenticated:', !!user);
-    console.log('====================');
-  };
-
-  // Make test function available globally for debugging
-  if (typeof window !== 'undefined') {
-    (window as any).testRememberMe = testRememberMe;
-  }
 
   const value: AuthContextType = {
     user,

@@ -14,9 +14,6 @@ type EmailService struct {
 
 func NewEmailService() *EmailService {
 	apiKey := os.Getenv("RESEND_API_KEY")
-	if apiKey == "" {
-		fmt.Println("Warning: RESEND_API_KEY not set, emails will not be sent")
-	}
 	return &EmailService{
 		client: resend.NewClient(apiKey),
 	}
