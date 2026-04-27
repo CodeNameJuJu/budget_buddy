@@ -149,7 +149,7 @@ export default function UserGuidePage() {
               <div className={cn("flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#88B39B] text-white")}>
                 3
               </div>
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")">
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                 <span className="font-semibold">Create categories</span> to organize your transactions
               </p>
             </div>
@@ -243,6 +243,16 @@ export default function UserGuidePage() {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Widget Descriptions */}
+      <div className="space-y-6">
+        <h2 className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          Dashboard Widgets
+        </h2>
+        <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          Customize your dashboard with these widgets to track what matters most to you. Visit the Customize Dashboard page to enable or disable widgets.
+        </p>
       </div>
 
       {/* Tips Section */}
