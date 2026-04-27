@@ -285,7 +285,7 @@ export default function CustomDashboardPage() {
   }
 
   return (
-    <div className="responsive-margin py-6 xs:py-8">
+    <div className="py-6 xs:py-8">
         {/* Header */}
         <div className="flex items-center justify-between gap-3 mb-6 xs:mb-8" data-tutorial="dashboard">
           <div className="flex-1 min-w-0">

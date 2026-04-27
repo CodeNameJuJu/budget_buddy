@@ -179,7 +179,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="responsive-margin">
+    <div className="py-6 xs:py-8">
       <div className="mb-6 xs:mb-8 flex items-center gap-3 xs:gap-4">
         <div className="relative flex-shrink-0">
           {profilePictureUrl ? (

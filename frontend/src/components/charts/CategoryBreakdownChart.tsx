@@ -79,7 +79,7 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
   }
 
   return (
-    <div className="w-full" style={{ height: isMobile ? 'auto' : '320px' }}>
+    <div className="w-full py-4 xs:py-6" style={{ height: isMobile ? 'auto' : '320px' }}>
       <ResponsiveContainer width="100%" height={isMobile ? 280 : '100%'}>
         <PieChart>
           <Pie
