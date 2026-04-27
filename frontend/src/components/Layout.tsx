@@ -26,17 +26,18 @@ import { useAuth } from "@/hooks"
 import { alertsApi, accountsApi, type Alert } from "@/lib/api"
 import { Badge } from "@/components/ui/badge"
 import { useTheme } from "@/contexts/ThemeContext"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const navItems = [
-  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/guide", icon: BookOpen, label: "User Guide" },
-  { to: "/transactions", icon: ArrowLeftRight, label: "Transactions" },
-  { to: "/categories", icon: Tags, label: "Categories" },
-  { to: "/budgets", icon: PiggyBank, label: "Budgets" },
-  { to: "/savings", icon: Landmark, label: "Savings" },
-  { to: "/analytics", icon: BarChart3, label: "Analytics" },
-  { to: "/alerts", icon: Bell, label: "Alerts" },
-  { to: "/partners", icon: Users, label: "Partners" },
+  { to: "/", icon: LayoutDashboard, label: "Dashboard", tooltip: "View your financial overview and widgets" },
+  { to: "/guide", icon: BookOpen, label: "User Guide", tooltip: "Learn how to use the app" },
+  { to: "/transactions", icon: ArrowLeftRight, label: "Transactions", tooltip: "Manage your income and expenses" },
+  { to: "/categories", icon: Tags, label: "Categories", tooltip: "Organize transactions with categories" },
+  { to: "/budgets", icon: PiggyBank, label: "Budgets", tooltip: "Set and track spending limits" },
+  { to: "/savings", icon: Landmark, label: "Savings", tooltip: "Track your savings goals" },
+  { to: "/analytics", icon: BarChart3, label: "Analytics", tooltip: "Analyze your financial trends" },
+  { to: "/alerts", icon: Bell, label: "Alerts", tooltip: "View important notifications" },
+  { to: "/partners", icon: Users, label: "Partners", tooltip: "Manage shared finances" },
 ]
 
 export default function Layout() {
@@ -290,42 +291,48 @@ export default function Layout() {
           <nav className="flex-1 p-4 xs:p-5 lg:p-6 space-y-1 overflow-y-auto mobile-scroll flex flex-col justify-start">
             <div className="space-y-1">
               {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  onClick={() => {
-                    closeSidebar()
-                    handleNavClick()
-                  }}
-                  className={({ isActive }) =>
-                    cn(
-                      "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
-                      isActive
-                        ? theme === "light"
-                          ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
-                          : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
-                        : theme === "light"
-                          ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24] hover:shadow-md hover:transform hover:translate-x-1"
-                          : "text-[#A7B3AD] hover:bg-[#C9A24A] hover:text-[#E8DCC5] hover:shadow-md hover:transform hover:translate-x-1"
-                    )
-                  }
-                >
-                  <div className={cn(
-                    "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
-                    theme === "light"
-                      ? "group-hover:bg-[#D9B44A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
-                      : "group-hover:bg-[#C9A24A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
-                  )}>
-                    <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
-                    {item.to === "/alerts" && unreadAlertCount > 0 && (
-                      <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 hover:bg-red-600">
-                        {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="truncate font-medium">{item.label}</span>
-                </NavLink>
+                <Tooltip key={item.to}>
+                  <TooltipTrigger asChild>
+                    <NavLink
+                      to={item.to}
+                      end={item.to === "/"}
+                      onClick={() => {
+                        closeSidebar()
+                        handleNavClick()
+                      }}
+                      className={({ isActive }) =>
+                        cn(
+                          "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
+                          isActive
+                            ? theme === "light"
+                              ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
+                              : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
+                            : theme === "light"
+                              ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24] hover:shadow-md hover:transform hover:translate-x-1"
+                              : "text-[#A7B3AD] hover:bg-[#C9A24A] hover:text-[#E8DCC5] hover:shadow-md hover:transform hover:translate-x-1"
+                        )
+                      }
+                    >
+                      <div className={cn(
+                        "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
+                        theme === "light"
+                          ? "group-hover:bg-[#D9B44A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
+                          : "group-hover:bg-[#C9A24A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
+                      )}>
+                        <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
+                        {item.to === "/alerts" && unreadAlertCount > 0 && (
+                          <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 hover:bg-red-600">
+                            {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
+                          </Badge>
+                        )}
+                      </div>
+                      <span className="truncate font-medium">{item.label}</span>
+                    </NavLink>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{item.tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
               ))}
             </div>
           </nav>
