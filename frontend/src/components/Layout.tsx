@@ -427,8 +427,8 @@ export default function Layout() {
                 <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-4 w-4 xs:h-5 xs:w-5 object-cover rounded-full" />
               </div>
               <span className={cn(
-                "font-bold text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E8DCC5]"
+                "brand-name text-sm xs:text-base",
+                theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
               )}>Bêre Bietjie</span>
             </div>
             <button

@@ -112,7 +112,7 @@ export default function UserGuidePage() {
           User Guide
         </h1>
         <p className={cn("text-lg", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-          Learn how to use Bêre Bietjie to manage your finances effectively
+          Learn how to use <span className={cn("brand-name", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>Bêre Bietjie</span> to manage your finances effectively
         </p>
       </div>
 
@@ -126,7 +126,7 @@ export default function UserGuidePage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-            Welcome to Bêre Bietjie! Here's how to get started with managing your finances:
+            Welcome to <span className={cn("brand-name", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>Bêre Bietjie</span>! Here's how to get started with managing your finances:
           </p>
           <div className="space-y-3">
             <div className="flex items-start gap-3">

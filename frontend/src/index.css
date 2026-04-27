@@ -1,5 +1,6 @@
 @import "tw-animate-css";
 @import "@fontsource-variable/geist";
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -526,4 +527,10 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Brand name styling with cursive font and green color */
+.brand-name {
+  font-family: 'Pacifico', cursive;
+  font-weight: 700;
 }

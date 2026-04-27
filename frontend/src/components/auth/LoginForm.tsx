@@ -94,10 +94,10 @@ export const LoginForm: React.FC = () => {
             </svg>
           </div>
           <h2 className={cn(
-            "mt-6 text-center text-3xl font-extrabold",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            "mt-6 text-center text-3xl",
+            theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
           )}>
-            Sign in to Bêre Bietjie
+            <span className="brand-name">Sign in to Bêre Bietjie</span>
           </h2>
           <p className={cn(
             "mt-2 text-center text-sm",

@@ -20,7 +20,10 @@ export default function WelcomeWidget() {
           theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
         )}>
           <Sparkles className="h-5 w-5" />
-          Welcome to Bêre Bietjie!
+          <span className={cn(
+            "brand-name text-2xl xs:text-3xl lg:text-4xl",
+            theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
+          )}>Welcome to Bêre Bietjie!</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
