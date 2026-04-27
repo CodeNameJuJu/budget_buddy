@@ -50,6 +50,7 @@ func UpdateAccount(account *types.Account) error {
 
 	_, err := db.NewUpdate().Model(account).
 		WherePK().
+		Column("name", "email", "currency", "timezone", "savings_balance", "dashboard_layout", "modified_date").
 		Returning("*").
 		Exec(context.Background())
 	return err
