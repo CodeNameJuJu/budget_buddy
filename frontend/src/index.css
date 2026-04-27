@@ -1,5 +1,4 @@
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 @tailwind base;
 @tailwind components;
@@ -95,13 +94,9 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground antialiased;
     font-family: "Inter", system-ui, -apple-system, sans-serif;
-    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
     min-height: 100vh;
     /* Mobile-specific improvements */
     -webkit-text-size-adjust: 100%;
