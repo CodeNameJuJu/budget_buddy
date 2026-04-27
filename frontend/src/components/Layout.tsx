@@ -294,7 +294,7 @@ export default function Layout() {
                       }}
                       className={({ isActive }) =>
                         cn(
-                          "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
+                          "group flex items-center gap-2 xs:gap-3 px-2 xs:px-3 py-2 xs:py-2.5 rounded-xl text-sm font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                           isActive
                             ? theme === "light"
                               ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
@@ -306,12 +306,12 @@ export default function Layout() {
                       }
                     >
                       <div className={cn(
-                        "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
+                        "p-1.5 rounded-lg transition-all duration-200 flex-shrink-0 relative",
                         theme === "light"
                           ? "group-hover:bg-[#D9B44A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
                           : "group-hover:bg-[#C9A24A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
                       )}>
-                        <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
+                        <item.icon className="h-4 w-5 xs:h-5 xs:w-5" />
                         {item.to === "/alerts" && unreadAlertCount > 0 && (
                           <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-red-500 hover:bg-red-600">
                             {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
