@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface SpendingTrendsWidgetProps {
   accountId: number
@@ -23,6 +25,7 @@ interface SpendingTrendsData {
 }
 
 export default function SpendingTrendsWidget({ accountId, size }: SpendingTrendsWidgetProps) {
+  const { theme } = useTheme()
   const [data, setData] = useState<SpendingTrendsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -134,7 +137,10 @@ export default function SpendingTrendsWidget({ accountId, size }: SpendingTrends
                 <div key={index} className="flex items-center justify-between text-sm py-2 border-b last:border-0">
                   <div className="font-medium">{trend.month}</div>
                   <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1 text-green-500">
+                    <div className={cn(
+                      "flex items-center gap-1",
+                      isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-500"
+                    )}>
                       <TrendingUp className="h-3 w-3" />
                       <span>{formatCurrency(income.toString())}</span>
                     </div>
@@ -143,7 +149,10 @@ export default function SpendingTrendsWidget({ accountId, size }: SpendingTrends
                       <span>{formatCurrency(expenses.toString())}</span>
                     </div>
                     {hasData ? (
-                      <div className={`font-semibold min-w-[80px] text-right ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                      <div className={cn(
+                        "font-semibold min-w-[80px] text-right",
+                        isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-500"
+                      )}>
                         {isPositive ? '+' : ''}{formatCurrency(net.toString())}
                       </div>
                     ) : (

@@ -17,8 +17,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { dashboardApi, budgetsApi, savingsApi, alertsApi, accountsApi, type DashboardSummary, type Budget, type SavingsPot, type Alert, type Account } from "@/lib/api"
 import { formatCurrency, formatDate, formatPercentage } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function DashboardPage() {
+  const { theme } = useTheme()
   const [accountId, setAccountId] = useState<number | null>(null)
   const [summary, setSummary] = useState<DashboardSummary | null>(null)
   const [budgets, setBudgets] = useState<Budget[]>([])
@@ -472,7 +475,10 @@ export default function DashboardPage() {
       <Card className="card-hover">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <div className="p-2 rounded-full bg-green-600 text-white transition-colors duration-200">
+            <div className={cn(
+              "p-2 rounded-full text-white transition-colors duration-200",
+              theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
+            )}>
               <Activity className="h-4 w-4" />
             </div>
             Financial Health Score
@@ -483,7 +489,10 @@ export default function DashboardPage() {
             <div className="flex-1">
               <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-green-400">78</div>
+                  <div className={cn(
+                    "text-4xl font-bold",
+                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                  )}>78</div>
                   <p className="text-sm text-muted-foreground">Good Health</p>
                 </div>
                 <div className="flex-1 space-y-2">
@@ -504,9 +513,15 @@ export default function DashboardPage() {
             </div>
             <div className="ml-8">
               <div className="w-20 h-20 rounded-full border-4 border-zinc-600 relative">
-                <div className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent border-r-transparent transform rotate-45"></div>
+                <div className={cn(
+                  "absolute inset-0 rounded-full border-4 border-t-transparent border-r-transparent transform rotate-45",
+                  theme === "light" ? "border-[#9EC489]" : "border-[#9EC489]"
+                )}></div>
                 <div className="absolute inset-2 flex items-center justify-center">
-                  <span className="text-lg font-bold text-green-400">78%</span>
+                  <span className={cn(
+                    "text-lg font-bold",
+                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                  )}>78%</span>
                 </div>
               </div>
             </div>

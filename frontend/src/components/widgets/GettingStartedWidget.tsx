@@ -55,8 +55,14 @@ export default function GettingStartedWidget() {
             className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/80 transition-colors"
             onClick={() => navigate("/categories")}
           >
-            <div className="bg-green-100 p-2 rounded-full">
-              <PiggyBank className="h-4 w-4 text-green-600" />
+            <div className={cn(
+              "p-2 rounded-full",
+              theme === "light" ? "bg-[#9EC489]/20" : "bg-[#9EC489]/20"
+            )}>
+              <PiggyBank className={cn(
+                "h-4 w-4",
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+              )} />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-sm">Add Categories</h4>

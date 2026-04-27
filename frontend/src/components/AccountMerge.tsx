@@ -6,8 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { accountMergeApi, type AccountMergeToken } from "@/lib/api"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function AccountMerge() {
+  const { theme } = useTheme()
   const [pendingTokens, setPendingTokens] = useState<AccountMergeToken[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -91,7 +94,12 @@ export default function AccountMerge() {
         )
       case "accepted":
         return (
-          <Badge variant="secondary" className="bg-green-800/30 text-green-300">
+          <Badge className={cn(
+            "border",
+            theme === "light"
+              ? "bg-[#9EC489]/20 text-[#9EC489] border-[#9EC489]/40"
+              : "bg-[#9EC489]/20 text-[#B8D5A8] border-[#9EC489]/40"
+          )}>
             <CheckCircle className="w-3 h-3 mr-1" />
             Accepted
           </Badge>
@@ -168,7 +176,11 @@ export default function AccountMerge() {
                   token: mergeToken,
                 } as AccountMergeToken)
               }
-              className="bg-green-600 hover:bg-green-700"
+              className={cn(
+                theme === "light"
+                  ? "bg-[#9EC489] hover:bg-[#7BA35E]"
+                  : "bg-[#9EC489] hover:bg-[#7BA35E]"
+              )}
             >
               <CheckCircle className="h-4 w-4 mr-1" />
               Accept Merge
@@ -291,7 +303,11 @@ export default function AccountMerge() {
                   <Button
                     size="sm"
                     onClick={() => handleAcceptMerge(token)}
-                    className="bg-green-600 hover:bg-green-700"
+                    className={cn(
+                      theme === "light"
+                        ? "bg-[#9EC489] hover:bg-[#7BA35E]"
+                        : "bg-[#9EC489] hover:bg-[#7BA35E]"
+                    )}
                   >
                     <CheckCircle className="h-4 w-4 mr-1" />
                     Accept

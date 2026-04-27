@@ -427,7 +427,7 @@
   }
   
   .status-indicator.online {
-    @apply bg-green-500/20 text-green-400 border border-green-500/30;
+    @apply bg-primary/20 text-primary border border-primary/30;
   }
   
   .status-indicator.offline {

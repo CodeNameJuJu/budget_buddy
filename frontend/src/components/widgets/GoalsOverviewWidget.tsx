@@ -184,7 +184,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                       "font-medium",
                       isCompleted
                         ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
-                        : "text-green-400"
+                        : (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                     )}>
                       {progress.toFixed(0)}%
                     </span>

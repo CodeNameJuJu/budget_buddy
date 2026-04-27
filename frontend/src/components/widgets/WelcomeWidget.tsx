@@ -46,7 +46,12 @@ export default function WelcomeWidget() {
             <CheckCircle className="h-3 w-3 mr-1" />
             Account Created
           </Badge>
-          <Badge className="bg-green-800/30 text-green-300 border border-green-700/50">
+          <Badge className={cn(
+            "border",
+            theme === "light"
+              ? "bg-[#9EC489]/20 text-[#9EC489] border-[#9EC489]/40"
+              : "bg-[#9EC489]/20 text-[#B8D5A8] border-[#9EC489]/40"
+          )}>
             <CheckCircle className="h-3 w-3 mr-1" />
             Ready to Start
           </Badge>
