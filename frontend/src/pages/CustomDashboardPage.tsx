@@ -56,10 +56,11 @@ export default function CustomDashboardPage() {
         if (account.dashboard_layout) {
           console.log("Loaded layout from account:", account.dashboard_layout)
           const layout = JSON.parse(account.dashboard_layout)
-          setWidgets(layout)
+          const arrangedLayout = autoArrangeWidgets(layout)
+          setWidgets(arrangedLayout)
           // Initialize layouts for react-grid-layout
           const initialLayouts: { [key: string]: Layout[] } = {
-            lg: layout.map((w: Widget) => ({
+            lg: arrangedLayout.map((w: Widget) => ({
               i: w.id,
               x: w.position.x,
               y: w.position.y,
@@ -71,7 +72,7 @@ export default function CustomDashboardPage() {
           }
           setLayouts(initialLayouts)
           // Save to session storage
-          sessionStorage.setItem(`dashboard-layout-${accountId}`, account.dashboard_layout)
+          sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(arrangedLayout))
         } else {
           console.log("No layout in account, trying session storage")
           // Try session storage as fallback
@@ -79,9 +80,10 @@ export default function CustomDashboardPage() {
           if (sessionLayout) {
             console.log("Loaded layout from session storage:", sessionLayout)
             const layout = JSON.parse(sessionLayout)
-            setWidgets(layout)
+            const arrangedLayout = autoArrangeWidgets(layout)
+            setWidgets(arrangedLayout)
             const initialLayouts: { [key: string]: Layout[] } = {
-              lg: layout.map((w: Widget) => ({
+              lg: arrangedLayout.map((w: Widget) => ({
                 i: w.id,
                 x: w.position.x,
                 y: w.position.y,
@@ -319,7 +321,59 @@ export default function CustomDashboardPage() {
     }
   }
 
-  // Clean layout with proper widget sizing
+  // Auto-arrange widgets to prevent overlap
+  function autoArrangeWidgets(widgetsToArrange: Widget[]): Widget[] {
+    const arranged: Widget[] = []
+    let currentY = 0
+    let currentX = 0
+    const cols = 12
+
+    widgetsToArrange.forEach(widget => {
+      const w = widget.position.w
+      const h = widget.position.h
+
+      // If current widget doesn't fit in current row, move to next row
+      if (currentX + w > cols) {
+        currentX = 0
+        currentY += h
+      }
+
+      arranged.push({
+        ...widget,
+        position: { x: currentX, y: currentY, w, h }
+      })
+
+      currentX += w
+    })
+
+    return arranged
+  }
+
+  async function resetLayout() {
+    if (!accountId) return
+    const defaultLayout = getCustomLayout()
+    setWidgets(defaultLayout)
+    const initialLayouts: { [key: string]: Layout[] } = {
+      lg: defaultLayout.map((w: Widget) => ({
+        i: w.id,
+        x: w.position.x,
+        y: w.position.y,
+        w: w.position.w,
+        h: w.position.h,
+        minW: 3,
+        minH: 2,
+      })),
+    }
+    setLayouts(initialLayouts)
+    // Save to database
+    const layoutJson = JSON.stringify(defaultLayout)
+    sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
+    try {
+      await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+    } catch (error) {
+      console.error("Failed to reset layout", error)
+    }
+  }
   function getCustomLayout(): Widget[] {
     return [
       {
@@ -607,6 +661,20 @@ export default function CustomDashboardPage() {
                   "Save Layout"
                 )}
               </Button>
+
+              {/* Reset Layout Button */}
+              <Button
+                onClick={resetLayout}
+                variant="outline"
+                className={cn(
+                  "w-full transition-all duration-200",
+                  theme === "light"
+                    ? "border-[#C5C0B5] text-[#5A6B55] hover:bg-[#D4C4A8] hover:border-[#9EC489]/50 hover:text-[#2D3A28]"
+                    : "border-[#3A4038] text-[#B8B3A8] hover:bg-[#4A5048] hover:border-[#9EC489]/50 hover:text-[#E8E3D8]"
+                )}
+              >
+                Reset to Default Layout
+              </Button>
             </CardContent>
           </Card>
         )}
@@ -624,9 +692,9 @@ export default function CustomDashboardPage() {
           useCSSTransforms={true}
           margin={[12, 12]}
           containerPadding={[12, 12]}
-          compactType="vertical"
           preventCollision={true}
           isBounded={true}
+          allowOverlap={false}
         >
           {accountId && widgets
             .filter(w => w.is_visible)
