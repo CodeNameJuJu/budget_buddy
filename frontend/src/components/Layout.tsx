@@ -257,7 +257,7 @@ export default function Layout() {
                   <p className={cn(
                     "text-xs xs:text-sm hidden md:block",
                     theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
-                  )}>Your elegant financial companion</p>
+                  )}>Your local financial companion</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
