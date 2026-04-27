@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
 import WidgetRenderer from "@/components/widgets/WidgetRenderer"
-import { accountsApi, dashboardApi } from "@/lib/api"
+import { accountsApi, dashboardApi, dashboardLayoutsApi } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
