@@ -25,14 +25,10 @@ export interface SelectValueProps extends React.SpanHTMLAttributes<HTMLSpanEleme
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, ...props }, ref) => {
-    const { theme } = useTheme()
     return (
       <select
         className={cn(
-          "flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          theme === "light"
-            ? "border-[#E6E0D6] bg-white placeholder:text-[#6C7A73] focus-visible:ring-[#6BAF92]"
-            : "border-[#2E3B35] bg-[#18231D] placeholder:text-[#A7B3AD] focus-visible:ring-[#6BAF92]",
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-muted-foreground focus-visible:ring-ring",
           className
         )}
         ref={ref}
@@ -47,14 +43,10 @@ Select.displayName = "Select"
 
 const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
   ({ className, children, ...props }, ref) => {
-    const { theme } = useTheme()
     return (
       <button
         className={cn(
-          "flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          theme === "light"
-            ? "border-[#E6E0D6] bg-white placeholder:text-[#6C7A73] focus-visible:ring-[#6BAF92]"
-            : "border-[#2E3B35] bg-[#18231D] placeholder:text-[#A7B3AD] focus-visible:ring-[#6BAF92]",
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-muted-foreground focus-visible:ring-ring",
           className
         )}
         ref={ref}
@@ -69,14 +61,10 @@ SelectTrigger.displayName = "SelectTrigger"
 
 const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
   ({ className, children, ...props }, ref) => {
-    const { theme } = useTheme()
     return (
       <div
         className={cn(
-          "relative z-50 min-w-[8rem] overflow-hidden rounded-md border shadow-md",
-          theme === "light"
-            ? "border-[#E6E0D6] bg-white text-[#1F2A24]"
-            : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]",
+          "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-input bg-popover text-popover-foreground shadow-md",
           className
         )}
         ref={ref}
@@ -91,14 +79,10 @@ SelectContent.displayName = "SelectContent"
 
 const SelectItem = React.forwardRef<HTMLOptionElement, SelectItemProps>(
   ({ className, children, ...props }, ref) => {
-    const { theme } = useTheme()
     return (
       <option
         className={cn(
-          "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none",
-          theme === "light"
-            ? "focus:bg-[#E8DCC5] focus:text-[#1F2A24]"
-            : "focus:bg-[#2E3B35] focus:text-[#E7EFEA]",
+          "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground",
           className
         )}
         ref={ref}
