@@ -79,16 +79,16 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
   }
 
   return (
-    <div className="w-full py-4 xs:py-6" style={{ height: isMobile ? 'auto' : '320px' }}>
-      <ResponsiveContainer width="100%" height={isMobile ? 280 : '100%'}>
+    <div className="w-full pt-6 xs:pt-8 pb-4 xs:pb-6" style={{ height: isMobile ? 'auto' : '320px' }}>
+      <ResponsiveContainer width="100%" height={isMobile ? 350 : '100%'}>
         <PieChart>
           <Pie
             data={chartData}
             cx={isMobile ? "50%" : "40%"}
-            cy="50%"
+            cy={isMobile ? "45%" : "50%"}
             labelLine={false}
             label={renderCustomLabel}
-            outerRadius={isMobile ? 70 : 80}
+            outerRadius={isMobile ? 60 : 80}
             fill="#8884d8"
             dataKey="value"
           >
@@ -101,7 +101,7 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
             verticalAlign={isMobile ? "bottom" : "middle"}
             align={isMobile ? "center" : "right"}
             layout={isMobile ? "horizontal" : "vertical"}
-            wrapperStyle={isMobile ? { paddingTop: '20px' } : {}}
+            wrapperStyle={isMobile ? { paddingTop: '10px', paddingBottom: '10px' } : {}}
             formatter={(value: any, entry: any) => [
               `${entry.payload.name}: ${formatCurrency(entry.payload.value)}`,
               ''
