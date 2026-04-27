@@ -49,20 +49,27 @@ func UpdateAccount(account *types.Account) error {
 	now := time.Now()
 	account.ModifiedDate = &now
 
-	_, err := db.NewUpdate().Model(account).
-		WherePK().
-		OmitZero().
-		ExcludeColumn("created_date", "deleted_date").
+	// Use raw SQL to update, ensuring dashboard_layout is included
+	result, err := db.NewUpdate().
+		Table("accounts").
+		Where("id = ?", account.ID).
+		Set("name = ?", account.Name).
+		Set("email = ?", account.Email).
+		Set("currency = ?", account.Currency).
+		Set("timezone = ?", account.Timezone).
+		Set("savings_balance = ?", account.SavingsBalance).
+		Set("dashboard_layout = ?", account.DashboardLayout).
+		Set("modified_date = ?", account.ModifiedDate).
 		Returning("*").
 		Exec(context.Background())
 
-	// Re-query the account to ensure all fields are populated
-	if err == nil {
-		err = db.NewSelect().Model(account).
-			WherePK().
-			Column("a.*").
-			Scan(context.Background())
+	if err != nil {
+		return err
 	}
 
-	return err
+	// Scan the result back into the account struct
+	return db.NewSelect().Model(account).
+		Where("id = ?", account.ID).
+		Column("a.*").
+		Scan(context.Background())
 }
