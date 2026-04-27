@@ -257,6 +257,26 @@ export default function CustomDashboardPage() {
     ]
   }
 
+  function getWidgetDescription(widgetType: string): string {
+    const descriptions: { [key: string]: string } = {
+      welcome: "Personalized welcome message and quick introduction to the app",
+      getting_started: "Step-by-step guide to help you get started with BudgetBuddy",
+      recent_transactions: "View your latest transactions and quickly add new ones",
+      savings_withdrawals: "Track your savings withdrawals and deposits",
+      spending_trends: "Visualize your spending patterns over time",
+      goals_overview: "Monitor progress toward your savings goals",
+      budget_progress: "Track how much of your budget you've used",
+      balance: "View your account balance and financial summary",
+      account_summary: "Overview of all your linked accounts",
+      category_breakdown: "See spending breakdown by category",
+      monthly_comparison: "Compare your spending across different months",
+      upcoming_bills: "Track upcoming bills and due dates",
+      alerts: "View important alerts and notifications",
+      financial_health: "Assess your overall financial health score"
+    }
+    return descriptions[widgetType] || "Custom widget for your dashboard"
+  }
+
   if (loading) {
     return (
       <div className="space-y-4 xs:space-y-6">
@@ -369,27 +389,35 @@ export default function CustomDashboardPage() {
                     <div
                       key={widget.id || widget.type}
                       className={cn(
-                        "flex items-center gap-3 p-4 rounded-xl border transition-all duration-200",
+                        "flex flex-col gap-2 p-4 rounded-xl border transition-all duration-200",
                         theme === "light"
                           ? "bg-white/60 border-[#E6E0D6]/50 hover:border-[#6BAF92]"
                           : "bg-[#18231D]/60 border-[#2E3B35]/50 hover:border-[#6BAF92]"
                       )}
                     >
-                      <input
-                        type="checkbox"
-                        checked={widget.is_visible || false}
-                        onChange={() => widget.id ? toggleWidgetVisibility(widget.id) : addWidget(widget.type, widget.name)}
-                        className={cn(
-                          "w-5 h-5 rounded cursor-pointer",
-                          theme === "light"
-                            ? "border-[#E6E0D6] bg-white text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
-                            : "border-[#2E3B35] bg-[#18231D] text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
-                        )}
-                      />
-                      <span className={cn(
-                        "font-medium",
-                        theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
-                      )}>{widget.title || widget.name}</span>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={widget.is_visible || false}
+                          onChange={() => widget.id ? toggleWidgetVisibility(widget.id) : addWidget(widget.type, widget.name)}
+                          className={cn(
+                            "w-5 h-5 rounded cursor-pointer flex-shrink-0",
+                            theme === "light"
+                              ? "border-[#E6E0D6] bg-white text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
+                              : "border-[#2E3B35] bg-[#18231D] text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
+                          )}
+                        />
+                        <span className={cn(
+                          "font-medium text-sm",
+                          theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                        )}>{widget.title || widget.name}</span>
+                      </div>
+                      <p className={cn(
+                        "text-xs",
+                        theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                      )}>
+                        {getWidgetDescription(widget.type)}
+                      </p>
                     </div>
                   ))}
                 </div>
