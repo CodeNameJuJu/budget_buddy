@@ -15,7 +15,7 @@ func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 
 	// Use raw SQL to ensure dashboard_layout is included
 	query := db.NewSelect().
-		ColumnExpr("a.*").
+		ColumnExpr("a.id, a.name, a.email, a.currency, a.timezone, a.savings_balance, a.dashboard_layout, a.created_date, a.modified_date, a.deleted_date").
 		TableExpr("accounts AS a").
 		Where("a.deleted_date IS NULL")
 
