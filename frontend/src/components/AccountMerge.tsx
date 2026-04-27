@@ -87,7 +87,7 @@ export default function AccountMerge() {
     switch (status) {
       case "pending":
         return (
-          <Badge variant="secondary" className={cn(theme === "light" ? "bg-[#D9B44A]/30 text-[#D9B44A]" : "bg-[#C9A24A]/30 text-[#C9A24A]")}>
+          <Badge variant="secondary" className={cn(theme === "light" ? "bg-[#6BAF92]/30 text-[#6BAF92]" : "bg-[#88B39B]/30 text-[#88B39B]")}>
             <Clock className="w-3 h-3 mr-1" />
             Pending
           </Badge>
@@ -106,7 +106,7 @@ export default function AccountMerge() {
         )
       case "expired":
         return (
-          <Badge variant="secondary" className="bg-red-800/30 text-red-300">
+          <Badge variant="secondary" className="bg-[#DC2626]/30 text-[#DC2626]">
             <XCircle className="w-3 h-3 mr-1" />
             Expired
           </Badge>

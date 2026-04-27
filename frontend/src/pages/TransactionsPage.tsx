@@ -312,7 +312,7 @@ export default function TransactionsPage() {
                           <p className="mobile-text font-medium truncate">
                             {t.description || "Untitled transaction"}
                           </p>
-                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={cn("text-xs", t.type === "income" ? (theme === "light" ? "bg-[#D9B44A]/30 text-[#D9B44A] border-[#D9B44A]/50" : "bg-[#C9A24A]/30 text-[#C9A24A] border-[#C9A24A]/50") : "bg-red-800/30 text-red-300 border-red-700/50")}>
+                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={cn("text-xs", t.type === "income" ? (theme === "light" ? "bg-[#6BAF92]/30 text-[#6BAF92] border-[#6BAF92]/50" : "bg-[#88B39B]/30 text-[#88B39B] border-[#88B39B]/50") : "bg-[#DC2626]/30 text-[#DC2626] border-[#DC2626]/50")}>
                             {t.type}
                           </Badge>
                         </div>
