@@ -43,10 +43,13 @@ export default function CustomDashboardPage() {
   }, [accountId])
 
   async function loadWidgets() {
+    console.log("loadWidgets called, accountId:", accountId)
     try {
       const response = await accountsApi.getMyAccount()
+      console.log("getMyAccount response:", response.data)
       if (response.data && response.data.length > 0) {
         const account = response.data[0]
+        console.log("Account dashboard_layout:", account.dashboard_layout)
         if (account.dashboard_layout) {
           const layout = JSON.parse(account.dashboard_layout)
           setWidgets(layout)
