@@ -150,7 +150,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
               <div className="text-xs text-muted-foreground mb-1 truncate">Balance</div>
               <div className={cn(
                 "text-sm font-bold truncate",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
               )}>{formatCurrency(data.total_balance)}</div>
             </div>
             <div className={cn(
@@ -171,7 +171,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
               <div className="text-xs text-muted-foreground mb-1 truncate">Available</div>
               <div className={cn(
                 "text-sm font-bold truncate",
-                unallocated >= 0 ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]") : "text-red-400"
+                unallocated >= 0 ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-400"
               )}>
                 {formatCurrency(Math.abs(unallocated))}
               </div>
@@ -183,23 +183,23 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
             <div className={cn(
               "p-3 rounded-lg border",
               theme === "light"
-                ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
-                : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+                ? "bg-[#9EC489]/10 border-[#9EC489]/20"
+                : "bg-[#9EC489]/10 border-[#9EC489]/20"
             )}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <TrendingUp className={cn(
                     "h-4 w-4",
-                    theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
                   )} />
                   <span className={cn(
                     "text-sm",
-                    theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
                   )}>Monthly Contribution</span>
                 </div>
                 <div className={cn(
                   "text-sm font-bold",
-                  theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                  theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
                 )}>
                   {formatCurrency(data.monthly_contribution)}
                 </div>

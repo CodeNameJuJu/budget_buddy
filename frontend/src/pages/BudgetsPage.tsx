@@ -241,7 +241,7 @@ export default function BudgetsPage() {
                     <div className={cn(
                       "p-2 rounded-lg text-white transition-colors duration-200",
                       remaining >= 0
-                        ? (theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]")
+                        ? (theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]")
                         : percentage >= 90 ? "bg-red-500" : "bg-blue-600"
                     )}>
                       {getProgressIcon(percentage)}
@@ -281,7 +281,7 @@ export default function BudgetsPage() {
                     <p className={cn(
                       "text-sm font-medium",
                       remaining >= 0
-                        ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                        ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                         : "text-red-400"
                     )}>
                       {remaining >= 0

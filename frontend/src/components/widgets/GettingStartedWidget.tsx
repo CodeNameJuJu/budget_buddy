@@ -41,7 +41,7 @@ export default function GettingStartedWidget() {
             )}>
               <TrendingUp className={cn(
                 "h-4 w-4",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
               )} />
             </div>
             <div className="flex-1">
@@ -75,7 +75,7 @@ export default function GettingStartedWidget() {
             )}>
               <PlusCircle className={cn(
                 "h-4 w-4",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
               )} />
             </div>
             <div className="flex-1">

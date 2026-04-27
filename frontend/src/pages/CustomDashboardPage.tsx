@@ -409,12 +409,12 @@ export default function CustomDashboardPage() {
             <h1 className={cn(
               "text-2xl xs:text-3xl font-bold bg-clip-text text-transparent flex items-center gap-3",
               theme === "light"
-                ? "bg-gradient-to-r from-[#6B7A4F] to-[#8B9A6B]"
-                : "bg-gradient-to-r from-[#A8B78F] to-[#8B9A6B]"
+                ? "bg-gradient-to-r from-[#7BA35E] to-[#9EC489]"
+                : "bg-gradient-to-r from-[#B8D5A8] to-[#9EC489]"
             )}>
               <LayoutDashboard className={cn(
                 "h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#8B9A6B]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#9EC489]"
               )} />
               Dashboard
             </h1>
@@ -431,8 +431,8 @@ export default function CustomDashboardPage() {
                 ? "text-white shadow-lg"
                 : "border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-slate-500",
               theme === "light"
-                ? isCustomizing ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] shadow-[#8B9A6B]/20" : ""
-                : isCustomizing ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] shadow-[#8B9A6B]/20" : ""
+                ? isCustomizing ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20" : ""
+                : isCustomizing ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20" : ""
             )}
           >
             {isCustomizing ? (
@@ -444,7 +444,7 @@ export default function CustomDashboardPage() {
               <>
                 <Settings className={cn(
                   "h-5 w-5 mr-2",
-                  theme === "light" ? "text-[#8B9A6B]" : "text-[#8B9A6B]"
+                  theme === "light" ? "text-[#9EC489]" : "text-[#9EC489]"
                 )} />
                 Customize
               </>
@@ -462,7 +462,7 @@ export default function CustomDashboardPage() {
             <div className="flex items-center gap-2 mb-3">
               <span className={cn(
                 "w-2 h-2 rounded-full",
-                theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+                theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
               )}></span>
               <p className={cn(
                 "text-sm font-medium",
@@ -495,7 +495,7 @@ export default function CustomDashboardPage() {
               )}>
                 <Settings className={cn(
                   "h-5 w-5",
-                  theme === "light" ? "text-[#8B9A6B]" : "text-[#8B9A6B]"
+                  theme === "light" ? "text-[#9EC489]" : "text-[#9EC489]"
                 )} />
                 Customize Dashboard
               </CardTitle>
@@ -509,7 +509,7 @@ export default function CustomDashboardPage() {
                 )}>
                   <span className={cn(
                     "w-2 h-2 rounded-full",
-                    theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+                    theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
                   )}></span>
                   Current Widgets
                 </h3>
@@ -520,8 +520,8 @@ export default function CustomDashboardPage() {
                       className={cn(
                         "flex items-center justify-between p-4 rounded-xl border hover:border transition-all duration-200",
                         theme === "light"
-                          ? "bg-white/60 border-[#C5C0B5]/50 hover:border-[#8B9A6B]"
-                          : "bg-[#242824]/60 border-[#3A4038]/50 hover:border-[#8B9A6B]"
+                          ? "bg-white/60 border-[#C5C0B5]/50 hover:border-[#9EC489]"
+                          : "bg-[#242824]/60 border-[#3A4038]/50 hover:border-[#9EC489]"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -532,8 +532,8 @@ export default function CustomDashboardPage() {
                           className={cn(
                             "w-5 h-5 rounded cursor-pointer",
                             theme === "light"
-                              ? "border-[#C5C0B5] bg-white text-[#8B9A6B] focus:ring-[#8B9A6B] focus:ring-offset-0"
-                              : "border-[#3A4038] bg-[#242824] text-[#8B9A6B] focus:ring-[#8B9A6B] focus:ring-offset-0"
+                              ? "border-[#C5C0B5] bg-white text-[#9EC489] focus:ring-[#9EC489] focus:ring-offset-0"
+                              : "border-[#3A4038] bg-[#242824] text-[#9EC489] focus:ring-[#9EC489] focus:ring-offset-0"
                           )}
                         />
                         <span className={cn(
@@ -575,8 +575,8 @@ export default function CustomDashboardPage() {
                           className={cn(
                             "justify-start transition-all duration-200",
                             theme === "light"
-                              ? "border-[#C5C0B5] text-[#5A6B55] hover:bg-[#D4C4A8] hover:border-[#8B9A6B]/50 hover:text-[#2D3A28]"
-                              : "border-[#3A4038] text-[#B8B3A8] hover:bg-[#4A5048] hover:border-[#8B9A6B]/50 hover:text-[#E8E3D8]"
+                              ? "border-[#C5C0B5] text-[#5A6B55] hover:bg-[#D4C4A8] hover:border-[#9EC489]/50 hover:text-[#2D3A28]"
+                              : "border-[#3A4038] text-[#B8B3A8] hover:bg-[#4A5048] hover:border-[#9EC489]/50 hover:text-[#E8E3D8]"
                           )}
                         >
                           <Plus className="h-4 w-4 mr-2" />
@@ -594,8 +594,8 @@ export default function CustomDashboardPage() {
                 className={cn(
                   "w-full text-white font-medium shadow-lg transition-all duration-200",
                   theme === "light"
-                    ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] shadow-[#8B9A6B]/20"
-                    : "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] shadow-[#8B9A6B]/20"
+                    ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20"
+                    : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20"
                 )}
               >
                 {isSaving ? (

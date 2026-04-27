@@ -54,7 +54,7 @@ export default function VerifyEmailPage() {
           <div className="text-center">
             <div className={cn(
               "animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4",
-              theme === "light" ? "border-[#8B9A6B]" : "border-[#A8B78F]"
+              theme === "light" ? "border-[#9EC489]" : "border-[#B8D5A8]"
             )}></div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
@@ -70,11 +70,11 @@ export default function VerifyEmailPage() {
           <div className="text-center">
             <div className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
-              theme === "light" ? "bg-[#8B9A6B]/20" : "bg-[#8B9A6B]/20"
+              theme === "light" ? "bg-[#9EC489]/20" : "bg-[#9EC489]/20"
             )}>
               <svg className={cn(
                 "w-8 h-8",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
               )} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -109,8 +109,8 @@ export default function VerifyEmailPage() {
               className={cn(
                 "px-6 py-2 rounded-lg transition-colors",
                 theme === "light"
-                  ? "bg-[#8B9A6B] hover:bg-[#6B7A4F] text-white"
-                  : "bg-[#8B9A6B] hover:bg-[#6B7A4F] text-white"
+                  ? "bg-[#9EC489] hover:bg-[#7BA35E] text-white"
+                  : "bg-[#9EC489] hover:bg-[#7BA35E] text-white"
               )}
             >
               Go to Profile

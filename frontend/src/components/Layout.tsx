@@ -242,8 +242,8 @@ export default function Layout() {
                 <div className={cn(
                   "p-1.5 xs:p-2 rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
                   theme === "light" 
-                    ? "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]" 
-                    : "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+                    ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]" 
+                    : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
                 )}>
                   <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8 object-cover rounded-full" />
                 </div>
@@ -251,8 +251,8 @@ export default function Layout() {
                   <h1 className={cn(
                     "text-lg xs:text-xl lg:text-2xl font-bold bg-clip-text text-transparent",
                     theme === "light"
-                      ? "bg-gradient-to-r from-[#6B7A4F] to-[#8B9A6B]"
-                      : "bg-gradient-to-r from-[#A8B78F] to-[#8B9A6B]"
+                      ? "bg-gradient-to-r from-[#7BA35E] to-[#9EC489]"
+                      : "bg-gradient-to-r from-[#B8D5A8] to-[#9EC489]"
                   )}>Bêre Bietjie</h1>
                   <p className={cn(
                     "text-xs xs:text-sm hidden md:block",
@@ -301,8 +301,8 @@ export default function Layout() {
                       "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
                         ? theme === "light"
-                          ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] text-white shadow-lg transform scale-[1.02]"
-                          : "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] text-white shadow-lg transform scale-[1.02]"
+                          ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] text-white shadow-lg transform scale-[1.02]"
+                          : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] text-white shadow-lg transform scale-[1.02]"
                         : theme === "light"
                           ? "text-[#5A6B55] hover:bg-[#D4C4A8] hover:text-[#2D3A28] hover:shadow-md hover:transform hover:translate-x-1"
                           : "text-[#B8B3A8] hover:bg-[#4A5048] hover:text-[#E8E3D8] hover:shadow-md hover:transform hover:translate-x-1"
@@ -312,8 +312,8 @@ export default function Layout() {
                   <div className={cn(
                     "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
                     theme === "light"
-                      ? "group-hover:bg-[#D4C4A8] group-hover:scale-110 group-[.active]:bg-[#8B9A6B]/50"
-                      : "group-hover:bg-[#4A5048] group-hover:scale-110 group-[.active]:bg-[#8B9A6B]/50"
+                      ? "group-hover:bg-[#D4C4A8] group-hover:scale-110 group-[.active]:bg-[#9EC489]/50"
+                      : "group-hover:bg-[#4A5048] group-hover:scale-110 group-[.active]:bg-[#9EC489]/50"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                     {item.to === "/alerts" && unreadAlertCount > 0 && (
@@ -338,8 +338,8 @@ export default function Layout() {
               className={cn(
                 "group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button shadow-lg hover:shadow-xl border",
                 theme === "light"
-                  ? "bg-gradient-to-r from-[#8B9A6B]/20 to-[#6B7A4F]/20 text-[#5A6B55] hover:from-[#8B9A6B]/30 hover:to-[#6B7A4F]/30 hover:text-[#2D3A28] border-[#8B9A6B]/30 hover:border-[#8B9A6B]/50"
-                  : "bg-gradient-to-r from-[#8B9A6B]/20 to-[#6B7A4F]/20 text-[#B8B3A8] hover:from-[#8B9A6B]/30 hover:to-[#6B7A4F]/30 hover:text-[#E8E3D8] border-[#8B9A6B]/30 hover:border-[#8B9A6B]/50"
+                  ? "bg-gradient-to-r from-[#9EC489]/20 to-[#7BA35E]/20 text-[#5A6B55] hover:from-[#9EC489]/30 hover:to-[#7BA35E]/30 hover:text-[#2D3A28] border-[#9EC489]/30 hover:border-[#9EC489]/50"
+                  : "bg-gradient-to-r from-[#9EC489]/20 to-[#7BA35E]/20 text-[#B8B3A8] hover:from-[#9EC489]/30 hover:to-[#7BA35E]/30 hover:text-[#E8E3D8] border-[#9EC489]/30 hover:border-[#9EC489]/50"
               )}
             >
               {user?.profile_picture_url ? (
@@ -348,13 +348,13 @@ export default function Layout() {
                   alt="Profile" 
                   className={cn(
                     "w-8 h-8 xs:w-10 xs:h-10 rounded-full object-cover border-2 group-hover:scale-110 transition-all duration-200 flex-shrink-0",
-                    theme === "light" ? "border-[#8B9A6B]" : "border-[#8B9A6B]"
+                    theme === "light" ? "border-[#9EC489]" : "border-[#9EC489]"
                   )}
                 />
               ) : (
                 <div className={cn(
                   "p-2 rounded-lg transition-all duration-200 flex-shrink-0 group-hover:scale-110",
-                  theme === "light" ? "bg-[#8B9A6B]/30 group-hover:bg-[#8B9A6B]/50" : "bg-[#8B9A6B]/30 group-hover:bg-[#8B9A6B]/50"
+                  theme === "light" ? "bg-[#9EC489]/30 group-hover:bg-[#9EC489]/50" : "bg-[#9EC489]/30 group-hover:bg-[#9EC489]/50"
                 )}>
                   <User className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
@@ -427,8 +427,8 @@ export default function Layout() {
               <div className={cn(
                 "p-1 xs:p-1.5 rounded-full text-white shadow-md transition-transform duration-300 hover:scale-110",
                 theme === "light"
-                  ? "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
-                  : "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+                  ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
+                  : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
               )}>
                 <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-4 w-4 xs:h-5 xs:w-5 object-cover rounded-full" />
               </div>

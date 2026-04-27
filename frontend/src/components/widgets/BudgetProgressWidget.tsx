@@ -202,7 +202,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                       <span className={cn(
                         isOverBudget ? "text-red-400 font-medium" :
                           isNearLimit ? "text-yellow-400" :
-                          (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                          (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                       )}>
                         {budget.progress.toFixed(0)}%
                       </span>
@@ -276,7 +276,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                         <div className={cn(
                           "font-semibold",
                           transaction.type === "income"
-                            ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                            ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                             : "text-red-400"
                         )}>
                           {transaction.type === "income" ? "+" : "-"}{formatCurrency(transaction.amount)}

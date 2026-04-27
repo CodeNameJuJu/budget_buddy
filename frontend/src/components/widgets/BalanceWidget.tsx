@@ -91,7 +91,7 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
           <div className="flex items-center justify-center py-2">
             <div className={cn(
               "text-3xl font-bold",
-              isPositive ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]") : "text-red-400"
+              isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-400"
             )}>
               {isPositive ? '+' : ''}{formatCurrency(data.balance)}
             </div>
@@ -101,19 +101,19 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
             <div className={cn(
               "flex flex-col items-center gap-1 p-2 rounded-lg border",
               theme === "light"
-                ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
-                : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+                ? "bg-[#9EC489]/10 border-[#9EC489]/20"
+                : "bg-[#9EC489]/10 border-[#9EC489]/20"
             )}>
               <div className={cn(
                 "flex items-center gap-1",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
               )}>
                 <TrendingUp className="h-3 w-3" />
                 <span className="text-xs">Income</span>
               </div>
               <span className={cn(
                 "font-semibold",
-                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
               )}>{formatCurrency(data.income)}</span>
             </div>
             <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-red-500/10 border border-red-500/20">

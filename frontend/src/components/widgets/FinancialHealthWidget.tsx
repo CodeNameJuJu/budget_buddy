@@ -33,14 +33,14 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
   }
 
   function getStatusColor(score: number): string {
-    if (score >= 80) return theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+    if (score >= 80) return theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
     if (score >= 60) return "text-yellow-400"
     if (score >= 40) return "text-orange-400"
     return "text-red-400"
   }
 
   function getStatusBgColor(score: number): string {
-    if (score >= 80) return theme === "light" ? "bg-[#8B9A6B]/20 border-[#8B9A6B]/50" : "bg-[#8B9A6B]/20 border-[#8B9A6B]/50"
+    if (score >= 80) return theme === "light" ? "bg-[#9EC489]/20 border-[#9EC489]/50" : "bg-[#9EC489]/20 border-[#9EC489]/50"
     if (score >= 60) return "bg-yellow-500/20 border-yellow-500/50"
     if (score >= 40) return "bg-orange-500/20 border-orange-500/50"
     return "bg-red-500/20 border-red-500/50"
@@ -55,7 +55,7 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
 
   function getMetricColor(value: string): string {
     const numValue = parseFloat(value)
-    if (numValue >= 80) return theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+    if (numValue >= 80) return theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
     if (numValue >= 60) return "text-yellow-400"
     if (numValue >= 40) return "text-orange-400"
     return "text-red-400"

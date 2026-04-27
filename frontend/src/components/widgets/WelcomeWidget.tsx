@@ -11,13 +11,13 @@ export default function WelcomeWidget() {
     <Card className={cn(
       "border",
       theme === "light"
-        ? "bg-gradient-to-br from-[#8B9A6B]/10 to-[#6B7A4F]/10 border-[#8B9A6B]/30"
-        : "bg-gradient-to-br from-[#8B9A6B]/10 to-[#6B7A4F]/10 border-[#8B9A6B]/30"
+        ? "bg-gradient-to-br from-[#9EC489]/10 to-[#7BA35E]/10 border-[#9EC489]/30"
+        : "bg-gradient-to-br from-[#9EC489]/10 to-[#7BA35E]/10 border-[#9EC489]/30"
     )}>
       <CardHeader className="pb-3">
         <CardTitle className={cn(
           "flex items-center gap-2",
-          theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+          theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
         )}>
           <Sparkles className="h-5 w-5" />
           Welcome to Bêre Bietjie!
@@ -40,8 +40,8 @@ export default function WelcomeWidget() {
           <Badge className={cn(
             "border",
             theme === "light"
-              ? "bg-[#8B9A6B]/20 text-[#8B9A6B] border-[#8B9A6B]/40"
-              : "bg-[#8B9A6B]/20 text-[#A8B78F] border-[#8B9A6B]/40"
+              ? "bg-[#9EC489]/20 text-[#9EC489] border-[#9EC489]/40"
+              : "bg-[#9EC489]/20 text-[#B8D5A8] border-[#9EC489]/40"
           )}>
             <CheckCircle className="h-3 w-3 mr-1" />
             Account Created

@@ -113,25 +113,25 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
               <div className={cn(
                 "p-3 rounded-lg border",
                 theme === "light"
-                  ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
-                  : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+                  ? "bg-[#9EC489]/10 border-[#9EC489]/20"
+                  : "bg-[#9EC489]/10 border-[#9EC489]/20"
               )}>
                 <div className={cn(
                   "flex items-center gap-1 mb-1",
-                  theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                  theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
                 )}>
                   <TrendingUp className="h-3 w-3" />
                   <span className={cn(
                     "text-sm font-semibold",
                     incomeChange >= 0
-                      ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                      ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                       : "text-red-400"
                   )}>Income Change</span>
                 </div>
                 <div className={cn(
                   "text-sm font-semibold",
                   incomeChange >= 0
-                    ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                    ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                     : "text-red-400"
                 )}>
                   {incomeChange >= 0 ? '+' : ''}{incomeChange.toFixed(1)}%
@@ -145,7 +145,7 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
                 <div className={cn(
                   "text-sm font-semibold",
                   expenseChange <= 0
-                    ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                    ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                     : "text-red-400"
                 )}>
                   {expenseChange >= 0 ? '+' : ''}{expenseChange.toFixed(1)}%
@@ -171,7 +171,7 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
                     <span className={cn(
                       "font-semibold",
                       net >= 0
-                        ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                        ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
                         : "text-red-400"
                     )}>
                       {formatCurrency(net.toString())}
@@ -182,7 +182,7 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
                       <div
                         className={cn(
                           "w-full rounded-t",
-                          theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+                          theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
                         )}
                         style={{ height: `${Math.max(incomeHeight, 0)}%` }}
                         title={`Income: ${formatCurrency(trend.income)}`}

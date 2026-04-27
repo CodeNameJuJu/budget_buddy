@@ -56,7 +56,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
       case "success":
         return <CheckCircle className={cn(
           "h-4 w-4",
-          theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+          theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
         )} />
       default:
         return <Info className="h-4 w-4 text-blue-400" />
@@ -71,7 +71,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
         return <Badge variant="destructive">Error</Badge>
       case "success":
         return <Badge className={cn(
-          theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+          theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
         )}>Success</Badge>
       default:
         return <Badge variant="outline">Info</Badge>
@@ -180,7 +180,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
                     {!alert.is_read && (
                       <span className={cn(
                         "w-2 h-2 rounded-full flex-shrink-0",
-                        theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+                        theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
                       )}></span>
                     )}
                   </div>

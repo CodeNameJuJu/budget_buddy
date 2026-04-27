@@ -101,8 +101,8 @@ export const RegisterForm: React.FC = () => {
           <div className={cn(
             "mx-auto h-12 w-12 flex items-center justify-center rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
             theme === "light"
-              ? "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
-              : "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+              ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
+              : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
           )}>
             <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -121,7 +121,7 @@ export const RegisterForm: React.FC = () => {
             Already have an account?{' '}
             <Link to="/login" className={cn(
               "font-medium hover:underline",
-              theme === "light" ? "text-[#8B9A6B] hover:text-[#6B7A4F]" : "text-[#A8B78F] hover:text-[#8B9A6B]"
+              theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
             )}>
               Sign in
             </Link>
@@ -146,8 +146,8 @@ export const RegisterForm: React.FC = () => {
                   className={cn(
                     "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                     theme === "light"
-                      ? "border-[#C5C0B5] bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
-                      : "border-[#3A4038] bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                      ? "border-[#C5C0B5] bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      : "border-[#3A4038] bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
                   )}
                   placeholder="First name"
                   value={formData.firstName}
@@ -170,8 +170,8 @@ export const RegisterForm: React.FC = () => {
                   className={cn(
                     "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                     theme === "light"
-                      ? "border-[#C5C0B5] bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
-                      : "border-[#3A4038] bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                      ? "border-[#C5C0B5] bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      : "border-[#3A4038] bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
                   )}
                   placeholder="Last name"
                   value={formData.lastName}
@@ -197,8 +197,8 @@ export const RegisterForm: React.FC = () => {
                   "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                   errors.email ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
                   theme === "light"
-                    ? "bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
-                    : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                    ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                    : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
                 )}
                 placeholder="Enter your email"
                 value={formData.email}
@@ -227,8 +227,8 @@ export const RegisterForm: React.FC = () => {
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                     errors.password ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
                     theme === "light"
-                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
-                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
                   )}
                   placeholder="Create a password"
                   value={formData.password}
@@ -280,8 +280,8 @@ export const RegisterForm: React.FC = () => {
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                     errors.confirmPassword ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
                     theme === "light"
-                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
-                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
                   )}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
@@ -319,8 +319,8 @@ export const RegisterForm: React.FC = () => {
               className={cn(
                 "h-4 w-4 focus:ring-2 rounded transition-colors duration-200",
                 theme === "light"
-                  ? "text-[#8B9A6B] focus:ring-[#8B9A6B] border-[#C5C0B5] bg-white"
-                  : "text-[#8B9A6B] focus:ring-[#8B9A6B] border-[#3A4038] bg-[#242824]"
+                  ? "text-[#9EC489] focus:ring-[#9EC489] border-[#C5C0B5] bg-white"
+                  : "text-[#9EC489] focus:ring-[#9EC489] border-[#3A4038] bg-[#242824]"
               )}
             />
             <label htmlFor="agree-terms" className={cn(
@@ -330,14 +330,14 @@ export const RegisterForm: React.FC = () => {
               I agree to the{' '}
               <Link to="/terms" className={cn(
                 "hover:underline",
-                theme === "light" ? "text-[#8B9A6B] hover:text-[#6B7A4F]" : "text-[#A8B78F] hover:text-[#8B9A6B]"
+                theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
               )}>
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link to="/privacy" className={cn(
                 "hover:underline",
-                theme === "light" ? "text-[#8B9A6B] hover:text-[#6B7A4F]" : "text-[#A8B78F] hover:text-[#8B9A6B]"
+                theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
               )}>
                 Privacy Policy
               </Link>
@@ -351,8 +351,8 @@ export const RegisterForm: React.FC = () => {
               className={cn(
                 "group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200",
                 theme === "light"
-                  ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] focus:ring-[#8B9A6B]"
-                  : "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] focus:ring-[#8B9A6B]"
+                  ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] focus:ring-[#9EC489]"
+                  : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] focus:ring-[#9EC489]"
               )}
             >
               {isLoading ? (
