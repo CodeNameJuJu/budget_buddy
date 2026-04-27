@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -72,6 +73,9 @@ func ConnectToDatabase() {
 			if i < maxRetries-1 {
 				time.Sleep(time.Duration(i+1) * time.Second)
 				continue
+			} else {
+				log.Printf("Failed to connect to database after %d retries: %v", maxRetries, lastErr)
+				return
 			}
 		} else {
 			dbConnected = true
