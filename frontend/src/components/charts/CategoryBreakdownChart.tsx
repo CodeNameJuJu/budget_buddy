@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
+import { useState, useEffect } from 'react'
 
 interface CategoryBreakdown {
   category_id: number
@@ -25,6 +26,17 @@ const COLORS = [
 ]
 
 export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartProps) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // Transform data for Recharts
   const chartData = data.map(item => ({
     name: item.category_name,
@@ -67,16 +79,16 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
   }
 
   return (
-    <div className="w-full h-80">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full" style={{ height: isMobile ? 'auto' : '320px' }}>
+      <ResponsiveContainer width="100%" height={isMobile ? 280 : '100%'}>
         <PieChart>
           <Pie
             data={chartData}
-            cx="50%"
+            cx={isMobile ? "50%" : "40%"}
             cy="50%"
             labelLine={false}
             label={renderCustomLabel}
-            outerRadius={80}
+            outerRadius={isMobile ? 70 : 80}
             fill="#8884d8"
             dataKey="value"
           >
@@ -86,9 +98,10 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
           </Pie>
           <Tooltip content={<CustomTooltip />} />
           <Legend 
-            verticalAlign="middle" 
-            align="right" 
-            layout="vertical"
+            verticalAlign={isMobile ? "bottom" : "middle"}
+            align={isMobile ? "center" : "right"}
+            layout={isMobile ? "horizontal" : "vertical"}
+            wrapperStyle={isMobile ? { paddingTop: '20px' } : {}}
             formatter={(value: any, entry: any) => [
               `${entry.payload.name}: ${formatCurrency(entry.payload.value)}`,
               ''

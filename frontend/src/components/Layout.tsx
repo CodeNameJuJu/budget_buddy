@@ -417,7 +417,7 @@ export default function Layout() {
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
             </button>
-            <div className="flex items-center gap-2 xs:gap-3">
+            <div className="flex items-center gap-2 xs:gap-3 hidden sm:flex">
               <div className={cn(
                 "p-1 xs:p-1.5 rounded-full text-white shadow-md transition-transform duration-300 hover:scale-110",
                 theme === "light"
