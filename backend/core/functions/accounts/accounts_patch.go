@@ -4,17 +4,18 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/go-chi/chi/v5"
 )
 
 type PATCHAccountRequest struct {
-	Name     *string `json:"name,omitempty"`
-	Email    *string `json:"email,omitempty"`
-	Currency *string `json:"currency,omitempty"`
-	Timezone *string `json:"timezone,omitempty"`
+	Name            *string `json:"name,omitempty"`
+	Email           *string `json:"email,omitempty"`
+	Currency        *string `json:"currency,omitempty"`
+	Timezone        *string `json:"timezone,omitempty"`
+	DashboardLayout *string `json:"dashboard_layout,omitempty"`
 }
 
 func PATCHAccount(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +44,9 @@ func PATCHAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	if req.Timezone != nil {
 		account.Timezone = req.Timezone
+	}
+	if req.DashboardLayout != nil {
+		account.DashboardLayout = req.DashboardLayout
 	}
 
 	if err := db.UpdateAccount(&account); err != nil {
