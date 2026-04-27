@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
@@ -13,7 +14,7 @@ func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 	var accounts []types.Account
 	userID := appcontext.GetUserID(context.Background())
 
-	// Use raw SQL to ensure dashboard_layout is included
+	// Use raw SQL to ensure dashboard_layout is included, exclude user_id if it exists
 	query := db.NewSelect().
 		ColumnExpr("a.id, a.name, a.email, a.currency, a.timezone, a.savings_balance, a.dashboard_layout, a.created_date, a.modified_date, a.deleted_date").
 		TableExpr("accounts AS a").
@@ -35,6 +36,14 @@ func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 	}
 
 	count, err := query.ScanAndCount(context.Background())
+
+	// Debug: log the first account's dashboard_layout
+	if len(accounts) > 0 && accounts[0].DashboardLayout != nil {
+		fmt.Printf("DEBUG: dashboard_layout from DB: %s\n", *accounts[0].DashboardLayout)
+	} else {
+		fmt.Printf("DEBUG: dashboard_layout is nil or accounts empty\n")
+	}
+
 	return accounts, count, err
 }
 
