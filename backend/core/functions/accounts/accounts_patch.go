@@ -1,6 +1,7 @@
 package accounts
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -49,7 +50,11 @@ func PATCHAccount(w http.ResponseWriter, r *http.Request) {
 		account.DashboardLayout = req.DashboardLayout
 	}
 
+	// Log for debugging
+	fmt.Printf("Updating account %d with dashboard_layout: %v\n", id, req.DashboardLayout)
+
 	if err := db.UpdateAccount(&account); err != nil {
+		fmt.Printf("Error updating account: %v\n", err)
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not update account")
 		return
 	}
