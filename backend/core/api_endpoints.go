@@ -16,7 +16,6 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/dashboard"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/debug"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/goals"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/partnership"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/tags"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/transactions"
