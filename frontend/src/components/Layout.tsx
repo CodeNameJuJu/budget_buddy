@@ -18,6 +18,7 @@ import {
   ChevronUp,
   Moon,
   Sun,
+  BookOpen,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import TutorialOverlay from "@/components/tutorial/TutorialOverlay"
@@ -35,6 +36,7 @@ const navItems = [
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
   { to: "/partners", icon: Users, label: "Partners" },
+  { to: "/guide", icon: BookOpen, label: "User Guide" },
 ]
 
 export default function Layout() {
