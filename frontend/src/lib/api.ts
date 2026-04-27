@@ -220,6 +220,14 @@ export const accountsApi = {
   getMyAccount: () => get<APIResponse<Account[]>>("/accounts/my"),
 }
 
+// Dashboard Layout API
+export const dashboardLayoutsApi = {
+  get: (accountId: number) => get<APIResponse<DashboardLayout>>(`/accounts/${accountId}/dashboard-layout`),
+  save: (accountId: number, layout: string) =>
+    post<APIResponse<{ message: string }>>(`/accounts/${accountId}/dashboard-layout`, { layout }),
+}
+
+
 // Category API
 export const categoriesApi = {
   list: (accountID: number, type?: string) => {

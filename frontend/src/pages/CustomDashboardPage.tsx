@@ -45,27 +45,20 @@ export default function CustomDashboardPage() {
   async function loadWidgets() {
     console.log("loadWidgets called, accountId:", accountId)
     try {
-      const response = await accountsApi.getMyAccount()
-      console.log("getMyAccount response:", response.data)
-      if (response.data && response.data.length > 0) {
-        const account = response.data[0]
-        console.log("Account dashboard_layout:", account.dashboard_layout)
-        if (account.dashboard_layout) {
-          const layout = JSON.parse(account.dashboard_layout)
-          setWidgets(layout)
-          // Sync to session storage for this device
-          sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(layout))
-        } else {
-          const defaultLayout = getCustomLayout()
-          setWidgets(defaultLayout)
-          sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(defaultLayout))
-        }
+      const response = await dashboardLayoutsApi.get(accountId)
+      console.log("getDashboardLayout response:", response.data)
+      if (response.data) {
+        const layout = JSON.parse(response.data.layout)
+        setWidgets(layout)
+        // Sync to session storage for this device
+        sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(layout))
       } else {
         const defaultLayout = getCustomLayout()
         setWidgets(defaultLayout)
+        sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(defaultLayout))
       }
     } catch (error) {
-      console.error("Failed to load layout from account:", error)
+      console.error("Failed to load layout from dashboard_layouts API:", error)
       const defaultLayout = getCustomLayout()
       setWidgets(defaultLayout)
     }
@@ -106,8 +99,8 @@ export default function CustomDashboardPage() {
       console.log("Saving layout with JSON:", layoutJson)
       // Save to session storage
       sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
-      // Save to account
-      await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+      // Save to dashboard_layouts table
+      await dashboardLayoutsApi.save(accountId, layoutJson)
       console.log("Layout saved successfully")
       setIsCustomizing(false)
     } catch (error) {
