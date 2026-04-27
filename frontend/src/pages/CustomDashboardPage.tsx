@@ -50,16 +50,12 @@ export default function CustomDashboardPage() {
         if (account.dashboard_layout) {
           const layout = JSON.parse(account.dashboard_layout)
           setWidgets(layout)
+          // Sync to session storage for this device
           sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(layout))
         } else {
-          const sessionLayout = sessionStorage.getItem(`dashboard-layout-${accountId}`)
-          if (sessionLayout) {
-            const layout = JSON.parse(sessionLayout)
-            setWidgets(layout)
-          } else {
-            const defaultLayout = getCustomLayout()
-            setWidgets(defaultLayout)
-          }
+          const defaultLayout = getCustomLayout()
+          setWidgets(defaultLayout)
+          sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(defaultLayout))
         }
       } else {
         const defaultLayout = getCustomLayout()
@@ -67,14 +63,8 @@ export default function CustomDashboardPage() {
       }
     } catch (error) {
       console.error("Failed to load layout from account:", error)
-      const sessionLayout = sessionStorage.getItem(`dashboard-layout-${accountId}`)
-      if (sessionLayout) {
-        const layout = JSON.parse(sessionLayout)
-        setWidgets(layout)
-      } else {
-        const defaultLayout = getCustomLayout()
-        setWidgets(defaultLayout)
-      }
+      const defaultLayout = getCustomLayout()
+      setWidgets(defaultLayout)
     }
   }
 
