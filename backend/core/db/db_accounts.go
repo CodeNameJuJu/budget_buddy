@@ -49,19 +49,26 @@ func UpdateAccount(account *types.Account) error {
 	now := time.Now()
 	account.ModifiedDate = &now
 
-	// Use raw SQL to update, ensuring dashboard_layout is included
-	result, err := db.NewUpdate().
+	// Build the update query dynamically based on which fields are set
+	update := db.NewUpdate().
 		Table("accounts").
 		Where("id = ?", account.ID).
 		Set("name = ?", account.Name).
 		Set("email = ?", account.Email).
 		Set("currency = ?", account.Currency).
-		Set("timezone = ?", account.Timezone).
-		Set("savings_balance = ?", account.SavingsBalance).
-		Set("dashboard_layout = ?", account.DashboardLayout).
-		Set("modified_date = ?", account.ModifiedDate).
-		Returning("*").
-		Exec(context.Background())
+		Set("modified_date = ?", account.ModifiedDate)
+
+	if account.Timezone != nil {
+		update = update.Set("timezone = ?", account.Timezone)
+	}
+	if account.SavingsBalance != nil {
+		update = update.Set("savings_balance = ?", account.SavingsBalance)
+	}
+	if account.DashboardLayout != nil {
+		update = update.Set("dashboard_layout = ?", account.DashboardLayout)
+	}
+
+	result, err := update.Returning("*").Exec(context.Background())
 
 	if err != nil {
 		return err
