@@ -14,34 +14,44 @@ func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 	var accounts []types.Account
 	userID := appcontext.GetUserID(context.Background())
 
-	// Use raw SQL to ensure dashboard_layout is included, exclude user_id if it exists
-	query := db.NewSelect().
-		ColumnExpr("a.id, a.name, a.email, a.currency, a.timezone, a.savings_balance, a.dashboard_layout, a.created_date, a.modified_date, a.deleted_date").
-		TableExpr("accounts AS a").
-		Where("a.deleted_date IS NULL")
+	// Use raw SQL to ensure dashboard_layout is included
+	query := db.NewRaw(`
+		SELECT a.id, a.name, a.email, a.currency, a.timezone, a.savings_balance, a.dashboard_layout, a.created_date, a.modified_date, a.deleted_date
+		FROM accounts AS a
+		WHERE a.deleted_date IS NULL
+	`)
 
 	// If user is authenticated, include their own accounts and shared accounts
 	if userID != 0 {
 		// Get user's own accounts
-		query = query.Where("a.email IN (SELECT email FROM users WHERE id = ?)", userID)
-
-		// Also include shared accounts from partnerships
-		query = query.WhereOr("a.id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?))", userID)
-	} else {
-		query = query.Where("a.email IN (SELECT email FROM users WHERE id = ?)", userID)
+		query = query.NewRaw(`
+			SELECT a.id, a.name, a.email, a.currency, a.timezone, a.savings_balance, a.dashboard_layout, a.created_date, a.modified_date, a.deleted_date
+			FROM accounts AS a
+			WHERE a.deleted_date IS NULL
+			AND (a.email IN (SELECT email FROM users WHERE id = ?)
+				OR a.id IN (SELECT account_id FROM shared_accounts WHERE partnership_id IN (SELECT partnership_id FROM partnership_members WHERE user_id = ?)))
+		`, userID, userID)
 	}
 
 	if accountID != nil {
-		query = query.Where("a.id = ?", *accountID)
+		query = query.NewRaw(`
+			SELECT a.id, a.name, a.email, a.currency, a.timezone, a.savings_balance, a.dashboard_layout, a.created_date, a.modified_date, a.deleted_date
+			FROM accounts AS a
+			WHERE a.deleted_date IS NULL
+			AND a.id = ?
+		`, *accountID)
 	}
 
-	count, err := query.ScanAndCount(context.Background())
+	err := query.Scan(context.Background(), &accounts)
+
+	// Get count
+	count := len(accounts)
 
 	// Debug: log the first account's dashboard_layout
 	if len(accounts) > 0 && accounts[0].DashboardLayout != nil {
 		fmt.Printf("DEBUG: dashboard_layout from DB: %s\n", *accounts[0].DashboardLayout)
 	} else {
-		fmt.Printf("DEBUG: dashboard_layout is nil or accounts empty\n")
+		fmt.Printf("DEBUG: dashboard_layout is nil or accounts empty, count: %d\n", count)
 	}
 
 	return accounts, count, err
