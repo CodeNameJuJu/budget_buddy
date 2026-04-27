@@ -243,10 +243,8 @@ export default function Layout() {
               <div className="flex items-center gap-3 xs:gap-4">
                 <div>
                   <h1 className={cn(
-                    "text-lg xs:text-xl lg:text-2xl font-bold bg-clip-text text-transparent",
-                    theme === "light"
-                      ? "bg-gradient-to-r from-[#5E9C7E] to-[#6BAF92]"
-                      : "bg-gradient-to-r from-[#A8D5BA] to-[#6BAF92]"
+                    "brand-name text-lg xs:text-xl lg:text-2xl",
+                    theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
                   )}>Bêre Bietjie</h1>
                   <p className={cn(
                     "text-xs xs:text-sm hidden md:block",
@@ -427,7 +425,7 @@ export default function Layout() {
                 <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-4 w-4 xs:h-5 xs:w-5 object-cover rounded-full" />
               </div>
               <span className={cn(
-                "brand-name text-sm xs:text-base",
+                "brand-name text-base xs:text-lg sm:text-xl",
                 theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
               )}>Bêre Bietjie</span>
             </div>
