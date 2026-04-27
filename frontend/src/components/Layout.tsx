@@ -292,7 +292,7 @@ export default function Layout() {
                   }}
                   className={({ isActive }) =>
                     cn(
-                      "group flex items-center gap-2 xs:gap-3 px-2 xs:px-3 py-2 xs:py-2.5 rounded-xl text-sm font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
+                      "group flex items-center justify-start gap-2 xs:gap-3 px-2 xs:px-3 py-2 xs:py-2.5 rounded-xl text-sm font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
                         ? theme === "light"
                           ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
