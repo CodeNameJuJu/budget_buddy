@@ -13,8 +13,10 @@ func QueryAccounts(accountID *int64) ([]types.Account, int, error) {
 	var accounts []types.Account
 	userID := appcontext.GetUserID(context.Background())
 
-	query := db.NewSelect().Model(&accounts).
-		ColumnExpr("a.*", "a.dashboard_layout").
+	// Use raw SQL to ensure dashboard_layout is included
+	query := db.NewSelect().
+		ColumnExpr("a.*").
+		TableExpr("accounts AS a").
 		Where("a.deleted_date IS NULL")
 
 	// If user is authenticated, include their own accounts and shared accounts
