@@ -87,7 +87,7 @@ export default function AccountMerge() {
     switch (status) {
       case "pending":
         return (
-          <Badge variant="secondary" className={cn(theme === "light" ? "bg-[#6BAF92]/30 text-[#6BAF92]" : "bg-[#88B39B]/30 text-[#88B39B]")}>
+          <Badge variant="secondary" className={cn(theme === "light" ? "bg-[#6BAF92]/20 text-[#4A7A60]" : "bg-[#88B39B]/20 text-[#88B39B]")}>
             <Clock className="w-3 h-3 mr-1" />
             Pending
           </Badge>

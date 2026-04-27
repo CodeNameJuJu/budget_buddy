@@ -84,7 +84,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               <Sparkles className={cn("h-4 w-4", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
               <h3 className={cn("font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Quick Add Transaction</h3>
               {suggestedCategory && (
-                <Badge variant="secondary" className={cn("text-xs", theme === "light" ? "bg-[#6BAF92]/30 text-[#6BAF92] border-[#6BAF92]/50" : "bg-[#88B39B]/30 text-[#88B39B] border-[#88B39B]/50")}>
+                <Badge variant="secondary" className={cn("text-xs", theme === "light" ? "bg-[#6BAF92]/20 text-[#4A7A60] border-[#6BAF92]/50" : "bg-[#88B39B]/20 text-[#88B39B] border-[#88B39B]/50")}>
                   Auto-categorized as {suggestedCategory.category}
                 </Badge>
               )}
@@ -141,7 +141,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
             </Button>
             
             {amount && (
-              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? cn(theme === "light" ? "bg-[#6BAF92]/30 text-[#6BAF92] border-[#6BAF92]/50" : "bg-[#88B39B]/30 text-[#88B39B] border-[#88B39B]/50") : "bg-[#DC2626]/30 text-[#DC2626] border-[#DC2626]/50"}>
+              <Badge variant={getTransactionType() === "income" ? "secondary" : "destructive"} className={getTransactionType() === "income" ? cn(theme === "light" ? "bg-[#6BAF92]/20 text-[#4A7A60] border-[#6BAF92]/50" : "bg-[#88B39B]/20 text-[#88B39B] border-[#88B39B]/50") : "bg-[#DC2626]/30 text-[#DC2626] border-[#DC2626]/50"}>
                 {getTransactionType() === "income" ? "Income" : "Expense"}
               </Badge>
             )}
