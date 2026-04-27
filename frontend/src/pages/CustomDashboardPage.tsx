@@ -218,7 +218,7 @@ export default function CustomDashboardPage() {
         id: "getting-started-1",
         type: "getting_started",
         title: "Getting Started",
-        size: "medium",
+        size: "large",
         is_visible: true,
         updated_at: ""
       },
@@ -417,11 +417,15 @@ export default function CustomDashboardPage() {
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
-              <WidgetRenderer
+              <div
                 key={widget.id}
-                widget={widget}
-                accountId={accountId}
-              />
+                className={widget.size === "large" ? "lg:col-span-3" : ""}
+              >
+                <WidgetRenderer
+                  widget={widget}
+                  accountId={accountId}
+                />
+              </div>
           ))}
         </div>
       </div>
