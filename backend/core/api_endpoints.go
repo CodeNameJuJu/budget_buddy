@@ -1,7 +1,11 @@
 package core
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/go-chi/chi/v5"
+
 	"github.com/CodeNameJuJu/budget_buddy/core/functions"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/accounts"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/alerts"
@@ -16,9 +20,41 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/tags"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/transactions"
+	"github.com/go-chi/chi/v5"
 )
 
+// FileServer conveniently sets up a http.FileServer handler to serve
+// static files from a http.FileSystem.
+func FileServer(r chi.Router, path string, root http.FileSystem) {
+	if strings.ContainsAny(path, "{}*") {
+		panic("FileServer does not permit any URL parameters.")
+	}
+
+	if path != "/" && path[len(path)-1] != '/' {
+		r.Get(path, http.RedirectHandler(path+"/", http.StatusMovedPermanently).ServeHTTP)
+		path += "/"
+	}
+	path += "*"
+
+	r.Get(path, func(w http.ResponseWriter, r *http.Request) {
+		rctx := chi.RouteContext(r.Context())
+		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
+		fs := http.StripPrefix(pathPrefix, http.FileServer(root))
+		fs.ServeHTTP(w, r)
+	})
+}
+
 func RegisterRoutes(r chi.Router) {
+	// Serve static files from frontend dist folder
+	staticDir := http.Dir("/app/frontend/dist")
+	FileServer(r, "/static", staticDir)
+	FileServer(r, "/assets", staticDir)
+
+	// Serve index.html for root and unmatched routes (SPA support)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "/app/frontend/dist/index.html")
+	})
+
 	// Add debug endpoint outside of /api to bypass all middleware
 	r.Get("/debug", debug.DebugCategoryCreation)
 

@@ -1,5 +1,6 @@
-# Use Go 1.23 image
-FROM golang:1.23-alpine AS builder
+# Multi-stage build
+# Stage 1: Build backend
+FROM golang:1.23-alpine AS backend-builder
 
 WORKDIR /app
 
@@ -21,16 +22,36 @@ COPY backend/migrations/ ./backend/migrations/
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o budget-buddy .
 
-# Final stage
+# Stage 2: Build frontend
+FROM node:18-alpine AS frontend-builder
+
+WORKDIR /app/frontend
+
+# Copy package files
+COPY frontend/package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy frontend source
+COPY frontend/ ./
+
+# Build frontend
+RUN npm run build
+
+# Stage 3: Final image
 FROM alpine:latest
 
 # Install ca-certificates for HTTPS
 RUN apk --no-cache add ca-certificates tzdata
 
-WORKDIR /root/
+WORKDIR /app
 
-# Copy the binary from builder stage
-COPY --from=builder /app/budget-buddy .
+# Copy the binary from backend builder
+COPY --from=backend-builder /app/budget-buddy .
+
+# Copy frontend dist folder
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
 # Expose port
 EXPOSE 8080

@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
-	"github.com/joho/godotenv"
 	"github.com/CodeNameJuJu/budget_buddy/core"
 	"github.com/CodeNameJuJu/budget_buddy/core/context"
 	dbmiddleware "github.com/CodeNameJuJu/budget_buddy/core/middleware"
 	"github.com/CodeNameJuJu/budget_buddy/migrations"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(dbmiddleware.DatabaseMiddleware)
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000", "https://budget-buddy-frontend-production.up.railway.app", "https://*.railway.app"},
+		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000", "https://bere-bietjie.up.railway.app", "https://*.railway.app"},
 		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Content-Type", "Authorization", "Cache-Control"},
 		AllowCredentials: true,
