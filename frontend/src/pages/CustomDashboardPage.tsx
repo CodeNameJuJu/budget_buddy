@@ -260,7 +260,7 @@ export default function CustomDashboardPage() {
   function getWidgetDescription(widgetType: string): string {
     const descriptions: { [key: string]: string } = {
       welcome: "Personalized welcome message and quick introduction to the app",
-      getting_started: "Step-by-step guide to help you get started with BudgetBuddy",
+      getting_started: "Step-by-step guide to help you get started with Bêre Bietjie",
       recent_transactions: "View your latest transactions and quickly add new ones",
       savings_withdrawals: "Track your savings withdrawals and deposits",
       spending_trends: "Visualize your spending patterns over time",
