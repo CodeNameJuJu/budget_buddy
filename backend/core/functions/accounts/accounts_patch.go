@@ -1,13 +1,11 @@
 package accounts
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
-	"github.com/CodeNameJuJu/budget_buddy/go-utils/logs"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/go-chi/chi/v5"
 )
@@ -51,11 +49,7 @@ func PATCHAccount(w http.ResponseWriter, r *http.Request) {
 		account.DashboardLayout = req.DashboardLayout
 	}
 
-	// Log for debugging
-	logs.Info(fmt.Sprintf("Updating account %d with dashboard_layout: %v", id, req.DashboardLayout))
-
 	if err := db.UpdateAccount(&account); err != nil {
-		logs.Error(fmt.Sprintf("Error updating account: %v", err))
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not update account")
 		return
 	}
