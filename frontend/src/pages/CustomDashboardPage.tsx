@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
-import { LayoutDashboard, Settings, Plus, X, Check } from "lucide-react"
+import { useEffect, useState, useCallback } from "react"
+import { LayoutDashboard, Settings, Plus, X, Check, GripVertical, Edit2 } from "lucide-react"
 import { useAuth } from "@/hooks"
 import WidgetRenderer from "@/components/widgets/WidgetRenderer"
 import { accountsApi, dashboardApi } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Responsive, Layout } from "react-grid-layout"
+import "react-grid-layout/css/styles.css"
 
 interface Widget {
   id: string
@@ -24,6 +26,7 @@ export default function CustomDashboardPage() {
   const [isCustomizing, setIsCustomizing] = useState(false)
   const [availableWidgets, setAvailableWidgets] = useState<any[]>([])
   const [isSaving, setIsSaving] = useState(false)
+  const [layouts, setLayouts] = useState<{ [key: string]: Layout[] }>({})
 
   useEffect(() => {
     loadUserAccount()
@@ -51,6 +54,19 @@ export default function CustomDashboardPage() {
           console.log("Loaded layout from account:", account.dashboard_layout)
           const layout = JSON.parse(account.dashboard_layout)
           setWidgets(layout)
+          // Initialize layouts for react-grid-layout
+          const initialLayouts: { [key: string]: Layout[] } = {
+            lg: layout.map((w: Widget) => ({
+              i: w.id,
+              x: w.position.x,
+              y: w.position.y,
+              w: w.position.w,
+              h: w.position.h,
+              minW: 3,
+              minH: 2,
+            })),
+          }
+          setLayouts(initialLayouts)
           // Save to session storage
           sessionStorage.setItem(`dashboard-layout-${accountId}`, account.dashboard_layout)
         } else {
@@ -59,15 +75,54 @@ export default function CustomDashboardPage() {
           const sessionLayout = sessionStorage.getItem(`dashboard-layout-${accountId}`)
           if (sessionLayout) {
             console.log("Loaded layout from session storage:", sessionLayout)
-            setWidgets(JSON.parse(sessionLayout))
+            const layout = JSON.parse(sessionLayout)
+            setWidgets(layout)
+            const initialLayouts: { [key: string]: Layout[] } = {
+              lg: layout.map((w: Widget) => ({
+                i: w.id,
+                x: w.position.x,
+                y: w.position.y,
+                w: w.position.w,
+                h: w.position.h,
+                minW: 3,
+                minH: 2,
+              })),
+            }
+            setLayouts(initialLayouts)
           } else {
             console.log("No layout in session storage, using default")
-            setWidgets(getCustomLayout())
+            const defaultLayout = getCustomLayout()
+            setWidgets(defaultLayout)
+            const initialLayouts: { [key: string]: Layout[] } = {
+              lg: defaultLayout.map((w: Widget) => ({
+                i: w.id,
+                x: w.position.x,
+                y: w.position.y,
+                w: w.position.w,
+                h: w.position.h,
+                minW: 3,
+                minH: 2,
+              })),
+            }
+            setLayouts(initialLayouts)
           }
         }
       } else {
         console.log("No account data, using default layout")
-        setWidgets(getCustomLayout())
+        const defaultLayout = getCustomLayout()
+        setWidgets(defaultLayout)
+        const initialLayouts: { [key: string]: Layout[] } = {
+          lg: defaultLayout.map((w: Widget) => ({
+            i: w.id,
+            x: w.position.x,
+            y: w.position.y,
+            w: w.position.w,
+            h: w.position.h,
+            minW: 3,
+            minH: 2,
+          })),
+        }
+        setLayouts(initialLayouts)
       }
     } catch (error) {
       console.error("Failed to load layout from account:", error)
@@ -75,10 +130,36 @@ export default function CustomDashboardPage() {
       const sessionLayout = sessionStorage.getItem(`dashboard-layout-${accountId}`)
       if (sessionLayout) {
         console.log("Loaded layout from session storage after error:", sessionLayout)
-        setWidgets(JSON.parse(sessionLayout))
+        const layout = JSON.parse(sessionLayout)
+        setWidgets(layout)
+        const initialLayouts: { [key: string]: Layout[] } = {
+          lg: layout.map((w: Widget) => ({
+            i: w.id,
+            x: w.position.x,
+            y: w.position.y,
+            w: w.position.w,
+            h: w.position.h,
+            minW: 3,
+            minH: 2,
+          })),
+        }
+        setLayouts(initialLayouts)
       } else {
         console.log("No layout in session storage after error, using default")
-        setWidgets(getCustomLayout())
+        const defaultLayout = getCustomLayout()
+        setWidgets(defaultLayout)
+        const initialLayouts: { [key: string]: Layout[] } = {
+          lg: defaultLayout.map((w: Widget) => ({
+            i: w.id,
+            x: w.position.x,
+            y: w.position.y,
+            w: w.position.w,
+            h: w.position.h,
+            minW: 3,
+            minH: 2,
+          })),
+        }
+        setLayouts(initialLayouts)
       }
     }
   }
@@ -111,6 +192,36 @@ export default function CustomDashboardPage() {
     }
   }
 
+  const handleLayoutChange = useCallback((layout: Layout[], layouts: { [key: string]: Layout[] }) => {
+    setLayouts(layouts)
+    // Update widget positions based on new layout
+    const updatedWidgets = widgets.map(widget => {
+      const layoutItem = layout.find(l => l.i === widget.id)
+      if (layoutItem) {
+        return {
+          ...widget,
+          position: {
+            x: layoutItem.x,
+            y: layoutItem.y,
+            w: layoutItem.w,
+            h: layoutItem.h,
+          }
+        }
+      }
+      return widget
+    })
+    setWidgets(updatedWidgets)
+    
+    // Auto-save to database
+    if (accountId) {
+      const layoutJson = JSON.stringify(updatedWidgets)
+      sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
+      accountsApi.update(accountId, { dashboard_layout: layoutJson }).catch(error => {
+        console.error("Failed to save layout to account", error)
+      })
+    }
+  }, [widgets, accountId])
+
   async function saveLayout() {
     if (!accountId) return
     setIsSaving(true)
@@ -136,12 +247,27 @@ export default function CustomDashboardPage() {
       type: widgetType,
       title: widgetTitle,
       size: "medium",
-      position: { x: 0, y: widgets.length * 3, w: 6, h: 3 },
+      position: { x: 0, y: 0, w: 6, h: 4 },
       is_visible: true,
       updated_at: new Date().toISOString()
     }
     const updatedWidgets = [...widgets, newWidget]
     setWidgets(updatedWidgets)
+    
+    // Update layouts
+    const newLayout = {
+      i: newWidget.id,
+      x: 0,
+      y: 0,
+      w: 6,
+      h: 4,
+      minW: 3,
+      minH: 2,
+    }
+    setLayouts({
+      lg: [...(layouts.lg || []), newLayout]
+    })
+    
     // Auto-save to session storage and database
     if (accountId) {
       const layoutJson = JSON.stringify(updatedWidgets)
@@ -159,6 +285,12 @@ export default function CustomDashboardPage() {
   async function removeWidget(widgetId: string) {
     const updatedWidgets = widgets.filter(w => w.id !== widgetId)
     setWidgets(updatedWidgets)
+    
+    // Update layouts
+    setLayouts({
+      lg: (layouts.lg || []).filter(l => l.i !== widgetId)
+    })
+    
     // Auto-save to session storage and database
     if (accountId) {
       const layoutJson = JSON.stringify(updatedWidgets)
@@ -190,9 +322,9 @@ export default function CustomDashboardPage() {
       {
         id: "welcome-1",
         type: "welcome",
-        title: "Welcome to Budget Buddy",
+        title: "Welcome to Bêre Bietjie",
         size: "large",
-        position: { x: 0, y: 0, w: 2, h: 1 },
+        position: { x: 0, y: 0, w: 12, h: 2 },
         is_visible: true,
         updated_at: ""
       },
@@ -201,7 +333,7 @@ export default function CustomDashboardPage() {
         type: "getting_started",
         title: "Getting Started",
         size: "medium",
-        position: { x: 0, y: 4, w: 6, h: 3 },
+        position: { x: 0, y: 2, w: 6, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -210,7 +342,7 @@ export default function CustomDashboardPage() {
         type: "recent_transactions",
         title: "Recent Transactions",
         size: "medium",
-        position: { x: 6, y: 4, w: 6, h: 3 },
+        position: { x: 6, y: 2, w: 6, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -219,7 +351,7 @@ export default function CustomDashboardPage() {
         type: "savings_withdrawals",
         title: "Savings Withdrawals",
         size: "medium",
-        position: { x: 0, y: 7, w: 6, h: 4 },
+        position: { x: 0, y: 5, w: 6, h: 4 },
         is_visible: true,
         updated_at: ""
       },
@@ -228,7 +360,7 @@ export default function CustomDashboardPage() {
         type: "spending_trends",
         title: "Spending Trends",
         size: "medium",
-        position: { x: 6, y: 7, w: 6, h: 4 },
+        position: { x: 6, y: 5, w: 6, h: 4 },
         is_visible: true,
         updated_at: ""
       },
@@ -237,7 +369,7 @@ export default function CustomDashboardPage() {
         type: "goals_overview",
         title: "Savings Goals",
         size: "medium",
-        position: { x: 0, y: 11, w: 12, h: 4 },
+        position: { x: 0, y: 9, w: 12, h: 4 },
         is_visible: true,
         updated_at: ""
       }
@@ -388,18 +520,35 @@ export default function CustomDashboardPage() {
         )}
 
         {/* Widget Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+        <Responsive
+          className="layout"
+          layouts={layouts}
+          onLayoutChange={handleLayoutChange}
+          cols={{ lg: 12, md: 12, sm: 6, xs: 1, xxs: 1 }}
+          rowHeight={120}
+          isDraggable={isCustomizing}
+          isResizable={isCustomizing}
+          draggableHandle=".drag-handle"
+          useCSSTransforms={true}
+          margin={[12, 12]}
+          containerPadding={[12, 12]}
+        >
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
-              <div key={widget.id} className={widget.type === "welcome" ? "md:col-span-2" : ""}>
+              <div key={widget.id} className="relative">
+                {isCustomizing && (
+                  <div className="drag-handle absolute top-2 left-2 z-10 p-2 bg-slate-700 rounded-lg cursor-move hover:bg-slate-600 transition-colors">
+                    <GripVertical className="h-4 w-4 text-slate-300" />
+                  </div>
+                )}
                 <WidgetRenderer
                   widget={widget}
                   accountId={accountId}
                 />
               </div>
           ))}
-        </div>
+        </Responsive>
       </div>
   )
 }

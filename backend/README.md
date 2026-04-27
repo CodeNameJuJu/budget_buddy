@@ -1,4 +1,4 @@
-# Budget Buddy Backend
+# Bêre Bietjie Backend
 
 A simple and efficient budget tracking application backend built with Go.
 

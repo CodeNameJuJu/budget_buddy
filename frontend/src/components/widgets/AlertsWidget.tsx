@@ -93,7 +93,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
     )
   }
 
-  if (!data || data.alerts.length === 0) {
+  if (!data || !data.alerts || data.alerts.length === 0) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
@@ -165,15 +165,15 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
               }`}
             >
               <div className="flex items-start gap-3">
-                <div className="mt-0.5">{getAlertIcon(alert.type)}</div>
+                <div className="mt-0.5 flex-shrink-0">{getAlertIcon(alert.type)}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     {getAlertBadge(alert.type)}
                     {!alert.is_read && (
-                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0"></span>
                     )}
                   </div>
-                  <p className="text-sm">{alert.message}</p>
+                  <p className="text-sm truncate">{alert.message}</p>
                   <p className="text-xs text-muted-foreground mt-1">{formatDate(alert.created_at)}</p>
                 </div>
               </div>

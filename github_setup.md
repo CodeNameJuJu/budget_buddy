@@ -28,7 +28,7 @@ git push -u origin main
 
 ## Step 5: Ready for Railway
 
-Once pushed to GitHub, your Budget Buddy is ready for Railway deployment!
+Once pushed to GitHub, your Bêre Bietjie is ready for Railway deployment!
 
 ## Next Steps
 
@@ -38,4 +38,4 @@ Once pushed to GitHub, your Budget Buddy is ready for Railway deployment!
 4. Choose your budget-buddy repository
 5. Deploy!
 
-Your Budget Buddy will be live in minutes!
+Your Bêre Bietjie will be live in minutes!

@@ -102,7 +102,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     )
   }
 
-  if (!data || data.budgets.length === 0) {
+  if (!data || !data.budgets || data.budgets.length === 0) {
     return (
       <Card className="h-full bg-slate-800/50 border-slate-700">
         <CardHeader className="pb-2">
@@ -170,13 +170,13 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
 
               return (
                 <div key={budget.id} className="space-y-2 cursor-pointer hover:bg-slate-700/30 p-2 rounded-md transition-colors" onClick={() => handleBudgetClick(budget)}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium truncate max-w-[120px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <span className="text-sm font-medium truncate">
                         {budget.name}
                       </span>
                       {isOverBudget && (
-                        <AlertTriangle className="h-3 w-3 text-red-400" />
+                        <AlertTriangle className="h-3 w-3 text-red-400 flex-shrink-0" />
                       )}
                     </div>
                     <div className="text-right">

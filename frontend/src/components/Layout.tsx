@@ -228,7 +228,7 @@ export default function Layout() {
                   <Wallet className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
                 <div>
-                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">Budget Buddy</h1>
+                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">Bêre Bietjie</h1>
                   <p className="text-xs xs:text-sm text-slate-400 hidden md:block">Your elegant financial companion</p>
                 </div>
               </div>
@@ -347,7 +347,7 @@ export default function Layout() {
               <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-md transition-transform duration-300 hover:scale-110">
                 <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
               </div>
-              <span className="font-bold text-sm xs:text-base text-slate-200">Budget Buddy</span>
+              <span className="font-bold text-sm xs:text-base text-slate-200">Bêre Bietjie</span>
             </div>
             <div className="w-8 xs:w-10"></div> {/* Spacer for balance */}
           </div>

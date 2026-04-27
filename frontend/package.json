@@ -1,5 +1,5 @@
 {
-  "name": "budget-buddy-frontend",
+  "name": "bere-bietjie-frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -22,6 +22,7 @@
     "lucide-react": "^0.441.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-grid-layout": "^2.2.3",
     "react-router-dom": "^6.26.0",
     "recharts": "^2.15.4",
     "tailwind-merge": "^2.5.2"

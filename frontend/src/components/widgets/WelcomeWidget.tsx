@@ -8,7 +8,7 @@ export default function WelcomeWidget() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-emerald-300">
           <Sparkles className="h-5 w-5" />
-          Welcome to Budget Buddy!
+          Welcome to Bêre Bietjie!
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

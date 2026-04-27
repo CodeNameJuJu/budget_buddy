@@ -58,18 +58,18 @@ func (e *EmailService) getVerificationEmailTemplate(token string) string {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Budget Buddy</h1>
+            <h1>Bêre Bietjie</h1>
         </div>
         <div class="content">
             <h2>Verify Your Email</h2>
-            <p>Thank you for signing up for Budget Buddy! Please click the button below to verify your email address:</p>
+            <p>Thank you for signing up for Bêre Bietjie! Please click the button below to verify your email address:</p>
             <a href="https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s" class="button">Verify Email</a>
             <p>Or copy and paste this link into your browser:</p>
             <p>https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s</p>
             <p>This link will expire in 24 hours.</p>
         </div>
         <div class="footer">
-            <p>If you didn't create an account with Budget Buddy, please ignore this email.</p>
+            <p>If you didn't create an account with Bêre Bietjie, please ignore this email.</p>
         </div>
     </div>
 </body>

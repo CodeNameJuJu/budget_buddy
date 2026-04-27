@@ -137,18 +137,18 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
       <CardContent className="flex-1 overflow-hidden flex flex-col">
         <div className="space-y-4 flex-1 overflow-auto">
           {/* Balance Overview */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-3 rounded-lg bg-slate-800/50 border border-slate-700">
-              <div className="text-xs text-muted-foreground mb-1">Balance</div>
-              <div className="text-sm font-bold text-emerald-400">{formatCurrency(data.total_balance)}</div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="text-center p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+              <div className="text-xs text-muted-foreground mb-1 truncate">Balance</div>
+              <div className="text-sm font-bold text-emerald-400 truncate">{formatCurrency(data.total_balance)}</div>
             </div>
-            <div className="text-center p-3 rounded-lg bg-slate-800/50 border border-slate-700">
-              <div className="text-xs text-muted-foreground mb-1">Allocated</div>
-              <div className="text-sm font-bold text-blue-400">{formatCurrency(data.total_allocated)}</div>
+            <div className="text-center p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+              <div className="text-xs text-muted-foreground mb-1 truncate">Allocated</div>
+              <div className="text-sm font-bold text-blue-400 truncate">{formatCurrency(data.total_allocated)}</div>
             </div>
-            <div className="text-center p-3 rounded-lg bg-slate-800/50 border border-slate-700">
-              <div className="text-xs text-muted-foreground mb-1">Available</div>
-              <div className={`text-sm font-bold ${unallocated >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <div className="text-center p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+              <div className="text-xs text-muted-foreground mb-1 truncate">Available</div>
+              <div className={`text-sm font-bold truncate ${unallocated >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 {formatCurrency(Math.abs(unallocated))}
               </div>
             </div>

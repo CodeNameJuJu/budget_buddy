@@ -1,4 +1,4 @@
-# Budget Buddy
+# Bêre Bietjie
 
 A full-stack budgeting application built with **Go** (chi + bun ORM) and **React** (Vite + TailwindCSS).
 

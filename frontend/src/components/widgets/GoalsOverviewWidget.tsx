@@ -73,7 +73,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
     )
   }
 
-  if (!data || data.goals.length === 0) {
+  if (!data || !data.goals || data.goals.length === 0) {
     return (
       <Card className="h-full bg-slate-800/50 border-slate-700">
         <CardHeader className="pb-2">
@@ -142,9 +142,9 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
             
             return (
               <div key={goal.id} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium truncate max-w-[120px]">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <span className="text-sm font-medium truncate">
                       {goal.name}
                     </span>
                     {isCompleted && (

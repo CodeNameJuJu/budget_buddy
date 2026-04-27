@@ -3,7 +3,7 @@ import { TutorialStep } from "@/contexts/TutorialContext"
 export const setupTutorialSteps: TutorialStep[] = [
   {
     id: "welcome",
-    title: "Welcome to Budget Buddy",
+    title: "Welcome to Bêre Bietjie",
     description: "Let's get you set up! We'll guide you through all the features to help you master your finances.",
     target: "dashboard",
     position: "bottom",
@@ -156,7 +156,7 @@ export const setupTutorialSteps: TutorialStep[] = [
   {
     id: "complete",
     title: "You're All Set!",
-    description: "Congratulations! You've learned all the features of Budget Buddy. Start tracking your finances and achieve your financial goals!",
+    description: "Congratulations! You've learned all the features of Bêre Bietjie. Start tracking your finances and achieve your financial goals!",
     target: "dashboard",
     position: "bottom",
     route: "/",

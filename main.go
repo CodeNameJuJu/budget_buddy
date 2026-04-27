@@ -64,7 +64,7 @@ func main() {
 		port = "8080"
 	}
 
-	log.Printf("Budget Buddy server starting on port %s with full API", port)
+	log.Printf("Bêre Bietjie server starting on port %s with full API", port)
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatal("Server failed to start:", err)
 	}

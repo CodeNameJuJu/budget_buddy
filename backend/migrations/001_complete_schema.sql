@@ -1,4 +1,4 @@
--- Budget Buddy Complete Database Schema
+-- Bêre Bietjie Complete Database Schema
 -- This file consolidates all migrations into a single comprehensive schema
 -- Created: 2026-04-19
 -- Version: 1.0

@@ -6,7 +6,7 @@ The migration runs automatically when you deploy to Railway. Just push your code
 ## Method 2: Railway Console (Manual)
 
 1. **Go to Railway Dashboard**
-   - Navigate to your Budget Buddy project
+   - Navigate to your Bêre Bietjie project
    - Click on "Console" tab
 
 2. **Connect to Database**

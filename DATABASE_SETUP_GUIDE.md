@@ -1,7 +1,7 @@
-# Budget Buddy - Railway Database Setup Guide
+# Bêre Bietjie - Railway Database Setup Guide
 
 ## Overview
-This guide will help you set up the complete Budget Buddy database schema on Railway PostgreSQL.
+This guide will help you set up the complete Bêre Bietjie database schema on Railway PostgreSQL.
 
 ## Prerequisites
 - Railway account with a PostgreSQL service
@@ -101,7 +101,7 @@ All migrations completed successfully!
 ## Next Steps
 
 Once the database is set up:
-1. Your Budget Buddy backend can connect to Railway
+1. Your Bêre Bietjie backend can connect to Railway
 2. The frontend can start making API calls
 3. You can create accounts, categories, budgets, and transactions
 4. All features will be fully functional
