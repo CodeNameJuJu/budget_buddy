@@ -74,6 +74,10 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/accounts", accounts.POSTAccount)
 		r.Patch("/accounts/{id}", accounts.PATCHAccount)
 
+		/* ----------- DASHBOARD LAYOUTS ----------- */
+		r.Get("/accounts/{accountId}/dashboard-layout", accounts.GETDashboardLayout)
+		r.Post("/accounts/{accountId}/dashboard-layout", accounts.POSTDashboardLayout)
+
 		/* ----------- CATEGORIES ----------- */
 		r.Get("/categories", categories.GETCategories)
 		r.Post("/categories", categories.POSTCategory)
