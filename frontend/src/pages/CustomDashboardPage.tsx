@@ -624,6 +624,9 @@ export default function CustomDashboardPage() {
           useCSSTransforms={true}
           margin={[12, 12]}
           containerPadding={[12, 12]}
+          compactType="vertical"
+          preventCollision={true}
+          isBounded={true}
         >
           {accountId && widgets
             .filter(w => w.is_visible)
