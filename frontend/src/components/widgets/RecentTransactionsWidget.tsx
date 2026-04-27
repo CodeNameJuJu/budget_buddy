@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface RecentTransactionsWidgetProps {
   accountId: number
@@ -31,6 +33,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
   const [data, setData] = useState<RecentTransactionsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -138,7 +141,12 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                     {t.description || t.category?.name || "Transaction"}
                   </p>
                   {t.account_type === "savings" && (
-                    <Badge variant="outline" className="text-xs text-emerald-300 border-emerald-700/50 bg-emerald-800/20">
+                    <Badge className={cn(
+                      "text-xs border",
+                      theme === "light"
+                        ? "text-[#8B9A6B] border-[#8B9A6B]/50 bg-[#8B9A6B]/20"
+                        : "text-[#A8B78F] border-[#8B9A6B]/50 bg-[#8B9A6B]/20"
+                    )}>
                       Savings
                     </Badge>
                   )}
@@ -149,7 +157,12 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                 <Badge variant={t.type === "income" ? "default" : "destructive"} className="text-xs">
                   {t.type}
                 </Badge>
-                <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}>
+                <span className={cn(
+                  "text-sm font-semibold",
+                  t.type === "income"
+                    ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                    : "text-red-400"
+                )}>
                   {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                 </span>
               </div>

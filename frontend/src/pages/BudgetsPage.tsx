@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { budgetsApi, categoriesApi, accountsApi, type Budget, type Category, type Account } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function BudgetsPage() {
   const [accountId, setAccountId] = useState<number | null>(null)
@@ -12,6 +14,7 @@ export default function BudgetsPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
+  const { theme } = useTheme()
 
   const [form, setForm] = useState({
     name: "",
@@ -235,7 +238,12 @@ export default function BudgetsPage() {
               <Card key={budget.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-200 group">
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
-                    <div className={`p-2 rounded-lg ${remaining >= 0 ? "bg-emerald-500" : percentage >= 90 ? "bg-red-500" : "bg-blue-600"} text-white transition-colors duration-200`}>
+                    <div className={cn(
+                      "p-2 rounded-lg text-white transition-colors duration-200",
+                      remaining >= 0
+                        ? (theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]")
+                        : percentage >= 90 ? "bg-red-500" : "bg-blue-600"
+                    )}>
                       {getProgressIcon(percentage)}
                     </div>
                     <div>
@@ -270,7 +278,12 @@ export default function BudgetsPage() {
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className={`text-sm font-medium ${remaining >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                    <p className={cn(
+                      "text-sm font-medium",
+                      remaining >= 0
+                        ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                        : "text-red-400"
+                    )}>
                       {remaining >= 0
                         ? `${formatCurrency(remaining)} remaining`
                         : `${formatCurrency(Math.abs(remaining))} over budget`}

@@ -8,6 +8,8 @@ import { formatCurrency, formatPercentage } from "@/lib/utils"
 import SpendingTrendsChart from "@/components/charts/SpendingTrendsChart"
 import CategoryBreakdownChart from "@/components/charts/CategoryBreakdownChart"
 import FinancialHealthGauge from "@/components/charts/FinancialHealthGauge"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function AnalyticsPage() {
   const [accountId, setAccountId] = useState<number | null>(null)
@@ -16,6 +18,7 @@ export default function AnalyticsPage() {
   const [financialHealth, setFinancialHealth] = useState<FinancialHealth | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedPeriod, setSelectedPeriod] = useState("current_month")
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadUserAccount()
@@ -142,7 +145,10 @@ export default function AnalyticsPage() {
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-emerald-600 text-white transition-colors duration-200">
+              <div className={cn(
+                "p-2 rounded-full text-white transition-colors duration-200",
+                theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+              )}>
                 <DollarSign className="h-4 w-4" />
               </div>
               Category Breakdown

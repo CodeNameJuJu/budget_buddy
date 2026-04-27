@@ -22,12 +22,12 @@ import { formatCurrency } from "@/lib/utils"
 
 const COLOUR_OPTIONS = [
   { label: "Blue", value: "#3b82f6" },
-  { label: "Emerald", value: "#10b981" },
+  { label: "Amber", value: "#f59e0b" },
   { label: "Amber", value: "#f59e0b" },
   { label: "Purple", value: "#8b5cf6" },
   { label: "Pink", value: "#ec4899" },
   { label: "Slate", value: "#64748b" },
-  { label: "Emerald", value: "#10b981" },
+  { label: "Amber", value: "#f59e0b" },
   { label: "Orange", value: "#f97316" },
 ]
 
@@ -278,7 +278,7 @@ export default function SavingsPage() {
               Unallocated
             </CardTitle>
             {unallocated >= 0 ? (
-              <ArrowUpRight className="h-4 w-4 text-emerald-400" />
+              <ArrowUpRight className="h-4 w-4 text-amber-400" />
             ) : (
               <ArrowDownRight className="h-4 w-4 text-red-400" />
             )}
@@ -286,7 +286,7 @@ export default function SavingsPage() {
           <CardContent>
             <div
               className={`text-2xl font-bold ${
-                unallocated >= 0 ? "text-emerald-400" : "text-red-400"
+                unallocated >= 0 ? "text-amber-400" : "text-red-400"
               }`}
             >
               {formatCurrency(Math.abs(unallocated))}
@@ -403,7 +403,7 @@ export default function SavingsPage() {
               </div>
               <div className="text-center p-3 rounded-lg bg-secondary/50">
                 <p className="text-xs text-muted-foreground mb-1">Projected in 12 months</p>
-                <p className="text-lg font-bold text-emerald-600">
+                <p className="text-lg font-bold text-amber-600">
                   {formatCurrency(forecast.projected_total_12mo)}
                 </p>
               </div>
@@ -435,7 +435,7 @@ export default function SavingsPage() {
                         </td>
                         <td className="p-3 text-right">{formatCurrency(f.projections[0])}</td>
                         <td className="p-3 text-right">{formatCurrency(f.projections[1])}</td>
-                        <td className="p-3 text-right font-medium text-emerald-600">
+                        <td className="p-3 text-right font-medium text-amber-600">
                           {formatCurrency(f.projections[2])}
                         </td>
                         <td className="p-3 text-right">
@@ -662,7 +662,7 @@ export default function SavingsPage() {
                       {potForecast.months_to_target != null && (
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-muted-foreground">Target reached in</span>
-                          <span className="font-medium text-emerald-600 flex items-center gap-1">
+                          <span className="font-medium text-amber-600 flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
                             {potForecast.months_to_target} month{potForecast.months_to_target !== 1 ? "s" : ""}
                           </span>
@@ -813,24 +813,12 @@ export default function SavingsPage() {
                             >
                               <div className="flex items-center gap-1.5">
                                 {isDeposit ? (
-                                  <ArrowUpRight className="h-3 w-3 text-emerald-500" />
+                                  <ArrowUpRight className="h-3 w-3 text-amber-500" />
                                 ) : (
                                   <ArrowDownRight className="h-3 w-3 text-red-500" />
                                 )}
                                 <span className="text-xs text-muted-foreground truncate max-w-[120px]">
                                   {alloc.notes || (isDeposit ? "Deposit" : "Withdrawal")}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className={`text-xs font-medium ${
-                                    isDeposit
-                                      ? "text-emerald-600"
-                                      : "text-red-600"
-                                  }`}
-                                >
-                                  {isDeposit ? "+" : ""}
-                                  {formatCurrency(amt)}
                                 </span>
                                 <button
                                   className="text-muted-foreground hover:text-destructive"

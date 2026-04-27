@@ -4,23 +4,46 @@
 
 @layer base {
   :root {
-    --background: 220 13% 12%;
-    --foreground: 220 9% 95%;
-    --card: 220 13% 15%;
-    --card-foreground: 220 9% 95%;
-    --primary: 159 84% 39%;
-    --primary-foreground: 220 9% 95%;
-    --secondary: 220 13% 18%;
-    --secondary-foreground: 220 9% 85%;
-    --muted: 220 13% 18%;
-    --muted-foreground: 220 8% 65%;
-    --accent: 159 84% 39%;
-    --accent-foreground: 220 9% 95%;
-    --destructive: 0 72% 61%;
-    --destructive-foreground: 220 9% 95%;
-    --border: 220 13% 25%;
-    --input: 220 13% 18%;
-    --ring: 159 84% 39%;
+    /* Light mode - pastel earthy green with beige/cream background */
+    --background: 40 30% 96%; /* #F5F0E8 - very light beige/cream */
+    --foreground: 85 25% 20%; /* #2D3A28 - dark green for text */
+    --card: 40 20% 92%; /* #E8E3D8 - slightly darker beige */
+    --card-foreground: 85 25% 20%; /* #2D3A28 - dark green */
+    --primary: 85 25% 55%; /* #8B9A6B - pastel earthy green */
+    --primary-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
+    --secondary: 40 20% 88%; /* #D4C4A8 - soft beige */
+    --secondary-foreground: 85 25% 20%; /* #2D3A28 - dark green */
+    --muted: 40 20% 88%; /* #D4C4A8 - soft beige */
+    --muted-foreground: 85 20% 40%; /* #5A6B55 - medium green */
+    --accent: 85 25% 55%; /* #8B9A6B - pastel earthy green */
+    --accent-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
+    --destructive: 0 72% 61%; /* red */
+    --destructive-foreground: 40 30% 96%; /* light beige */
+    --border: 40 15% 75%; /* #C5C0B5 - soft beige border */
+    --input: 40 20% 92%; /* #E8E3D8 - beige */
+    --ring: 85 25% 55%; /* #8B9A6B - pastel earthy green */
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* Dark mode */
+    --background: 120 8% 10%; /* #1A1D1A - very dark green/gray */
+    --foreground: 40 20% 91%; /* #E8E3D8 - light beige for text */
+    --card: 120 8% 14%; /* #242824 - slightly lighter dark */
+    --card-foreground: 40 20% 91%; /* #E8E3D8 - light beige */
+    --primary: 85 25% 55%; /* #8B9A6B - pastel earthy green */
+    --primary-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
+    --secondary: 120 8% 18%; /* #4A5048 - dark beige accent */
+    --secondary-foreground: 40 20% 91%; /* #E8E3D8 - light beige */
+    --muted: 120 8% 18%; /* #4A5048 - dark beige */
+    --muted-foreground: 40 15% 72%; /* #B8B3A8 - medium beige */
+    --accent: 85 25% 55%; /* #8B9A6B - pastel earthy green */
+    --accent-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
+    --destructive: 0 72% 61%; /* red */
+    --destructive-foreground: 40 30% 96%; /* light beige */
+    --border: 120 10% 22%; /* #3A4038 - dark green border */
+    --input: 120 8% 14%; /* #242824 - dark */
+    --ring: 85 25% 55%; /* #8B9A6B - pastel earthy green */
     --radius: 0.75rem;
   }
 }

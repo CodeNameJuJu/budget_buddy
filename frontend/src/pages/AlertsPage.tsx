@@ -176,7 +176,7 @@ export default function AlertsPage() {
           <select
             value={alertType}
             onChange={(e) => setAlertType(e.target.value)}
-            className="flex h-10 w-[140px] rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="flex h-10 w-[140px] rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <option value="all">All Alerts</option>
             <option value="weekly">Weekly Summary</option>

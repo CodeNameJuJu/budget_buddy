@@ -3,6 +3,8 @@ import { Wallet, TrendingUp, TrendingDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface BalanceWidgetProps {
   accountId: number
@@ -18,6 +20,7 @@ interface BalanceData {
 export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
   const [data, setData] = useState<BalanceData | null>(null)
   const [loading, setLoading] = useState(true)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -86,18 +89,32 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
       <CardContent>
         <div className="space-y-4">
           <div className="flex items-center justify-center py-2">
-            <div className={`text-3xl font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+            <div className={cn(
+              "text-3xl font-bold",
+              isPositive ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]") : "text-red-400"
+            )}>
               {isPositive ? '+' : ''}{formatCurrency(data.balance)}
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              <div className="flex items-center gap-1 text-emerald-400">
+            <div className={cn(
+              "flex flex-col items-center gap-1 p-2 rounded-lg border",
+              theme === "light"
+                ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+                : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+            )}>
+              <div className={cn(
+                "flex items-center gap-1",
+                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+              )}>
                 <TrendingUp className="h-3 w-3" />
                 <span className="text-xs">Income</span>
               </div>
-              <span className="font-semibold text-emerald-400">{formatCurrency(data.income)}</span>
+              <span className={cn(
+                "font-semibold",
+                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+              )}>{formatCurrency(data.income)}</span>
             </div>
             <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
               <div className="flex items-center gap-1 text-red-400">
@@ -108,7 +125,10 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
             </div>
           </div>
           
-          <div className="text-center text-xs text-muted-foreground">
+          <div className={cn(
+            "text-center text-xs",
+            theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+          )}>
             {data.period}
           </div>
         </div>

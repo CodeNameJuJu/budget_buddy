@@ -16,12 +16,15 @@ import {
   User,
   LogOut,
   ChevronUp,
+  Moon,
+  Sun,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import TutorialOverlay from "@/components/tutorial/TutorialOverlay"
 import { useAuth } from "@/hooks"
 import { alertsApi, accountsApi, type Alert } from "@/lib/api"
 import { Badge } from "@/components/ui/badge"
+import { useTheme } from "@/contexts/ThemeContext"
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -44,6 +47,7 @@ export default function Layout() {
   const location = useLocation()
   const navigate = useNavigate()
   const { logout, user } = useAuth()
+  const { theme, toggleTheme } = useTheme()
 
   // Load unread alert count
   useEffect(() => {
@@ -193,7 +197,12 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 relative mobile-safe-area">
+    <div className={cn(
+      "flex h-screen relative mobile-safe-area transition-colors duration-300",
+      theme === "light" 
+        ? "bg-[#F5F0E8]" 
+        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+    )}>
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
         <div
@@ -214,25 +223,57 @@ export default function Layout() {
       <aside
         ref={sidebarRef}
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 bg-slate-800/95 backdrop-blur-xl border-r border-emerald-900/50 shadow-2xl transform transition-all duration-300 ease-out",
+          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 backdrop-blur-xl border-r shadow-2xl transform transition-all duration-300 ease-out",
           sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          "lg:w-64 lg:bg-slate-800/90 lg:backdrop-blur-md lg:shadow-xl lg:border-emerald-900/30"
+          theme === "light"
+            ? "bg-[#E8E3D8] border-[#C5C0B5]"
+            : "bg-[#242824]/95 border-[#3A4038]",
+          "lg:w-64 lg:shadow-xl"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-4 xs:p-5 lg:p-6 border-b border-emerald-900/50">
+          <div className={cn(
+            "p-4 xs:p-5 lg:p-6 border-b",
+            theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]"
+          )}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
-                <div className="p-2.5 xs:p-3 rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
-                  <Wallet className="h-5 w-5 xs:h-6 xs:w-6" />
+                <div className={cn(
+                  "p-1.5 xs:p-2 rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
+                  theme === "light" 
+                    ? "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]" 
+                    : "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+                )}>
+                  <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8 object-cover rounded-full" />
                 </div>
                 <div>
-                  <h1 className="text-lg xs:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">Bêre Bietjie</h1>
-                  <p className="text-xs xs:text-sm text-slate-400 hidden md:block">Your elegant financial companion</p>
+                  <h1 className={cn(
+                    "text-lg xs:text-xl lg:text-2xl font-bold bg-clip-text text-transparent",
+                    theme === "light"
+                      ? "bg-gradient-to-r from-[#6B7A4F] to-[#8B9A6B]"
+                      : "bg-gradient-to-r from-[#A8B78F] to-[#8B9A6B]"
+                  )}>Bêre Bietjie</h1>
+                  <p className={cn(
+                    "text-xs xs:text-sm hidden md:block",
+                    theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                  )}>Your elegant financial companion</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {/* Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className={cn(
+                    "p-2 rounded-lg transition-colors duration-200",
+                    theme === "light"
+                      ? "hover:bg-[#D4C4A8] text-[#5A6B55]"
+                      : "hover:bg-[#4A5048] text-[#B8B3A8]"
+                  )}
+                  aria-label="Toggle theme"
+                >
+                  {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                </button>
                 <button
                   onClick={closeSidebar}
                   className="lg:hidden p-2 xs:p-2.5 rounded-full hover:bg-zinc-700/50 transition-colors mobile-button-sm"
@@ -259,15 +300,20 @@ export default function Layout() {
                     cn(
                       "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
-                        ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg transform scale-[1.02]"
-                        : "text-slate-300 hover:bg-emerald-900/30 hover:text-emerald-200 hover:shadow-md hover:transform hover:translate-x-1"
+                        ? theme === "light"
+                          ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] text-white shadow-lg transform scale-[1.02]"
+                          : "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] text-white shadow-lg transform scale-[1.02]"
+                        : theme === "light"
+                          ? "text-[#5A6B55] hover:bg-[#D4C4A8] hover:text-[#2D3A28] hover:shadow-md hover:transform hover:translate-x-1"
+                          : "text-[#B8B3A8] hover:bg-[#4A5048] hover:text-[#E8E3D8] hover:shadow-md hover:transform hover:translate-x-1"
                     )
                   }
                 >
                   <div className={cn(
                     "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
-                    "group-hover:bg-emerald-900/30 group-hover:scale-110",
-                    "group-[.active]:bg-emerald-800/50"
+                    theme === "light"
+                      ? "group-hover:bg-[#D4C4A8] group-hover:scale-110 group-[.active]:bg-[#8B9A6B]/50"
+                      : "group-hover:bg-[#4A5048] group-hover:scale-110 group-[.active]:bg-[#8B9A6B]/50"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                     {item.to === "/alerts" && unreadAlertCount > 0 && (
@@ -283,19 +329,33 @@ export default function Layout() {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 xs:p-5 lg:p-6 border-t border-emerald-900/50 relative" ref={profileDropdownRef}>
+          <div className={cn(
+            "p-4 xs:p-5 lg:p-6 border-t relative",
+            theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]"
+          )} ref={profileDropdownRef}>
             <button
               onClick={handleProfileClick}
-              className="group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button bg-gradient-to-r from-emerald-900/50 to-green-900/50 hover:from-emerald-800/50 hover:to-green-800/50 text-emerald-200 hover:text-white shadow-lg hover:shadow-xl border border-emerald-800/50 hover:border-emerald-700/50"
+              className={cn(
+                "group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button shadow-lg hover:shadow-xl border",
+                theme === "light"
+                  ? "bg-gradient-to-r from-[#8B9A6B]/20 to-[#6B7A4F]/20 text-[#5A6B55] hover:from-[#8B9A6B]/30 hover:to-[#6B7A4F]/30 hover:text-[#2D3A28] border-[#8B9A6B]/30 hover:border-[#8B9A6B]/50"
+                  : "bg-gradient-to-r from-[#8B9A6B]/20 to-[#6B7A4F]/20 text-[#B8B3A8] hover:from-[#8B9A6B]/30 hover:to-[#6B7A4F]/30 hover:text-[#E8E3D8] border-[#8B9A6B]/30 hover:border-[#8B9A6B]/50"
+              )}
             >
               {user?.profile_picture_url ? (
                 <img 
                   src={user.profile_picture_url} 
                   alt="Profile" 
-                  className="w-8 h-8 xs:w-10 xs:h-10 rounded-full object-cover border-2 border-emerald-600 group-hover:scale-110 transition-all duration-200 flex-shrink-0"
+                  className={cn(
+                    "w-8 h-8 xs:w-10 xs:h-10 rounded-full object-cover border-2 group-hover:scale-110 transition-all duration-200 flex-shrink-0",
+                    theme === "light" ? "border-[#8B9A6B]" : "border-[#8B9A6B]"
+                  )}
                 />
               ) : (
-                <div className="p-2 rounded-lg bg-emerald-800/50 group-hover:bg-emerald-700/50 transition-all duration-200 flex-shrink-0 group-hover:scale-110">
+                <div className={cn(
+                  "p-2 rounded-lg transition-all duration-200 flex-shrink-0 group-hover:scale-110",
+                  theme === "light" ? "bg-[#8B9A6B]/30 group-hover:bg-[#8B9A6B]/50" : "bg-[#8B9A6B]/30 group-hover:bg-[#8B9A6B]/50"
+                )}>
                   <User className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
               )}
@@ -310,15 +370,25 @@ export default function Layout() {
 
             {/* Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 bg-slate-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-emerald-900/50 overflow-hidden z-50">
+              <div className={cn(
+                "absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 backdrop-blur-xl rounded-xl shadow-2xl border overflow-hidden z-50",
+                theme === "light"
+                  ? "bg-[#E8E3D8]/95 border-[#C5C0B5]"
+                  : "bg-[#242824]/95 border-[#3A4038]"
+              )}>
                 <button
                   onClick={handleViewProfile}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-300 hover:bg-emerald-900/30 hover:text-white transition-all duration-200"
+                  className={cn(
+                    "w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200",
+                    theme === "light"
+                      ? "text-[#5A6B55] hover:bg-[#D4C4A8] hover:text-[#2D3A28]"
+                      : "text-[#B8B3A8] hover:bg-[#4A5048] hover:text-[#E8E3D8]"
+                  )}
                 >
                   <User className="h-4 w-4" />
                   <span className="font-medium">View Profile</span>
                 </button>
-                <div className="border-t border-emerald-900/50" />
+                <div className={cn("border-t", theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]")} />
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
@@ -335,21 +405,50 @@ export default function Layout() {
       {/* Main content */}
       <main className="flex-1 overflow-auto mobile-scroll">
         {/* Mobile header with enhanced design */}
-        <div className="lg:hidden sticky top-0 z-30 bg-slate-800/90 backdrop-blur-md border-b border-emerald-900/50 responsive-padding">
+        <div className={cn(
+          "lg:hidden sticky top-0 z-30 backdrop-blur-md border-b responsive-padding transition-colors duration-300",
+          theme === "light"
+            ? "bg-[#E8E3D8]/90 border-[#C5C0B5]"
+            : "bg-[#242824]/90 border-[#3A4038]"
+        )}>
           <div className="flex items-center justify-between">
             <button
               onClick={openSidebar}
-              className="p-2.5 xs:p-3 rounded-full hover:bg-emerald-900/30 transition-all duration-200 mobile-app-button group text-slate-300"
+              className={cn(
+                "p-2.5 xs:p-3 rounded-full transition-all duration-200 mobile-app-button group",
+                theme === "light"
+                  ? "text-[#5A6B55] hover:bg-[#D4C4A8]"
+                  : "text-[#B8B3A8] hover:bg-[#4A5048]"
+              )}
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
             </button>
             <div className="flex items-center gap-2 xs:gap-3">
-              <div className="p-1.5 xs:p-2 rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-md transition-transform duration-300 hover:scale-110">
-                <Wallet className="h-4 w-4 xs:h-5 xs:w-5" />
+              <div className={cn(
+                "p-1 xs:p-1.5 rounded-full text-white shadow-md transition-transform duration-300 hover:scale-110",
+                theme === "light"
+                  ? "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+                  : "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+              )}>
+                <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-4 w-4 xs:h-5 xs:w-5 object-cover rounded-full" />
               </div>
-              <span className="font-bold text-sm xs:text-base text-slate-200">Bêre Bietjie</span>
+              <span className={cn(
+                "font-bold text-sm xs:text-base",
+                theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+              )}>Bêre Bietjie</span>
             </div>
-            <div className="w-8 xs:w-10"></div> {/* Spacer for balance */}
+            <button
+              onClick={toggleTheme}
+              className={cn(
+                "p-2.5 xs:p-3 rounded-full transition-all duration-200",
+                theme === "light"
+                  ? "text-[#5A6B55] hover:bg-[#D4C4A8]"
+                  : "text-[#B8B3A8] hover:bg-[#4A5048]"
+              )}
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? <Moon className="h-5 w-5 xs:h-6 xs:w-6" /> : <Sun className="h-5 w-5 xs:h-6 xs:w-6" />}
+            </button>
           </div>
         </div>
 

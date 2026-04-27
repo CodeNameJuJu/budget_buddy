@@ -3,6 +3,8 @@ import { BarChart2, TrendingUp, TrendingDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface MonthlyComparisonWidgetProps {
   accountId: number
@@ -24,6 +26,7 @@ interface MonthlyComparisonData {
 export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComparisonWidgetProps) {
   const [data, setData] = useState<MonthlyComparisonData | null>(null)
   const [loading, setLoading] = useState(true)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -107,12 +110,30 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
           {/* Summary Stats */}
           {previousMonth && (
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                <div className="flex items-center gap-1 text-emerald-400 mb-1">
+              <div className={cn(
+                "p-3 rounded-lg border",
+                theme === "light"
+                  ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+                  : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+              )}>
+                <div className={cn(
+                  "flex items-center gap-1 mb-1",
+                  theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                )}>
                   <TrendingUp className="h-3 w-3" />
-                  <span className="text-xs">Income Change</span>
+                  <span className={cn(
+                    "text-sm font-semibold",
+                    incomeChange >= 0
+                      ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                      : "text-red-400"
+                  )}>Income Change</span>
                 </div>
-                <div className={`text-sm font-semibold ${incomeChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className={cn(
+                  "text-sm font-semibold",
+                  incomeChange >= 0
+                    ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                    : "text-red-400"
+                )}>
                   {incomeChange >= 0 ? '+' : ''}{incomeChange.toFixed(1)}%
                 </div>
               </div>
@@ -121,7 +142,12 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
                   <TrendingDown className="h-3 w-3" />
                   <span className="text-xs">Expense Change</span>
                 </div>
-                <div className={`text-sm font-semibold ${expenseChange <= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className={cn(
+                  "text-sm font-semibold",
+                  expenseChange <= 0
+                    ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                    : "text-red-400"
+                )}>
                   {expenseChange >= 0 ? '+' : ''}{expenseChange.toFixed(1)}%
                 </div>
               </div>
@@ -142,14 +168,22 @@ export default function MonthlyComparisonWidget({ accountId, size }: MonthlyComp
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium">{trend.month}</span>
-                    <span className={`font-semibold ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <span className={cn(
+                      "font-semibold",
+                      net >= 0
+                        ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                        : "text-red-400"
+                    )}>
                       {formatCurrency(net.toString())}
                     </span>
                   </div>
                   <div className="flex gap-2 h-16 items-end">
                     <div className="flex-1 flex flex-col items-center">
                       <div
-                        className="w-full bg-emerald-500 rounded-t"
+                        className={cn(
+                          "w-full rounded-t",
+                          theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+                        )}
                         style={{ height: `${Math.max(incomeHeight, 0)}%` }}
                         title={`Income: ${formatCurrency(trend.income)}`}
                       />

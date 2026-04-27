@@ -164,7 +164,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-amber-950 to-slate-900">
         <div className="text-white">Loading...</div>
       </div>
     );
@@ -178,18 +178,18 @@ export default function ProfilePage() {
             <img 
               src={profilePictureUrl} 
               alt="Profile" 
-              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 border-emerald-600 cursor-pointer hover:opacity-90 transition-opacity"
+              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full object-cover border-4 border-amber-600 cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => document.getElementById('header-profile-upload')?.click()}
             />
           ) : (
             <div 
-              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full bg-emerald-600 flex items-center justify-center border-4 border-emerald-600 cursor-pointer hover:opacity-90 transition-opacity"
+              className="w-16 h-16 xs:w-20 xs:h-20 rounded-full bg-amber-600 flex items-center justify-center border-4 border-amber-600 cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => document.getElementById('header-profile-upload')?.click()}
             >
               <UserIcon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
             </div>
           )}
-          <label className="absolute bottom-0 right-0 bg-emerald-600 hover:bg-emerald-700 rounded-full p-1.5 cursor-pointer transition-colors">
+          <label className="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 rounded-full p-1.5 cursor-pointer transition-colors">
             <Camera className="h-3 w-3 text-white" />
             <input
               id="header-profile-upload"
@@ -202,23 +202,23 @@ export default function ProfilePage() {
           </label>
         </div>
         <div>
-          <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent">
+          <h1 className="text-2xl xs:text-3xl font-bold bg-gradient-to-r from-amber-300 to-yellow-300 bg-clip-text text-transparent">
             Profile
           </h1>
           <p className="text-slate-400 mt-1">Manage your account settings</p>
         </div>
       </div>
 
-      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
+      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-amber-900/30 p-4 xs:p-6 mb-4 xs:mb-6 w-full">
         <div className="flex items-center justify-between mb-4 xs:mb-6">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-            <UserIcon className="h-5 w-5 text-emerald-400" />
+            <UserIcon className="h-5 w-5 text-amber-400" />
             User Information
           </h2>
           {!isEditing && (
             <Button
               onClick={handleEditClick}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="bg-amber-600 hover:bg-amber-700 text-white"
             >
               <Edit className="h-4 w-4 mr-2" />
               Edit
@@ -228,7 +228,7 @@ export default function ProfilePage() {
 
         {saveMessage && (
           <div className={`mb-4 p-3 rounded-lg ${
-            saveMessage.type === 'success' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-red-900/50 text-red-300'
+            saveMessage.type === 'success' ? 'bg-amber-900/50 text-amber-300' : 'bg-red-900/50 text-red-300'
           }`}>
             {saveMessage.text}
           </div>
@@ -258,7 +258,7 @@ export default function ProfilePage() {
                 type="text"
                 value={editForm.first_name}
                 onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
-                className="w-full bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
               />
             </div>
 
@@ -271,7 +271,7 @@ export default function ProfilePage() {
                 type="text"
                 value={editForm.last_name}
                 onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
-                className="w-full bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
               />
             </div>
 
@@ -283,7 +283,7 @@ export default function ProfilePage() {
               <select
                 value={editForm.currency}
                 onChange={(e) => setEditForm({ ...editForm, currency: e.target.value })}
-                className="w-full bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
               >
                 {CURRENCY_OPTIONS.map((opt) => (
                   <option key={opt.code} value={opt.code}>
@@ -301,7 +301,7 @@ export default function ProfilePage() {
               <select
                 value={editForm.timezone}
                 onChange={(e) => setEditForm({ ...editForm, timezone: e.target.value })}
-                className="w-full bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
               >
                 {TIMEZONE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -315,7 +315,7 @@ export default function ProfilePage() {
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium"
+                className="bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white font-medium"
               >
                 {isSaving ? 'Saving...' : 'Save Changes'}
               </Button>
@@ -373,7 +373,7 @@ export default function ProfilePage() {
                 <Shield className="h-4 w-4" />
                 Account Status
               </label>
-              <p className={`font-medium ${user.is_active ? 'text-emerald-400' : 'text-red-400'}`}>
+              <p className={`font-medium ${user.is_active ? 'text-amber-400' : 'text-red-400'}`}>
                 {user.is_active ? 'Active' : 'Inactive'}
               </p>
             </div>
@@ -384,13 +384,13 @@ export default function ProfilePage() {
                 Email Verified
               </label>
               <div className="flex items-center gap-2">
-                <p className={`font-medium ${user.email_verified ? 'text-emerald-400' : 'text-amber-400'}`}>
+                <p className={`font-medium ${user.email_verified ? 'text-amber-400' : 'text-amber-400'}`}>
                   {user.email_verified ? 'Yes' : 'No'}
                 </p>
                 {!user.email_verified && (
                   <Button
                     onClick={handleSendVerification}
-                    className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1"
+                    className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1"
                   >
                     Verify
                   </Button>
@@ -409,11 +409,11 @@ export default function ProfilePage() {
                     value={verificationToken}
                     onChange={(e) => setVerificationToken(e.target.value)}
                     placeholder="Enter verification token"
-                    className="flex-1 bg-slate-800 border border-emerald-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                    className="flex-1 bg-slate-800 border border-amber-900/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
                   />
                   <Button
                     onClick={handleVerifyEmail}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
                   >
                     <Check className="h-4 w-4" />
                   </Button>

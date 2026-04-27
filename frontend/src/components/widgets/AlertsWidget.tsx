@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { dashboardApi } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface AlertsWidgetProps {
   accountId: number
@@ -28,6 +30,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
   const [data, setData] = useState<AlertsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -51,7 +54,10 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
       case "error":
         return <AlertTriangle className="h-4 w-4 text-red-400" />
       case "success":
-        return <CheckCircle className="h-4 w-4 text-emerald-400" />
+        return <CheckCircle className={cn(
+          "h-4 w-4",
+          theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+        )} />
       default:
         return <Info className="h-4 w-4 text-blue-400" />
     }
@@ -64,7 +70,9 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
       case "error":
         return <Badge variant="destructive">Error</Badge>
       case "success":
-        return <Badge variant="default" className="bg-emerald-500">Success</Badge>
+        return <Badge className={cn(
+          theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+        )}>Success</Badge>
       default:
         return <Badge variant="outline">Info</Badge>
     }
@@ -170,7 +178,10 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     {getAlertBadge(alert.type)}
                     {!alert.is_read && (
-                      <span className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0"></span>
+                      <span className={cn(
+                        "w-2 h-2 rounded-full flex-shrink-0",
+                        theme === "light" ? "bg-[#8B9A6B]" : "bg-[#8B9A6B]"
+                      )}></span>
                     )}
                   </div>
                   <p className="text-sm truncate">{alert.message}</p>

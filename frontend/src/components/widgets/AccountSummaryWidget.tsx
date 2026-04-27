@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface AccountSummaryWidgetProps {
   accountId: number
@@ -21,6 +23,7 @@ interface AccountSummaryData {
 export default function AccountSummaryWidget({ accountId, size }: AccountSummaryWidgetProps) {
   const [data, setData] = useState<AccountSummaryData | null>(null)
   const [loading, setLoading] = useState(true)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -92,7 +95,10 @@ export default function AccountSummaryWidget({ accountId, size }: AccountSummary
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center py-2">
-          <div className={`text-3xl font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+          <div className={cn(
+            "text-3xl font-bold",
+            isPositive ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]") : "text-red-400"
+          )}>
             {formatCurrency(data.total_balance)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
@@ -101,12 +107,23 @@ export default function AccountSummaryWidget({ accountId, size }: AccountSummary
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <div className="flex flex-col items-center gap-1 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-            <div className="flex items-center gap-1 text-emerald-400">
+          <div className={cn(
+            "flex flex-col items-center gap-1 p-3 rounded-lg border",
+            theme === "light"
+              ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+              : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+          )}>
+            <div className={cn(
+              "flex items-center gap-1",
+              theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+            )}>
               <TrendingUp className="h-3 w-3" />
               <span className="text-xs">Income</span>
             </div>
-            <span className="font-semibold text-emerald-400">{formatCurrency(data.total_income)}</span>
+            <span className={cn(
+              "font-semibold",
+              theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+            )}>{formatCurrency(data.total_income)}</span>
           </div>
           <div className="flex flex-col items-center gap-1 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
             <div className="flex items-center gap-1 text-red-400">

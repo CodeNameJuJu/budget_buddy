@@ -8,7 +8,7 @@ import { categoriesApi, accountsApi, type Category, type Account } from "@/lib/a
 
 const COLOUR_OPTIONS = [
   { label: "Blue", value: "#3b82f6" },
-  { label: "Emerald", value: "#10b981" },
+  { label: "Amber", value: "#f59e0b" },
   { label: "Amber", value: "#f59e0b" },
   { label: "Red", value: "#ef4444" },
   { label: "Purple", value: "#8b5cf6" },

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
+import { useTheme } from '../../contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 interface LoginFormData {
   email: string;
@@ -20,6 +22,7 @@ export const LoginForm: React.FC = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -72,20 +75,39 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area">
+    <div className={cn(
+      "min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area transition-colors duration-300",
+      theme === "light" 
+        ? "bg-[#F5F0E8]" 
+        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+    )}>
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-green-400 text-white shadow-lg transition-transform duration-300 hover:scale-110">
+          <div className={cn(
+            "mx-auto h-12 w-12 flex items-center justify-center rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
+            theme === "light"
+              ? "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+              : "bg-gradient-to-br from-[#8B9A6B] to-[#6B7A4F]"
+          )}>
             <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-100">
+          <h2 className={cn(
+            "mt-6 text-center text-3xl font-extrabold",
+            theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+          )}>
             Sign in to Bêre Bietjie
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-400">
+          <p className={cn(
+            "mt-2 text-center text-sm",
+            theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+          )}>
             Or{' '}
-            <Link to="/register" className="font-medium text-emerald-300 hover:text-emerald-200">
+            <Link to="/register" className={cn(
+              "font-medium hover:underline",
+              theme === "light" ? "text-[#8B9A6B] hover:text-[#6B7A4F]" : "text-[#A8B78F] hover:text-[#8B9A6B]"
+            )}>
               create a new account
             </Link>
           </p>
@@ -94,7 +116,10 @@ export const LoginForm: React.FC = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-300">
+              <label htmlFor="email" className={cn(
+                "block text-sm font-medium",
+                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              )}>
                 Email address
               </label>
               <input
@@ -103,9 +128,13 @@ export const LoginForm: React.FC = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  errors.email ? 'border-red-400' : 'border-emerald-800'
-                } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm`}
+                className={cn(
+                  "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
+                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                  theme === "light"
+                    ? "bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                    : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                )}
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
@@ -116,7 +145,10 @@ export const LoginForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-300">
+              <label htmlFor="password" className={cn(
+                "block text-sm font-medium",
+                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              )}>
                 Password
               </label>
               <div className="mt-1 relative">
@@ -126,9 +158,13 @@ export const LoginForm: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
-                  className={`appearance-none relative block w-full px-3 py-2 pr-10 border ${
-                    errors.password ? 'border-red-400' : 'border-emerald-800'
-                  } rounded-lg placeholder-slate-400 text-slate-100 bg-slate-800/50 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm`}
+                  className={cn(
+                    "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
+                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                    theme === "light"
+                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#8B9A6B] focus:border-[#8B9A6B]"
+                  )}
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -138,11 +174,9 @@ export const LoginForm: React.FC = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <span className="text-slate-400">Hide</span>
-                  ) : (
-                    <span className="text-slate-400">Show</span>
-                  )}
+                  <span className={theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"}>
+                    {showPassword ? 'Hide' : 'Show'}
+                  </span>
                 </button>
               </div>
               {errors.password && (
@@ -159,15 +193,26 @@ export const LoginForm: React.FC = () => {
                 type="checkbox"
                 checked={formData.rememberMe}
                 onChange={handleChange}
-                className="h-4 w-4 text-emerald-500 focus:ring-emerald-400 border-emerald-800 rounded bg-slate-700"
+                className={cn(
+                  "h-4 w-4 focus:ring-2 rounded transition-colors duration-200",
+                  theme === "light"
+                    ? "text-[#8B9A6B] focus:ring-[#8B9A6B] border-[#C5C0B5] bg-white"
+                    : "text-[#8B9A6B] focus:ring-[#8B9A6B] border-[#3A4038] bg-[#242824]"
+                )}
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300">
+              <label htmlFor="remember-me" className={cn(
+                "ml-2 block text-sm",
+                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              )}>
                 Remember me {formData.rememberMe ? '(ON)' : '(OFF)'}
               </label>
             </div>
 
             <div className="text-sm">
-              <Link to="/forgot-password" className="font-medium text-emerald-300 hover:text-emerald-200">
+              <Link to="/forgot-password" className={cn(
+                "font-medium hover:underline",
+                theme === "light" ? "text-[#8B9A6B] hover:text-[#6B7A4F]" : "text-[#A8B78F] hover:text-[#8B9A6B]"
+              )}>
                 Forgot your password?
               </Link>
             </div>
@@ -177,7 +222,12 @@ export const LoginForm: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200"
+              className={cn(
+                "group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200",
+                theme === "light"
+                  ? "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] focus:ring-[#8B9A6B]"
+                  : "bg-gradient-to-r from-[#8B9A6B] to-[#6B7A4F] hover:from-[#6B7A4F] hover:to-[#5A6B45] focus:ring-[#8B9A6B]"
+              )}
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

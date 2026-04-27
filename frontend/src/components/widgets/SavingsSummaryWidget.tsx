@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface SavingsSummaryWidgetProps {
   accountId: number
@@ -31,6 +33,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
   const [data, setData] = useState<SavingsSummaryData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -138,17 +141,38 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
         <div className="space-y-4 flex-1 overflow-auto">
           {/* Balance Overview */}
           <div className="grid grid-cols-3 gap-2">
-            <div className="text-center p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+            <div className={cn(
+              "text-center p-2 rounded-lg border",
+              theme === "light"
+                ? "bg-white/50 border-[#C5C0B5]"
+                : "bg-[#242824]/50 border-[#3A4038]"
+            )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Balance</div>
-              <div className="text-sm font-bold text-emerald-400 truncate">{formatCurrency(data.total_balance)}</div>
+              <div className={cn(
+                "text-sm font-bold truncate",
+                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+              )}>{formatCurrency(data.total_balance)}</div>
             </div>
-            <div className="text-center p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+            <div className={cn(
+              "text-center p-2 rounded-lg border",
+              theme === "light"
+                ? "bg-white/50 border-[#C5C0B5]"
+                : "bg-[#242824]/50 border-[#3A4038]"
+            )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Allocated</div>
               <div className="text-sm font-bold text-blue-400 truncate">{formatCurrency(data.total_allocated)}</div>
             </div>
-            <div className="text-center p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+            <div className={cn(
+              "text-center p-2 rounded-lg border",
+              theme === "light"
+                ? "bg-white/50 border-[#C5C0B5]"
+                : "bg-[#242824]/50 border-[#3A4038]"
+            )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Available</div>
-              <div className={`text-sm font-bold truncate ${unallocated >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+              <div className={cn(
+                "text-sm font-bold truncate",
+                unallocated >= 0 ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]") : "text-red-400"
+              )}>
                 {formatCurrency(Math.abs(unallocated))}
               </div>
             </div>
@@ -156,13 +180,27 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
 
           {/* Monthly Contribution */}
           {data.monthly_contribution && (
-            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <div className={cn(
+              "p-3 rounded-lg border",
+              theme === "light"
+                ? "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+                : "bg-[#8B9A6B]/10 border-[#8B9A6B]/20"
+            )}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-emerald-400" />
-                  <span className="text-sm text-emerald-300">Monthly Contribution</span>
+                  <TrendingUp className={cn(
+                    "h-4 w-4",
+                    theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                  )} />
+                  <span className={cn(
+                    "text-sm",
+                    theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                  )}>Monthly Contribution</span>
                 </div>
-                <div className="text-sm font-bold text-emerald-400">
+                <div className={cn(
+                  "text-sm font-bold",
+                  theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+                )}>
                   {formatCurrency(data.monthly_contribution)}
                 </div>
               </div>

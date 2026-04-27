@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, PlusCircle, TrendingUp, PiggyBank } from "lucide-react"
 import { useTutorial } from "@/contexts/TutorialContext"
 import { setupTutorialSteps } from "@/lib/tutorialSteps"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 export default function GettingStartedWidget() {
   const navigate = useNavigate()
   const { startTutorial } = useTutorial()
+  const { theme } = useTheme()
 
   const handleStartSetup = () => {
     startTutorial(setupTutorialSteps)
@@ -32,8 +35,14 @@ export default function GettingStartedWidget() {
             className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/80 transition-colors"
             onClick={() => navigate("/budgets")}
           >
-            <div className="bg-emerald-100 p-2 rounded-full">
-              <TrendingUp className="h-4 w-4 text-emerald-600" />
+            <div className={cn(
+              "p-2 rounded-full",
+              theme === "light" ? "bg-[#E8E3D8]" : "bg-[#242824]"
+            )}>
+              <TrendingUp className={cn(
+                "h-4 w-4",
+                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+              )} />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-sm">Add Budgets</h4>
@@ -60,8 +69,14 @@ export default function GettingStartedWidget() {
             className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/80 transition-colors"
             onClick={() => navigate("/transactions")}
           >
-            <div className="bg-emerald-100 p-2 rounded-full">
-              <PlusCircle className="h-4 w-4 text-emerald-600" />
+            <div className={cn(
+              "p-2 rounded-full",
+              theme === "light" ? "bg-[#E8E3D8]" : "bg-[#242824]"
+            )}>
+              <PlusCircle className={cn(
+                "h-4 w-4",
+                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+              )} />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-sm">Track Transactions</h4>

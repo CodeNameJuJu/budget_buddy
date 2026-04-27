@@ -14,13 +14,13 @@ interface CategoryBreakdownChartProps {
 }
 
 const COLORS = [
-  '#10B981', // emerald
+  '#F59E0B', // amber
   '#3B82F6', // blue
   '#F59E0B', // amber
   '#EF4444', // red
   '#8B5CF6', // violet
   '#EC4899', // pink
-  '#10B981', // emerald
+  '#F59E0B', // amber
   '#F97316', // orange
   '#6366F1', // indigo
   '#84CC16', // lime

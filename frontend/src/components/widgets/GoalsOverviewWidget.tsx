@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { dashboardApi } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface GoalsOverviewWidgetProps {
   accountId: number
@@ -31,6 +33,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
   const [data, setData] = useState<GoalsOverviewData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
@@ -177,7 +180,12 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                         </>
                       )}
                     </div>
-                    <span className={isCompleted ? "text-emerald-400 font-medium" : "text-green-400"}>
+                    <span className={cn(
+                      "font-medium",
+                      isCompleted
+                        ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                        : "text-green-400"
+                    )}>
                       {progress.toFixed(0)}%
                     </span>
                   </div>

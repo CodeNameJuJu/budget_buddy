@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { dashboardApi, transactionsApi, type Transaction } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
+import { cn } from "@/lib/utils"
 
 interface BudgetProgressWidgetProps {
   accountId: number
@@ -30,9 +32,9 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
   const [data, setData] = useState<BudgetProgressData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [showTransactionsModal, setShowTransactionsModal] = useState(false)
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const { theme } = useTheme()
   const [transactionsLoading, setTransactionsLoading] = useState(false)
 
   useEffect(() => {
@@ -196,11 +198,11 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                     />
                     <div className="flex items-center justify-between text-xs text-slate-400">
                       <span>{budget.category}</span>
-                      <span className={`
-                        ${isOverBudget ? "text-red-400 font-medium" :
+                      <span className={cn(
+                        isOverBudget ? "text-red-400 font-medium" :
                           isNearLimit ? "text-yellow-400" :
-                          "text-emerald-400"}
-                      `}>
+                          (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                      )}>
                         {budget.progress.toFixed(0)}%
                       </span>
                     </div>
@@ -270,9 +272,12 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                             )}
                           </div>
                         </div>
-                        <div className={`font-semibold ${
-                          transaction.type === "income" ? "text-emerald-400" : "text-red-400"
-                        }`}>
+                        <div className={cn(
+                          "font-semibold",
+                          transaction.type === "income"
+                            ? (theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]")
+                            : "text-red-400"
+                        )}>
                           {transaction.type === "income" ? "+" : "-"}{formatCurrency(transaction.amount)}
                         </div>
                       </div>

@@ -122,7 +122,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-emerald-400">
+            <div className="text-2xl font-bold text-amber-400">
               {formatCurrency(income)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Great progress this month</p>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${balance >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+            <div className={`text-2xl font-bold ${balance >= 0 ? "text-amber-400" : "text-red-400"}`}>
               {formatCurrency(balance)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Healthy balance</p>
@@ -194,7 +194,7 @@ export default function DashboardPage() {
                       <Badge variant={t.type === "income" ? "income" : "expense"}>
                         {t.type}
                       </Badge>
-                      <span className={`text-sm font-semibold ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}>
+                      <span className={`text-sm font-semibold ${t.type === "income" ? "text-amber-400" : "text-red-400"}`}>
                         {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                       </span>
                     </div>
@@ -279,7 +279,7 @@ export default function DashboardPage() {
                       <div className="h-2 bg-zinc-600 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-700 ease-out ${
-                            percentage > 80 ? 'bg-red-500' : percentage > 60 ? 'bg-orange-500' : 'bg-emerald-500'
+                            percentage > 80 ? 'bg-red-500' : percentage > 60 ? 'bg-orange-500' : 'bg-amber-500'
                           }`}
                           style={{ width: `${Math.min(percentage, 100)}%` }}
                         />
@@ -330,7 +330,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Savings Rate</span>
-                  <span className="text-emerald-400">
+                  <span className="text-amber-400">
                     {formatPercentage(
                       parseFloat(summary?.total_income || "0") > 0 
                         ? (parseFloat(summary?.total_income || "0") - parseFloat(summary?.total_expenses || "0")) / parseFloat(summary?.total_income || "1") * 100
@@ -383,7 +383,7 @@ export default function DashboardPage() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-emerald-600 text-white transition-colors duration-200">
+              <div className="p-2 rounded-full bg-amber-600 text-white transition-colors duration-200">
                 <PiggyBank className="h-4 w-4" />
               </div>
               Savings Summary
@@ -398,7 +398,7 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-emerald-400">
+                    <div className="text-2xl font-bold text-amber-400">
                       {formatCurrency(savings.reduce((sum, pot) => sum + parseFloat(pot.allocated || "0"), 0))}
                     </div>
                     <p className="text-xs text-muted-foreground">Total Allocated</p>
@@ -414,7 +414,7 @@ export default function DashboardPage() {
                   {savings.slice(0, 3).map((pot) => (
                     <div key={pot.id} className="flex items-center justify-between p-2 rounded-lg bg-zinc-800/50">
                       <span className="text-sm font-medium">{pot.name}</span>
-                      <span className="text-sm text-emerald-400">
+                      <span className="text-sm text-amber-400">
                         {formatCurrency(parseFloat(pot.allocated || "0"))}
                       </span>
                     </div>
@@ -439,7 +439,7 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-lg font-bold text-emerald-400">+12%</div>
+                  <div className="text-lg font-bold text-amber-400">+12%</div>
                   <p className="text-xs text-muted-foreground">vs Last Month</p>
                 </div>
                 <div>
@@ -489,7 +489,7 @@ export default function DashboardPage() {
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Savings Rate</span>
-                    <span className="text-emerald-400">+15%</span>
+                    <span className="text-amber-400">+15%</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Budget Adherence</span>

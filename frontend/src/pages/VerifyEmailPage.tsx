@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authApi } from '../lib/api';
+import { useTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const token = searchParams.get('token');
@@ -35,25 +38,54 @@ export default function VerifyEmailPage() {
   }, [searchParams, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-6">
-      <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-xl border border-emerald-900/30 p-8 max-w-md w-full">
+    <div className={cn(
+      "flex items-center justify-center min-h-screen p-6",
+      theme === "light"
+        ? "bg-gradient-to-br from-[#F5F0E8] via-[#E8E3D8] to-[#F5F0E8]"
+        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+    )}>
+      <div className={cn(
+        "backdrop-blur-md rounded-2xl shadow-xl border p-8 max-w-md w-full",
+        theme === "light"
+          ? "bg-white/90 border-[#C5C0B5]/30"
+          : "bg-[#242824]/90 border-[#3A4038]/30"
+      )}>
         {status === 'loading' && (
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-400 mx-auto mb-4"></div>
-            <h2 className="text-xl font-semibold text-white mb-2">Verifying your email...</h2>
-            <p className="text-slate-400">Please wait while we verify your email address.</p>
+            <div className={cn(
+              "animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4",
+              theme === "light" ? "border-[#8B9A6B]" : "border-[#A8B78F]"
+            )}></div>
+            <h2 className={cn(
+              "text-xl font-semibold mb-2",
+              theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+            )}>Verifying your email...</h2>
+            <p className={cn(
+              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            )}>Please wait while we verify your email address.</p>
           </div>
         )}
 
         {status === 'success' && (
           <div className="text-center">
-            <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className={cn(
+              "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
+              theme === "light" ? "bg-[#8B9A6B]/20" : "bg-[#8B9A6B]/20"
+            )}>
+              <svg className={cn(
+                "w-8 h-8",
+                theme === "light" ? "text-[#8B9A6B]" : "text-[#A8B78F]"
+              )} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Email Verified!</h2>
-            <p className="text-slate-400">{message}</p>
+            <h2 className={cn(
+              "text-xl font-semibold mb-2",
+              theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+            )}>Email Verified!</h2>
+            <p className={cn(
+              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            )}>{message}</p>
           </div>
         )}
 
@@ -64,11 +96,22 @@ export default function VerifyEmailPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Verification Failed</h2>
-            <p className="text-slate-400 mb-6">{message}</p>
+            <h2 className={cn(
+              "text-xl font-semibold mb-2",
+              theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+            )}>Verification Failed</h2>
+            <p className={cn(
+              "mb-6",
+              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            )}>{message}</p>
             <button
               onClick={() => navigate('/profile')}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition-colors"
+              className={cn(
+                "px-6 py-2 rounded-lg transition-colors",
+                theme === "light"
+                  ? "bg-[#8B9A6B] hover:bg-[#6B7A4F] text-white"
+                  : "bg-[#8B9A6B] hover:bg-[#6B7A4F] text-white"
+              )}
             >
               Go to Profile
             </button>
