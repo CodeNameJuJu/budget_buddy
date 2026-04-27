@@ -34,8 +34,9 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
   const [isExpanded, setIsExpanded] = useState(false)
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  const { theme } = useTheme()
+  const [showTransactionsModal, setShowTransactionsModal] = useState(false)
   const [transactionsLoading, setTransactionsLoading] = useState(false)
+  const { theme } = useTheme()
 
   useEffect(() => {
     loadData()
