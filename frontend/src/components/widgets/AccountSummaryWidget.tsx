@@ -97,7 +97,7 @@ export default function AccountSummaryWidget({ accountId, size }: AccountSummary
         <div className="text-center py-2">
           <div className={cn(
             "text-3xl font-bold",
-            isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-400"
+            isPositive ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400"
           )}>
             {formatCurrency(data.total_balance)}
           </div>
@@ -110,19 +110,19 @@ export default function AccountSummaryWidget({ accountId, size }: AccountSummary
           <div className={cn(
             "flex flex-col items-center gap-1 p-3 rounded-lg border",
             theme === "light"
-              ? "bg-[#9EC489]/10 border-[#9EC489]/20"
-              : "bg-[#9EC489]/10 border-[#9EC489]/20"
+              ? "bg-[#6BAF92]/10 border-[#6BAF92]/20"
+              : "bg-[#6BAF92]/10 border-[#6BAF92]/20"
           )}>
             <div className={cn(
               "flex items-center gap-1",
-              theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+              theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
             )}>
               <TrendingUp className="h-3 w-3" />
               <span className="text-xs">Income</span>
             </div>
             <span className={cn(
               "font-semibold",
-              theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+              theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
             )}>{formatCurrency(data.total_income)}</span>
           </div>
           <div className="flex flex-col items-center gap-1 p-3 rounded-lg bg-red-500/10 border border-red-500/20">

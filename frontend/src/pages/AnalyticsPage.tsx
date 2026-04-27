@@ -147,7 +147,7 @@ export default function AnalyticsPage() {
             <div className="flex items-center gap-2">
               <div className={cn(
                 "p-2 rounded-full text-white transition-colors duration-200",
-                theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
+                theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]"
               )}>
                 <DollarSign className="h-4 w-4" />
               </div>

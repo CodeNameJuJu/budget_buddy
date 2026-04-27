@@ -37,11 +37,11 @@ export default function GettingStartedWidget() {
           >
             <div className={cn(
               "p-2 rounded-full",
-              theme === "light" ? "bg-[#E8E3D8]" : "bg-[#242824]"
+              theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
             )}>
               <TrendingUp className={cn(
                 "h-4 w-4",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )} />
             </div>
             <div className="flex-1">
@@ -57,11 +57,11 @@ export default function GettingStartedWidget() {
           >
             <div className={cn(
               "p-2 rounded-full",
-              theme === "light" ? "bg-[#9EC489]/20" : "bg-[#9EC489]/20"
+              theme === "light" ? "bg-[#6BAF92]/20" : "bg-[#6BAF92]/20"
             )}>
               <PiggyBank className={cn(
                 "h-4 w-4",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )} />
             </div>
             <div className="flex-1">
@@ -77,11 +77,11 @@ export default function GettingStartedWidget() {
           >
             <div className={cn(
               "p-2 rounded-full",
-              theme === "light" ? "bg-[#E8E3D8]" : "bg-[#242824]"
+              theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
             )}>
               <PlusCircle className={cn(
                 "h-4 w-4",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )} />
             </div>
             <div className="flex-1">

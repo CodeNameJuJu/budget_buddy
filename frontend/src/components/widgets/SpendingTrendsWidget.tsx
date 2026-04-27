@@ -139,7 +139,7 @@ export default function SpendingTrendsWidget({ accountId, size }: SpendingTrends
                   <div className="flex items-center gap-4">
                     <div className={cn(
                       "flex items-center gap-1",
-                      isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-500"
+                      isPositive ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-500"
                     )}>
                       <TrendingUp className="h-3 w-3" />
                       <span>{formatCurrency(income.toString())}</span>
@@ -151,7 +151,7 @@ export default function SpendingTrendsWidget({ accountId, size }: SpendingTrends
                     {hasData ? (
                       <div className={cn(
                         "font-semibold min-w-[80px] text-right",
-                        isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-500"
+                        isPositive ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-500"
                       )}>
                         {isPositive ? '+' : ''}{formatCurrency(net.toString())}
                       </div>

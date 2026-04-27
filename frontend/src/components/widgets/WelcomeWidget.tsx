@@ -11,13 +11,13 @@ export default function WelcomeWidget() {
     <Card className={cn(
       "border",
       theme === "light"
-        ? "bg-gradient-to-br from-[#9EC489]/10 to-[#7BA35E]/10 border-[#9EC489]/30"
-        : "bg-gradient-to-br from-[#9EC489]/10 to-[#7BA35E]/10 border-[#9EC489]/30"
+        ? "bg-gradient-to-br from-[#6BAF92]/10 to-[#5E9C7E]/10 border-[#6BAF92]/30"
+        : "bg-gradient-to-br from-[#6BAF92]/10 to-[#5E9C7E]/10 border-[#6BAF92]/30"
     )}>
       <CardHeader className="pb-3">
         <CardTitle className={cn(
           "flex items-center gap-2",
-          theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+          theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
         )}>
           <Sparkles className="h-5 w-5" />
           Welcome to Bêre Bietjie!
@@ -25,12 +25,12 @@ export default function WelcomeWidget() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className={cn(
-          theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+          theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
         )}>
           <p className="text-lg font-medium">Hi there! Ready to take control of your finances?</p>
           <p className={cn(
             "text-sm mt-2",
-            theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
           )}>
             You've successfully registered and can now start managing your budget, tracking expenses, and achieving your financial goals.
           </p>
@@ -40,8 +40,8 @@ export default function WelcomeWidget() {
           <Badge className={cn(
             "border",
             theme === "light"
-              ? "bg-[#9EC489]/20 text-[#9EC489] border-[#9EC489]/40"
-              : "bg-[#9EC489]/20 text-[#B8D5A8] border-[#9EC489]/40"
+              ? "bg-[#6BAF92]/20 text-[#6BAF92] border-[#6BAF92]/40"
+              : "bg-[#6BAF92]/20 text-[#A8D5BA] border-[#6BAF92]/40"
           )}>
             <CheckCircle className="h-3 w-3 mr-1" />
             Account Created
@@ -49,8 +49,8 @@ export default function WelcomeWidget() {
           <Badge className={cn(
             "border",
             theme === "light"
-              ? "bg-[#9EC489]/20 text-[#9EC489] border-[#9EC489]/40"
-              : "bg-[#9EC489]/20 text-[#B8D5A8] border-[#9EC489]/40"
+              ? "bg-[#6BAF92]/20 text-[#6BAF92] border-[#6BAF92]/40"
+              : "bg-[#6BAF92]/20 text-[#A8D5BA] border-[#6BAF92]/40"
           )}>
             <CheckCircle className="h-3 w-3 mr-1" />
             Ready to Start

@@ -144,20 +144,20 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
             <div className={cn(
               "text-center p-2 rounded-lg border",
               theme === "light"
-                ? "bg-white/50 border-[#C5C0B5]"
-                : "bg-[#242824]/50 border-[#3A4038]"
+                ? "bg-white/50 border-[#E6E0D6]"
+                : "bg-[#18231D]/50 border-[#2E3B35]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Balance</div>
               <div className={cn(
                 "text-sm font-bold truncate",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )}>{formatCurrency(data.total_balance)}</div>
             </div>
             <div className={cn(
               "text-center p-2 rounded-lg border",
               theme === "light"
-                ? "bg-white/50 border-[#C5C0B5]"
-                : "bg-[#242824]/50 border-[#3A4038]"
+                ? "bg-white/50 border-[#E6E0D6]"
+                : "bg-[#18231D]/50 border-[#2E3B35]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Allocated</div>
               <div className="text-sm font-bold text-blue-400 truncate">{formatCurrency(data.total_allocated)}</div>
@@ -165,13 +165,13 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
             <div className={cn(
               "text-center p-2 rounded-lg border",
               theme === "light"
-                ? "bg-white/50 border-[#C5C0B5]"
-                : "bg-[#242824]/50 border-[#3A4038]"
+                ? "bg-white/50 border-[#E6E0D6]"
+                : "bg-[#18231D]/50 border-[#2E3B35]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Available</div>
               <div className={cn(
                 "text-sm font-bold truncate",
-                unallocated >= 0 ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-400"
+                unallocated >= 0 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400"
               )}>
                 {formatCurrency(Math.abs(unallocated))}
               </div>
@@ -183,23 +183,23 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
             <div className={cn(
               "p-3 rounded-lg border",
               theme === "light"
-                ? "bg-[#9EC489]/10 border-[#9EC489]/20"
-                : "bg-[#9EC489]/10 border-[#9EC489]/20"
+                ? "bg-[#6BAF92]/10 border-[#6BAF92]/20"
+                : "bg-[#6BAF92]/10 border-[#6BAF92]/20"
             )}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <TrendingUp className={cn(
                     "h-4 w-4",
-                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                    theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
                   )} />
                   <span className={cn(
                     "text-sm",
-                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                    theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
                   )}>Monthly Contribution</span>
                 </div>
                 <div className={cn(
                   "text-sm font-bold",
-                  theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                  theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
                 )}>
                   {formatCurrency(data.monthly_contribution)}
                 </div>

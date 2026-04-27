@@ -4,46 +4,46 @@
 
 @layer base {
   :root {
-    /* Light mode - pastel earthy green with beige/cream background */
-    --background: 40 30% 96%; /* #F5F0E8 - very light beige/cream */
-    --foreground: 85 25% 20%; /* #2D3A28 - dark green for text */
-    --card: 40 20% 92%; /* #E8E3D8 - slightly darker beige */
-    --card-foreground: 85 25% 20%; /* #2D3A28 - dark green */
-    --primary: 85 25% 55%; /* #9EC489 - pastel earthy green */
-    --primary-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
-    --secondary: 40 20% 88%; /* #D4C4A8 - soft beige */
-    --secondary-foreground: 85 25% 20%; /* #2D3A28 - dark green */
-    --muted: 40 20% 88%; /* #D4C4A8 - soft beige */
-    --muted-foreground: 85 20% 40%; /* #5A6B55 - medium green */
-    --accent: 85 25% 55%; /* #9EC489 - pastel earthy green */
-    --accent-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
-    --destructive: 0 72% 61%; /* red */
-    --destructive-foreground: 40 30% 96%; /* light beige */
-    --border: 40 15% 75%; /* #C5C0B5 - soft beige border */
-    --input: 40 20% 92%; /* #E8E3D8 - beige */
-    --ring: 85 25% 55%; /* #9EC489 - pastel earthy green */
+    /* Light mode - Savanna theme */
+    --background: 30 20% 95%; /* #F6F4EF - Savanna background */
+    --foreground: 180 20% 15%; /* #1F2A24 - dark text */
+    --card: 30 15% 90%; /* #E8DCC5 - surface */
+    --card-foreground: 180 20% 15%; /* #1F2A24 - dark text */
+    --primary: 145 35% 60%; /* #6BAF92 - primary green */
+    --primary-foreground: 30 20% 95%; /* #F6F4EF - Savanna background */
+    --secondary: 160 30% 80%; /* #A8D5BA - secondary green */
+    --secondary-foreground: 180 20% 15%; /* #1F2A24 - dark text */
+    --muted: 30 15% 90%; /* #E8DCC5 - surface */
+    --muted-foreground: 160 10% 45%; /* #6C7A73 - muted text */
+    --accent: 145 35% 60%; /* #6BAF92 - primary green */
+    --accent-foreground: 30 20% 95%; /* #F6F4EF - Savanna background */
+    --destructive: 15 60% 60%; /* #C97C5D - warning */
+    --destructive-foreground: 30 20% 95%; /* Savanna background */
+    --border: 30 10% 88%; /* #E6E0D6 - border */
+    --input: 30 15% 90%; /* #E8DCC5 - surface */
+    --ring: 145 35% 60%; /* #6BAF92 - primary green */
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Dark mode */
-    --background: 120 8% 10%; /* #1A1D1A - very dark green/gray */
-    --foreground: 40 20% 91%; /* #E8E3D8 - light beige for text */
-    --card: 120 8% 14%; /* #242824 - slightly lighter dark */
-    --card-foreground: 40 20% 91%; /* #E8E3D8 - light beige */
-    --primary: 85 25% 55%; /* #9EC489 - pastel earthy green */
-    --primary-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
-    --secondary: 120 8% 18%; /* #4A5048 - dark beige accent */
-    --secondary-foreground: 40 20% 91%; /* #E8E3D8 - light beige */
-    --muted: 120 8% 18%; /* #4A5048 - dark beige */
-    --muted-foreground: 40 15% 72%; /* #B8B3A8 - medium beige */
-    --accent: 85 25% 55%; /* #9EC489 - pastel earthy green */
-    --accent-foreground: 40 30% 96%; /* #F5F0E8 - light beige */
-    --destructive: 0 72% 61%; /* red */
-    --destructive-foreground: 40 30% 96%; /* light beige */
-    --border: 120 10% 22%; /* #3A4038 - dark green border */
-    --input: 120 8% 14%; /* #242824 - dark */
-    --ring: 85 25% 55%; /* #9EC489 - pastel earthy green */
+    /* Dark mode - Kalahari theme */
+    --background: 150 15% 5%; /* #0F1512 - Kalahari background */
+    --foreground: 150 20% 90%; /* #E7EFEA - light text */
+    --card: 150 15% 10%; /* #18231D - surface */
+    --card-foreground: 150 20% 90%; /* #E7EFEA - light text */
+    --primary: 150 35% 50%; /* #5E9C7E - primary green */
+    --primary-foreground: 150 20% 95%; /* #E7EFEA - light text */
+    --secondary: 150 30% 65%; /* #88B39B - secondary green */
+    --secondary-foreground: 150 20% 90%; /* #E7EFEA - light text */
+    --muted: 150 15% 10%; /* #18231D - surface */
+    --muted-foreground: 150 15% 70%; /* #A7B3AD - muted text */
+    --accent: 150 35% 50%; /* #5E9C7E - primary green */
+    --accent-foreground: 150 20% 95%; /* #E7EFEA - light text */
+    --destructive: 15 50% 55%; /* #B46B52 - warning */
+    --destructive-foreground: 150 20% 95%; /* light text */
+    --border: 150 15% 18%; /* #2E3B35 - border */
+    --input: 150 15% 10%; /* #18231D - surface */
+    --ring: 150 35% 50%; /* #5E9C7E - primary green */
     --radius: 0.75rem;
   }
 }

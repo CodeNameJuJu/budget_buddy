@@ -91,7 +91,7 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
           <div className="flex items-center justify-center py-2">
             <div className={cn(
               "text-3xl font-bold",
-              isPositive ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]") : "text-red-400"
+              isPositive ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400"
             )}>
               {isPositive ? '+' : ''}{formatCurrency(data.balance)}
             </div>
@@ -101,19 +101,19 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
             <div className={cn(
               "flex flex-col items-center gap-1 p-2 rounded-lg border",
               theme === "light"
-                ? "bg-[#9EC489]/10 border-[#9EC489]/20"
-                : "bg-[#9EC489]/10 border-[#9EC489]/20"
+                ? "bg-[#6BAF92]/10 border-[#6BAF92]/20"
+                : "bg-[#6BAF92]/10 border-[#6BAF92]/20"
             )}>
               <div className={cn(
                 "flex items-center gap-1",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )}>
                 <TrendingUp className="h-3 w-3" />
                 <span className="text-xs">Income</span>
               </div>
               <span className={cn(
                 "font-semibold",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )}>{formatCurrency(data.income)}</span>
             </div>
             <div className="flex flex-col items-center gap-1 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
@@ -127,7 +127,7 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
           
           <div className={cn(
             "text-center text-xs",
-            theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
           )}>
             {data.period}
           </div>

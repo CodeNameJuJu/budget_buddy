@@ -200,8 +200,8 @@ export default function Layout() {
     <div className={cn(
       "flex h-screen relative mobile-safe-area transition-colors duration-300",
       theme === "light" 
-        ? "bg-[#F5F0E8]" 
-        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+        ? "bg-[#F6F4EF]" 
+        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
     )}>
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
@@ -226,8 +226,8 @@ export default function Layout() {
           "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 backdrop-blur-xl border-r shadow-2xl transform transition-all duration-300 ease-out",
           sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           theme === "light"
-            ? "bg-[#E8E3D8] border-[#C5C0B5]"
-            : "bg-[#242824]/95 border-[#3A4038]",
+            ? "bg-[#E8DCC5] border-[#E6E0D6]"
+            : "bg-[#18231D]/95 border-[#2E3B35]",
           "lg:w-64 lg:shadow-xl"
         )}
       >
@@ -235,15 +235,15 @@ export default function Layout() {
           {/* Sidebar Header */}
           <div className={cn(
             "p-4 xs:p-5 lg:p-6 border-b",
-            theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]"
+            theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
           )}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
                 <div className={cn(
                   "p-1.5 xs:p-2 rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
                   theme === "light" 
-                    ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]" 
-                    : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
+                    ? "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]" 
+                    : "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
                 )}>
                   <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8 object-cover rounded-full" />
                 </div>
@@ -251,12 +251,12 @@ export default function Layout() {
                   <h1 className={cn(
                     "text-lg xs:text-xl lg:text-2xl font-bold bg-clip-text text-transparent",
                     theme === "light"
-                      ? "bg-gradient-to-r from-[#7BA35E] to-[#9EC489]"
-                      : "bg-gradient-to-r from-[#B8D5A8] to-[#9EC489]"
+                      ? "bg-gradient-to-r from-[#5E9C7E] to-[#6BAF92]"
+                      : "bg-gradient-to-r from-[#A8D5BA] to-[#6BAF92]"
                   )}>Bêre Bietjie</h1>
                   <p className={cn(
                     "text-xs xs:text-sm hidden md:block",
-                    theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                    theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                   )}>Your elegant financial companion</p>
                 </div>
               </div>
@@ -267,8 +267,8 @@ export default function Layout() {
                   className={cn(
                     "p-2 rounded-lg transition-colors duration-200",
                     theme === "light"
-                      ? "hover:bg-[#D4C4A8] text-[#5A6B55]"
-                      : "hover:bg-[#4A5048] text-[#B8B3A8]"
+                      ? "hover:bg-[#D9B44A] text-[#6C7A73]"
+                      : "hover:bg-[#C9A24A] text-[#A7B3AD]"
                   )}
                   aria-label="Toggle theme"
                 >
@@ -301,19 +301,19 @@ export default function Layout() {
                       "group flex items-center gap-3 xs:gap-4 px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
                         ? theme === "light"
-                          ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] text-white shadow-lg transform scale-[1.02]"
-                          : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] text-white shadow-lg transform scale-[1.02]"
+                          ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
+                          : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
                         : theme === "light"
-                          ? "text-[#5A6B55] hover:bg-[#D4C4A8] hover:text-[#2D3A28] hover:shadow-md hover:transform hover:translate-x-1"
-                          : "text-[#B8B3A8] hover:bg-[#4A5048] hover:text-[#E8E3D8] hover:shadow-md hover:transform hover:translate-x-1"
+                          ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24] hover:shadow-md hover:transform hover:translate-x-1"
+                          : "text-[#A7B3AD] hover:bg-[#C9A24A] hover:text-[#E8DCC5] hover:shadow-md hover:transform hover:translate-x-1"
                     )
                   }
                 >
                   <div className={cn(
                     "p-2 rounded-lg transition-all duration-200 flex-shrink-0 relative",
                     theme === "light"
-                      ? "group-hover:bg-[#D4C4A8] group-hover:scale-110 group-[.active]:bg-[#9EC489]/50"
-                      : "group-hover:bg-[#4A5048] group-hover:scale-110 group-[.active]:bg-[#9EC489]/50"
+                      ? "group-hover:bg-[#D9B44A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
+                      : "group-hover:bg-[#C9A24A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
                   )}>
                     <item.icon className="h-5 w-5 xs:h-6 xs:w-6" />
                     {item.to === "/alerts" && unreadAlertCount > 0 && (
@@ -331,15 +331,15 @@ export default function Layout() {
           {/* Sidebar Footer */}
           <div className={cn(
             "p-4 xs:p-5 lg:p-6 border-t relative",
-            theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]"
+            theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
           )} ref={profileDropdownRef}>
             <button
               onClick={handleProfileClick}
               className={cn(
                 "group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button shadow-lg hover:shadow-xl border",
                 theme === "light"
-                  ? "bg-gradient-to-r from-[#9EC489]/20 to-[#7BA35E]/20 text-[#5A6B55] hover:from-[#9EC489]/30 hover:to-[#7BA35E]/30 hover:text-[#2D3A28] border-[#9EC489]/30 hover:border-[#9EC489]/50"
-                  : "bg-gradient-to-r from-[#9EC489]/20 to-[#7BA35E]/20 text-[#B8B3A8] hover:from-[#9EC489]/30 hover:to-[#7BA35E]/30 hover:text-[#E8E3D8] border-[#9EC489]/30 hover:border-[#9EC489]/50"
+                  ? "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#6C7A73] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#1F2A24] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
+                  : "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#A7B3AD] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#E8DCC5] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
               )}
             >
               {user?.profile_picture_url ? (
@@ -348,13 +348,13 @@ export default function Layout() {
                   alt="Profile" 
                   className={cn(
                     "w-8 h-8 xs:w-10 xs:h-10 rounded-full object-cover border-2 group-hover:scale-110 transition-all duration-200 flex-shrink-0",
-                    theme === "light" ? "border-[#9EC489]" : "border-[#9EC489]"
+                    theme === "light" ? "border-[#6BAF92]" : "border-[#6BAF92]"
                   )}
                 />
               ) : (
                 <div className={cn(
                   "p-2 rounded-lg transition-all duration-200 flex-shrink-0 group-hover:scale-110",
-                  theme === "light" ? "bg-[#9EC489]/30 group-hover:bg-[#9EC489]/50" : "bg-[#9EC489]/30 group-hover:bg-[#9EC489]/50"
+                  theme === "light" ? "bg-[#6BAF92]/30 group-hover:bg-[#6BAF92]/50" : "bg-[#6BAF92]/30 group-hover:bg-[#6BAF92]/50"
                 )}>
                   <User className="h-5 w-5 xs:h-6 xs:w-6" />
                 </div>
@@ -373,22 +373,22 @@ export default function Layout() {
               <div className={cn(
                 "absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 backdrop-blur-xl rounded-xl shadow-2xl border overflow-hidden z-50",
                 theme === "light"
-                  ? "bg-[#E8E3D8]/95 border-[#C5C0B5]"
-                  : "bg-[#242824]/95 border-[#3A4038]"
+                  ? "bg-[#E8DCC5]/95 border-[#E6E0D6]"
+                  : "bg-[#18231D]/95 border-[#2E3B35]"
               )}>
                 <button
                   onClick={handleViewProfile}
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200",
                     theme === "light"
-                      ? "text-[#5A6B55] hover:bg-[#D4C4A8] hover:text-[#2D3A28]"
-                      : "text-[#B8B3A8] hover:bg-[#4A5048] hover:text-[#E8E3D8]"
+                      ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24]"
+                      : "text-[#A7B3AD] hover:bg-[#C9A24A] hover:text-[#E8DCC5]"
                   )}
                 >
                   <User className="h-4 w-4" />
                   <span className="font-medium">View Profile</span>
                 </button>
-                <div className={cn("border-t", theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]")} />
+                <div className={cn("border-t", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]")} />
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
@@ -408,8 +408,8 @@ export default function Layout() {
         <div className={cn(
           "lg:hidden sticky top-0 z-30 backdrop-blur-md border-b responsive-padding transition-colors duration-300",
           theme === "light"
-            ? "bg-[#E8E3D8]/90 border-[#C5C0B5]"
-            : "bg-[#242824]/90 border-[#3A4038]"
+            ? "bg-[#E8DCC5]/90 border-[#E6E0D6]"
+            : "bg-[#18231D]/90 border-[#2E3B35]"
         )}>
           <div className="flex items-center justify-between">
             <button
@@ -417,8 +417,8 @@ export default function Layout() {
               className={cn(
                 "p-2.5 xs:p-3 rounded-full transition-all duration-200 mobile-app-button group",
                 theme === "light"
-                  ? "text-[#5A6B55] hover:bg-[#D4C4A8]"
-                  : "text-[#B8B3A8] hover:bg-[#4A5048]"
+                  ? "text-[#6C7A73] hover:bg-[#D9B44A]"
+                  : "text-[#A7B3AD] hover:bg-[#C9A24A]"
               )}
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
@@ -427,14 +427,14 @@ export default function Layout() {
               <div className={cn(
                 "p-1 xs:p-1.5 rounded-full text-white shadow-md transition-transform duration-300 hover:scale-110",
                 theme === "light"
-                  ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
-                  : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
+                  ? "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
+                  : "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
               )}>
                 <img src="/src/images/bere_bietjie_logo.jpeg" alt="Bêre Bietjie" className="h-4 w-4 xs:h-5 xs:w-5 object-cover rounded-full" />
               </div>
               <span className={cn(
                 "font-bold text-sm xs:text-base",
-                theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E8DCC5]"
               )}>Bêre Bietjie</span>
             </div>
             <button
@@ -442,8 +442,8 @@ export default function Layout() {
               className={cn(
                 "p-2.5 xs:p-3 rounded-full transition-all duration-200",
                 theme === "light"
-                  ? "text-[#5A6B55] hover:bg-[#D4C4A8]"
-                  : "text-[#B8B3A8] hover:bg-[#4A5048]"
+                  ? "text-[#6C7A73] hover:bg-[#D9B44A]"
+                  : "text-[#A7B3AD] hover:bg-[#C9A24A]"
               )}
               aria-label="Toggle theme"
             >

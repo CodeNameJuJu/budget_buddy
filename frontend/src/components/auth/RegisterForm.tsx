@@ -93,16 +93,16 @@ export const RegisterForm: React.FC = () => {
     <div className={cn(
       "min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area transition-colors duration-300",
       theme === "light" 
-        ? "bg-[#F5F0E8]" 
-        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+        ? "bg-[#F6F4EF]" 
+        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
     )}>
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className={cn(
             "mx-auto h-12 w-12 flex items-center justify-center rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
             theme === "light"
-              ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
-              : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
+              ? "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
+              : "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
           )}>
             <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -110,18 +110,18 @@ export const RegisterForm: React.FC = () => {
           </div>
           <h2 className={cn(
             "mt-6 text-center text-3xl font-extrabold",
-            theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
           )}>
             Create your Bêre Bietjie account
           </h2>
           <p className={cn(
             "mt-2 text-center text-sm",
-            theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
           )}>
             Already have an account?{' '}
             <Link to="/login" className={cn(
               "font-medium hover:underline",
-              theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
+              theme === "light" ? "text-[#6BAF92] hover:text-[#5E9C7E]" : "text-[#A8D5BA] hover:text-[#6BAF92]"
             )}>
               Sign in
             </Link>
@@ -134,7 +134,7 @@ export const RegisterForm: React.FC = () => {
               <div>
                 <label htmlFor="firstName" className={cn(
                   "block text-sm font-medium",
-                  theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                 )}>
                   First name
                 </label>
@@ -146,8 +146,8 @@ export const RegisterForm: React.FC = () => {
                   className={cn(
                     "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                     theme === "light"
-                      ? "border-[#C5C0B5] bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                      : "border-[#3A4038] bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      ? "border-[#E6E0D6] bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                      : "border-[#2E3B35] bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                   )}
                   placeholder="First name"
                   value={formData.firstName}
@@ -158,7 +158,7 @@ export const RegisterForm: React.FC = () => {
               <div>
                 <label htmlFor="lastName" className={cn(
                   "block text-sm font-medium",
-                  theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                 )}>
                   Last name
                 </label>
@@ -170,8 +170,8 @@ export const RegisterForm: React.FC = () => {
                   className={cn(
                     "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
                     theme === "light"
-                      ? "border-[#C5C0B5] bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                      : "border-[#3A4038] bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      ? "border-[#E6E0D6] bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                      : "border-[#2E3B35] bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                   )}
                   placeholder="Last name"
                   value={formData.lastName}
@@ -183,7 +183,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <label htmlFor="email" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Email address
               </label>
@@ -195,10 +195,10 @@ export const RegisterForm: React.FC = () => {
                 required
                 className={cn(
                   "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
                   theme === "light"
-                    ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                    : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                    ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                    : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                 )}
                 placeholder="Enter your email"
                 value={formData.email}
@@ -212,7 +212,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <label htmlFor="password" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Password
               </label>
@@ -225,10 +225,10 @@ export const RegisterForm: React.FC = () => {
                   required
                   className={cn(
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
                     theme === "light"
-                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                      : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                   )}
                   placeholder="Create a password"
                   value={formData.password}
@@ -240,11 +240,11 @@ export const RegisterForm: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                     </svg>
                   ) : (
-                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
@@ -256,7 +256,7 @@ export const RegisterForm: React.FC = () => {
               )}
               <p className={cn(
                 "mt-1 text-xs",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Must be at least 6 characters with uppercase, lowercase, and number
               </p>
@@ -265,7 +265,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <label htmlFor="confirmPassword" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Confirm Password
               </label>
@@ -278,10 +278,10 @@ export const RegisterForm: React.FC = () => {
                   required
                   className={cn(
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                    errors.confirmPassword ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                    errors.confirmPassword ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
                     theme === "light"
-                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                      : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                   )}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
@@ -293,11 +293,11 @@ export const RegisterForm: React.FC = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
-                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                     </svg>
                   ) : (
-                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={cn("h-5 w-5", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
@@ -319,25 +319,25 @@ export const RegisterForm: React.FC = () => {
               className={cn(
                 "h-4 w-4 focus:ring-2 rounded transition-colors duration-200",
                 theme === "light"
-                  ? "text-[#9EC489] focus:ring-[#9EC489] border-[#C5C0B5] bg-white"
-                  : "text-[#9EC489] focus:ring-[#9EC489] border-[#3A4038] bg-[#242824]"
+                  ? "text-[#6BAF92] focus:ring-[#6BAF92] border-[#E6E0D6] bg-white"
+                  : "text-[#6BAF92] focus:ring-[#6BAF92] border-[#2E3B35] bg-[#18231D]"
               )}
             />
             <label htmlFor="agree-terms" className={cn(
               "ml-2 block text-sm",
-              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
             )}>
               I agree to the{' '}
               <Link to="/terms" className={cn(
                 "hover:underline",
-                theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
+                theme === "light" ? "text-[#6BAF92] hover:text-[#5E9C7E]" : "text-[#A8D5BA] hover:text-[#6BAF92]"
               )}>
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link to="/privacy" className={cn(
                 "hover:underline",
-                theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
+                theme === "light" ? "text-[#6BAF92] hover:text-[#5E9C7E]" : "text-[#A8D5BA] hover:text-[#6BAF92]"
               )}>
                 Privacy Policy
               </Link>
@@ -351,8 +351,8 @@ export const RegisterForm: React.FC = () => {
               className={cn(
                 "group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200",
                 theme === "light"
-                  ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] focus:ring-[#9EC489]"
-                  : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] focus:ring-[#9EC489]"
+                  ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] focus:ring-[#6BAF92]"
+                  : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] focus:ring-[#6BAF92]"
               )}
             >
               {isLoading ? (

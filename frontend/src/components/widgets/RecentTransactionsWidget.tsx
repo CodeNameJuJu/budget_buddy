@@ -144,8 +144,8 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                     <Badge className={cn(
                       "text-xs border",
                       theme === "light"
-                        ? "text-[#9EC489] border-[#9EC489]/50 bg-[#9EC489]/20"
-                        : "text-[#B8D5A8] border-[#9EC489]/50 bg-[#9EC489]/20"
+                        ? "text-[#6BAF92] border-[#6BAF92]/50 bg-[#6BAF92]/20"
+                        : "text-[#A8D5BA] border-[#6BAF92]/50 bg-[#6BAF92]/20"
                     )}>
                       Savings
                     </Badge>
@@ -160,7 +160,7 @@ export default function RecentTransactionsWidget({ accountId, size }: RecentTran
                 <span className={cn(
                   "text-sm font-semibold",
                   t.type === "income"
-                    ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
+                    ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]")
                     : "text-red-400"
                 )}>
                   {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}

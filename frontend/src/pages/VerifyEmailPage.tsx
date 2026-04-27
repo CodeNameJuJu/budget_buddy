@@ -41,27 +41,27 @@ export default function VerifyEmailPage() {
     <div className={cn(
       "flex items-center justify-center min-h-screen p-6",
       theme === "light"
-        ? "bg-gradient-to-br from-[#F5F0E8] via-[#E8E3D8] to-[#F5F0E8]"
-        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+        ? "bg-gradient-to-br from-[#F6F4EF] via-[#E8DCC5] to-[#F6F4EF]"
+        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
     )}>
       <div className={cn(
         "backdrop-blur-md rounded-2xl shadow-xl border p-8 max-w-md w-full",
         theme === "light"
-          ? "bg-white/90 border-[#C5C0B5]/30"
-          : "bg-[#242824]/90 border-[#3A4038]/30"
+          ? "bg-white/90 border-[#E6E0D6]/30"
+          : "bg-[#18231D]/90 border-[#2E3B35]/30"
       )}>
         {status === 'loading' && (
           <div className="text-center">
             <div className={cn(
               "animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4",
-              theme === "light" ? "border-[#9EC489]" : "border-[#B8D5A8]"
+              theme === "light" ? "border-[#6BAF92]" : "border-[#A8D5BA]"
             )}></div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
-              theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
             )}>Verifying your email...</h2>
             <p className={cn(
-              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
             )}>Please wait while we verify your email address.</p>
           </div>
         )}
@@ -70,21 +70,21 @@ export default function VerifyEmailPage() {
           <div className="text-center">
             <div className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
-              theme === "light" ? "bg-[#9EC489]/20" : "bg-[#9EC489]/20"
+              theme === "light" ? "bg-[#6BAF92]/20" : "bg-[#6BAF92]/20"
             )}>
               <svg className={cn(
                 "w-8 h-8",
-                theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
               )} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
-              theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
             )}>Email Verified!</h2>
             <p className={cn(
-              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
             )}>{message}</p>
           </div>
         )}
@@ -98,19 +98,19 @@ export default function VerifyEmailPage() {
             </div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
-              theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
             )}>Verification Failed</h2>
             <p className={cn(
               "mb-6",
-              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
             )}>{message}</p>
             <button
               onClick={() => navigate('/profile')}
               className={cn(
                 "px-6 py-2 rounded-lg transition-colors",
                 theme === "light"
-                  ? "bg-[#9EC489] hover:bg-[#7BA35E] text-white"
-                  : "bg-[#9EC489] hover:bg-[#7BA35E] text-white"
+                  ? "bg-[#6BAF92] hover:bg-[#5E9C7E] text-white"
+                  : "bg-[#6BAF92] hover:bg-[#5E9C7E] text-white"
               )}
             >
               Go to Profile

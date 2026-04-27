@@ -78,16 +78,16 @@ export const LoginForm: React.FC = () => {
     <div className={cn(
       "min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area transition-colors duration-300",
       theme === "light" 
-        ? "bg-[#F5F0E8]" 
-        : "bg-gradient-to-br from-[#1A1D1A] via-[#242824] to-[#1A1D1A]"
+        ? "bg-[#F6F4EF]" 
+        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
     )}>
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className={cn(
             "mx-auto h-12 w-12 flex items-center justify-center rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
             theme === "light"
-              ? "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
-              : "bg-gradient-to-br from-[#9EC489] to-[#7BA35E]"
+              ? "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
+              : "bg-gradient-to-br from-[#6BAF92] to-[#5E9C7E]"
           )}>
             <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -95,18 +95,18 @@ export const LoginForm: React.FC = () => {
           </div>
           <h2 className={cn(
             "mt-6 text-center text-3xl font-extrabold",
-            theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
           )}>
             Sign in to Bêre Bietjie
           </h2>
           <p className={cn(
             "mt-2 text-center text-sm",
-            theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
           )}>
             Or{' '}
             <Link to="/register" className={cn(
               "font-medium hover:underline",
-              theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
+              theme === "light" ? "text-[#6BAF92] hover:text-[#5E9C7E]" : "text-[#A8D5BA] hover:text-[#6BAF92]"
             )}>
               create a new account
             </Link>
@@ -118,7 +118,7 @@ export const LoginForm: React.FC = () => {
             <div>
               <label htmlFor="email" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Email address
               </label>
@@ -130,10 +130,10 @@ export const LoginForm: React.FC = () => {
                 required
                 className={cn(
                   "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
                   theme === "light"
-                    ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                    : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                    ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                    : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                 )}
                 placeholder="Enter your email"
                 value={formData.email}
@@ -147,7 +147,7 @@ export const LoginForm: React.FC = () => {
             <div>
               <label htmlFor="password" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Password
               </label>
@@ -160,10 +160,10 @@ export const LoginForm: React.FC = () => {
                   required
                   className={cn(
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#C5C0B5]" : "border-[#3A4038]",
+                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
                     theme === "light"
-                      ? "bg-white/80 text-[#2D3A28] focus:ring-[#9EC489] focus:border-[#9EC489]"
-                      : "bg-[#242824]/80 text-[#E8E3D8] focus:ring-[#9EC489] focus:border-[#9EC489]"
+                      ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                      : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                   )}
                   placeholder="Enter your password"
                   value={formData.password}
@@ -174,7 +174,7 @@ export const LoginForm: React.FC = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <span className={theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"}>
+                  <span className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>
                     {showPassword ? 'Hide' : 'Show'}
                   </span>
                 </button>
@@ -196,13 +196,13 @@ export const LoginForm: React.FC = () => {
                 className={cn(
                   "h-4 w-4 focus:ring-2 rounded transition-colors duration-200",
                   theme === "light"
-                    ? "text-[#9EC489] focus:ring-[#9EC489] border-[#C5C0B5] bg-white"
-                    : "text-[#9EC489] focus:ring-[#9EC489] border-[#3A4038] bg-[#242824]"
+                    ? "text-[#6BAF92] focus:ring-[#6BAF92] border-[#E6E0D6] bg-white"
+                    : "text-[#6BAF92] focus:ring-[#6BAF92] border-[#2E3B35] bg-[#18231D]"
                 )}
               />
               <label htmlFor="remember-me" className={cn(
                 "ml-2 block text-sm",
-                theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
               )}>
                 Remember me {formData.rememberMe ? '(ON)' : '(OFF)'}
               </label>
@@ -211,7 +211,7 @@ export const LoginForm: React.FC = () => {
             <div className="text-sm">
               <Link to="/forgot-password" className={cn(
                 "font-medium hover:underline",
-                theme === "light" ? "text-[#9EC489] hover:text-[#7BA35E]" : "text-[#B8D5A8] hover:text-[#9EC489]"
+                theme === "light" ? "text-[#6BAF92] hover:text-[#5E9C7E]" : "text-[#A8D5BA] hover:text-[#6BAF92]"
               )}>
                 Forgot your password?
               </Link>
@@ -225,8 +225,8 @@ export const LoginForm: React.FC = () => {
               className={cn(
                 "group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200",
                 theme === "light"
-                  ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] focus:ring-[#9EC489]"
-                  : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] focus:ring-[#9EC489]"
+                  ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] focus:ring-[#6BAF92]"
+                  : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] focus:ring-[#6BAF92]"
               )}
             >
               {isLoading ? (

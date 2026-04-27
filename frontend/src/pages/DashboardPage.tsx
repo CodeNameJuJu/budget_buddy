@@ -477,7 +477,7 @@ export default function DashboardPage() {
           <CardTitle className="flex items-center gap-2">
             <div className={cn(
               "p-2 rounded-full text-white transition-colors duration-200",
-              theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
+              theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]"
             )}>
               <Activity className="h-4 w-4" />
             </div>
@@ -491,7 +491,7 @@ export default function DashboardPage() {
                 <div className="text-center">
                   <div className={cn(
                     "text-4xl font-bold",
-                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                    theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
                   )}>78</div>
                   <p className="text-sm text-muted-foreground">Good Health</p>
                 </div>
@@ -515,12 +515,12 @@ export default function DashboardPage() {
               <div className="w-20 h-20 rounded-full border-4 border-zinc-600 relative">
                 <div className={cn(
                   "absolute inset-0 rounded-full border-4 border-t-transparent border-r-transparent transform rotate-45",
-                  theme === "light" ? "border-[#9EC489]" : "border-[#9EC489]"
+                  theme === "light" ? "border-[#6BAF92]" : "border-[#6BAF92]"
                 )}></div>
                 <div className="absolute inset-2 flex items-center justify-center">
                   <span className={cn(
                     "text-lg font-bold",
-                    theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]"
+                    theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
                   )}>78%</span>
                 </div>
               </div>

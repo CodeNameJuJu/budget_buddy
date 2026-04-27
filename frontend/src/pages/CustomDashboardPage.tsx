@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
-import { LayoutDashboard, Settings, Plus, X, Check, GripVertical, Edit2 } from "lucide-react"
+import { LayoutDashboard, Settings, Plus, X, Check } from "lucide-react"
 import { useAuth } from "@/hooks"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
@@ -7,15 +7,12 @@ import WidgetRenderer from "@/components/widgets/WidgetRenderer"
 import { accountsApi, dashboardApi } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Responsive, Layout } from "react-grid-layout"
-import "react-grid-layout/css/styles.css"
 
 interface Widget {
   id: string
   type: string
   title: string
   size: string
-  position: { x: number; y: number; w: number; h: number }
   is_visible: boolean
   updated_at: string
 }
@@ -29,7 +26,6 @@ export default function CustomDashboardPage() {
   const [isCustomizing, setIsCustomizing] = useState(false)
   const [availableWidgets, setAvailableWidgets] = useState<any[]>([])
   const [isSaving, setIsSaving] = useState(false)
-  const [layouts, setLayouts] = useState<{ [key: string]: Layout[] }>({})
 
   useEffect(() => {
     loadUserAccount()
@@ -56,115 +52,37 @@ export default function CustomDashboardPage() {
         if (account.dashboard_layout) {
           console.log("Loaded layout from account:", account.dashboard_layout)
           const layout = JSON.parse(account.dashboard_layout)
-          const arrangedLayout = autoArrangeWidgets(layout)
-          setWidgets(arrangedLayout)
-          // Initialize layouts for react-grid-layout
-          const initialLayouts: { [key: string]: Layout[] } = {
-            lg: arrangedLayout.map((w: Widget) => ({
-              i: w.id,
-              x: w.position.x,
-              y: w.position.y,
-              w: w.position.w,
-              h: w.position.h,
-              minW: 3,
-              minH: 2,
-            })),
-          }
-          setLayouts(initialLayouts)
-          // Save to session storage
-          sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(arrangedLayout))
+          setWidgets(layout)
+          sessionStorage.setItem(`dashboard-layout-${accountId}`, JSON.stringify(layout))
         } else {
           console.log("No layout in account, trying session storage")
-          // Try session storage as fallback
           const sessionLayout = sessionStorage.getItem(`dashboard-layout-${accountId}`)
           if (sessionLayout) {
             console.log("Loaded layout from session storage:", sessionLayout)
             const layout = JSON.parse(sessionLayout)
-            const arrangedLayout = autoArrangeWidgets(layout)
-            setWidgets(arrangedLayout)
-            const initialLayouts: { [key: string]: Layout[] } = {
-              lg: arrangedLayout.map((w: Widget) => ({
-                i: w.id,
-                x: w.position.x,
-                y: w.position.y,
-                w: w.position.w,
-                h: w.position.h,
-                minW: 3,
-                minH: 2,
-              })),
-            }
-            setLayouts(initialLayouts)
+            setWidgets(layout)
           } else {
             console.log("No layout in session storage, using default")
             const defaultLayout = getCustomLayout()
             setWidgets(defaultLayout)
-            const initialLayouts: { [key: string]: Layout[] } = {
-              lg: defaultLayout.map((w: Widget) => ({
-                i: w.id,
-                x: w.position.x,
-                y: w.position.y,
-                w: w.position.w,
-                h: w.position.h,
-                minW: 3,
-                minH: 2,
-              })),
-            }
-            setLayouts(initialLayouts)
           }
         }
       } else {
         console.log("No account data, using default layout")
         const defaultLayout = getCustomLayout()
         setWidgets(defaultLayout)
-        const initialLayouts: { [key: string]: Layout[] } = {
-          lg: defaultLayout.map((w: Widget) => ({
-            i: w.id,
-            x: w.position.x,
-            y: w.position.y,
-            w: w.position.w,
-            h: w.position.h,
-            minW: 3,
-            minH: 2,
-          })),
-        }
-        setLayouts(initialLayouts)
       }
     } catch (error) {
       console.error("Failed to load layout from account:", error)
-      // Try session storage as fallback
       const sessionLayout = sessionStorage.getItem(`dashboard-layout-${accountId}`)
       if (sessionLayout) {
         console.log("Loaded layout from session storage after error:", sessionLayout)
         const layout = JSON.parse(sessionLayout)
         setWidgets(layout)
-        const initialLayouts: { [key: string]: Layout[] } = {
-          lg: layout.map((w: Widget) => ({
-            i: w.id,
-            x: w.position.x,
-            y: w.position.y,
-            w: w.position.w,
-            h: w.position.h,
-            minW: 3,
-            minH: 2,
-          })),
-        }
-        setLayouts(initialLayouts)
       } else {
         console.log("No layout in session storage after error, using default")
         const defaultLayout = getCustomLayout()
         setWidgets(defaultLayout)
-        const initialLayouts: { [key: string]: Layout[] } = {
-          lg: defaultLayout.map((w: Widget) => ({
-            i: w.id,
-            x: w.position.x,
-            y: w.position.y,
-            w: w.position.w,
-            h: w.position.h,
-            minW: 3,
-            minH: 2,
-          })),
-        }
-        setLayouts(initialLayouts)
       }
     }
   }
@@ -197,35 +115,6 @@ export default function CustomDashboardPage() {
     }
   }
 
-  const handleLayoutChange = useCallback((layout: Layout[], layouts: { [key: string]: Layout[] }) => {
-    setLayouts(layouts)
-    // Update widget positions based on new layout
-    const updatedWidgets = widgets.map(widget => {
-      const layoutItem = layout.find(l => l.i === widget.id)
-      if (layoutItem) {
-        return {
-          ...widget,
-          position: {
-            x: layoutItem.x,
-            y: layoutItem.y,
-            w: layoutItem.w,
-            h: layoutItem.h,
-          }
-        }
-      }
-      return widget
-    })
-    setWidgets(updatedWidgets)
-    
-    // Auto-save to database
-    if (accountId) {
-      const layoutJson = JSON.stringify(updatedWidgets)
-      sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
-      accountsApi.update(accountId, { dashboard_layout: layoutJson }).catch(error => {
-        console.error("Failed to save layout to account", error)
-      })
-    }
-  }, [widgets, accountId])
 
   async function saveLayout() {
     if (!accountId) return
@@ -252,26 +141,11 @@ export default function CustomDashboardPage() {
       type: widgetType,
       title: widgetTitle,
       size: "medium",
-      position: { x: 0, y: 0, w: 6, h: 4 },
       is_visible: true,
       updated_at: new Date().toISOString()
     }
     const updatedWidgets = [...widgets, newWidget]
     setWidgets(updatedWidgets)
-    
-    // Update layouts
-    const newLayout = {
-      i: newWidget.id,
-      x: 0,
-      y: 0,
-      w: 6,
-      h: 4,
-      minW: 3,
-      minH: 2,
-    }
-    setLayouts({
-      lg: [...(layouts.lg || []), newLayout]
-    })
     
     // Auto-save to session storage and database
     if (accountId) {
@@ -290,11 +164,6 @@ export default function CustomDashboardPage() {
   async function removeWidget(widgetId: string) {
     const updatedWidgets = widgets.filter(w => w.id !== widgetId)
     setWidgets(updatedWidgets)
-    
-    // Update layouts
-    setLayouts({
-      lg: (layouts.lg || []).filter(l => l.i !== widgetId)
-    })
     
     // Auto-save to session storage and database
     if (accountId) {
@@ -321,50 +190,11 @@ export default function CustomDashboardPage() {
     }
   }
 
-  // Auto-arrange widgets to prevent overlap
-  function autoArrangeWidgets(widgetsToArrange: Widget[]): Widget[] {
-    const arranged: Widget[] = []
-    let currentY = 0
-    let currentX = 0
-    const cols = 12
-
-    widgetsToArrange.forEach(widget => {
-      const w = widget.position.w
-      const h = widget.position.h
-
-      // If current widget doesn't fit in current row, move to next row
-      if (currentX + w > cols) {
-        currentX = 0
-        currentY += h
-      }
-
-      arranged.push({
-        ...widget,
-        position: { x: currentX, y: currentY, w, h }
-      })
-
-      currentX += w
-    })
-
-    return arranged
-  }
 
   async function resetLayout() {
     if (!accountId) return
     const defaultLayout = getCustomLayout()
     setWidgets(defaultLayout)
-    const initialLayouts: { [key: string]: Layout[] } = {
-      lg: defaultLayout.map((w: Widget) => ({
-        i: w.id,
-        x: w.position.x,
-        y: w.position.y,
-        w: w.position.w,
-        h: w.position.h,
-        minW: 3,
-        minH: 2,
-      })),
-    }
-    setLayouts(initialLayouts)
     // Save to database
     const layoutJson = JSON.stringify(defaultLayout)
     sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
@@ -381,7 +211,6 @@ export default function CustomDashboardPage() {
         type: "welcome",
         title: "Welcome to Bêre Bietjie",
         size: "large",
-        position: { x: 0, y: 0, w: 12, h: 2 },
         is_visible: true,
         updated_at: ""
       },
@@ -390,7 +219,6 @@ export default function CustomDashboardPage() {
         type: "getting_started",
         title: "Getting Started",
         size: "medium",
-        position: { x: 0, y: 2, w: 6, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -399,7 +227,6 @@ export default function CustomDashboardPage() {
         type: "recent_transactions",
         title: "Recent Transactions",
         size: "medium",
-        position: { x: 6, y: 2, w: 6, h: 3 },
         is_visible: true,
         updated_at: ""
       },
@@ -408,7 +235,6 @@ export default function CustomDashboardPage() {
         type: "savings_withdrawals",
         title: "Savings Withdrawals",
         size: "medium",
-        position: { x: 0, y: 5, w: 6, h: 4 },
         is_visible: true,
         updated_at: ""
       },
@@ -417,7 +243,6 @@ export default function CustomDashboardPage() {
         type: "spending_trends",
         title: "Spending Trends",
         size: "medium",
-        position: { x: 6, y: 5, w: 6, h: 4 },
         is_visible: true,
         updated_at: ""
       },
@@ -426,7 +251,6 @@ export default function CustomDashboardPage() {
         type: "goals_overview",
         title: "Savings Goals",
         size: "medium",
-        position: { x: 0, y: 9, w: 12, h: 4 },
         is_visible: true,
         updated_at: ""
       }
@@ -463,18 +287,18 @@ export default function CustomDashboardPage() {
             <h1 className={cn(
               "text-2xl xs:text-3xl font-bold bg-clip-text text-transparent flex items-center gap-3",
               theme === "light"
-                ? "bg-gradient-to-r from-[#7BA35E] to-[#9EC489]"
-                : "bg-gradient-to-r from-[#B8D5A8] to-[#9EC489]"
+                ? "bg-gradient-to-r from-[#5E9C7E] to-[#6BAF92]"
+                : "bg-gradient-to-r from-[#A8D5BA] to-[#6BAF92]"
             )}>
               <LayoutDashboard className={cn(
                 "h-6 w-6 xs:h-7 xs:w-7 lg:h-8 lg:w-8",
-                theme === "light" ? "text-[#9EC489]" : "text-[#9EC489]"
+                theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
               )} />
               Dashboard
             </h1>
             <p className={cn(
               "mt-1 text-sm xs:text-base",
-              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
             )}>Your elegant financial overview</p>
           </div>
           <Button
@@ -485,8 +309,8 @@ export default function CustomDashboardPage() {
                 ? "text-white shadow-lg"
                 : "border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-slate-500",
               theme === "light"
-                ? isCustomizing ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20" : ""
-                : isCustomizing ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20" : ""
+                ? isCustomizing ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] shadow-[#6BAF92]/20" : ""
+                : isCustomizing ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] shadow-[#6BAF92]/20" : ""
             )}
           >
             {isCustomizing ? (
@@ -498,7 +322,7 @@ export default function CustomDashboardPage() {
               <>
                 <Settings className={cn(
                   "h-5 w-5 mr-2",
-                  theme === "light" ? "text-[#9EC489]" : "text-[#9EC489]"
+                  theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
                 )} />
                 Customize
               </>
@@ -506,161 +330,70 @@ export default function CustomDashboardPage() {
           </Button>
         </div>
 
-        {isCustomizing && (
-          <div className={cn(
-            "mb-6 p-4 rounded-lg border",
-            theme === "light"
-              ? "bg-[#E8E3D8] border-[#C5C0B5]"
-              : "bg-[#242824] border-[#3A4038]"
-          )}>
-            <div className="flex items-center gap-2 mb-3">
-              <span className={cn(
-                "w-2 h-2 rounded-full",
-                theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
-              )}></span>
-              <p className={cn(
-                "text-sm font-medium",
-                theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
-              )}>
-                Customization Mode
-              </p>
-            </div>
-            <p className={cn(
-              "text-xs",
-              theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
-            )}>
-              Drag widgets to rearrange, use the edit button to resize, or click the X to remove widgets.
-            </p>
-          </div>
-        )}
 
         {/* Customization Panel */}
         {isCustomizing && (
           <Card className={cn(
             "mb-6 backdrop-blur-xl shadow-xl",
             theme === "light"
-              ? "bg-[#E8E3D8]/80 border-[#C5C0B5]/50"
-              : "bg-[#242824]/80 border-[#3A4038]/50"
+              ? "bg-[#E8DCC5]/80 border-[#E6E0D6]/50"
+              : "bg-[#18231D]/80 border-[#2E3B35]/50"
           )}>
             <CardHeader>
               <CardTitle className={cn(
                 "flex items-center gap-2",
-                theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 <Settings className={cn(
                   "h-5 w-5",
-                  theme === "light" ? "text-[#9EC489]" : "text-[#9EC489]"
+                  theme === "light" ? "text-[#6BAF92]" : "text-[#6BAF92]"
                 )} />
                 Customize Dashboard
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Current Widgets */}
+              {/* All Widgets Grid */}
               <div>
                 <h3 className={cn(
                   "text-sm font-semibold mb-4 flex items-center gap-2",
-                  theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                 )}>
                   <span className={cn(
                     "w-2 h-2 rounded-full",
-                    theme === "light" ? "bg-[#9EC489]" : "bg-[#9EC489]"
+                    theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]"
                   )}></span>
-                  Current Widgets
+                  Select Widgets to Display
                 </h3>
-                <div className="grid gap-3">
-                  {widgets.map((widget) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {[...widgets, ...availableWidgets.filter(aw => !widgets.some(w => w.type === aw.type))].map((widget) => (
                     <div
-                      key={widget.id}
+                      key={widget.id || widget.type}
                       className={cn(
-                        "flex items-center justify-between p-4 rounded-xl border hover:border transition-all duration-200",
+                        "flex items-center gap-3 p-4 rounded-xl border transition-all duration-200",
                         theme === "light"
-                          ? "bg-white/60 border-[#C5C0B5]/50 hover:border-[#9EC489]"
-                          : "bg-[#242824]/60 border-[#3A4038]/50 hover:border-[#9EC489]"
+                          ? "bg-white/60 border-[#E6E0D6]/50 hover:border-[#6BAF92]"
+                          : "bg-[#18231D]/60 border-[#2E3B35]/50 hover:border-[#6BAF92]"
                       )}
                     >
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={widget.is_visible}
-                          onChange={() => toggleWidgetVisibility(widget.id)}
-                          className={cn(
-                            "w-5 h-5 rounded cursor-pointer",
-                            theme === "light"
-                              ? "border-[#C5C0B5] bg-white text-[#9EC489] focus:ring-[#9EC489] focus:ring-offset-0"
-                              : "border-[#3A4038] bg-[#242824] text-[#9EC489] focus:ring-[#9EC489] focus:ring-offset-0"
-                          )}
-                        />
-                        <span className={cn(
-                          "font-medium",
-                          theme === "light" ? "text-[#2D3A28]" : "text-[#E8E3D8]"
-                        )}>{widget.title}</span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeWidget(widget.id)}
-                        className="text-slate-400 hover:text-red-400 hover:bg-red-500/10 h-9 w-9 transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
+                      <input
+                        type="checkbox"
+                        checked={widget.is_visible || false}
+                        onChange={() => widget.id ? toggleWidgetVisibility(widget.id) : addWidget(widget.type, widget.name)}
+                        className={cn(
+                          "w-5 h-5 rounded cursor-pointer",
+                          theme === "light"
+                            ? "border-[#E6E0D6] bg-white text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
+                            : "border-[#2E3B35] bg-[#18231D] text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
+                        )}
+                      />
+                      <span className={cn(
+                        "font-medium",
+                        theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                      )}>{widget.title || widget.name}</span>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Available Widgets */}
-              {availableWidgets.length > 0 && (
-                <div>
-                  <h3 className={cn(
-                    "text-sm font-semibold mb-4 flex items-center gap-2",
-                    theme === "light" ? "text-[#5A6B55]" : "text-[#B8B3A8]"
-                  )}>
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    Add Widgets
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {availableWidgets
-                      .filter(aw => !widgets.some(w => w.type === aw.type))
-                      .map((availableWidget) => (
-                        <Button
-                          key={availableWidget.type}
-                          variant="outline"
-                          onClick={() => addWidget(availableWidget.type, availableWidget.name)}
-                          className={cn(
-                            "justify-start transition-all duration-200",
-                            theme === "light"
-                              ? "border-[#C5C0B5] text-[#5A6B55] hover:bg-[#D4C4A8] hover:border-[#9EC489]/50 hover:text-[#2D3A28]"
-                              : "border-[#3A4038] text-[#B8B3A8] hover:bg-[#4A5048] hover:border-[#9EC489]/50 hover:text-[#E8E3D8]"
-                          )}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          {availableWidget.name}
-                        </Button>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Save Button */}
-              <Button
-                onClick={saveLayout}
-                disabled={isSaving}
-                className={cn(
-                  "w-full text-white font-medium shadow-lg transition-all duration-200",
-                  theme === "light"
-                    ? "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20"
-                    : "bg-gradient-to-r from-[#9EC489] to-[#7BA35E] hover:from-[#7BA35E] hover:to-[#5A6B45] shadow-[#9EC489]/20"
-                )}
-              >
-                {isSaving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                    Saving...
-                  </>
-                ) : (
-                  "Save Layout"
-                )}
-              </Button>
 
               {/* Reset Layout Button */}
               <Button
@@ -669,8 +402,8 @@ export default function CustomDashboardPage() {
                 className={cn(
                   "w-full transition-all duration-200",
                   theme === "light"
-                    ? "border-[#C5C0B5] text-[#5A6B55] hover:bg-[#D4C4A8] hover:border-[#9EC489]/50 hover:text-[#2D3A28]"
-                    : "border-[#3A4038] text-[#B8B3A8] hover:bg-[#4A5048] hover:border-[#9EC489]/50 hover:text-[#E8E3D8]"
+                    ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#D9B44A] hover:border-[#6BAF92]/50 hover:text-[#1F2A24]"
+                    : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#C9A24A] hover:border-[#6BAF92]/50 hover:text-[#E7EFEA]"
                 )}
               >
                 Reset to Default Layout
@@ -680,38 +413,17 @@ export default function CustomDashboardPage() {
         )}
 
         {/* Widget Grid */}
-        <Responsive
-          className="layout"
-          layouts={layouts}
-          onLayoutChange={handleLayoutChange}
-          cols={{ lg: 12, md: 12, sm: 6, xs: 1, xxs: 1 }}
-          rowHeight={120}
-          isDraggable={isCustomizing}
-          isResizable={isCustomizing}
-          draggableHandle=".drag-handle"
-          useCSSTransforms={true}
-          margin={[12, 12]}
-          containerPadding={[12, 12]}
-          preventCollision={true}
-          isBounded={true}
-          allowOverlap={false}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {accountId && widgets
             .filter(w => w.is_visible)
             .map((widget) => (
-              <div key={widget.id} className="relative">
-                {isCustomizing && (
-                  <div className="drag-handle absolute top-2 left-2 z-10 p-2 bg-slate-700 rounded-lg cursor-move hover:bg-slate-600 transition-colors">
-                    <GripVertical className="h-4 w-4 text-slate-300" />
-                  </div>
-                )}
-                <WidgetRenderer
-                  widget={widget}
-                  accountId={accountId}
-                />
-              </div>
+              <WidgetRenderer
+                key={widget.id}
+                widget={widget}
+                accountId={accountId}
+              />
           ))}
-        </Responsive>
+        </div>
       </div>
   )
 }

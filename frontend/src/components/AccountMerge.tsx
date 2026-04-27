@@ -97,8 +97,8 @@ export default function AccountMerge() {
           <Badge className={cn(
             "border",
             theme === "light"
-              ? "bg-[#9EC489]/20 text-[#9EC489] border-[#9EC489]/40"
-              : "bg-[#9EC489]/20 text-[#B8D5A8] border-[#9EC489]/40"
+              ? "bg-[#6BAF92]/20 text-[#6BAF92] border-[#6BAF92]/40"
+              : "bg-[#6BAF92]/20 text-[#A8D5BA] border-[#6BAF92]/40"
           )}>
             <CheckCircle className="w-3 h-3 mr-1" />
             Accepted
@@ -178,8 +178,8 @@ export default function AccountMerge() {
               }
               className={cn(
                 theme === "light"
-                  ? "bg-[#9EC489] hover:bg-[#7BA35E]"
-                  : "bg-[#9EC489] hover:bg-[#7BA35E]"
+                  ? "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                  : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
               )}
             >
               <CheckCircle className="h-4 w-4 mr-1" />
@@ -305,8 +305,8 @@ export default function AccountMerge() {
                     onClick={() => handleAcceptMerge(token)}
                     className={cn(
                       theme === "light"
-                        ? "bg-[#9EC489] hover:bg-[#7BA35E]"
-                        : "bg-[#9EC489] hover:bg-[#7BA35E]"
+                        ? "bg-[#6BAF92] hover:bg-[#5E9C7E]"
+                        : "bg-[#6BAF92] hover:bg-[#5E9C7E]"
                     )}
                   >
                     <CheckCircle className="h-4 w-4 mr-1" />

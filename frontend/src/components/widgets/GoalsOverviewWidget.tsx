@@ -183,8 +183,8 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
                     <span className={cn(
                       "font-medium",
                       isCompleted
-                        ? (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
-                        : (theme === "light" ? "text-[#9EC489]" : "text-[#B8D5A8]")
+                        ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]")
+                        : (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]")
                     )}>
                       {progress.toFixed(0)}%
                     </span>
