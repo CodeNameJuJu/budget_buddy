@@ -151,12 +151,14 @@ type SavingsSummary struct {
 func GetSavingsSummary(accountID int64) (*SavingsSummary, error) {
 	db := appcontext.GetDb()
 
-	// Get account savings balance
-	var account types.Account
-	err := db.NewSelect().Model(&account).
-		Where("id = ?", accountID).
+	// Calculate savings balance from all savings allocations (sum of all allocation amounts)
+	var savingsBalance decimal.Decimal
+	err := db.NewSelect().
+		Model((*types.SavingsAllocation)(nil)).
+		ColumnExpr("COALESCE(SUM(amount), 0)").
+		Where("account_id = ?", accountID).
 		Where("deleted_date IS NULL").
-		Scan(context.Background())
+		Scan(context.Background(), &savingsBalance)
 	if err != nil {
 		return nil, err
 	}
@@ -175,13 +177,10 @@ func GetSavingsSummary(accountID int64) (*SavingsSummary, error) {
 		}
 	}
 
-	unallocated := decimal.Zero
-	if account.SavingsBalance != nil {
-		unallocated = account.SavingsBalance.Sub(totalAllocated)
-	}
+	unallocated := savingsBalance.Sub(totalAllocated)
 
 	return &SavingsSummary{
-		SavingsBalance: account.SavingsBalance,
+		SavingsBalance: &savingsBalance,
 		TotalAllocated: totalAllocated,
 		Unallocated:    unallocated,
 		Pots:           pots,

@@ -3,6 +3,7 @@ package savings
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
@@ -135,44 +136,32 @@ func POSTAllocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Create automatic transaction for the savings operation
+	accountType := "savings"
+	transactionType := "income" // Default to income (deposit to savings)
+	transactionAmount := amount.Abs()
+	description := "Savings deposit"
+
+	// If amount is negative, it's a withdrawal
+	if amount.IsNegative() {
+		transactionType = "expense" // Withdrawal from savings is an expense
+		description = "Savings withdrawal"
+	}
+
+	transaction := types.Transaction{
+		AccountID:           req.AccountID,
+		Amount:              transactionAmount,
+		Type:                transactionType,
+		Description:         &description,
+		Date:                time.Now(),
+		SavingsAllocationID: &allocation.ID,
+		AccountType:         &accountType,
+	}
+
+	if err := db.InsertTransaction(&transaction); err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not create transaction for savings operation")
+		return
+	}
+
 	helpers.RespondData(w, allocation, 1)
-}
-
-type POSTSavingsBalanceRequest struct {
-	SavingsBalance string `json:"savings_balance"`
-}
-
-func POSTSavingsBalance(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
-		return
-	}
-
-	var req POSTSavingsBalanceRequest
-	if err := helpers.DecodeBody(r, &req); err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
-		return
-	}
-
-	balance, err := decimal.NewFromString(req.SavingsBalance)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "savings_balance must be a valid number")
-		return
-	}
-
-	var accountID int64
-	fmt.Sscanf(accountIDStr, "%d", &accountID)
-
-	account := types.Account{
-		ID:             accountID,
-		SavingsBalance: &balance,
-	}
-
-	if err := db.UpdateAccount(&account); err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not update savings balance")
-		return
-	}
-
-	helpers.RespondData(w, account, 1)
 }

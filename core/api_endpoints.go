@@ -2,13 +2,13 @@ package core
 
 import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/account_merge"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/accounts"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/alerts"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/analytics"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/budgets"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/categories"
-	"github.com/CodeNameJuJu/budget_buddy/core/functions/couples"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/dashboard"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/goals"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
@@ -20,7 +20,7 @@ import (
 func RegisterRoutes(r chi.Router) {
 	// Initialize handlers
 	authHandler := auth.NewAuthHandler()
-	couplesHandler := couples.NewCouplesHandler()
+	accountMergeHandler := account_merge.NewAccountMergeHandler()
 
 	r.Route("/api", func(r chi.Router) {
 		/* ----------- HEALTH ----------- */
@@ -46,17 +46,11 @@ func RegisterRoutes(r chi.Router) {
 			})
 		})
 
-		/* ----------- COUPLES/PARTNERS ----------- */
+		/* ----------- ACCOUNT MERGE ----------- */
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
-			r.Get("/couples", couplesHandler.GetPartnerships)
-			r.Post("/couples", couplesHandler.CreatePartnership)
-			r.Get("/couples/details", couplesHandler.GetPartnershipDetails)
-			r.Post("/couples/invite", couplesHandler.InvitePartner)
-			r.Post("/couples/respond", couplesHandler.RespondToInvitation)
-			r.Get("/couples/invitation", couplesHandler.GetInvitationDetails)
-			r.Post("/couples/share-account", couplesHandler.ShareAccount)
-			r.Delete("/couples/remove-member", couplesHandler.RemoveMember)
-			r.Patch("/couples/update-role", couplesHandler.UpdateMemberRole)
+			r.Post("/account-merge/create", accountMergeHandler.CreateMergeToken)
+			r.Post("/account-merge/accept", accountMergeHandler.AcceptMerge)
+			r.Get("/account-merge/pending", accountMergeHandler.GetPendingMergeTokens)
 		})
 
 		/* ----------- ACCOUNTS ----------- */
@@ -107,7 +101,6 @@ func RegisterRoutes(r chi.Router) {
 			r.Delete("/savings/allocations/{id}", savings.DELETEAllocation)
 			r.Get("/savings/summary", savings.GETSavingsSummary)
 			r.Get("/savings/forecast", savings.GETSavingsForecast)
-			r.Post("/savings/balance", savings.POSTSavingsBalance)
 		})
 
 		/* ----------- DASHBOARD ----------- */

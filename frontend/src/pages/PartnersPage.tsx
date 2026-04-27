@@ -1,9 +1,9 @@
-import PartnerInvitation from "@/components/PartnerInvitation"
+import AccountMerge from "@/components/AccountMerge"
 
 export default function PartnersPage() {
   return (
     <div className="container mx-auto p-6">
-      <PartnerInvitation />
+      <AccountMerge />
     </div>
   )
 }

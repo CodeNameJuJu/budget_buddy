@@ -127,3 +127,27 @@ type UserSession struct {
 	ExpiresAt  time.Time `json:"expires_at" bun:"expires_at"`
 	IsActive   bool      `json:"is_active" bun:"is_active"`
 }
+
+// AccountMergeToken represents a token for merging two user accounts
+type AccountMergeToken struct {
+	ID         int        `json:"id" bun:"id,pk,autoincrement"`
+	FromUserID int        `json:"from_user_id" bun:"from_user_id"`
+	FromEmail  string     `json:"from_email" bun:"from_email"`
+	ToUserID   int        `json:"to_user_id" bun:"to_user_id"`
+	ToEmail    string     `json:"to_email" bun:"to_email"`
+	Token      string     `json:"token" bun:"token"`
+	Status     string     `json:"status" bun:"status"` // 'pending', 'accepted', 'expired'
+	ExpiresAt  time.Time  `json:"expires_at" bun:"expires_at"`
+	AcceptedAt *time.Time `json:"accepted_at,omitempty" bun:"accepted_at"`
+	CreatedAt  time.Time  `json:"created_at" bun:"created_date"`
+}
+
+// CreateAccountMergeRequest represents a request to create an account merge token
+type CreateAccountMergeRequest struct {
+	PartnerEmail string `json:"partner_email" validate:"required,email"`
+}
+
+// AcceptAccountMergeRequest represents a request to accept an account merge
+type AcceptAccountMergeRequest struct {
+	Token string `json:"token" validate:"required"`
+}

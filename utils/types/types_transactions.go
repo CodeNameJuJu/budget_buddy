@@ -11,20 +11,23 @@ import (
 type Transaction struct {
 	bun.BaseModel `bun:"table:transactions,alias:t"`
 
-	ID          int64           `json:"id" bun:"id,pk,autoincrement"`
-	AccountID   int64           `json:"account_id" bun:"account_id,notnull"`
-	CategoryID  *int64          `json:"category_id,omitempty" bun:"category_id"`
-	BudgetID    *int64          `json:"budget_id,omitempty" bun:"budget_id"`
-	Amount      decimal.Decimal `json:"amount" bun:"amount,notnull,type:numeric(12,2)"`
-	Type        string          `json:"type" bun:"type,notnull"` // "income" or "expense"
-	Description *string         `json:"description,omitempty" bun:"description"`
-	Date        time.Time       `json:"date" bun:"date,notnull"`
-	Notes       *string         `json:"notes,omitempty" bun:"notes"`
-	Tags        *string         `json:"tags,omitempty" bun:"tags"` // JSON array of tags
+	ID                  int64           `json:"id" bun:"id,pk,autoincrement"`
+	AccountID           int64           `json:"account_id" bun:"account_id,notnull"`
+	CategoryID          *int64          `json:"category_id,omitempty" bun:"category_id"`
+	BudgetID            *int64          `json:"budget_id,omitempty" bun:"budget_id"`
+	Amount              decimal.Decimal `json:"amount" bun:"amount,notnull,type:numeric(12,2)"`
+	Type                string          `json:"type" bun:"type,notnull"` // "income" or "expense"
+	Description         *string         `json:"description,omitempty" bun:"description"`
+	Date                time.Time       `json:"date" bun:"date,notnull"`
+	Notes               *string         `json:"notes,omitempty" bun:"notes"`
+	Tags                *string         `json:"tags,omitempty" bun:"tags"` // JSON array of tags
+	SavingsAllocationID *int64          `json:"savings_allocation_id,omitempty" bun:"savings_allocation_id"`
+	AccountType         *string         `json:"account_type,omitempty" bun:"account_type"` // "checking" or "savings"
 
-	Account  *Account  `json:"account,omitempty" bun:"rel:belongs-to,join:account_id=id"`
-	Category *Category `json:"category,omitempty" bun:"rel:belongs-to,join:category_id=id"`
-	Budget   *Budget   `json:"budget,omitempty" bun:"rel:belongs-to,join:budget_id=id"`
+	Account           *Account           `json:"account,omitempty" bun:"rel:belongs-to,join:account_id=id"`
+	Category          *Category          `json:"category,omitempty" bun:"rel:belongs-to,join:category_id=id"`
+	Budget            *Budget            `json:"budget,omitempty" bun:"rel:belongs-to,join:budget_id=id"`
+	SavingsAllocation *SavingsAllocation `json:"savings_allocation,omitempty" bun:"rel:belongs-to,join:savings_allocation_id=id"`
 
 	Timestamps
 }
