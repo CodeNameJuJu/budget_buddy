@@ -225,8 +225,8 @@ export const LoginForm: React.FC = () => {
               className={cn(
                 "group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-[1.02] transition-all duration-200",
                 theme === "light"
-                  ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] focus:ring-[#6BAF92]"
-                  : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] focus:ring-[#6BAF92]"
+                  ? "bg-[#6BAF92] hover:bg-[#5E9C7E] focus:ring-[#6BAF92]"
+                  : "bg-[#6BAF92] hover:bg-[#5E9C7E] focus:ring-[#6BAF92]"
               )}
             >
               {isLoading ? (
