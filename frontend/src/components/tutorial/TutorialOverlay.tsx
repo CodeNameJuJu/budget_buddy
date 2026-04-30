@@ -39,24 +39,39 @@ export default function TutorialOverlay() {
           element = document.querySelector(".mobile-title") as HTMLElement
           break
         case "budgets-page":
+        case "add-budget-button":
+        case "budgets-list":
           element = document.querySelector("button:has(.PiggyBank)") as HTMLElement
+          if (!element) element = document.querySelector('button[aria-label*="Add"]') as HTMLElement
           break
         case "categories-page":
+        case "add-category-button":
+        case "categories-list":
           element = document.querySelector("button:has(.Tags)") as HTMLElement
+          if (!element) element = document.querySelector('button[aria-label*="Add"]') as HTMLElement
           break
         case "transactions-page":
+        case "add-transaction-button":
+        case "transactions-list":
           element = document.querySelector("button:has(.ArrowLeftRight)") as HTMLElement
+          if (!element) element = document.querySelector('button[aria-label*="Add"]') as HTMLElement
           break
         case "quick-add-button":
           element = document.querySelector("button:has(.Plus)") as HTMLElement
           break
         case "savings-page":
+        case "add-pot-button":
         case "savings-pots":
         case "savings-allocations":
           element = document.querySelector("h1") as HTMLElement
+          if (!element) element = document.querySelector('button[aria-label*="Add"]') as HTMLElement
           break
         case "savings-forecast":
           element = document.querySelector('[data-tutorial="savings-forecast"]') as HTMLElement
+          break
+        case "customize-button":
+          element = document.querySelector('button[aria-label*="Customize"]') as HTMLElement
+          if (!element) element = document.querySelector('button:has(.Settings)') as HTMLElement
           break
         case "analytics-page":
         case "analytics-trends":
