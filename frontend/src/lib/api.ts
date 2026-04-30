@@ -222,9 +222,9 @@ export const accountsApi = {
 
 // Dashboard Layout API
 export const dashboardLayoutsApi = {
-  get: (accountId: number) => get<APIResponse<DashboardLayout>>(`/accounts/${accountId}/dashboard-layout`),
-  save: (accountId: number, layout: string) =>
-    post<APIResponse<{ message: string }>>(`/accounts/${accountId}/dashboard-layout`, { layout }),
+  get: (_accountId?: number) => get<APIResponse<DashboardLayout>>("/dashboard/layout"),
+  save: (_accountId: number, layout: string, name: string = "Main Dashboard") =>
+    post<APIResponse<DashboardLayout>>("/dashboard/layout", { name, layout }),
 }
 
 
@@ -456,20 +456,19 @@ export const alertsApi = {
 
 // Dashboard API
 export const dashboardApi = {
-  summary: (accountID: number, dateFrom?: string, dateTo?: string) => {
-    const params: Record<string, string> = { account_id: String(accountID) }
+  summary: (_accountID: number, dateFrom?: string, dateTo?: string) => {
+    const params: Record<string, string> = {}
     if (dateFrom) params.date_from = dateFrom
     if (dateTo) params.date_to = dateTo
     return get<APIResponse<DashboardSummary>>("/dashboard/summary", params)
   },
-  getLayout: (accountID: number) =>
-    get<APIResponse<DashboardLayout>>("/dashboard/layout", { account_id: String(accountID) }),
-  saveLayout: (data: { account_id: number; name: string; layout: string }) =>
+  getLayout: (_accountID: number) => get<APIResponse<DashboardLayout>>("/dashboard/layout"),
+  saveLayout: (data: { name?: string; layout: string }) =>
     post<APIResponse<DashboardLayout>>("/dashboard/layout", data),
   getAvailableWidgets: () =>
     get<APIResponse<WidgetDefinition[]>>("/dashboard/widgets"),
-  getWidgetData: (accountID: number, widgetType: string) =>
-    get<APIResponse<any>>("/dashboard/widget-data", { account_id: String(accountID), widget_type: widgetType }),
+  getWidgetData: (_accountID: number, widgetType: string) =>
+    get<APIResponse<any>>("/dashboard/widget-data", { widget_type: widgetType }),
 }
 
 // =====================================================================

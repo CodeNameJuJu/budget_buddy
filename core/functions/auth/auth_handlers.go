@@ -37,6 +37,15 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	firstName := normalizedNamePointer(req.FirstName, req.FirstNameAlt)
+	lastName := normalizedNamePointer(req.LastName, req.LastNameAlt)
+	if firstName != nil {
+		req.FirstName = firstName
+	}
+	if lastName != nil {
+		req.LastName = lastName
+	}
+
 	// Basic validation
 	if req.Email == "" || req.Password == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "Email and password are required")
@@ -69,6 +78,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create user
+	now := time.Now()
 	user := &types.User{
 		Email:         req.Email,
 		PasswordHash:  passwordHash,
@@ -76,6 +86,8 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		LastName:      req.LastName,
 		IsActive:      true,
 		EmailVerified: false,
+		CreatedAt:     now,
+		UpdatedAt:     now,
 	}
 
 	err = database.NewInsert().Model(user).Returning("*").Scan(context.Background())
@@ -84,12 +96,20 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	accountOwnerName := "My"
+	if req.FirstName != nil && strings.TrimSpace(*req.FirstName) != "" {
+		accountOwnerName = strings.TrimSpace(*req.FirstName)
+	}
+
 	// Create associated account for the user
 	account := &types.Account{
 		UserID:   int64(user.ID),
-		Name:     fmt.Sprintf("%s %s's Account", user.FirstName, user.LastName),
+		Name:     fmt.Sprintf("%s's Account", accountOwnerName),
 		Email:    user.Email,
 		Currency: "ZAR",
+		Timestamps: types.Timestamps{
+			CreatedDate: now,
+		},
 	}
 
 	err = database.NewInsert().Model(account).Returning("*").Scan(context.Background())
@@ -151,6 +171,22 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.RespondJSON(w, http.StatusCreated, response)
+}
+
+func normalizedNamePointer(primary *string, fallback *string) *string {
+	if primary != nil {
+		trimmed := strings.TrimSpace(*primary)
+		if trimmed != "" {
+			return &trimmed
+		}
+	}
+	if fallback != nil {
+		trimmed := strings.TrimSpace(*fallback)
+		if trimmed != "" {
+			return &trimmed
+		}
+	}
+	return nil
 }
 
 // Login handles user login

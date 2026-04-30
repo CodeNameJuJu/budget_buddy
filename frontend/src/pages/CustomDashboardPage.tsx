@@ -83,9 +83,9 @@ export default function CustomDashboardPage() {
       const layoutJson = JSON.stringify(updatedWidgets)
       sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
       try {
-        await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+        await dashboardLayoutsApi.save(accountId, layoutJson)
       } catch (error) {
-        console.error("Failed to save layout to account", error)
+        console.error("Failed to save layout", error)
       }
     }
   }
@@ -129,9 +129,9 @@ export default function CustomDashboardPage() {
       const layoutJson = JSON.stringify(updatedWidgets)
       sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
       try {
-        await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+        await dashboardLayoutsApi.save(accountId, layoutJson)
       } catch (error) {
-        console.error("Failed to save layout to account", error)
+        console.error("Failed to save layout", error)
       }
     }
   }
@@ -145,9 +145,9 @@ export default function CustomDashboardPage() {
       const layoutJson = JSON.stringify(updatedWidgets)
       sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
       try {
-        await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+        await dashboardLayoutsApi.save(accountId, layoutJson)
       } catch (error) {
-        console.error("Failed to save layout to account", error)
+        console.error("Failed to save layout", error)
       }
     }
   }
@@ -172,7 +172,7 @@ export default function CustomDashboardPage() {
     const layoutJson = JSON.stringify(defaultLayout)
     sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
     try {
-      await accountsApi.update(accountId, { dashboard_layout: layoutJson })
+      await dashboardLayoutsApi.save(accountId, layoutJson)
     } catch (error) {
       console.error("Failed to reset layout", error)
     }

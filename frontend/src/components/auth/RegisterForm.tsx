@@ -75,8 +75,8 @@ export const RegisterForm: React.FC = () => {
       await register({
         email: formData.email,
         password: formData.password,
-        firstName: formData.firstName || undefined,
-        lastName: formData.lastName || undefined,
+        first_name: formData.firstName || undefined,
+        last_name: formData.lastName || undefined,
       });
       navigate('/dashboard');
     } catch (error: any) {

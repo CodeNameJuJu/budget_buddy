@@ -43,10 +43,12 @@ type LoginRequest struct {
 
 // RegisterRequest represents a registration request
 type RegisterRequest struct {
-	Email     string  `json:"email" validate:"required,email"`
-	Password  string  `json:"password" validate:"required,min=6"`
-	FirstName *string `json:"first_name,omitempty"`
-	LastName  *string `json:"last_name,omitempty"`
+	Email        string  `json:"email" validate:"required,email"`
+	Password     string  `json:"password" validate:"required,min=6"`
+	FirstName    *string `json:"first_name,omitempty"`
+	LastName     *string `json:"last_name,omitempty"`
+	FirstNameAlt *string `json:"firstName,omitempty"`
+	LastNameAlt  *string `json:"lastName,omitempty"`
 }
 
 // AuthResponse represents the response after successful authentication
