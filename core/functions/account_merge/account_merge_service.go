@@ -194,23 +194,26 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		return fmt.Errorf("failed to merge alerts: %w", err)
 	}
 
-	// Update user's account_id to point to the shared account
+	// Map recipient user to source account owner for shared-account resolution
 	_, err = database.NewUpdate().
-		Model(&user).
-		Set("account_id = ?", fromAccount.ID).
-		Where("id = ?", userID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to update user account: %w", err)
-	}
-
-	// Delete the old account
-	_, err = database.NewDelete().
-		Model(&toAccount).
+		Model((*types.Account)(nil)).
+		Set("user_id = ?", mergeToken.FromUserID).
+		Set("deleted_date = ?", time.Now()).
+		Set("modified_date = ?", time.Now()).
 		Where("id = ?", toAccount.ID).
 		Exec(context.Background())
 	if err != nil {
-		return fmt.Errorf("failed to delete old account: %w", err)
+		return fmt.Errorf("failed to remap recipient account: %w", err)
+	}
+
+	// Keep recipient user active and linked through accepted merge token
+	_, err = database.NewUpdate().
+		Model((*types.User)(nil)).
+		Set("updated_at = ?", time.Now()).
+		Where("id = ?", userID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to update recipient user: %w", err)
 	}
 
 	// Update merge token status

@@ -119,22 +119,28 @@ func GetDashboardLayout(accountID int64) (*types.DashboardLayout, error) {
 
 func CreateOrUpdateDashboardLayout(layout *types.DashboardLayout) error {
 	db := appcontext.GetDb()
+	if layout.Name == "" {
+		layout.Name = "Main Dashboard"
+	}
+
 	now := time.Now()
+	layout.ModifiedDate = &now
 
-	// Use raw SQL to avoid issues with Bun ORM
-	query := `
-		INSERT INTO dashboard_layouts (account_id, name, is_active, layout, created_date, modified_date)
-		VALUES (?, ?, ?, ?, ?, ?)
-		ON CONFLICT (account_id, is_active) WHERE is_active = TRUE
-		DO UPDATE SET 
-			name = EXCLUDED.name,
-			layout = EXCLUDED.layout,
-			modified_date = EXCLUDED.modified_date
-		RETURNING id, created_date, modified_date
-	`
+	_, err := db.NewUpdate().
+		Model((*types.DashboardLayout)(nil)).
+		Set("is_active = ?", false).
+		Set("modified_date = ?", now).
+		Where("account_id = ?", layout.AccountID).
+		Where("is_active = ?", true).
+		Exec(context.Background())
+	if err != nil {
+		return err
+	}
 
-	err := db.NewRaw(query, layout.AccountID, layout.Name, layout.IsActive, layout.Layout, now, now).
-		Scan(context.Background(), &layout.ID, &layout.CreatedDate, &layout.ModifiedDate)
+	err = db.NewInsert().
+		Model(layout).
+		Returning("*").
+		Scan(context.Background())
 
 	return err
 }

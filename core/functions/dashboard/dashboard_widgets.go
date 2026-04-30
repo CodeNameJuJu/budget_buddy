@@ -3,25 +3,19 @@ package dashboard
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
 
 func GETDashboardLayout(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
-		return
-	}
-
-	accountID, err := strconv.ParseInt(accountIDStr, 10, 64)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid account_id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
 	}
 
@@ -47,19 +41,19 @@ func GETDashboardLayout(w http.ResponseWriter, r *http.Request) {
 }
 
 func POSTDashboardLayout(w http.ResponseWriter, r *http.Request) {
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	var req struct {
-		AccountID int64  `json:"account_id"`
-		Name      string `json:"name"`
-		Layout    string `json:"layout"`
+		Name   string `json:"name"`
+		Layout string `json:"layout"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
-		return
-	}
-
-	if req.AccountID == 0 {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
 		return
 	}
 
@@ -68,9 +62,14 @@ func POSTDashboardLayout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	name := req.Name
+	if name == "" {
+		name = "Main Dashboard"
+	}
+
 	layout := &types.DashboardLayout{
-		AccountID: req.AccountID,
-		Name:      req.Name,
+		AccountID: accountID,
+		Name:      name,
 		Layout:    req.Layout,
 		IsActive:  true,
 	}
@@ -90,22 +89,16 @@ func GETAvailableWidgets(w http.ResponseWriter, r *http.Request) {
 }
 
 func GETWidgetData(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	widgetType := r.URL.Query().Get("widget_type")
-
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
 	}
+
+	widgetType := r.URL.Query().Get("widget_type")
 
 	if widgetType == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "widget_type is required")
-		return
-	}
-
-	accountID, err := strconv.ParseInt(accountIDStr, 10, 64)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid account_id")
 		return
 	}
 

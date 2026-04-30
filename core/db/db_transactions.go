@@ -96,3 +96,33 @@ func SoftDeleteTransaction(id int64) error {
 		Exec(context.Background())
 	return err
 }
+
+func UpdateTransactionForAccount(transaction *types.Transaction, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+	transaction.ModifiedDate = &now
+
+	_, err := db.NewUpdate().
+		Model(transaction).
+		Where("id = ?", transaction.ID).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		OmitZero().
+		Returning("*").
+		Exec(context.Background())
+	return err
+}
+
+func SoftDeleteTransactionForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.Transaction)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Exec(context.Background())
+	return err
+}

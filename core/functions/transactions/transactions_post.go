@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
@@ -24,9 +25,6 @@ type POSTTransactionRequest struct {
 }
 
 func (p *POSTTransactionRequest) Validate() error {
-	if p.AccountID == 0 {
-		return fmt.Errorf("account_id is required")
-	}
 	if p.Amount == "" {
 		return fmt.Errorf("amount is required")
 	}
@@ -46,6 +44,12 @@ func (p *POSTTransactionRequest) Validate() error {
 }
 
 func POSTTransaction(w http.ResponseWriter, r *http.Request) {
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	var req POSTTransactionRequest
 	if err := helpers.DecodeBody(r, &req); err != nil {
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
@@ -61,7 +65,7 @@ func POSTTransaction(w http.ResponseWriter, r *http.Request) {
 	date, _ := time.Parse("2006-01-02", req.Date)
 
 	transaction := types.Transaction{
-		AccountID:   req.AccountID,
+		AccountID:   accountID,
 		CategoryID:  req.CategoryID,
 		BudgetID:    req.BudgetID,
 		Amount:      amount,

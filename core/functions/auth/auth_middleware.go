@@ -71,10 +71,17 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		accountID, err := db.GetAccountIDForUser(int64(user.ID))
+		if err != nil {
+			helpers.RespondError(w, http.StatusUnauthorized, "Account not found")
+			return
+		}
+
 		// Add user to context
 		ctx := context.WithValue(r.Context(), "user", &user)
 		ctx = context.WithValue(ctx, "user_id", user.ID)
 		ctx = context.WithValue(ctx, "user_email", user.Email)
+		ctx = context.WithValue(ctx, "account_id", accountID)
 		ctx = context.WithValue(ctx, "device_id", claims.DeviceID)
 
 		// Call next handler with updated context
@@ -187,6 +194,11 @@ func GetUserIDFromContext(r *http.Request) (int, bool) {
 func GetUserEmailFromContext(r *http.Request) (string, bool) {
 	email, ok := r.Context().Value("user_email").(string)
 	return email, ok
+}
+
+func GetAccountIDFromContext(r *http.Request) (int64, bool) {
+	accountID, ok := r.Context().Value("account_id").(int64)
+	return accountID, ok
 }
 
 // GetDeviceIDFromContext gets the device ID from the request context

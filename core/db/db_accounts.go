@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"time"
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
@@ -38,6 +40,54 @@ func InsertAccount(account *types.Account) error {
 		Returning("*").
 		Exec(context.Background())
 	return err
+}
+
+func GetAccountIDForUser(userID int64) (int64, error) {
+	db := appcontext.GetDb()
+	ctx := context.Background()
+
+	var account types.Account
+	err := db.NewSelect().
+		Model(&account).
+		Column("id").
+		Where("user_id = ?", userID).
+		Where("deleted_date IS NULL").
+		Order("id ASC").
+		Limit(1).
+		Scan(ctx)
+	if err == nil {
+		return account.ID, nil
+	}
+	if !errors.Is(err, sql.ErrNoRows) {
+		return 0, err
+	}
+
+	var mergeToken types.AccountMergeToken
+	err = db.NewSelect().
+		Model(&mergeToken).
+		Column("from_user_id").
+		Where("to_user_id = ?", userID).
+		Where("status = ?", "accepted").
+		OrderExpr("COALESCE(accepted_at, created_date) DESC").
+		Limit(1).
+		Scan(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	err = db.NewSelect().
+		Model(&account).
+		Column("id").
+		Where("user_id = ?", mergeToken.FromUserID).
+		Where("deleted_date IS NULL").
+		Order("id ASC").
+		Limit(1).
+		Scan(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	return account.ID, nil
 }
 
 func UpdateAccount(account *types.Account) error {
