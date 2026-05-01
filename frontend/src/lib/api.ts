@@ -469,8 +469,8 @@ export const dashboardApi = {
     post<APIResponse<DashboardLayout>>("/dashboard/layout", data),
   getAvailableWidgets: () =>
     get<APIResponse<WidgetDefinition[]>>("/dashboard/widgets"),
-  getWidgetData: (_accountID: number, widgetType: string) =>
-    get<APIResponse<any>>("/dashboard/widget-data", { widget_type: widgetType }),
+  getWidgetData: (accountID: number, widgetType: string) =>
+    get<APIResponse<any>>("/dashboard/widget-data", { account_id: String(accountID), widget_type: widgetType }),
 }
 
 // =====================================================================
