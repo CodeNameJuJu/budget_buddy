@@ -179,17 +179,11 @@ export default function TransactionsPage() {
         </div>
         <div className="flex gap-2 ml-auto">
           <Button 
-            variant="outline" 
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
-            className={cn(
-              "mobile-button",
-              theme === "light"
-                ? "bg-[#6BAF92] text-[#1F2A24] border-[#6BAF92] hover:bg-[#5A9E82]"
-                : "bg-[#88B39B] text-[#E7EFEA] border-[#88B39B] hover:bg-[#78A38B]"
-            )}
+            className="hover:shadow-lg transition-all duration-300 mobile-button"
           >
-            <Settings className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
-            <span className="hidden sm:inline ml-2">Add transaction</span>
+            <Plus className="h-4 w-4 mr-2" />
+            Add transaction
           </Button>
         </div>
       </div>
