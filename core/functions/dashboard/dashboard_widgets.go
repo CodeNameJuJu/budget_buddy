@@ -208,7 +208,7 @@ func getBillingCycleDateRangeOrDefault(accountID int64) (time.Time, time.Time) {
 
 func getBalanceWidgetData(accountID int64) (interface{}, error) {
 	now := time.Now()
-	from := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+	from := time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, now.Location())
 	to := from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 
 	summary, err := db.GetDashboardSummary(accountID, from, to)
@@ -231,7 +231,7 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 
 func getRecentTransactionsWidgetData(accountID int64) (interface{}, error) {
 	now := time.Now()
-	from := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+	from := time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, now.Location())
 	to := from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 
 	summary, err := db.GetDashboardSummary(accountID, from, to)
