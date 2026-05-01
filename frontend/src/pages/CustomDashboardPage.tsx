@@ -469,30 +469,17 @@ export default function CustomDashboardPage() {
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
+                          {...(isCustomizing ? provided.dragHandleProps : {})}
                           className={cn(
                             widget.size === "large" ? "lg:col-span-3 sm:col-span-2" : "",
-                            snapshot.isDragging ? "opacity-50" : ""
+                            snapshot.isDragging ? "opacity-50 scale-105" : "",
+                            isCustomizing ? "cursor-grab active:cursor-grabbing" : ""
                           )}
                         >
-                          <div className="relative">
-                            {isCustomizing && (
-                              <div
-                                {...provided.dragHandleProps}
-                                className={cn(
-                                  "absolute top-2 left-2 z-10 p-1 rounded cursor-grab",
-                                  theme === "light"
-                                    ? "bg-white shadow-md text-[#6C7A73]"
-                                    : "bg-[#18231D] shadow-md text-[#A7B3AD]"
-                                )}
-                              >
-                                <GripVertical className="h-4 w-4" />
-                              </div>
-                            )}
-                            <WidgetRenderer
-                              widget={widget}
-                              accountId={accountId}
-                            />
-                          </div>
+                          <WidgetRenderer
+                            widget={widget}
+                            accountId={accountId}
+                          />
                         </div>
                       )}
                     </Draggable>
