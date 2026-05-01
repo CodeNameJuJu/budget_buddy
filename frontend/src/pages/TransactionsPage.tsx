@@ -28,6 +28,7 @@ export default function TransactionsPage() {
   const [loading, setLoading] = useState(true)
   const [showAdvancedForm, setShowAdvancedForm] = useState(false)
   const [filterType, setFilterType] = useState<string>("")
+  const [filterCategory, setFilterCategory] = useState<string>("")
   const { theme } = useTheme()
 
   const [form, setForm] = useState({
@@ -49,7 +50,7 @@ export default function TransactionsPage() {
     if (accountId) {
       loadData()
     }
-  }, [accountId, filterType])
+  }, [accountId, filterType, filterCategory])
 
   async function loadUserAccount() {
     try {
@@ -69,6 +70,7 @@ export default function TransactionsPage() {
     try {
       const params: Record<string, string> = {}
       if (filterType) params.type = filterType
+      if (filterCategory) params.category_id = filterCategory
 
       const [txRes, catRes, tagsRes] = await Promise.all([
         transactionsApi.list(accountId, params),
@@ -183,6 +185,18 @@ export default function TransactionsPage() {
         >
           Expenses
         </Button>
+        <select
+          className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Advanced transaction form */}
