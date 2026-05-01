@@ -496,6 +496,7 @@ export default function Layout() {
                   <li>Added category editing with custom color picker</li>
                   <li>Added savings pot editing with custom color picker</li>
                   <li>Click on budget to view transactions</li>
+                  <li>Clickable version number with release notes modal</li>
                 </ul>
               </div>
 
