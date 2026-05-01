@@ -50,7 +50,7 @@ func GetSpendingTrends(accountID int64, months int) ([]SpendingTrend, error) {
 			ColumnExpr("COALESCE(SUM(amount), 0)").
 			Where("account_id = ?", accountID).
 			Where("type = ?", "income").
-			Where("date >= ? AND date <= ?", monthStart, monthEnd).
+			Where("date >= ? AND date <= ?", monthStart.Format("2006-01-02"), monthEnd.Format("2006-01-02")).
 			Where("deleted_date IS NULL").
 			Scan(context.Background(), &income)
 		if err != nil {
@@ -63,7 +63,7 @@ func GetSpendingTrends(accountID int64, months int) ([]SpendingTrend, error) {
 			ColumnExpr("COALESCE(SUM(amount), 0)").
 			Where("account_id = ?", accountID).
 			Where("type = ?", "expense").
-			Where("date >= ? AND date <= ?", monthStart, monthEnd).
+			Where("date >= ? AND date <= ?", monthStart.Format("2006-01-02"), monthEnd.Format("2006-01-02")).
 			Where("deleted_date IS NULL").
 			Scan(context.Background(), &expenses)
 		if err != nil {
@@ -131,7 +131,7 @@ func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, month
 					ColumnExpr("COALESCE(SUM(amount), 0)").
 					Where("account_id = ?", accountID).
 					Where("type = ?", "income").
-					Where("date >= ? AND date <= ?", cycleStart, cycleEnd).
+					Where("date >= ? AND date <= ?", cycleStart.Format("2006-01-02"), cycleEnd.Format("2006-01-02")).
 					Where("deleted_date IS NULL").
 					Scan(context.Background(), &income)
 				if err != nil {
@@ -144,7 +144,7 @@ func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, month
 					ColumnExpr("COALESCE(SUM(amount), 0)").
 					Where("account_id = ?", accountID).
 					Where("type = ?", "expense").
-					Where("date >= ? AND date <= ?", cycleStart, cycleEnd).
+					Where("date >= ? AND date <= ?", cycleStart.Format("2006-01-02"), cycleEnd.Format("2006-01-02")).
 					Where("deleted_date IS NULL").
 					Scan(context.Background(), &expenses)
 				if err != nil {
@@ -291,7 +291,7 @@ func GetCategoryBreakdownByDateRange(accountID int64, startDate, endDate time.Ti
 		ColumnExpr("category_id, COALESCE(SUM(amount), 0) as total_amount, COUNT(id) as transaction_count").
 		Where("account_id = ?", accountID).
 		Where("type = ?", "expense").
-		Where("date >= ? AND date <= ?", startDate, endDate).
+		Where("date >= ? AND date <= ?", startDate.Format("2006-01-02"), endDate.Format("2006-01-02")).
 		Where("deleted_date IS NULL").
 		Where("category_id IS NOT NULL").
 		Group("category_id").
