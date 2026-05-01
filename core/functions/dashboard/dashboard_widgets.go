@@ -3,6 +3,7 @@ package dashboard
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -177,6 +178,9 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 		billingCycleDay = *account.BillingCycleDay
 	}
 
+	// Log the billing cycle day being used
+	fmt.Printf("Using billing cycle day: %d for account %d\n", billingCycleDay, accountID)
+
 	// Get data from billing cycle day of previous month to billing cycle day of current month
 	now := time.Now()
 	var from, to time.Time
@@ -191,8 +195,11 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
 	}
 
+	fmt.Printf("Date range: %s to %s\n", from.Format("2006-01-02"), to.Format("2006-01-02"))
+
 	summary, err := db.GetDashboardSummary(accountID, from, to)
 	if err != nil {
+		fmt.Printf("Error getting dashboard summary: %v\n", err)
 		// Return empty data instead of error
 		return map[string]interface{}{
 			"balance":  "0",
