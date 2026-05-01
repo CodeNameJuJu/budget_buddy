@@ -19,6 +19,7 @@ import {
   Moon,
   Sun,
   BookOpen,
+  Target,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -31,9 +32,7 @@ import { useTheme } from "@/contexts/ThemeContext"
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/guide", icon: BookOpen, label: "User Guide" },
-  { to: "/transactions", icon: ArrowLeftRight, label: "Transactions" },
-  { to: "/categories", icon: Tags, label: "Categories" },
-  { to: "/budgets", icon: PiggyBank, label: "Budgets" },
+  { to: "/finance", icon: Target, label: "Finance" },
   { to: "/savings", icon: Landmark, label: "Savings" },
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },

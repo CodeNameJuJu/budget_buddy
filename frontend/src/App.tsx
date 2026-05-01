@@ -14,6 +14,7 @@ import PartnersPage from "./pages/PartnersPage"
 import ProfilePage from "./pages/ProfilePage"
 import UserGuidePage from "./pages/UserGuidePage"
 import VerifyEmailPage from "./pages/VerifyEmailPage"
+import FinancePage from "./pages/FinancePage"
 import { LoginForm } from "./components/auth/LoginForm"
 import { RegisterForm } from "./components/auth/RegisterForm"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
@@ -85,6 +86,11 @@ export default function App() {
             <Route path="/guide" element={
               <ProtectedRoute>
                 <UserGuidePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/finance" element={
+              <ProtectedRoute>
+                <FinancePage />
               </ProtectedRoute>
             } />
         </Route>
