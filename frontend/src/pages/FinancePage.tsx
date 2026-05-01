@@ -840,6 +840,68 @@ export default function FinancePage() {
           </Card>
         </div>
       )}
+
+      {/* Budget transactions modal */}
+      {selectedBudget && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className={cn(
+            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
+            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+          )}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                  {selectedBudget.name} Transactions
+                </h2>
+                <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                  {selectedBudget.category?.name} · {selectedBudget.period}
+                </p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedBudget(null)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {loadingBudgetTransactions ? (
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading transactions...</p>
+            ) : budgetTransactions.length === 0 ? (
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found for this budget period.</p>
+            ) : (
+              <div className="space-y-2">
+                {budgetTransactions.map((t) => (
+                  <div
+                    key={t.id}
+                    className={cn(
+                      "flex items-center justify-between p-3 rounded-md border",
+                      theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white"
+                        style={{ backgroundColor: t.category?.colour || "#6BAF92" }}
+                      >
+                        {t.category?.icon || t.category?.name[0] || "??"}
+                      </div>
+                      <div>
+                        <p className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                          {t.description || t.category?.name}
+                        </p>
+                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                          {formatDate(t.date)}
+                        </p>
+                      </div>
+                    </div>
+                    <span className={cn("text-sm font-semibold", t.type === "income" ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400")}>
+                      {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
