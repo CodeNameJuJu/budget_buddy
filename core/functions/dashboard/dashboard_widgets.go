@@ -169,22 +169,15 @@ func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
 		billingCycleDay = *account.BillingCycleDay
 	}
 
-	loc := time.UTC
-	if account.Timezone != nil {
-		if tz, err := time.LoadLocation(*account.Timezone); err == nil {
-			loc = tz
-		}
-	}
-
-	now := time.Now().In(loc)
+	now := time.Now()
 	var from, to time.Time
 
 	if now.Day() >= billingCycleDay {
-		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, loc)
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
 		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 	} else {
-		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, loc).AddDate(0, -1, 0)
-		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, loc).Add(-time.Nanosecond)
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
 	}
 
 	return from, to, nil
