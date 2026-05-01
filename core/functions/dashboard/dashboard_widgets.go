@@ -169,15 +169,22 @@ func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
 		billingCycleDay = *account.BillingCycleDay
 	}
 
-	now := time.Now()
+	loc := time.UTC
+	if account.Timezone != nil {
+		if tz, err := time.LoadLocation(*account.Timezone); err == nil {
+			loc = tz
+		}
+	}
+
+	now := time.Now().In(loc)
 	var from, to time.Time
 
 	if now.Day() >= billingCycleDay {
-		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, loc)
 		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 	} else {
-		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, loc).AddDate(0, -1, 0)
+		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, loc).Add(-time.Nanosecond)
 	}
 
 	return from, to, nil
@@ -186,23 +193,28 @@ func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
 func getBillingCycleDateRangeOrDefault(accountID int64) (time.Time, time.Time) {
 	from, to, err := getBillingCycleDateRange(accountID)
 	if err != nil {
-		now := time.Now()
-		from = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+		var account types.Account
+		_ = db.GetDb().NewSelect().
+			Model(&account).
+			Where("id = ?", accountID).
+			Scan(context.Background())
+
+		loc := time.UTC
+		if account.Timezone != nil {
+			if tz, err := time.LoadLocation(*account.Timezone); err == nil {
+				loc = tz
+			}
+		}
+
+		now := time.Now().In(loc)
+		from = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, loc)
 		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 	}
 	return from, to
 }
 
 func getBalanceWidgetData(accountID int64) (interface{}, error) {
-	from, to, err := getBillingCycleDateRange(accountID)
-	if err != nil {
-		return map[string]interface{}{
-			"balance":  "0",
-			"income":   "0",
-			"expenses": "0",
-			"period":   "all time",
-		}, nil
-	}
+	from, to := getBillingCycleDateRangeOrDefault(accountID)
 
 	summary, err := db.GetDashboardSummary(accountID, from, to)
 	if err != nil {
@@ -352,13 +364,7 @@ func getSpendingTrendsWidgetData(accountID int64) (interface{}, error) {
 }
 
 func getCategoryBreakdownWidgetData(accountID int64) (interface{}, error) {
-	from, to, err := getBillingCycleDateRange(accountID)
-	if err != nil {
-		return map[string]interface{}{
-			"breakdown": []interface{}{},
-			"period":    "this month",
-		}, nil
-	}
+	from, to := getBillingCycleDateRangeOrDefault(accountID)
 
 	breakdown, err := db.GetCategoryBreakdownByDateRange(accountID, from, to)
 	if err != nil {

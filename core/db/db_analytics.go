@@ -103,15 +103,93 @@ func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, month
 	db := appcontext.GetDb()
 	var trends []SpendingTrend
 
+	var account types.Account
+	err := db.NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err == nil && account.Timezone != nil {
+		if tz, err := time.LoadLocation(*account.Timezone); err == nil {
+			now := time.Now().In(tz)
+			var currentCycleStart, currentCycleEnd time.Time
+
+			if now.Day() >= billingCycleDay {
+				currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, tz)
+				currentCycleEnd = currentCycleStart.AddDate(0, 1, 0).Add(-time.Nanosecond)
+			} else {
+				currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, tz).AddDate(0, -1, 0)
+				currentCycleEnd = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, tz).Add(-time.Nanosecond)
+			}
+
+			for i := months - 1; i >= 0; i-- {
+				cycleStart := currentCycleStart.AddDate(0, -i, 0)
+				cycleEnd := currentCycleEnd.AddDate(0, -i, 0)
+
+				var income decimal.Decimal
+				err := db.NewSelect().
+					Model((*types.Transaction)(nil)).
+					ColumnExpr("COALESCE(SUM(amount), 0)").
+					Where("account_id = ?", accountID).
+					Where("type = ?", "income").
+					Where("date >= ? AND date <= ?", cycleStart, cycleEnd).
+					Where("deleted_date IS NULL").
+					Scan(context.Background(), &income)
+				if err != nil {
+					return nil, err
+				}
+
+				var expenses decimal.Decimal
+				err = db.NewSelect().
+					Model((*types.Transaction)(nil)).
+					ColumnExpr("COALESCE(SUM(amount), 0)").
+					Where("account_id = ?", accountID).
+					Where("type = ?", "expense").
+					Where("date >= ? AND date <= ?", cycleStart, cycleEnd).
+					Where("deleted_date IS NULL").
+					Scan(context.Background(), &expenses)
+				if err != nil {
+					return nil, err
+				}
+
+				var budgetUsed decimal.Decimal
+				budgets, _, err := QueryBudgets(accountID, nil)
+				if err == nil {
+					var totalBudget decimal.Decimal
+					for _, budget := range budgets {
+						if budget.StartDate.Before(cycleEnd) && (budget.EndDate == nil || budget.EndDate.After(cycleStart)) {
+							totalBudget = totalBudget.Add(budget.Amount)
+						}
+					}
+
+					if totalBudget.GreaterThan(decimal.Zero) {
+						budgetUsed = expenses.Div(totalBudget).Mul(decimal.NewFromInt(100))
+					}
+				}
+
+				savings := income.Sub(expenses)
+
+				trends = append(trends, SpendingTrend{
+					Month:      cycleStart.Format("2006-01"),
+					Income:     income,
+					Expenses:   expenses,
+					Savings:    savings,
+					BudgetUsed: budgetUsed,
+				})
+			}
+
+			return trends, nil
+		}
+	}
+
 	now := time.Now()
 	var currentCycleStart, currentCycleEnd time.Time
 
 	if now.Day() >= billingCycleDay {
-		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
+		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, time.UTC)
 		currentCycleEnd = currentCycleStart.AddDate(0, 1, 0).Add(-time.Nanosecond)
 	} else {
-		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-		currentCycleEnd = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
+		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, time.UTC).AddDate(0, -1, 0)
+		currentCycleEnd = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, time.UTC).Add(-time.Nanosecond)
 	}
 
 	for i := months - 1; i >= 0; i-- {
