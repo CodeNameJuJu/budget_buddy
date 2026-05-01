@@ -34,8 +34,8 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		Where("account_id = ?", accountID).
 		Where("type = ?", "income").
 		Where("deleted_date IS NULL").
-		Where("date >= ?", from.Format("2006-01-02")).
-		Where("date <= ?", to.Format("2006-01-02")).
+		Where("date >= ?", from).
+		Where("date <= ?", to).
 		Scan(context.Background(), &totalIncome)
 	if err != nil {
 		return nil, err
@@ -49,8 +49,8 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		Where("account_id = ?", accountID).
 		Where("type = ?", "expense").
 		Where("deleted_date IS NULL").
-		Where("date >= ?", from.Format("2006-01-02")).
-		Where("date <= ?", to.Format("2006-01-02")).
+		Where("date >= ?", from).
+		Where("date <= ?", to).
 		Scan(context.Background(), &totalExpenses)
 	if err != nil {
 		return nil, err
@@ -63,8 +63,8 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		Relation("Category").
 		Where("t.account_id = ?", accountID).
 		Where("t.deleted_date IS NULL").
-		Where("t.date >= ?", from.Format("2006-01-02")).
-		Where("t.date <= ?", to.Format("2006-01-02")).
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
 		Order("t.date DESC").
 		Limit(10).
 		Scan(context.Background())
@@ -83,8 +83,8 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		Where("t.type = ?", "expense").
 		Where("t.deleted_date IS NULL").
 		Where("t.category_id IS NOT NULL").
-		Where("t.date >= ?", from.Format("2006-01-02")).
-		Where("t.date <= ?", to.Format("2006-01-02")).
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
 		GroupExpr("t.category_id, cat.name").
 		OrderExpr("total DESC").
 		Limit(5).
