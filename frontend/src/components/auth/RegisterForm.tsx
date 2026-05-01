@@ -72,11 +72,13 @@ export const RegisterForm: React.FC = () => {
 
     setIsLoading(true);
     try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       await register({
         email: formData.email,
         password: formData.password,
         first_name: formData.firstName || undefined,
         last_name: formData.lastName || undefined,
+        timezone: timezone || undefined,
       });
       navigate('/dashboard');
     } catch (error: any) {

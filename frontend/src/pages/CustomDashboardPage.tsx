@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import { LayoutDashboard, Settings, Plus, X, Check } from "lucide-react"
 import { useAuth } from "@/hooks"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -110,6 +110,15 @@ export default function CustomDashboardPage() {
     } finally {
       setIsSaving(false)
     }
+  }
+
+  async function toggleCustomizeMode() {
+    if (isCustomizing) {
+      await saveLayout()
+      return
+    }
+
+    setIsCustomizing(true)
   }
 
   async function addWidget(widgetType: string, widgetTitle: string) {
@@ -295,7 +304,7 @@ export default function CustomDashboardPage() {
             )}>Your elegant financial overview</p>
           </div>
           <Button
-            onClick={() => setIsCustomizing(!isCustomizing)}
+            onClick={toggleCustomizeMode}
             variant={isCustomizing ? "default" : "outline"}
             className={cn(
               "flex-shrink-0 text-xs xs:text-sm px-3 xs:px-4 py-2",

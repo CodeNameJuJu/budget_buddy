@@ -129,6 +129,7 @@ export const authApi = {
     password: string; 
     first_name?: string; 
     last_name?: string; 
+    timezone?: string;
   }) => apiClient.post('/auth/register', credentials),
   
   refresh: () => apiClient.post('/auth/refresh', {}),

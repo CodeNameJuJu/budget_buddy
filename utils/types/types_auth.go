@@ -47,6 +47,7 @@ type RegisterRequest struct {
 	Password     string  `json:"password" validate:"required,min=6"`
 	FirstName    *string `json:"first_name,omitempty"`
 	LastName     *string `json:"last_name,omitempty"`
+	Timezone     *string `json:"timezone,omitempty"`
 	FirstNameAlt *string `json:"firstName,omitempty"`
 	LastNameAlt  *string `json:"lastName,omitempty"`
 }

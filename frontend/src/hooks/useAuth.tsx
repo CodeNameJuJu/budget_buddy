@@ -34,6 +34,7 @@ interface RegisterCredentials {
   password: string;
   first_name?: string;
   last_name?: string;
+  timezone?: string;
 }
 
 interface AuthContextType {

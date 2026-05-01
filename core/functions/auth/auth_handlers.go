@@ -108,6 +108,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		Name:     fmt.Sprintf("%s's Account", accountOwnerName),
 		Email:    user.Email,
 		Currency: "ZAR",
+		Timezone: req.Timezone,
 		Timestamps: types.Timestamps{
 			CreatedDate: now,
 		},
