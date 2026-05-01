@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import TagInput from "@/components/ui/tag-input"
-import QuickAddTransaction from "@/components/QuickAddTransaction"
 import {
   transactionsApi,
   categoriesApi,
@@ -123,10 +122,6 @@ export default function TransactionsPage() {
     }
   }
 
-  function handleQuickAddTransaction(transaction: Transaction) {
-    loadData()
-  }
-
   async function handleDelete(id: number) {
     if (!confirm("Are you sure you want to delete this transaction?")) return
     try {
@@ -184,15 +179,6 @@ export default function TransactionsPage() {
         </div>
         <div className="flex gap-2 ml-auto">
           <Button 
-            onClick={handleExportData}
-            disabled={exporting}
-            variant="outline"
-            className="mobile-button"
-          >
-            <Download className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
-            <span className="hidden sm:inline ml-2">{exporting ? "Exporting..." : "Export"}</span>
-          </Button>
-          <Button 
             variant="outline" 
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
             className="mobile-button"
@@ -203,9 +189,17 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      {/* Quick Add Transaction - Always Visible */}
-      <div className="responsive-margin flex justify-between items-center gap-2" data-tutorial="quick-add-button">
-        <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
+      {/* Export button and message */}
+      <div className="responsive-margin flex justify-between items-center gap-2">
+        <Button 
+          onClick={handleExportData}
+          disabled={exporting}
+          variant="outline"
+          className="mobile-button ml-auto"
+        >
+          <Download className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
+          <span className="hidden sm:inline ml-2">{exporting ? "Exporting..." : "Export"}</span>
+        </Button>
         {message && (
           <div className={cn(
             "p-3 rounded-lg text-sm flex-shrink-0",
