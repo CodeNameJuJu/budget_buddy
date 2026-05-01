@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Plus, Trash2, Tags } from "lucide-react"
+import { Plus, Trash2, Tags, Edit2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,6 +26,7 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [filterType, setFilterType] = useState<string>("")
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
 
   const [form, setForm] = useState({
     name: "",
@@ -73,6 +74,11 @@ export default function CategoriesPage() {
     e.preventDefault()
     if (!accountId) return
     
+    if (editingCategory) {
+      await handleEditSubmit(e)
+      return
+    }
+    
     try {
       await categoriesApi.create({
         account_id: accountId,
@@ -96,6 +102,37 @@ export default function CategoriesPage() {
       loadCategories()
     } catch {
       console.error("Failed to delete category")
+    }
+  }
+
+  function handleEditClick(category: Category) {
+    setEditingCategory(category)
+    setForm({
+      name: category.name,
+      type: category.type,
+      colour: category.colour || "#6BAF92",
+      icon: category.icon || "",
+    })
+    setShowForm(true)
+  }
+
+  async function handleEditSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!accountId || !editingCategory) return
+    
+    try {
+      await categoriesApi.update(editingCategory.id, {
+        name: form.name,
+        type: form.type,
+        colour: form.colour || undefined,
+        icon: form.icon || undefined,
+      })
+      setEditingCategory(null)
+      setForm({ name: "", type: "expense", colour: "#6BAF92", icon: "" })
+      setShowForm(false)
+      loadCategories()
+    } catch {
+      console.error("Failed to update category")
     }
   }
 
@@ -143,14 +180,16 @@ export default function CategoriesPage() {
         </Button>
       </div>
 
-      {/* Add category form */}
+      {/* Add/Edit category form */}
       {showForm && (
         <Card className={cn(
           "border",
           theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New category</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+              {editingCategory ? "Edit category" : "New category"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -206,8 +245,16 @@ export default function CategoriesPage() {
                 />
               </div>
               <div className="sm:col-span-2 lg:col-span-4 flex gap-2">
-                <Button type="submit">Save category</Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                <Button type="submit">{editingCategory ? "Update category" : "Save category"}</Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => {
+                    setShowForm(false)
+                    setEditingCategory(null)
+                    setForm({ name: "", type: "expense", colour: "#6BAF92", icon: "" })
+                  }}
+                >
                   Cancel
                 </Button>
               </div>
@@ -269,16 +316,28 @@ export default function CategoriesPage() {
                         </div>
                         <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={cn(
-                          theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
-                        )}
-                        onClick={() => handleDelete(cat.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]"
+                          )}
+                          onClick={() => handleEditClick(cat)}
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
+                          )}
+                          onClick={() => handleDelete(cat.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -322,16 +381,28 @@ export default function CategoriesPage() {
                         </div>
                         <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={cn(
-                          theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
-                        )}
-                        onClick={() => handleDelete(cat.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]"
+                          )}
+                          onClick={() => handleEditClick(cat)}
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
+                          )}
+                          onClick={() => handleDelete(cat.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
