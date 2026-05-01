@@ -1,31 +1,25 @@
 import { useState, useEffect } from "react"
-import { Save, Moon, Sun, Bell, Download, Upload, Trash2, Shield, Lock } from "lucide-react"
+import { Save, Moon, Sun, Bell, Download } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
-import { alertsApi, transactionsApi, authApi } from "@/lib/api"
+import { alertsApi, transactionsApi } from "@/lib/api"
 import { useAuth } from "@/hooks"
 
 export default function SettingsPage() {
   const { theme, toggleTheme } = useTheme()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [accountId, setAccountId] = useState<number | null>(null)
   const [exporting, setExporting] = useState(false)
-  const [deletingAccount, setDeletingAccount] = useState(false)
   
   const [alertPreferences, setAlertPreferences] = useState({
     budgetOverspending: true,
     savingsGoals: true,
-  })
-
-  const [privacySettings, setPrivacySettings] = useState({
-    dataRetention: "indefinite",
-    analyticsOptOut: false,
   })
 
   async function saveSettings() {
@@ -140,49 +134,11 @@ export default function SettingsPage() {
     }
   }
 
-  async function handleDeleteAccount() {
-    if (!confirm("Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.")) return
-    
-    if (!confirm("This is your last chance. Type 'DELETE' to confirm account deletion.")) return
-    
-    setDeletingAccount(true)
-    try {
-      await authApi.deleteAccount()
-      await logout()
-    } catch (error) {
-      console.error("Failed to delete account", error)
-      setMessage({ type: 'error', text: 'Failed to delete account' })
-      setTimeout(() => setMessage(null), 3000)
-      setDeletingAccount(false)
-    }
-  }
-
-  async function savePrivacySettings() {
-    setSaving(true)
-    try {
-      localStorage.setItem('privacySettings', JSON.stringify(privacySettings))
-      setMessage({ type: 'success', text: 'Privacy settings saved' })
-      setTimeout(() => setMessage(null), 3000)
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to save settings' })
-      setTimeout(() => setMessage(null), 3000)
-    } finally {
-      setSaving(false)
-    }
-  }
-
   useEffect(() => {
     if (accountId) {
       loadPreferences()
     }
   }, [accountId])
-
-  useEffect(() => {
-    const saved = localStorage.getItem('privacySettings')
-    if (saved) {
-      setPrivacySettings(JSON.parse(saved))
-    }
-  }, [])
 
   return (
     <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
@@ -334,98 +290,6 @@ export default function SettingsPage() {
               {exporting ? "Exporting..." : "Export"}
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Account Management */}
-      <Card className={cn(
-        theme === "light"
-          ? "bg-[#E8DCC5]/50 border-[#E6E0D6]"
-          : "bg-[#18231D]/50 border-[#2E3B35]"
-      )}>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-red-500">
-            <Trash2 className="h-5 w-5" />
-            Account Management
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-red-500">Delete Account</Label>
-              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                Permanently delete your account and all data
-              </p>
-            </div>
-            <Button
-              onClick={handleDeleteAccount}
-              disabled={deletingAccount}
-              variant="destructive"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              {deletingAccount ? "Deleting..." : "Delete Account"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Privacy */}
-      <Card className={cn(
-        theme === "light"
-          ? "bg-[#E8DCC5]/50 border-[#E6E0D6]"
-          : "bg-[#18231D]/50 border-[#2E3B35]"
-      )}>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Privacy
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Data Retention</Label>
-            <select
-              className={cn("w-full border rounded-lg px-3 py-2", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
-              value={privacySettings.dataRetention}
-              onChange={(e) => setPrivacySettings({ ...privacySettings, dataRetention: e.target.value })}
-            >
-              <option value="indefinite">Keep data indefinitely</option>
-              <option value="1year">Keep data for 1 year</option>
-              <option value="2years">Keep data for 2 years</option>
-              <option value="5years">Keep data for 5 years</option>
-            </select>
-            <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-              How long to keep your transaction data
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>Analytics Opt-Out</Label>
-              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                Disable anonymous usage analytics
-              </p>
-            </div>
-            <input
-              type="checkbox"
-              checked={privacySettings.analyticsOptOut}
-              onChange={(e) => setPrivacySettings({ ...privacySettings, analyticsOptOut: e.target.checked })}
-              className="w-5 h-5 rounded"
-            />
-          </div>
-
-          <Button
-            onClick={savePrivacySettings}
-            disabled={saving}
-            className={cn(
-              theme === "light"
-                ? "bg-[#D9B44A] hover:bg-[#C9A24A] text-[#1F2A24]"
-                : "bg-[#C9A24A] hover:bg-[#B8923A] text-[#E7EFEA]"
-            )}
-          >
-            <Save className="h-4 w-4 mr-2" />
-            {saving ? "Saving..." : "Save Privacy Settings"}
-          </Button>
         </CardContent>
       </Card>
     </div>
