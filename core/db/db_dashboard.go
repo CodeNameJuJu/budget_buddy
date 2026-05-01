@@ -65,11 +65,12 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	err = db.NewSelect().
 		Model(&recentTrans).
 		Relation("Category").
-		Where("transactions.account_id = ?", accountID).
-		Where("transactions.deleted_date IS NULL").
-		Where("transactions.date >= ?", from).
-		Where("transactions.date <= ?", to).
-		Order("transactions.date DESC").
+		TableExpr("transactions AS t").
+		Where("t.account_id = ?", accountID).
+		Where("t.deleted_date IS NULL").
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
+		Order("t.date DESC").
 		Limit(10).
 		Scan(context.Background())
 	if err != nil {
