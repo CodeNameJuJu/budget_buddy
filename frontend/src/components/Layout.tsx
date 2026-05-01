@@ -499,7 +499,6 @@ export default function Layout() {
                   <li>Click on budget to view transactions</li>
                   <li>Added category filter to transactions page</li>
                   <li>Added configurable billing cycle day</li>
-                  <li>Added drag and drop widget reordering</li>
                   <li>Clickable version number with release notes modal</li>
                 </ul>
               </div>
