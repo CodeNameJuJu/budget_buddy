@@ -1,11 +1,14 @@
 package analytics
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func GETAnalyticsTrends(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +24,22 @@ func GETAnalyticsTrends(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get account to retrieve billing cycle day
+	var account types.Account
+	err = appcontext.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not get account")
+		return
+	}
+
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
 	// Get months parameter (default to 6 months)
 	months := 6
 	if monthsStr := r.URL.Query().Get("months"); monthsStr != "" {
@@ -29,7 +48,7 @@ func GETAnalyticsTrends(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	trends, err := db.GetSpendingTrends(accountID, months)
+	trends, err := db.GetSpendingTrendsByBillingCycle(accountID, billingCycleDay, months)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not get spending trends")
 		return
@@ -51,13 +70,29 @@ func GETAnalyticsCategoryBreakdown(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get period (default to current month)
-	period := "current_month"
+	// Get account to retrieve billing cycle day
+	var account types.Account
+	err = appcontext.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not get account")
+		return
+	}
+
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
+	// Get period (default to current billing cycle)
+	period := "current_cycle"
 	if p := r.URL.Query().Get("period"); p != "" {
 		period = p
 	}
 
-	breakdown, err := db.GetCategoryBreakdown(accountID, period)
+	breakdown, err := db.GetCategoryBreakdown(accountID, period, billingCycleDay)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not get category breakdown")
 		return
@@ -79,7 +114,23 @@ func GETAnalyticsFinancialHealth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	healthScore, err := db.CalculateFinancialHealth(accountID)
+	// Get account to retrieve billing cycle day
+	var account types.Account
+	err = appcontext.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not get account")
+		return
+	}
+
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
+	healthScore, err := db.CalculateFinancialHealth(accountID, billingCycleDay)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not calculate financial health")
 		return
