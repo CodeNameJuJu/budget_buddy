@@ -104,6 +104,12 @@ export default function FinancePage() {
     }
   }, [accountId])
 
+  useEffect(() => {
+    if (accountId) {
+      loadTransactions()
+    }
+  }, [filterTransactionType, filterTransactionCategory])
+
   async function loadUserAccount() {
     try {
       const response = await accountsApi.getMyAccount()
