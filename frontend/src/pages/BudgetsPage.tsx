@@ -455,7 +455,7 @@ export default function BudgetsPage() {
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-3 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
                   <div className="flex justify-between text-sm">
                     <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                       {formatCurrency(spent)} spent
