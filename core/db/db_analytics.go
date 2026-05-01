@@ -194,16 +194,8 @@ func GetCategoryBreakdown(accountID int64, period string, billingCycleDay int) (
 			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -2, 0)
 			endDate = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).AddDate(0, -1, 0).Add(-time.Nanosecond)
 		}
-	case "current_month":
-		startDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
-		endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
-	case "last_month":
-		startDate = time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, now.Location())
-		endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
-	case "current_year":
-		startDate = time.Date(now.Year(), 1, 1, 0, 0, 0, 0, now.Location())
-		endDate = time.Date(now.Year(), 12, 31, 23, 59, 59, 999999999, now.Location())
 	default:
+		// Default to current billing cycle for all other periods
 		if now.Day() >= billingCycleDay {
 			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
 			endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
