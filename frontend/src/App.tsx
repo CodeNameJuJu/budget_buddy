@@ -12,6 +12,7 @@ import AnalyticsPage from "./pages/AnalyticsPage"
 import AlertsPage from "./pages/AlertsPage"
 import PartnersPage from "./pages/PartnersPage"
 import ProfilePage from "./pages/ProfilePage"
+import SettingsPage from "./pages/SettingsPage"
 import UserGuidePage from "./pages/UserGuidePage"
 import VerifyEmailPage from "./pages/VerifyEmailPage"
 import { LoginForm } from "./components/auth/LoginForm"
@@ -80,6 +81,11 @@ export default function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <SettingsPage />
               </ProtectedRoute>
             } />
             <Route path="/guide" element={
