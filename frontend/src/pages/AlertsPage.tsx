@@ -167,29 +167,29 @@ export default function AlertsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 px-2 sm:px-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className={cn(
-            "text-2xl font-bold tracking-tight flex items-center gap-2",
+            "text-xl sm:text-2xl font-bold tracking-tight flex items-center gap-2",
             theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
           )}>
-            <Bell className="h-6 w-6" />
+            <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
             Alerts
             {unreadCount > 0 && (
-              <Badge variant="destructive" className="ml-2">
+              <Badge variant="destructive" className="ml-2 text-xs">
                 {unreadCount}
               </Badge>
             )}
           </h1>
-          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Stay informed about your finances</p>
+          <p className={cn("text-sm sm:text-base", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Stay informed about your finances</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <select
             value={alertType}
             onChange={(e) => setAlertType(e.target.value)}
             className={cn(
-              "flex h-10 w-[140px] rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2",
+              "flex h-10 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 flex-1 sm:flex-none sm:w-[140px]",
               theme === "light"
                 ? "border-[#E6E0D6] bg-white text-[#1F2A24] focus:ring-[#D9B44A]"
                 : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA] focus:ring-[#C9A24A]"
@@ -199,15 +199,15 @@ export default function AlertsPage() {
             <option value="weekly">Weekly Summary</option>
             <option value="monthly">Monthly Summary</option>
           </select>
-          <Button onClick={triggerAlerts} variant="outline" size="sm">
+          <Button onClick={triggerAlerts} variant="outline" size="sm" className="flex-1 sm:flex-none">
             Check for New Alerts
           </Button>
           {unreadCount > 0 && (
-            <Button onClick={markAllAsRead} variant="outline" size="sm">
+            <Button onClick={markAllAsRead} variant="outline" size="sm" className="flex-1 sm:flex-none">
               Mark All as Read
             </Button>
           )}
-          <Button onClick={() => setShowPreferences(!showPreferences)} variant="outline" size="sm">
+          <Button onClick={() => setShowPreferences(!showPreferences)} variant="outline" size="sm" className="flex-1 sm:flex-none">
             <Settings className="h-4 w-4 mr-2" />
             Preferences
           </Button>
@@ -221,18 +221,18 @@ export default function AlertsPage() {
           theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>Alert Preferences</CardTitle>
+            <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Alert Preferences</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {preferences.map((pref) => (
               <div key={pref.id} className={cn(
-                "flex items-center justify-between p-3 border rounded-lg",
+                "flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 border rounded-lg",
                 theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
               )}>
                 <div className="flex-1">
-                  <Label className={cn("font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{getAlertTypeLabel(pref.type)}</Label>
+                  <Label className={cn("font-medium text-sm sm:text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{getAlertTypeLabel(pref.type)}</Label>
                   <p className={cn(
-                    "text-sm mt-1",
+                    "text-xs sm:text-sm mt-1",
                     theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                   )}>
                     {pref.type === "budget_threshold" && 
@@ -243,10 +243,10 @@ export default function AlertsPage() {
                     }
                   </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                   {pref.type === "budget_threshold" && (
                     <div className="flex items-center gap-2">
-                      <Label htmlFor={`threshold-${pref.id}`} className={cn("text-sm", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Threshold:</Label>
+                      <Label htmlFor={`threshold-${pref.id}`} className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Threshold:</Label>
                       <Input
                         id={`threshold-${pref.id}`}
                         type="number"
@@ -260,7 +260,7 @@ export default function AlertsPage() {
                         }}
                         className="w-16 h-8 text-sm"
                       />
-                      <span className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>%</span>
+                      <span className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>%</span>
                     </div>
                   )}
                   <Switch
@@ -308,13 +308,13 @@ export default function AlertsPage() {
               key={alert.id} 
               className={`transition-all duration-200 ${!alert.is_read ? 'shadow-md' : ''} ${getSeverityColor(alert.severity)}`}
             >
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                   <div className="flex items-start gap-3 flex-1">
                     {getAlertIcon(alert.severity)}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium">{alert.title}</h4>
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <h4 className="font-medium text-sm sm:text-base">{alert.title}</h4>
                         {!alert.is_read && (
                           <Badge variant="secondary" className="text-xs">
                             New
@@ -322,11 +322,11 @@ export default function AlertsPage() {
                         )}
                       </div>
                       <p className={cn(
-                        "text-sm mb-2",
+                        "text-xs sm:text-sm mb-2",
                         theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                       )}>{alert.message}</p>
                       <div className={cn(
-                        "flex items-center gap-2 text-xs",
+                        "flex flex-wrap items-center gap-2 text-xs",
                         theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
                       )}>
                         <span>{formatDate(alert.created_date)}</span>
@@ -335,7 +335,7 @@ export default function AlertsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 ml-4">
+                  <div className="flex items-center gap-2 sm:ml-4 w-full sm:w-auto justify-end">
                     {!alert.is_read && (
                       <Button
                         size="sm"
