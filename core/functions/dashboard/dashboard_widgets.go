@@ -3,7 +3,6 @@ package dashboard
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -208,15 +207,10 @@ func getBillingCycleDateRangeOrDefault(accountID int64) (time.Time, time.Time) {
 }
 
 func getBalanceWidgetData(accountID int64) (interface{}, error) {
-	now := time.Now()
-	from := time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, now.Location())
-	to := from.AddDate(0, 1, 0).Add(-time.Nanosecond)
-
-	fmt.Printf("getBalanceWidgetData - accountID: %d, from: %s, to: %s\n", accountID, from.Format("2006-01-02"), to.Format("2006-01-02"))
+	from, to := getBillingCycleDateRangeOrDefault(accountID)
 
 	summary, err := db.GetDashboardSummary(accountID, from, to)
 	if err != nil {
-		fmt.Printf("getBalanceWidgetData - GetDashboardSummary error: %v\n", err)
 		return map[string]interface{}{
 			"balance":  "0",
 			"income":   "0",
@@ -224,8 +218,6 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 			"period":   from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 		}, nil
 	}
-
-	fmt.Printf("getBalanceWidgetData - summary: balance=%s, income=%s, expenses=%s\n", summary.Balance.String(), summary.TotalIncome.String(), summary.TotalExpenses.String())
 
 	return map[string]interface{}{
 		"balance":  summary.Balance.String(),
@@ -236,9 +228,13 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 }
 
 func getRecentTransactionsWidgetData(accountID int64) (interface{}, error) {
-	now := time.Now()
-	from := time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, now.Location())
-	to := from.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	from, to, err := getBillingCycleDateRange(accountID)
+	if err != nil {
+		return map[string]interface{}{
+			"transactions": []interface{}{},
+			"count":        0,
+		}, nil
+	}
 
 	summary, err := db.GetDashboardSummary(accountID, from, to)
 	if err != nil {
