@@ -62,16 +62,18 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 
 	// Recent transactions - filter by date range
 	var recentTrans []types.Transaction
+
 	err = db.NewSelect().
-		Model(&recentTrans).
-		Join("LEFT JOIN categories cat ON transaction.category_id = cat.id").
-		Where("transaction.account_id = ?", accountID).
-		Where("transaction.deleted_date IS NULL").
-		Where("transaction.date >= ?", from).
-		Where("transaction.date <= ?", to).
-		Order("transaction.date DESC").
+		Model((*types.Transaction)(nil)).
+		TableExpr("transactions AS t").
+		Join("LEFT JOIN categories cat ON t.category_id = cat.id").
+		Where("t.account_id = ?", accountID).
+		Where("t.deleted_date IS NULL").
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
+		Order("t.date DESC").
 		Limit(10).
-		Scan(context.Background())
+		Scan(context.Background(), &recentTrans)
 
 	if err != nil {
 		return nil, err
