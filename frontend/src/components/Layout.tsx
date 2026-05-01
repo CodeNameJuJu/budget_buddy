@@ -515,7 +515,6 @@ export default function Layout() {
                   <li>Repurposed settings page for app level settings</li>
                   <li>Added data management and privacy sections to settings</li>
                   <li>Integrated alert preferences with backend API</li>
-                  <li>Added visible drag handle grip icon for widgets in customize mode</li>
                 </ul>
               </div>
 
