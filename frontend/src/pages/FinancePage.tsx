@@ -32,15 +32,15 @@ const COLOUR_OPTIONS = [
   { label: "Dark Border", value: "#2E3B35" },
 ]
 
-const STEPS = [
-  { id: "categories", label: "1. Categories", icon: Tags, description: "Create categories for your transactions" },
-  { id: "budgets", label: "2. Budgets", icon: PiggyBank, description: "Set budgets to track your spending" },
-  { id: "transactions", label: "3. Transactions", icon: Target, description: "Add and manage your transactions" },
+const TABS = [
+  { id: "categories", label: "Categories", icon: Tags },
+  { id: "budgets", label: "Budgets", icon: PiggyBank },
+  { id: "transactions", label: "Transactions", icon: Target },
 ]
 
 export default function FinancePage() {
   const { theme } = useTheme()
-  const [activeStep, setActiveStep] = useState<"categories" | "budgets" | "transactions">("categories")
+  const [activeTab, setActiveTab] = useState<"categories" | "budgets" | "transactions">("categories")
   const [accountId, setAccountId] = useState<number | null>(null)
   
   // Categories state
@@ -342,29 +342,18 @@ export default function FinancePage() {
         <p className="text-muted-foreground">Manage your categories, budgets, and transactions in one place</p>
       </div>
 
-      {/* Step indicator */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {STEPS.map((step) => (
-          <button
-            key={step.id}
-            onClick={() => setActiveStep(step.id as any)}
-            className={cn(
-              "p-4 rounded-lg border-2 text-left transition-all",
-              activeStep === step.id
-                ? theme === "light"
-                  ? "border-[#6BAF92] bg-[#E8DCC5]"
-                  : "border-[#88B39B] bg-[#18231D]"
-                : theme === "light"
-                  ? "border-[#E6E0D6] bg-white hover:border-[#6BAF92]"
-                  : "border-[#2E3B35] bg-[#0F1512] hover:border-[#88B39B]"
-            )}
+      {/* Tabs */}
+      <div className="flex gap-2">
+        {TABS.map((tab) => (
+          <Button
+            key={tab.id}
+            variant={activeTab === tab.id ? "default" : "outline"}
+            onClick={() => setActiveTab(tab.id as any)}
+            className="flex items-center gap-2"
           >
-            <div className="flex items-center gap-3 mb-2">
-              <step.icon className={cn("h-5 w-5", activeStep === step.id ? "text-[#6BAF92]" : "text-muted-foreground")} />
-              <span className={cn("font-semibold", activeStep === step.id ? "text-[#1F2A24]" : "text-muted-foreground")}>{step.label}</span>
-            </div>
-            <p className="text-sm text-muted-foreground">{step.description}</p>
-          </button>
+            <tab.icon className="h-4 w-4" />
+            {tab.label}
+          </Button>
         ))}
       </div>
 
