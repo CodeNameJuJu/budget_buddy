@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { LayoutDashboard, Settings, Plus, X, Check } from "lucide-react"
+import { LayoutDashboard, Settings, Plus, X, Check, GripVertical } from "lucide-react"
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
 import { useAuth } from "@/hooks"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
@@ -119,6 +120,27 @@ export default function CustomDashboardPage() {
     }
 
     setIsCustomizing(true)
+  }
+
+  const handleDragEnd = async (result: any) => {
+    if (!result.destination) return
+
+    const items = Array.from(widgets)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+
+    setWidgets(items)
+
+    // Auto-save on reordering
+    if (accountId) {
+      const layoutJson = JSON.stringify(items)
+      sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
+      try {
+        await dashboardLayoutsApi.save(layoutJson)
+      } catch (error) {
+        console.error("Failed to save layout after reordering", error)
+      }
+    }
   }
 
   async function addWidget(widgetType: string, widgetTitle: string) {
@@ -426,21 +448,60 @@ export default function CustomDashboardPage() {
         )}
 
         {/* Widget Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6">
-          {accountId && widgets
-            .filter(w => w.is_visible)
-            .map((widget) => (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="dashboard-widgets">
+            {(provided) => (
               <div
-                key={widget.id}
-                className={widget.size === "large" ? "lg:col-span-3 sm:col-span-2" : ""}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6"
               >
-                <WidgetRenderer
-                  widget={widget}
-                  accountId={accountId}
-                />
+                {accountId && widgets
+                  .filter(w => w.is_visible)
+                  .map((widget, index) => (
+                    <Draggable
+                      key={widget.id}
+                      draggableId={widget.id}
+                      index={index}
+                      isDragDisabled={!isCustomizing}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={cn(
+                            widget.size === "large" ? "lg:col-span-3 sm:col-span-2" : "",
+                            snapshot.isDragging ? "opacity-50" : ""
+                          )}
+                        >
+                          <div className="relative">
+                            {isCustomizing && (
+                              <div
+                                {...provided.dragHandleProps}
+                                className={cn(
+                                  "absolute top-2 left-2 z-10 p-1 rounded cursor-grab",
+                                  theme === "light"
+                                    ? "bg-white shadow-md text-[#6C7A73]"
+                                    : "bg-[#18231D] shadow-md text-[#A7B3AD]"
+                                )}
+                              >
+                                <GripVertical className="h-4 w-4" />
+                              </div>
+                            )}
+                            <WidgetRenderer
+                              widget={widget}
+                              accountId={accountId}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
               </div>
-          ))}
-        </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
   )
 }
