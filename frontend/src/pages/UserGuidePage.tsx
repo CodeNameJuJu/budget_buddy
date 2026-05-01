@@ -38,22 +38,36 @@ export default function UserGuidePage() {
       description: "Quickly add income or expense transactions to track your finances.",
       details: [
         "Use the Quick Add widget on the dashboard for fast transaction entry",
+        "Navigate to the Finance page and click the Transactions tab",
         "Select transaction type (income or expense)",
-        "Enter amount and description",
-        "Choose a category for better organization",
+        "Enter amount, description, and choose a category",
+        "Add tags for better organization",
         "Transactions automatically update your balance and budgets"
       ]
     },
     {
-      icon: <CreditCard className="h-5 w-5" />,
-      title: "Managing Budgets",
-      description: "Set spending limits for different categories to stay on track financially.",
+      icon: <Wallet className="h-5 w-5" />,
+      title: "Finance Management",
+      description: "Combined hub for managing categories, budgets, and transactions in one place.",
       details: [
-        "Navigate to the Budgets page to create and manage budgets",
-        "Set a monthly spending limit for each category",
-        "Track progress with visual progress bars",
-        "Get alerts when approaching budget limits",
-        "Adjust budgets as your financial situation changes"
+        "Navigate to the Finance page to access all finance features",
+        "Use tabs to switch between Categories, Budgets, and Transactions",
+        "Create and organize categories for better transaction tracking",
+        "Set and monitor budgets with visual progress indicators",
+        "Add, edit, and filter transactions easily",
+        "Click on budget cards to view related transactions"
+      ]
+    },
+    {
+      icon: <Wallet className="h-5 w-5" />,
+      title: "Organizing Categories",
+      description: "Create and manage categories to organize your transactions effectively.",
+      details: [
+        "Navigate to the Finance page and click the Categories tab",
+        "Create custom categories for income and expenses",
+        "Set icons and colors for easy identification",
+        "Filter by income or expense type",
+        "Edit or delete categories as needed"
       ]
     },
     {
@@ -96,10 +110,8 @@ export default function UserGuidePage() {
 
   const navigation = [
     { icon: <Home className="h-4 w-4" />, label: "Dashboard", path: "/dashboard" },
-    { icon: <Wallet className="h-4 w-4" />, label: "Transactions", path: "/transactions" },
-    { icon: <Target className="h-4 w-4" />, label: "Budgets", path: "/budgets" },
+    { icon: <Wallet className="h-4 w-4" />, label: "Finance", path: "/finance" },
     { icon: <PiggyBank className="h-4 w-4" />, label: "Savings", path: "/savings" },
-    { icon: <CreditCard className="h-4 w-4" />, label: "Categories", path: "/categories" },
     { icon: <Bell className="h-4 w-4" />, label: "Alerts", path: "/alerts" },
     { icon: <TrendingUp className="h-4 w-4" />, label: "Analytics", path: "/analytics" },
     { icon: <Settings className="h-4 w-4" />, label: "Profile", path: "/profile" }
@@ -142,7 +154,7 @@ export default function UserGuidePage() {
                 2
               </div>
               <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                <span className="font-semibold">Add your first transaction</span> using the Quick Add widget
+                <span className="font-semibold">Add your first transaction</span> using the Quick Add widget or Finance page
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -150,7 +162,7 @@ export default function UserGuidePage() {
                 3
               </div>
               <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                <span className="font-semibold">Create categories</span> to organize your transactions
+                <span className="font-semibold">Create categories</span> in the Finance page to organize transactions
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -158,7 +170,7 @@ export default function UserGuidePage() {
                 4
               </div>
               <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                <span className="font-semibold">Set up budgets</span> to track spending limits
+                <span className="font-semibold">Set up budgets</span> in the Finance page to track spending limits
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -185,12 +197,12 @@ export default function UserGuidePage() {
           <p className={cn("mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
             Use the sidebar to navigate between different sections of the app:
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {navigation.map((item) => (
               <div
                 key={item.label}
                 className={cn(
-                  "flex items-center gap-2 p-3 rounded-lg border transition-colors",
+                  "flex flex-col sm:flex-row items-center gap-2 p-3 rounded-lg border transition-colors text-center sm:text-left",
                   theme === "light"
                     ? "bg-white/60 border-[#E6E0D6]/50 hover:border-[#6BAF92]"
                     : "bg-[#18231D]/60 border-[#2E3B35]/50 hover:border-[#88B39B]"
@@ -279,7 +291,7 @@ export default function UserGuidePage() {
           <div className="flex items-start gap-3">
             <CheckCircle className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
             <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-              <span className="font-semibold">Use categories:</span> Organize transactions for better insights
+              <span className="font-semibold">Use the Finance page:</span> Access categories, budgets, and transactions in one place
             </p>
           </div>
           <div className="flex items-start gap-3">
