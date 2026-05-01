@@ -1,99 +1,147 @@
 import { useState, useEffect } from "react"
-import { Calendar, Save } from "lucide-react"
+import { Save, Moon, Sun, Bell, AlertTriangle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
-import { accountsApi } from "@/lib/api"
-import { useAuth } from "@/hooks"
 
 export default function SettingsPage() {
-  const { user } = useAuth()
-  const { theme } = useTheme()
-  const [billingCycleDay, setBillingCycleDay] = useState(25)
-  const [loading, setLoading] = useState(false)
+  const { theme, toggleTheme } = useTheme()
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
-  const [accountId, setAccountId] = useState<number | null>(null)
-
-  useEffect(() => {
-    loadAccountSettings()
-  }, [])
-
-  async function loadAccountSettings() {
-    setLoading(true)
-    try {
-      const response = await accountsApi.getMyAccount()
-      if (response.data && response.data.length > 0) {
-        const account = response.data[0]
-        setAccountId(account.id)
-        setBillingCycleDay(account.billing_cycle_day || 25)
-      } else {
-        console.error("No accounts found in response")
-      }
-    } catch (error) {
-      console.error("Failed to load account settings", error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  
+  const [alertPreferences, setAlertPreferences] = useState({
+    budgetOverspending: true,
+    billReminders: true,
+    savingsGoals: true,
+  })
 
   async function saveSettings() {
-    if (!accountId) {
-      setMessage({ type: 'error', text: 'No account found' })
-      return
-    }
     setSaving(true)
     setMessage(null)
     try {
-      await accountsApi.update(accountId, { billing_cycle_day: billingCycleDay })
+      // Save alert preferences to localStorage for now
+      localStorage.setItem('alertPreferences', JSON.stringify(alertPreferences))
       setMessage({ type: 'success', text: 'Settings saved successfully' })
+      setTimeout(() => setMessage(null), 3000)
     } catch (error) {
       console.error("Failed to save settings", error)
       setMessage({ type: 'error', text: 'Failed to save settings' })
+      setTimeout(() => setMessage(null), 3000)
     } finally {
       setSaving(false)
     }
   }
 
+  useEffect(() => {
+    const saved = localStorage.getItem('alertPreferences')
+    if (saved) {
+      setAlertPreferences(JSON.parse(saved))
+    }
+  }, [])
+
   return (
-    <div className="max-w-2xl mx-auto p-4 md:p-6">
+    <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
       <h1 className={cn(
-        "text-2xl font-bold mb-6",
+        "text-2xl font-bold",
         theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
       )}>
         Settings
       </h1>
 
-      <Card>
+      {/* Appearance */}
+      <Card className={cn(
+        theme === "light"
+          ? "bg-[#E8DCC5]/50 border-[#E6E0D6]"
+          : "bg-[#18231D]/50 border-[#2E3B35]"
+      )}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Billing Cycle
+            {theme === "light" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            Appearance
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="billing-cycle-day">Billing Cycle Day</Label>
-            <Input
-              id="billing-cycle-day"
-              type="number"
-              min="1"
-              max="31"
-              value={billingCycleDay}
-              onChange={(e) => setBillingCycleDay(parseInt(e.target.value) || 1)}
-              disabled={loading || saving}
-              className="max-w-xs"
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>Theme</Label>
+              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                Choose your preferred color scheme
+              </p>
+            </div>
+            <Button
+              onClick={toggleTheme}
+              variant="outline"
+              className={cn(
+                theme === "light"
+                  ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5]"
+                  : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D]"
+              )}
+            >
+              {theme === "light" ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
+              {theme === "light" ? "Dark" : "Light"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Notifications */}
+      <Card className={cn(
+        theme === "light"
+          ? "bg-[#E8DCC5]/50 border-[#E6E0D6]"
+          : "bg-[#18231D]/50 border-[#2E3B35]"
+      )}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bell className="h-5 w-5" />
+            Notifications
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>Budget Overspending Alerts</Label>
+              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                Get notified when you exceed your budget
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={alertPreferences.budgetOverspending}
+              onChange={(e) => setAlertPreferences({ ...alertPreferences, budgetOverspending: e.target.checked })}
+              className="w-5 h-5 rounded"
             />
-            <p className={cn(
-              "text-sm",
-              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
-            )}>
-              The day of the month when your billing cycle starts (1-31).
-              This is typically the day you get paid.
-            </p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>Bill Reminders</Label>
+              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                Get reminded before bills are due
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={alertPreferences.billReminders}
+              onChange={(e) => setAlertPreferences({ ...alertPreferences, billReminders: e.target.checked })}
+              className="w-5 h-5 rounded"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>Savings Goal Alerts</Label>
+              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                Track progress towards your savings goals
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={alertPreferences.savingsGoals}
+              onChange={(e) => setAlertPreferences({ ...alertPreferences, savingsGoals: e.target.checked })}
+              className="w-5 h-5 rounded"
+            />
           </div>
 
           {message && (
@@ -109,7 +157,7 @@ export default function SettingsPage() {
 
           <Button
             onClick={saveSettings}
-            disabled={loading || saving}
+            disabled={saving}
             className={cn(
               theme === "light"
                 ? "bg-[#D9B44A] hover:bg-[#C9A24A] text-[#1F2A24]"
