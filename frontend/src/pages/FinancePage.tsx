@@ -369,405 +369,418 @@ export default function FinancePage() {
       </div>
 
       {/* Categories Section */}
-      {activeStep === "categories" && (
+      {activeTab === "categories" && (
         <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Categories</h2>
-            <Button onClick={() => { setShowCategoryForm(true); setEditingCategory(null); setCategoryForm({ name: "", type: "expense", colour: "#6BAF92", icon: "" }) }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className={cn("text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Categories</h2>
+              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Organise your transactions</p>
+            </div>
+            <Button onClick={() => setShowCategoryForm(!showCategoryForm)}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Category
+              Add category
             </Button>
           </div>
 
+          {/* Filters */}
+          <div className="flex gap-2">
+            <Button variant={filterType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterType("")}>All</Button>
+            <Button variant={filterType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterType("income")}>Income</Button>
+            <Button variant={filterType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterType("expense")}>Expense</Button>
+          </div>
+
+          {/* Add/Edit category form */}
           {showCategoryForm && (
-            <Card className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
+            <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
               <CardHeader>
-                <CardTitle>{editingCategory ? "Edit category" : "New category"}</CardTitle>
+                <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+                  {editingCategory ? "Edit category" : "New category"}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleCategorySubmit} className="space-y-4">
-                  <div>
+                <form onSubmit={handleCategorySubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
-                    <Input
-                      value={categoryForm.name}
-                      onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
-                      placeholder="Category name"
-                      required
-                    />
+                    <Input placeholder="e.g. Groceries" value={categoryForm.name} onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })} required />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
-                    <select
-                      value={categoryForm.type}
-                      onChange={(e) => setCategoryForm({ ...categoryForm, type: e.target.value as any })}
-                      className={cn("w-full mt-1 p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-                    >
+                    <select className={cn("flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={categoryForm.type} onChange={(e) => setCategoryForm({ ...categoryForm, type: e.target.value as "income" | "expense" })}>
                       <option value="expense">Expense</option>
                       <option value="income">Income</option>
                     </select>
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
-                    <div className="flex gap-1.5 flex-wrap items-center mt-2">
+                    <div className="flex gap-1.5 flex-wrap items-center">
                       {COLOUR_OPTIONS.map((c) => (
-                        <button
-                          key={c.value}
-                          type="button"
-                          className={`h-7 w-7 rounded-full border-2 transition-all ${
-                            categoryForm.colour === c.value ? "border-foreground scale-110" : "border-transparent"
-                          }`}
-                          style={{ backgroundColor: c.value }}
-                          onClick={() => setCategoryForm({ ...categoryForm, colour: c.value })}
-                          title={c.label}
-                        />
+                        <button key={c.value} type="button" className={`h-7 w-7 rounded-full border-2 transition-all ${categoryForm.colour === c.value ? "border-foreground scale-110" : "border-transparent"}`} style={{ backgroundColor: c.value }} onClick={() => setCategoryForm({ ...categoryForm, colour: c.value })} title={c.label} />
                       ))}
-                      <input
-                        type="color"
-                        value={categoryForm.colour}
-                        onChange={(e) => setCategoryForm({ ...categoryForm, colour: e.target.value })}
-                        className="h-7 w-7 rounded-full border-2 cursor-pointer overflow-hidden"
-                        title="Custom color"
-                      />
+                      <input type="color" value={categoryForm.colour} onChange={(e) => setCategoryForm({ ...categoryForm, colour: e.target.value })} className="h-7 w-7 rounded-full border-2 cursor-pointer overflow-hidden" title="Custom color" />
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button type="submit">{editingCategory ? "Update" : "Create"}</Button>
-                    <Button type="button" variant="outline" onClick={() => { setShowCategoryForm(false); setEditingCategory(null); setCategoryForm({ name: "", type: "expense", colour: "#6BAF92", icon: "" }) }}>
-                      Cancel
-                    </Button>
+                  <div className="space-y-2">
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
+                    <Input placeholder="e.g. 🛒" value={categoryForm.icon} onChange={(e) => setCategoryForm({ ...categoryForm, icon: e.target.value })} maxLength={4} />
+                  </div>
+                  <div className="sm:col-span-2 lg:col-span-4 flex gap-2">
+                    <Button type="submit">{editingCategory ? "Update category" : "Save category"}</Button>
+                    <Button type="button" variant="outline" onClick={() => { setShowCategoryForm(false); setEditingCategory(null); setCategoryForm({ name: "", type: "expense", colour: "#6BAF92", icon: "" }) }}>Cancel</Button>
                   </div>
                 </form>
               </CardContent>
             </Card>
           )}
 
-          <div className="space-y-6">
-            <div>
-              <h3 className={cn("text-lg font-medium mb-4", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Income Categories</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {incomeCategories.map((cat) => (
-                  <Card key={cat.id} className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
-                    <CardHeader className="flex flex-row items-start justify-between pb-2">
-                      <CardTitle className="text-sm font-medium">{cat.name}</CardTitle>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => handleEditCategory(cat)}>
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDeleteCategory(cat.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Badge className={cn("text-xs", cat.type === "income" ? "bg-green-500" : "bg-red-500")}>{cat.type}</Badge>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+          {/* Categories */}
+          {categories.length === 0 ? (
+            <div className="text-center py-16">
+              <Tags className={cn("h-12 w-12 mx-auto mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
+              <h2 className={cn("text-lg font-semibold mb-1", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>No categories yet</h2>
+              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create categories to organise your transactions.</p>
             </div>
+          ) : (
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Income categories */}
+              {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
+                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+                  <CardHeader>
+                    <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                      <Badge variant="income">Income</Badge>
+                      <span>{incomeCategories.length} categories</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {incomeCategories.map((cat) => (
+                        <div key={cat.id} className={cn("flex items-center justify-between p-3 rounded-md border transition-colors", theme === "light" ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20" : "border-[#2E3B35] hover:bg-[#6BAF92]/20")}>
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-full flex items-center justify-center text-sm" style={{ backgroundColor: cat.colour || "#6BAF92" }}>{cat.icon || cat.name[0]}</div>
+                            <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
+                          </div>
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")} onClick={() => handleEditCategory(cat)}><Edit2 className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")} onClick={() => handleDeleteCategory(cat.id)}><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-            <div>
-              <h3 className={cn("text-lg font-medium mb-4", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Expense Categories</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {expenseCategories.map((cat) => (
-                  <Card key={cat.id} className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
-                    <CardHeader className="flex flex-row items-start justify-between pb-2">
-                      <CardTitle className="text-sm font-medium">{cat.name}</CardTitle>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => handleEditCategory(cat)}>
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDeleteCategory(cat.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Badge className={cn("text-xs", cat.type === "income" ? "bg-green-500" : "bg-red-500")}>{cat.type}</Badge>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              {/* Expense categories */}
+              {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
+                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+                  <CardHeader>
+                    <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                      <Badge variant="expense">Expense</Badge>
+                      <span>{expenseCategories.length} categories</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {expenseCategories.map((cat) => (
+                        <div key={cat.id} className={cn("flex items-center justify-between p-3 rounded-md border transition-colors", theme === "light" ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20" : "border-[#2E3B35] hover:bg-[#6BAF92]/20")}>
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white" style={{ backgroundColor: cat.colour || "#C97C5D" }}>{cat.icon || cat.name[0]}</div>
+                            <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
+                          </div>
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")} onClick={() => handleEditCategory(cat)}><Edit2 className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")} onClick={() => handleDeleteCategory(cat.id)}><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-          </div>
+          )}
         </div>
       )}
 
       {/* Budgets Section */}
-      {activeStep === "budgets" && (
+      {activeTab === "budgets" && (
         <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Budgets</h2>
-            <Button onClick={() => { setShowBudgetForm(true); setEditingBudget(null); setBudgetForm({ name: "", amount: "", category_id: "", period: "monthly", start_date: new Date().toISOString().split("T")[0], end_date: "" }) }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className={cn("text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Budgets</h2>
+              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Track your spending limits</p>
+            </div>
+            <Button onClick={() => setShowBudgetForm(!showBudgetForm)} className="hover:shadow-lg transition-all duration-300">
               <Plus className="h-4 w-4 mr-2" />
-              Add Budget
+              Add budget
             </Button>
           </div>
 
+          {/* Add budget form */}
           {showBudgetForm && (
-            <Card className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
+            <Card className={cn("border hover:transition-all duration-200", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70")}>
               <CardHeader>
-                <CardTitle>{editingBudget ? "Edit budget" : "New budget"}</CardTitle>
+                <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New budget</CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleBudgetSubmit} className="space-y-4">
-                  <div>
+                <form onSubmit={handleBudgetSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
-                    <Input
-                      value={budgetForm.name}
-                      onChange={(e) => setBudgetForm({ ...budgetForm, name: e.target.value })}
-                      placeholder="Budget name"
-                      required
-                    />
+                    <Input placeholder="e.g. Monthly groceries" value={budgetForm.name} onChange={(e) => setBudgetForm({ ...budgetForm, name: e.target.value })} required />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
-                    <Input
-                      type="number"
-                      value={budgetForm.amount}
-                      onChange={(e) => setBudgetForm({ ...budgetForm, amount: e.target.value })}
-                      placeholder="Budget amount"
-                      required
-                    />
+                    <Input type="number" step="0.01" placeholder="0.00" value={budgetForm.amount} onChange={(e) => setBudgetForm({ ...budgetForm, amount: e.target.value })} required />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
-                    <select
-                      value={budgetForm.category_id}
-                      onChange={(e) => setBudgetForm({ ...budgetForm, category_id: e.target.value })}
-                      className={cn("w-full mt-1 p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-                      required
-                    >
+                    <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={budgetForm.category_id} onChange={(e) => setBudgetForm({ ...budgetForm, category_id: e.target.value })} required>
                       <option value="">Select category</option>
-                      {categories.map((c) => (
-                        <option key={c.id} value={c.id}>{c.name}</option>
-                      ))}
+                      {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Period</label>
-                    <select
-                      value={budgetForm.period}
-                      onChange={(e) => setBudgetForm({ ...budgetForm, period: e.target.value })}
-                      className={cn("w-full mt-1 p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-                    >
-                      <option value="monthly">Monthly</option>
+                    <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={budgetForm.period} onChange={(e) => setBudgetForm({ ...budgetForm, period: e.target.value })}>
                       <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
                       <option value="yearly">Yearly</option>
                     </select>
                   </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Start Date</label>
-                    <Input
-                      type="date"
-                      value={budgetForm.start_date}
-                      onChange={(e) => setBudgetForm({ ...budgetForm, start_date: e.target.value })}
-                      required
-                    />
+                  <div className="space-y-2">
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Start date</label>
+                    <Input type="date" value={budgetForm.start_date} onChange={(e) => setBudgetForm({ ...budgetForm, start_date: e.target.value })} required />
                   </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>End Date (optional)</label>
-                    <Input
-                      type="date"
-                      value={budgetForm.end_date}
-                      onChange={(e) => setBudgetForm({ ...budgetForm, end_date: e.target.value })}
-                    />
+                  <div className="space-y-2">
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>End date (optional)</label>
+                    <Input type="date" value={budgetForm.end_date} onChange={(e) => setBudgetForm({ ...budgetForm, end_date: e.target.value })} />
                   </div>
-                  <div className="flex gap-2">
-                    <Button type="submit">{editingBudget ? "Update" : "Create"}</Button>
-                    <Button type="button" variant="outline" onClick={() => { setShowBudgetForm(false); setEditingBudget(null); setBudgetForm({ name: "", amount: "", category_id: "", period: "monthly", start_date: new Date().toISOString().split("T")[0], end_date: "" }) }}>
-                      Cancel
-                    </Button>
+                  <div className="sm:col-span-2 lg:col-span-3 flex gap-2">
+                    <Button type="submit">Save budget</Button>
+                    <Button type="button" variant="outline" onClick={() => setShowBudgetForm(false)}>Cancel</Button>
                   </div>
                 </form>
               </CardContent>
             </Card>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {budgets.map((budget) => (
-              <Card key={budget.id} className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
-                <CardHeader className="flex flex-row items-start justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">{budget.name}</CardTitle>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => handleEditBudget(budget)}>
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDeleteBudget(budget.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Amount</span>
-                      <span className="font-semibold">{formatCurrency(budget.amount)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Category</span>
-                      <span>{budget.category?.name || "N/A"}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Period</span>
-                      <span>{budget.period}</span>
-                    </div>
-                    <Badge className="text-xs">{budget.spent ? `${((parseFloat(budget.spent) / parseFloat(budget.amount)) * 100).toFixed(0)}% spent` : "0% spent"}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {/* Budgets grid */}
+          {budgets.length === 0 ? (
+            <div className="text-center py-16">
+              <PiggyBank className={cn("h-12 w-12 mx-auto mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
+              <h2 className={cn("text-lg font-semibold mb-1", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>No budgets yet</h2>
+              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create a budget to start tracking your spending.</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {budgets.map((budget) => {
+                const percentage = getProgressPercentage(budget)
+                const spent = budget.spent ? parseFloat(budget.spent) : 0
+                const remaining = budget.remaining ? parseFloat(budget.remaining) : parseFloat(budget.amount)
+
+                return (
+                  <Card key={budget.id} className={cn("border hover:transition-all duration-200 group cursor-pointer", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70")}>
+                    <CardHeader className="flex flex-row items-start justify-between pb-2 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
+                      <div className="flex items-center gap-2">
+                        <div className={cn("p-2 rounded-lg text-white transition-colors duration-200", remaining >= 0 ? (theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]") : percentage >= 90 ? "bg-red-500" : theme === "light" ? "bg-[#C97C5D]" : "bg-[#B46B52]")}>
+                          {getProgressIcon(percentage)}
+                        </div>
+                        <div>
+                          <CardTitle className={cn("text-base transition-colors", theme === "light" ? "group-hover:text-[#6BAF92]" : "group-hover:text-[#88B39B]")}>{budget.name}</CardTitle>
+                          <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{budget.category?.name} · {budget.period}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                        <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#A7B3AD] hover:text-[#88B39B]", "-mt-1")} onClick={() => handleEditBudget(budget)}>
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")} onClick={() => handleDeleteBudget(budget.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
+                      <div className="flex justify-between text-sm">
+                        <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{formatCurrency(spent)} spent</span>
+                        <span className="font-medium">{formatCurrency(budget.amount)}</span>
+                      </div>
+                      <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}>
+                        <div className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColour(percentage)} progress-bar-fill`} style={{ width: `${percentage}%` }} />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <p className={cn("text-sm font-medium", remaining >= 0 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400")}>
+                          {remaining >= 0 ? `${formatCurrency(remaining)} remaining` : `${formatCurrency(Math.abs(remaining))} over budget`}
+                        </p>
+                        <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{percentage.toFixed(1)}% used</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 
       {/* Transactions Section */}
-      {activeStep === "transactions" && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Transactions</h2>
-            <div className="flex gap-2">
-              <Button onClick={handleExportData} disabled={exporting}>
-                <Download className="h-4 w-4 mr-2" />
-                {exporting ? "Exporting..." : "Export"}
-              </Button>
-              <Button onClick={() => { setShowTransactionForm(true); setTransactionForm({ amount: "", type: "expense", description: "", date: new Date().toISOString().split("T")[0], category_id: "", notes: "", tags: [], account_type: "checking" }) }}>
+      {activeTab === "transactions" && (
+        <div className="space-y-3 xs:space-y-4 lg:space-y-6">
+          <div className="responsive-flex responsive-margin">
+            <div>
+              <h2 className={cn("mobile-title tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Transactions</h2>
+              <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
+            </div>
+            <div className="flex gap-2 ml-auto">
+              <Button onClick={() => setShowTransactionForm(!showTransactionForm)} className="hover:shadow-lg transition-all duration-300 mobile-button">
                 <Plus className="h-4 w-4 mr-2" />
-                Add Transaction
+                Add transaction
               </Button>
             </div>
           </div>
 
-          {message && (
-            <div className={cn("p-3 rounded-lg text-sm", message.type === "success" ? "bg-green-500/20 text-green-500" : "bg-red-500/20 text-red-500")}>
-              {message.text}
-            </div>
-          )}
+          {/* Export button and message */}
+          <div className="responsive-margin flex justify-between items-center gap-2">
+            <Button onClick={handleExportData} disabled={exporting} variant="outline" className="mobile-button ml-auto">
+              <Download className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
+              <span className="hidden sm:inline ml-2">{exporting ? "Exporting..." : "Export"}</span>
+            </Button>
+            {message && (
+              <div className={cn("p-3 rounded-lg text-sm flex-shrink-0", message.type === 'success' ? theme === "light" ? "bg-[#6BAF92]/20 text-[#6BAF92]" : "bg-[#6BAF92]/20 text-[#88B39B]" : "bg-red-500/20 text-red-400")}>
+                {message.text}
+              </div>
+            )}
+          </div>
 
-          <div className="flex gap-2">
-            <select
-              value={filterTransactionType}
-              onChange={(e) => setFilterTransactionType(e.target.value)}
-              className={cn("p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-            >
-              <option value="">All Types</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-            <select
-              value={filterTransactionCategory}
-              onChange={(e) => setFilterTransactionCategory(e.target.value)}
-              className={cn("p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-            >
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2 responsive-margin">
+            <Button variant={filterTransactionType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("")} className="mobile-button">All</Button>
+            <Button variant={filterTransactionType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("income")} className="mobile-button">Income</Button>
+            <Button variant={filterTransactionType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("expense")} className="mobile-button">Expenses</Button>
+            <select className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
               <option value="">All Categories</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
+              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
 
+          {/* Advanced transaction form */}
           {showTransactionForm && (
-            <Card className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
-              <CardHeader>
-                <CardTitle>New Transaction</CardTitle>
+            <Card className="mobile-card">
+              <CardHeader className="responsive-padding">
+                <CardTitle className="mobile-title">Advanced Transaction Entry</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="responsive-padding">
                 <form onSubmit={handleTransactionSubmit} className="space-y-4">
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
-                    <Input
-                      type="number"
-                      value={transactionForm.amount}
-                      onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })}
-                      placeholder="Amount"
-                      required
-                    />
+                  <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                      <Input type="number" step="0.01" placeholder="0.00" value={transactionForm.amount} onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })} className="responsive-input" required />
+                    </div>
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
+                      <select className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
+                      <Input type="date" value={transactionForm.date} onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })} className="responsive-input" required />
+                    </div>
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Account Type</label>
+                      <select className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.account_type} onChange={(e) => setTransactionForm({ ...transactionForm, account_type: e.target.value as "checking" | "savings" })}>
+                        <option value="checking">Checking Account</option>
+                        <option value="savings">Savings Account</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
+                      <Input placeholder="e.g. Grocery shopping" value={transactionForm.description} onChange={(e) => setTransactionForm({ ...transactionForm, description: e.target.value })} className="responsive-input" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                      <select className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
+                        <option value="">No category</option>
+                        {categories.filter((c) => c.type === transactionForm.type).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
+                      <Input placeholder="Optional notes" value={transactionForm.notes} onChange={(e) => setTransactionForm({ ...transactionForm, notes: e.target.value })} className="responsive-input" />
+                    </div>
                   </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
-                    <select
-                      value={transactionForm.type}
-                      onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as any })}
-                      className={cn("w-full mt-1 p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-                    >
-                      <option value="expense">Expense</option>
-                      <option value="income">Income</option>
-                    </select>
+                  <div className="space-y-2">
+                    <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
+                    <TagInput value={transactionForm.tags} onChange={(tags) => setTransactionForm({ ...transactionForm, tags })} placeholder="Add tags (press Enter or comma to add)" suggestions={popularTags.map(tag => tag.tag)} />
                   </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
-                    <Input
-                      value={transactionForm.description}
-                      onChange={(e) => setTransactionForm({ ...transactionForm, description: e.target.value })}
-                      placeholder="Description"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
-                    <select
-                      value={transactionForm.category_id}
-                      onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}
-                      className={cn("w-full mt-1 p-2 rounded border", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35] bg-[#0F1512]")}
-                    >
-                      <option value="">Select category</option>
-                      {categories
-                        .filter((c) => c.type === transactionForm.type)
-                        .map((c) => (
-                          <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
-                    <Input
-                      type="date"
-                      value={transactionForm.date}
-                      onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
-                    <TagInput
-                      value={transactionForm.tags}
-                      onChange={(tags) => setTransactionForm({ ...transactionForm, tags })}
-                      suggestions={popularTags.map(tag => tag.tag)}
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button type="submit">Create</Button>
-                    <Button type="button" variant="outline" onClick={() => { setShowTransactionForm(false); setTransactionForm({ amount: "", type: "expense", description: "", date: new Date().toISOString().split("T")[0], category_id: "", notes: "", tags: [], account_type: "checking" }) }}>
-                      Cancel
-                    </Button>
+                  <div className="flex flex-col xs:flex-row gap-2 justify-end">
+                    <Button type="submit" className="mobile-button">Save transaction</Button>
+                    <Button type="button" variant="outline" onClick={() => setShowTransactionForm(false)} className="mobile-button">Cancel</Button>
                   </div>
                 </form>
               </CardContent>
             </Card>
           )}
 
-          <div className="space-y-2">
-            {transactions.map((t) => (
-              <Card key={t.id} className={cn(theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]")}>
-                <CardContent className="flex items-center justify-between py-4">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{t.description || "Transaction"}</p>
-                    <p className="text-xs text-muted-foreground">{formatDate(t.date)}</p>
-                    {t.category && <Badge className="text-xs mt-1">{t.category.name}</Badge>}
-                  </div>
-                  <div className="flex items-center gap-2 ml-4">
-                    <Badge variant={t.type === "income" ? "income" : "expense"}>{t.type}</Badge>
-                    <span className={cn("text-sm font-semibold", t.type === "income" ? "text-green-500" : "text-red-500")}>
-                      {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
-                    </span>
-                    <Button variant="ghost" size="icon" onClick={() => handleDeleteTransaction(t.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {/* Transactions list */}
+          <Card className="mobile-card">
+            <CardContent className="p-0">
+              {transactions.length === 0 ? (
+                <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found</p>
+              ) : (
+                <div className="divide-y">
+                  {transactions.map((t) => (
+                    <div key={t.id} className={cn("px-3 xs:px-4 lg:px-6 py-3 xs:py-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/20" : "hover:bg-[#2E3B35]/20")}>
+                      <div className="flex flex-col gap-2 xs:gap-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-2 mb-1">
+                              <p className="mobile-text font-medium truncate">{t.description || "Untitled transaction"}</p>
+                              <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={cn("text-xs", t.type === "income" ? (theme === "light" ? "bg-[#6BAF92]/20 text-[#4A7A60] border-[#6BAF92]/50" : "bg-[#88B39B]/20 text-[#88B39B] border-[#88B39B]/50") : "bg-[#DC2626]/30 text-[#DC2626] border-[#DC2626]/50")}>
+                                {t.type}
+                              </Badge>
+                            </div>
+                            <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                              <span>{formatDate(t.date)}</span>
+                              {t.category && (
+                                <>
+                                  <span>·</span>
+                                  <span>{t.category.name}</span>
+                                </>
+                              )}
+                              {t.tags && (
+                                <>
+                                  <span>·</span>
+                                  <div className="flex items-center gap-1">
+                                    <TagIcon className="h-3 w-3" />
+                                    <div className="flex gap-1 flex-wrap">
+                                      {JSON.parse(t.tags).slice(0, 2).map((tag: string, index: number) => (
+                                        <Badge key={index} variant="outline" className="text-xs px-1 py-0">{tag}</Badge>
+                                      ))}
+                                      {JSON.parse(t.tags).length > 2 && (
+                                        <Badge variant="outline" className="text-xs px-1 py-0">+{JSON.parse(t.tags).length - 2}</Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <span className={cn("mobile-text font-semibold", t.type === "income" ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400")}>
+                              {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
+                            </span>
+                            <Button variant="ghost" size="icon" className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")} onClick={() => handleDeleteTransaction(t.id)}>
+                              <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>
