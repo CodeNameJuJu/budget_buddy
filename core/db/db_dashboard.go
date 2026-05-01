@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
@@ -123,13 +122,11 @@ func CreateOrUpdateDashboardLayout(layout *types.DashboardLayout) error {
 	if layout.Name == "" {
 		layout.Name = "Main Dashboard"
 	}
-	if layout.UserID == 0 {
-		return errors.New("user_id is required")
-	}
 
 	now := time.Now()
 	layout.ModifiedDate = &now
 
+	// Try user-scoped deactivation first
 	_, err := db.NewUpdate().
 		Model((*types.DashboardLayout)(nil)).
 		Set("is_active = ?", false).
@@ -137,8 +134,19 @@ func CreateOrUpdateDashboardLayout(layout *types.DashboardLayout) error {
 		Where("user_id = ?", layout.UserID).
 		Where("is_active = ?", true).
 		Exec(context.Background())
+
+	// If user_id column doesn't exist yet, fall back to account_id
 	if err != nil {
-		return err
+		_, err = db.NewUpdate().
+			Model((*types.DashboardLayout)(nil)).
+			Set("is_active = ?", false).
+			Set("modified_date = ?", now).
+			Where("account_id = ?", layout.AccountID).
+			Where("is_active = ?", true).
+			Exec(context.Background())
+		if err != nil {
+			return err
+		}
 	}
 
 	err = db.NewInsert().
