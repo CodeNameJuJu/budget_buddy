@@ -407,13 +407,19 @@ export default function BudgetsPage() {
             const remaining = budget.remaining ? parseFloat(budget.remaining) : parseFloat(budget.amount)
 
             return (
-              <Card key={budget.id} className={cn(
-                "border hover:transition-all duration-200 group",
-                theme === "light"
-                  ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-                  : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
-              )}>
-                <CardHeader className="flex flex-row items-start justify-between pb-2">
+              <Card 
+                key={budget.id} 
+                className={cn(
+                  "border hover:transition-all duration-200 group cursor-pointer",
+                  theme === "light"
+                    ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
+                    : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
+                )}
+              >
+                <CardHeader 
+                  className="flex flex-row items-start justify-between pb-2 cursor-pointer"
+                  onClick={() => handleBudgetClick(budget)}
+                >
                   <div className="flex items-center gap-2">
                     <div className={cn(
                       "p-2 rounded-lg text-white transition-colors duration-200",
