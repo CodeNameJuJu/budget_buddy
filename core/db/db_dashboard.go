@@ -25,10 +25,15 @@ type CategorySpendingSummary struct {
 }
 
 func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*DashboardSummary, error) {
-	fmt.Printf("GetDashboardSummary - accountID: %d, from: %s, to: %s\n", accountID, from.Format("2006-01-02"), to.Format("2006-01-02"))
-	db := appcontext.GetDb()
+	fmt.Printf("GetDashboardSummary - accountID: %d, from: %s, to: %s\n",
+		accountID, from.Format("2006-01-02"), to.Format("2006-01-02"))
 
+	db := appcontext.GetDb()
+	ctx := context.Background()
+
+	// -------------------------
 	// Total income
+	// -------------------------
 	var totalIncome decimal.Decimal
 	err := db.NewSelect().
 		Model((*types.Transaction)(nil)).
@@ -38,13 +43,16 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		Where("deleted_date IS NULL").
 		Where("date >= ?", from).
 		Where("date <= ?", to).
-		Scan(context.Background(), &totalIncome)
+		Scan(ctx, &totalIncome)
 	if err != nil {
 		return nil, err
 	}
+
 	fmt.Printf("GetDashboardSummary - totalIncome: %s\n", totalIncome.String())
 
+	// -------------------------
 	// Total expenses
+	// -------------------------
 	var totalExpenses decimal.Decimal
 	err = db.NewSelect().
 		Model((*types.Transaction)(nil)).
@@ -54,52 +62,63 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		Where("deleted_date IS NULL").
 		Where("date >= ?", from).
 		Where("date <= ?", to).
-		Scan(context.Background(), &totalExpenses)
+		Scan(ctx, &totalExpenses)
 	if err != nil {
 		return nil, err
 	}
+
 	fmt.Printf("GetDashboardSummary - totalExpenses: %s\n", totalExpenses.String())
 
-	// Recent transactions - filter by date range
+	// -------------------------
+	// Recent transactions
+	// (FIXED: removed TableExpr + alias mismatch)
+	// -------------------------
 	var recentTrans []types.Transaction
 
 	err = db.NewSelect().
 		Model((*types.Transaction)(nil)).
-		TableExpr("transactions AS t").
-		Join("LEFT JOIN categories cat ON t.category_id = cat.id").
-		Where("t.account_id = ?", accountID).
-		Where("t.deleted_date IS NULL").
-		Where("t.date >= ?", from).
-		Where("t.date <= ?", to).
-		Order("t.date DESC").
+		Relation("Category").
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Where("date >= ?", from).
+		Where("date <= ?", to).
+		Order("date DESC").
 		Limit(10).
-		Scan(context.Background(), &recentTrans)
+		Scan(ctx, &recentTrans)
 
 	if err != nil {
 		return nil, err
 	}
 
+	// -------------------------
 	// Top categories
+	// -------------------------
 	var topCategories []CategorySpendingSummary
+
 	err = db.NewSelect().
 		Model((*types.Transaction)(nil)).
-		TableExpr("transactions t").
-		Join("JOIN categories cat ON t.category_id = cat.id").
-		ColumnExpr("t.category_id, cat.name as category_name, COALESCE(SUM(t.amount), 0) as total").
-		Where("t.account_id = ?", accountID).
-		Where("t.type = ?", "expense").
-		Where("t.deleted_date IS NULL").
-		Where("t.category_id IS NOT NULL").
-		Where("t.date >= ?", from).
-		Where("t.date <= ?", to).
-		GroupExpr("t.category_id, cat.name").
+		ColumnExpr("category_id").
+		ColumnExpr("cat.name AS category_name").
+		ColumnExpr("COALESCE(SUM(amount), 0) AS total").
+		Join("JOIN categories cat ON cat.id = transactions.category_id").
+		Where("transactions.account_id = ?", accountID).
+		Where("transactions.type = ?", "expense").
+		Where("transactions.deleted_date IS NULL").
+		Where("transactions.category_id IS NOT NULL").
+		Where("transactions.date >= ?", from).
+		Where("transactions.date <= ?", to).
+		GroupExpr("transactions.category_id, cat.name").
 		OrderExpr("total DESC").
 		Limit(5).
-		Scan(context.Background(), &topCategories)
+		Scan(ctx, &topCategories)
+
 	if err != nil {
 		return nil, err
 	}
 
+	// -------------------------
+	// Return summary
+	// -------------------------
 	return &DashboardSummary{
 		TotalIncome:   totalIncome,
 		TotalExpenses: totalExpenses,
