@@ -87,19 +87,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Debug Info */}
-      <div className={cn("border rounded-lg p-4", theme === "light" ? "bg-[#E8DCC5] border-[#E6E0D6]" : "bg-[#18231D] border-[#2E3B35]")}>
-        <h3 className={cn("text-sm font-medium mb-2", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Debug Info:</h3>
-        <div className={cn("text-xs space-y-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-          <p>Loading: {loading ? 'Yes' : 'No'}</p>
-          <p>Summary: {summary ? 'Loaded' : 'Null'}</p>
-          <p>Budgets: {budgets.length} items</p>
-          <p>Savings: {savings.length} items</p>
-          <p>Alerts: {alerts.length} items</p>
-          <p>Account ID: {ACCOUNT_ID}</p>
-        </div>
-      </div>
-      
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">Your financial overview for this month</p>
