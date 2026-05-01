@@ -44,6 +44,7 @@ export default function Layout() {
   const [isClosing, setIsClosing] = useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [unreadAlertCount, setUnreadAlertCount] = useState(0)
+  const [showReleaseNotes, setShowReleaseNotes] = useState(false)
   const sidebarRef = useRef<HTMLElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
@@ -390,6 +391,19 @@ export default function Layout() {
                 </button>
               </div>
             )}
+
+            {/* Version number */}
+            <div className="mt-3 text-center">
+              <button
+                onClick={() => setShowReleaseNotes(true)}
+                className={cn(
+                  "text-xs font-medium hover:underline transition-colors",
+                  theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#A7B3AD] hover:text-[#88B39B]"
+                )}
+              >
+                v0.1.0
+              </button>
+            </div>
           </div>
         </div>
       </aside>
@@ -457,6 +471,53 @@ export default function Layout() {
 
       {/* Tutorial Overlay */}
       <TutorialOverlay />
+
+      {/* Release Notes Modal */}
+      {showReleaseNotes && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className={cn(
+            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
+            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+          )}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                Release Notes v0.1.0
+              </h2>
+              <Button variant="ghost" size="icon" onClick={() => setShowReleaseNotes(false)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <div className={cn("space-y-4", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+              <div>
+                <h3 className="font-semibold mb-2">New Features</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Moved export functionality to transactions page</li>
+                  <li>Added category editing with custom color picker</li>
+                  <li>Added savings pot editing with custom color picker</li>
+                  <li>Click on budget to view transactions</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-2">Improvements</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Changed "Advanced" button to "Add transaction" with green styling</li>
+                  <li>Removed quick add transaction for cleaner UI</li>
+                  <li>Removed settings page</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-2">Bug Fixes</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Fixed budget card click functionality</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
