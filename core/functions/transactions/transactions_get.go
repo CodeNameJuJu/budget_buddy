@@ -1,13 +1,16 @@
 package transactions
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 	"time"
 
+	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func GETTransactions(w http.ResponseWriter, r *http.Request) {
@@ -52,22 +55,56 @@ func GETTransactions(w http.ResponseWriter, r *http.Request) {
 		filters.Type = &t
 	}
 
-	if fromStr := r.URL.Query().Get("date_from"); fromStr != "" {
-		from, err := time.Parse("2006-01-02", fromStr)
+	// Default to current billing cycle if no date range provided
+	dateFromProvided := r.URL.Query().Get("date_from") != ""
+	dateToProvided := r.URL.Query().Get("date_to") != ""
+
+	if !dateFromProvided && !dateToProvided {
+		// Get account to retrieve billing cycle day
+		var account types.Account
+		err := appcontext.GetDb().NewSelect().
+			Model(&account).
+			Where("id = ?", accountID).
+			Scan(context.Background())
 		if err != nil {
-			helpers.RespondError(w, http.StatusBadRequest, "Invalid date_from format, use YYYY-MM-DD")
+			helpers.RespondError(w, http.StatusInternalServerError, "Could not get account")
 			return
+		}
+
+		billingCycleDay := 25
+		if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+			billingCycleDay = *account.BillingCycleDay
+		}
+
+		now := time.Now()
+		var from, to time.Time
+		if now.Day() >= billingCycleDay {
+			from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
+			to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
+		} else {
+			from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+			to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
 		}
 		filters.DateFrom = &from
-	}
-
-	if toStr := r.URL.Query().Get("date_to"); toStr != "" {
-		to, err := time.Parse("2006-01-02", toStr)
-		if err != nil {
-			helpers.RespondError(w, http.StatusBadRequest, "Invalid date_to format, use YYYY-MM-DD")
-			return
-		}
 		filters.DateTo = &to
+	} else {
+		if fromStr := r.URL.Query().Get("date_from"); fromStr != "" {
+			from, err := time.Parse("2006-01-02", fromStr)
+			if err != nil {
+				helpers.RespondError(w, http.StatusBadRequest, "Invalid date_from format, use YYYY-MM-DD")
+				return
+			}
+			filters.DateFrom = &from
+		}
+
+		if toStr := r.URL.Query().Get("date_to"); toStr != "" {
+			to, err := time.Parse("2006-01-02", toStr)
+			if err != nil {
+				helpers.RespondError(w, http.StatusBadRequest, "Invalid date_to format, use YYYY-MM-DD")
+				return
+			}
+			filters.DateTo = &to
+		}
 	}
 
 	if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
