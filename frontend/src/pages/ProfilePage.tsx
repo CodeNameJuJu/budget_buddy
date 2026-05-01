@@ -10,7 +10,7 @@ export default function ProfilePage() {
   const { user, logout } = useAuth();
   const { theme } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ email: '', first_name: '', last_name: '', currency: '', timezone: '' });
+  const [editForm, setEditForm] = useState({ email: '', first_name: '', last_name: '', currency: '', timezone: '', billing_cycle_day: 25 });
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [verificationToken, setVerificationToken] = useState('');
@@ -75,6 +75,7 @@ export default function ProfilePage() {
       last_name: user.last_name || '',
       currency: account?.currency || 'USD',
       timezone: account?.timezone || 'UTC',
+      billing_cycle_day: account?.billing_cycle_day || 25,
     });
     setIsEditing(true);
     setSaveMessage(null);
@@ -84,13 +85,19 @@ export default function ProfilePage() {
     setIsSaving(true);
     try {
       const updatedUser = await authApi.updateProfile(editForm);
-      // Update account currency/timezone
-      if (account && (editForm.currency !== account.currency || editForm.timezone !== account.timezone)) {
+      // Update account currency/timezone/billing cycle day
+      if (account && (editForm.currency !== account.currency || editForm.timezone !== account.timezone || editForm.billing_cycle_day !== account.billing_cycle_day)) {
         await accountsApi.update(account.id, {
           currency: editForm.currency,
           timezone: editForm.timezone,
+          billing_cycle_day: editForm.billing_cycle_day,
         });
-        setAccount({ ...account, currency: editForm.currency, timezone: editForm.timezone });
+        setAccount({ 
+          ...account, 
+          currency: editForm.currency, 
+          timezone: editForm.timezone,
+          billing_cycle_day: editForm.billing_cycle_day,
+        });
       }
       // Update local user state
       // Note: In a real app, you'd update the auth context
@@ -411,6 +418,38 @@ export default function ProfilePage() {
               </select>
             </div>
 
+            <div className={cn(
+              "rounded-xl p-3 xs:p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-2 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
+                <Calendar className="h-4 w-4" />
+                Billing Cycle Day
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="31"
+                value={editForm.billing_cycle_day}
+                onChange={(e) => setEditForm({ ...editForm, billing_cycle_day: parseInt(e.target.value) || 1 })}
+                className={cn(
+                  "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
+                  theme === "light"
+                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
+                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                )}
+              />
+              <p className={cn(
+                "text-xs mt-1",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
+                The day of the month when your billing cycle starts (1-31)
+              </p>
+            </div>
+
             <div className="flex gap-2 xs:gap-3 flex-wrap">
               <Button
                 onClick={handleSave}
@@ -511,6 +550,25 @@ export default function ProfilePage() {
                 theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
               )}>
                 {account?.timezone || 'UTC'}
+              </p>
+            </div>
+
+            <div className={cn(
+              "rounded-xl p-3 xs:p-4",
+              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+            )}>
+              <label className={cn(
+                "block text-sm font-medium mb-1 flex items-center gap-2",
+                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              )}>
+                <Calendar className="h-4 w-4" />
+                Billing Cycle Day
+              </label>
+              <p className={cn(
+                "font-medium text-sm xs:text-base",
+                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              )}>
+                {account?.billing_cycle_day || 25}
               </p>
             </div>
             
