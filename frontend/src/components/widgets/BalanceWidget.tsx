@@ -27,8 +27,10 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
   }, [accountId])
 
   async function loadData() {
+    console.log("BalanceWidget - accountId:", accountId)
     try {
       const response = await dashboardApi.getWidgetData(accountId, "balance")
+      console.log("BalanceWidget - response:", response)
       setData(response.data)
     } catch (error) {
       console.error("Failed to load balance widget data", error)
