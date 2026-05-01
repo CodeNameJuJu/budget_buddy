@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
@@ -52,13 +53,15 @@ func (s *EmailService) SendVerificationEmail(userID int, email string, token str
 		return fmt.Errorf("failed to store verification token: %w", err)
 	}
 
+	verificationLink := s.getVerificationLink(token)
+
 	// Send email using Resend
 	if s.client != nil {
 		params := &resend.SendEmailRequest{
 			From:    "onboarding@resend.dev", // Use Resend's default verified sender
 			To:      []string{email},
 			Subject: "Verify Your Email",
-			Html:    s.getVerificationEmailTemplate(token),
+			Html:    s.getVerificationEmailTemplate(verificationLink),
 		}
 
 		_, err = s.client.Emails.Send(params)
@@ -72,7 +75,7 @@ func (s *EmailService) SendVerificationEmail(userID int, email string, token str
 	} else {
 		// Fallback to logging if API key not set
 		fmt.Printf("Verification email would be sent to %s with token: %s\n", email, token)
-		fmt.Printf("Verification link: https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s\n", token)
+		fmt.Printf("Verification link: %s\n", verificationLink)
 	}
 
 	return nil
@@ -112,7 +115,7 @@ func (s *EmailService) VerifyToken(token string, tokenType string) (int, error) 
 }
 
 // getVerificationEmailTemplate returns the HTML template for verification email
-func (s *EmailService) getVerificationEmailTemplate(token string) string {
+func (s *EmailService) getVerificationEmailTemplate(verificationLink string) string {
 	return fmt.Sprintf(`
 <!DOCTYPE html>
 <html>
@@ -134,9 +137,9 @@ func (s *EmailService) getVerificationEmailTemplate(token string) string {
         <div class="content">
             <h2>Verify Your Email</h2>
             <p>Thank you for signing up for Bêre Bietjie! Please click the button below to verify your email address:</p>
-            <a href="https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s" class="button">Verify Email</a>
+            <a href="%s" class="button">Verify Email</a>
             <p>Or copy and paste this link into your browser:</p>
-            <p>https://budgetbuddy-production-b70f.up.railway.app/verify?token=%s</p>
+            <p>%s</p>
             <p>This link will expire in 24 hours.</p>
         </div>
         <div class="footer">
@@ -145,5 +148,15 @@ func (s *EmailService) getVerificationEmailTemplate(token string) string {
     </div>
 </body>
 </html>
-`, token, token)
+`, verificationLink, verificationLink)
+}
+
+func (s *EmailService) getVerificationLink(token string) string {
+	frontendURL := strings.TrimSpace(os.Getenv("FRONTEND_URL"))
+	if frontendURL == "" {
+		frontendURL = "https://bere-bietjie.up.railway.app"
+	}
+
+	frontendURL = strings.TrimSuffix(frontendURL, "/")
+	return fmt.Sprintf("%s/verify?token=%s", frontendURL, token)
 }

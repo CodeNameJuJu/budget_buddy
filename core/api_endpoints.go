@@ -32,6 +32,7 @@ func RegisterRoutes(r chi.Router) {
 			r.Post("/login", authHandler.Login)
 			r.Post("/refresh", authHandler.RefreshToken)
 			r.Post("/logout", authHandler.Logout) // Requires auth middleware
+			r.Post("/verify-email", authHandler.VerifyEmail)
 
 			// Protected routes
 			r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
@@ -39,7 +40,6 @@ func RegisterRoutes(r chi.Router) {
 				r.Patch("/profile", authHandler.UpdateProfile)
 				r.Post("/change-password", authHandler.ChangePassword)
 				r.Post("/verify-email/send", authHandler.SendVerificationEmail)
-				r.Post("/verify-email", authHandler.VerifyEmail)
 				r.Get("/devices", authHandler.ListDevices)
 				r.Delete("/devices", authHandler.RevokeDevice)
 				r.Post("/profile-picture", authHandler.POSTProfilePicture)
