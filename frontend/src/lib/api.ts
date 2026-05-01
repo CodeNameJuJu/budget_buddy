@@ -154,6 +154,7 @@ export interface Account {
   email: string
   currency: string
   timezone?: string
+  billing_cycle_day?: number
   savings_balance?: string
   dashboard_layout?: string
   created_date: string
