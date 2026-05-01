@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Plus, Trash2, PiggyBank, Target, Sparkles } from "lucide-react"
+import { Plus, Trash2, PiggyBank, Target, Sparkles, Edit2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +14,8 @@ export default function BudgetsPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
+  const [showEditForm, setShowEditForm] = useState(false)
+  const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
   const { theme } = useTheme()
 
   const [form, setForm] = useState({
@@ -22,6 +24,15 @@ export default function BudgetsPage() {
     category_id: "",
     period: "monthly",
     start_date: new Date().toISOString().split("T")[0],
+    end_date: "",
+  })
+
+  const [editForm, setEditForm] = useState({
+    name: "",
+    amount: "",
+    category_id: "",
+    period: "monthly",
+    start_date: "",
     end_date: "",
   })
 
@@ -103,6 +114,40 @@ export default function BudgetsPage() {
     }
   }
 
+  function handleEdit(budget: Budget) {
+    setEditingBudget(budget)
+    setEditForm({
+      name: budget.name,
+      amount: budget.amount,
+      category_id: String(budget.category_id),
+      period: budget.period,
+      start_date: budget.start_date.split("T")[0],
+      end_date: budget.end_date ? budget.end_date.split("T")[0] : "",
+    })
+    setShowEditForm(true)
+  }
+
+  async function handleEditSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!editingBudget || !accountId) return
+    
+    try {
+      await budgetsApi.update(editingBudget.id, {
+        name: editForm.name,
+        amount: editForm.amount,
+        category_id: Number(editForm.category_id),
+        period: editForm.period,
+        start_date: editForm.start_date,
+        end_date: editForm.end_date || undefined,
+      })
+      setShowEditForm(false)
+      setEditingBudget(null)
+      loadData()
+    } catch {
+      console.error("Failed to update budget")
+    }
+  }
+
   function getProgressPercentage(budget: Budget): number {
     if (!budget.spent) return 0
     const spent = parseFloat(budget.spent)
@@ -136,6 +181,98 @@ export default function BudgetsPage() {
           Add budget
         </Button>
       </div>
+
+      {/* Edit budget form */}
+      {showEditForm && editingBudget && (
+        <Card className={cn(
+          "border hover:transition-all duration-200",
+          theme === "light"
+            ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
+            : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
+        )}>
+          <CardHeader>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>Edit budget</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleEditSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-2">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                <Input
+                  placeholder="e.g. Monthly groceries"
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={editForm.amount}
+                  onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                <select
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                  value={editForm.category_id}
+                  onChange={(e) => setEditForm({ ...editForm, category_id: e.target.value })}
+                  required
+                >
+                  <option value="">Select category</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Period</label>
+                <select
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                  value={editForm.period}
+                  onChange={(e) => setEditForm({ ...editForm, period: e.target.value })}
+                >
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Start date</label>
+                <Input
+                  type="date"
+                  value={editForm.start_date}
+                  onChange={(e) => setEditForm({ ...editForm, start_date: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>End date (optional)</label>
+                <Input
+                  type="date"
+                  value={editForm.end_date}
+                  onChange={(e) => setEditForm({ ...editForm, end_date: e.target.value })}
+                />
+              </div>
+              <div className="sm:col-span-2 lg:col-span-3 flex gap-2">
+                <Button type="submit">Update budget</Button>
+                <Button type="button" variant="outline" onClick={() => {
+                  setShowEditForm(false)
+                  setEditingBudget(null)
+                }}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Add budget form */}
       {showForm && (
@@ -272,14 +409,24 @@ export default function BudgetsPage() {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
-                    onClick={() => handleDelete(budget.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#A7B3AD] hover:text-[#88B39B]", "-mt-1")}
+                      onClick={() => handleEdit(budget)}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
+                      onClick={() => handleDelete(budget.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between text-sm">
