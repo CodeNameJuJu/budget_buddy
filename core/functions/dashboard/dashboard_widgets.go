@@ -92,7 +92,7 @@ func POSTDashboardLayout(w http.ResponseWriter, r *http.Request) {
 
 	err := db.CreateOrUpdateDashboardLayout(layout)
 	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not save layout")
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not save layout: "+err.Error())
 		return
 	}
 
