@@ -465,6 +465,7 @@ export default function CustomDashboardPage() {
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                           className={cn(
                             widget.size === "large" ? "lg:col-span-3 sm:col-span-2" : "",
                             snapshot.isDragging ? "opacity-50 scale-105" : "",
@@ -472,7 +473,7 @@ export default function CustomDashboardPage() {
                           )}
                         >
                           {isCustomizing && (
-                            <div {...provided.dragHandleProps} className="absolute top-2 right-2 z-10 p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 cursor-grab">
+                            <div className="absolute top-2 right-2 z-10 p-1 rounded hover:bg-black/10 dark:hover:bg-white/10">
                               <GripVertical className="h-5 w-5" />
                             </div>
                           )}
