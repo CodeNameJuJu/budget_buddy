@@ -102,6 +102,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     if (!response.ok) {
+      console.error(`Token validation failed: ${response.status} ${response.statusText}`);
       throw new Error(`Token validation failed: ${response.status} ${response.statusText}`);
     }
 
@@ -110,6 +111,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
+      console.error('Token validation returned non-JSON response:', text.substring(0, 200));
       throw new Error('Token validation returned non-JSON response');
     }
 
@@ -120,11 +122,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshAccessToken = async (): Promise<void> => {
     const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
     if (!refreshToken) {
+      console.error('No refresh token available in either storage');
       throw new Error('No refresh token available');
     }
 
     // Determine which storage type to use based on where the token was found
     const useLocalStorage = localStorage.getItem('refresh_token') === refreshToken;
+
+    console.log('Attempting to refresh access token...');
 
     const response = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
@@ -135,6 +140,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     if (!response.ok) {
+      console.error(`Token refresh failed: ${response.status} ${response.statusText}`);
       throw new Error(`Token refresh failed: ${response.status} ${response.statusText}`);
     }
 
@@ -143,16 +149,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
+      console.error('Token refresh returned non-JSON response:', text.substring(0, 200));
       throw new Error('Token refresh returned non-JSON response');
     }
 
     const data: AuthResponse = await response.json();
+    console.log('Token refresh successful');
     // Use the same storage type as before
     setTokens(data, useLocalStorage);
     setUser(data.user);
   };
 
   const setTokens = (data: AuthResponse, rememberMe: boolean = false) => {
+    console.log('Setting tokens, rememberMe:', rememberMe);
+    
     // Clear any tokens from BOTH storages first. Leaving stale tokens behind
     // (e.g. from a previous user who used a different rememberMe setting)
     // caused the auth bootstrap to pick up the wrong user's session, which
@@ -168,9 +178,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     storage.setItem('access_token', data.access_token);
     storage.setItem('refresh_token', data.refresh_token);
     storage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
+    
+    console.log('Tokens stored in:', rememberMe ? 'localStorage' : 'sessionStorage');
   };
 
   const clearTokens = () => {
+    console.log('Clearing tokens from both storage locations');
     // Clear from both storage locations
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -212,6 +225,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = async (): Promise<void> => {
+    console.log('Logging out user');
     try {
       // Try to call logout API, but don't fail if it doesn't work
       await apiClient.post('/auth/logout', {});
@@ -263,20 +277,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!user) return;
 
     const checkTokenExpiry = () => {
-      const expiresAt = localStorage.getItem('token_expires_at');
+      // Check both storage locations for token expiry
+      const localStorageExpires = localStorage.getItem('token_expires_at');
+      const sessionStorageExpires = sessionStorage.getItem('token_expires_at');
+      const expiresAt = localStorageExpires || sessionStorageExpires;
+      
       if (!expiresAt) return;
 
       const timeUntilExpiry = parseInt(expiresAt) - Date.now();
       if (timeUntilExpiry < 5 * 60 * 1000) { // 5 minutes before expiry
-        refreshToken().catch(() => {
-          // Handle refresh failure silently
+        refreshToken().catch((error) => {
+          console.error('Auto-refresh failed:', error);
+          // Navigate to login on refresh failure
+          navigate('/login');
         });
       }
     };
 
     const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user, navigate]);
 
   const value: AuthContextType = {
     user,
