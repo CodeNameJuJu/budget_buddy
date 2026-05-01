@@ -11,6 +11,7 @@ import {
   ArrowDownRight,
   Calendar,
   Pencil,
+  Edit2,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -48,6 +49,7 @@ export default function SavingsPage() {
 
   // New pot form
   const [showPotForm, setShowPotForm] = useState(false)
+  const [editingPot, setEditingPot] = useState<SavingsPot | null>(null)
   const [potForm, setPotForm] = useState({
     name: "",
     icon: "",
@@ -128,6 +130,11 @@ export default function SavingsPage() {
     e.preventDefault()
     if (!accountId) return
     
+    if (editingPot) {
+      await handleEditPotSubmit(e)
+      return
+    }
+    
     try {
       await savingsApi.createPot({
         account_id: accountId,
@@ -153,6 +160,41 @@ export default function SavingsPage() {
       loadData()
     } catch {
       console.error("Failed to delete savings pot")
+    }
+  }
+
+  function handleEditPotClick(pot: SavingsPot) {
+    setEditingPot(pot)
+    setPotForm({
+      name: pot.name,
+      icon: pot.icon || "",
+      colour: pot.colour || "#6BAF92",
+      target: pot.target || "",
+      contribution: pot.contribution || "",
+      contribution_period: pot.contribution_period || "monthly",
+    })
+    setShowPotForm(true)
+  }
+
+  async function handleEditPotSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!accountId || !editingPot) return
+    
+    try {
+      await savingsApi.updatePot(editingPot.id, {
+        name: potForm.name,
+        icon: potForm.icon || undefined,
+        colour: potForm.colour || undefined,
+        target: potForm.target || undefined,
+        contribution: potForm.contribution || undefined,
+        contribution_period: potForm.contribution ? potForm.contribution_period : undefined,
+      })
+      setEditingPot(null)
+      setPotForm({ name: "", icon: "", colour: "#6BAF92", target: "", contribution: "", contribution_period: "monthly" })
+      setShowPotForm(false)
+      loadData()
+    } catch {
+      console.error("Failed to update savings pot")
     }
   }
 
@@ -494,7 +536,9 @@ export default function SavingsPage() {
           theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New savings pot</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+              {editingPot ? "Edit savings pot" : "New savings pot"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form
@@ -528,7 +572,7 @@ export default function SavingsPage() {
               </div>
               <div className="space-y-2">
                 <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
-                <div className="flex gap-1.5 flex-wrap">
+                <div className="flex gap-1.5 flex-wrap items-center">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
                       key={c.value}
@@ -545,6 +589,13 @@ export default function SavingsPage() {
                       title={c.label}
                     />
                   ))}
+                  <input
+                    type="color"
+                    value={potForm.colour}
+                    onChange={(e) => setPotForm({ ...potForm, colour: e.target.value })}
+                    className="h-7 w-7 rounded-full border-2 cursor-pointer overflow-hidden"
+                    title="Custom color"
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -589,11 +640,15 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="sm:col-span-2 lg:col-span-4 flex gap-2">
-                <Button type="submit">Save pot</Button>
+                <Button type="submit">{editingPot ? "Update pot" : "Save pot"}</Button>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setShowPotForm(false)}
+                  onClick={() => {
+                    setShowPotForm(false)
+                    setEditingPot(null)
+                    setPotForm({ name: "", icon: "", colour: "#6BAF92", target: "", contribution: "", contribution_period: "monthly" })
+                  }}
                 >
                   Cancel
                 </Button>
@@ -656,14 +711,24 @@ export default function SavingsPage() {
                       )}
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
-                    onClick={() => handleDeletePot(pot.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]", "-mt-1")}
+                      onClick={() => handleEditPotClick(pot)}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
+                      onClick={() => handleDeletePot(pot.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>

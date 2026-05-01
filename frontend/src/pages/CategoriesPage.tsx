@@ -34,6 +34,7 @@ export default function CategoriesPage() {
     colour: "#6BAF92",
     icon: "",
   })
+  const [showCustomColor, setShowCustomColor] = useState(false)
 
   useEffect(() => {
     loadUserAccount()
@@ -220,7 +221,7 @@ export default function CategoriesPage() {
               </div>
               <div className="space-y-2">
                 <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
-                <div className="flex gap-1.5 flex-wrap">
+                <div className="flex gap-1.5 flex-wrap items-center">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
                       key={c.value}
@@ -233,6 +234,13 @@ export default function CategoriesPage() {
                       title={c.label}
                     />
                   ))}
+                  <input
+                    type="color"
+                    value={form.colour}
+                    onChange={(e) => setForm({ ...form, colour: e.target.value })}
+                    className="h-7 w-7 rounded-full border-2 cursor-pointer overflow-hidden"
+                    title="Custom color"
+                  />
                 </div>
               </div>
               <div className="space-y-2">
