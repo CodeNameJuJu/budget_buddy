@@ -20,6 +20,10 @@ import {
   Sun,
   BookOpen,
   Target,
+  Sparkles,
+  Star,
+  TrendingUp,
+  CheckCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -474,55 +478,169 @@ export default function Layout() {
 
       {/* Release Notes Modal */}
       {showReleaseNotes && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className={cn(
-            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6 shadow-2xl",
-            theme === "light" ? "bg-[#E8DCC5] border border-[#E6E0D6]" : "bg-[#18231D] border border-[#2E3B35]"
+            "w-full max-w-2xl max-h-[85vh] overflow-auto rounded-2xl shadow-2xl relative",
+            theme === "light" 
+              ? "bg-gradient-to-br from-[#E8DCC5] to-[#D4C4A8] border border-[#E6E0D6]" 
+              : "bg-gradient-to-br from-[#18231D] to-[#1F2A24] border border-[#2E3B35]"
           )}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
-                Release Notes v0.1.0
-              </h2>
-              <Button variant="ghost" size="icon" onClick={() => setShowReleaseNotes(false)}>
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            <div className={cn("space-y-4", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
-              <div>
-                <h3 className="font-semibold mb-2 text-lg">New Features</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Combined Finance page with Categories, Budgets, and Transactions</li>
-                  <li>Added budget editing functionality</li>
-                  <li>Added category editing with custom color picker</li>
-                  <li>Added savings pot editing with custom color picker</li>
-                  <li>Click on budget to view transactions</li>
-                  <li>Added category filter to transactions page</li>
-                  <li>Added configurable billing cycle day</li>
-                  <li>Clickable version number with release notes modal</li>
-                </ul>
+            {/* Decorative header */}
+            <div className={cn(
+              "h-2 w-full rounded-t-2xl",
+              "bg-gradient-to-r from-[#6BAF92] via-[#88B39B] to-[#D9B44A]"
+            )} />
+            
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "p-2 rounded-lg",
+                    theme === "light" ? "bg-[#6BAF92]/20" : "bg-[#6BAF92]/20"
+                  )}>
+                    <Sparkles className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
+                  </div>
+                  <div>
+                    <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                      What's New
+                    </h2>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge className={cn("text-xs", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#6BAF92] text-white")}>
+                        v0.1.0
+                      </Badge>
+                      <span className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                        Latest Release
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setShowReleaseNotes(false)}
+                  className={cn(theme === "light" ? "hover:bg-[#E6E0D6]" : "hover:bg-[#2E3B35]")}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
               </div>
 
-              <div>
-                <h3 className="font-semibold mb-2 text-lg">Improvements</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Moved export functionality to transactions page</li>
-                  <li>Changed "Advanced" button to "Add transaction" with green styling</li>
-                  <li>Removed quick add transaction for cleaner UI</li>
-                  <li>Updated transactions to default to current billing cycle</li>
-                  <li>Updated analytics to use billing cycle instead of calendar month</li>
-                  <li>Integrated alert preferences with backend API</li>
-                </ul>
-              </div>
+              <div className={cn("space-y-6", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                {/* New Features */}
+                <div className={cn(
+                  "rounded-xl p-4 border",
+                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#0F1512]/50 border-[#2E3B35]"
+                )}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={cn("p-1.5 rounded-md", "bg-[#6BAF92]/20")}>
+                      <Star className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
+                    </div>
+                    <h3 className="font-semibold text-lg">New Features</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Combined Finance page with Categories, Budgets, and Transactions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added budget editing functionality</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added category editing with custom color picker</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added savings pot editing with custom color picker</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Click on budget to view transactions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added category filter to transactions page</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added configurable billing cycle day</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Clickable version number with release notes modal</span>
+                    </li>
+                  </ul>
+                </div>
 
-              <div>
-                <h3 className="font-semibold mb-2 text-lg">Bug Fixes</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Fixed budget card click functionality</li>
-                  <li>Fixed verify email flow</li>
-                  <li>Fixed account invite links</li>
-                  <li>Fixed signup timezone and dashboard save</li>
-                </ul>
+                {/* Improvements */}
+                <div className={cn(
+                  "rounded-xl p-4 border",
+                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#0F1512]/50 border-[#2E3B35]"
+                )}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={cn("p-1.5 rounded-md", "bg-[#D9B44A]/20")}>
+                      <TrendingUp className={cn("h-4 w-4", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
+                    </div>
+                    <h3 className="font-semibold text-lg">Improvements</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Moved export functionality to transactions page</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Changed "Advanced" button to "Add transaction" with green styling</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Removed quick add transaction for cleaner UI</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Updated transactions to default to current billing cycle</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Updated analytics to use billing cycle instead of calendar month</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Integrated alert preferences with backend API</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Bug Fixes */}
+                <div className={cn(
+                  "rounded-xl p-4 border",
+                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#0F1512]/50 border-[#2E3B35]"
+                )}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={cn("p-1.5 rounded-md", "bg-[#6BAF92]/20")}>
+                      <CheckCircle className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
+                    </div>
+                    <h3 className="font-semibold text-lg">Bug Fixes</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed budget card click functionality</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed verify email flow</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed account invite links</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed signup timezone and dashboard save</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
