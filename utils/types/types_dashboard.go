@@ -36,6 +36,7 @@ type DashboardLayout struct {
 	bun.BaseModel `bun:"table:dashboard_layouts,alias:dl"`
 
 	ID        int64  `json:"id" bun:"id,pk,autoincrement"`
+	UserID    int64  `json:"user_id" bun:"user_id,notnull"`
 	AccountID int64  `json:"account_id" bun:"account_id,notnull"`
 	Name      string `json:"name" bun:"name,notnull"` // e.g., "Main Dashboard"
 	IsActive  bool   `json:"is_active" bun:"is_active,notnull,default:true"`

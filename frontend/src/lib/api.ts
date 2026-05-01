@@ -222,8 +222,8 @@ export const accountsApi = {
 
 // Dashboard Layout API
 export const dashboardLayoutsApi = {
-  get: (_accountId?: number) => get<APIResponse<DashboardLayout>>("/dashboard/layout"),
-  save: (_accountId: number, layout: string, name: string = "Main Dashboard") =>
+  get: () => get<APIResponse<DashboardLayout>>("/dashboard/layout"),
+  save: (layout: string, name: string = "Main Dashboard") =>
     post<APIResponse<DashboardLayout>>("/dashboard/layout", { name, layout }),
 }
 
@@ -382,6 +382,7 @@ export interface Widget {
 
 export interface DashboardLayout {
   id: number
+  user_id: number
   account_id: number
   name: string
   is_active: boolean

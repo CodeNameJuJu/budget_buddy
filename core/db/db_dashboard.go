@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
@@ -102,12 +103,12 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 }
 
 // Dashboard Layout Functions
-func GetDashboardLayout(accountID int64) (*types.DashboardLayout, error) {
+func GetDashboardLayout(userID int64) (*types.DashboardLayout, error) {
 	db := appcontext.GetDb()
 	var layout types.DashboardLayout
 
 	err := db.NewSelect().Model(&layout).
-		Where("account_id = ?", accountID).
+		Where("user_id = ?", userID).
 		Where("is_active = ?", true).
 		Scan(context.Background())
 	if err != nil {
@@ -122,6 +123,9 @@ func CreateOrUpdateDashboardLayout(layout *types.DashboardLayout) error {
 	if layout.Name == "" {
 		layout.Name = "Main Dashboard"
 	}
+	if layout.UserID == 0 {
+		return errors.New("user_id is required")
+	}
 
 	now := time.Now()
 	layout.ModifiedDate = &now
@@ -130,7 +134,7 @@ func CreateOrUpdateDashboardLayout(layout *types.DashboardLayout) error {
 		Model((*types.DashboardLayout)(nil)).
 		Set("is_active = ?", false).
 		Set("modified_date = ?", now).
-		Where("account_id = ?", layout.AccountID).
+		Where("user_id = ?", layout.UserID).
 		Where("is_active = ?", true).
 		Exec(context.Background())
 	if err != nil {

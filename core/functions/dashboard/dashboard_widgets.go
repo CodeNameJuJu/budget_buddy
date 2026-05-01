@@ -13,16 +13,24 @@ import (
 )
 
 func GETDashboardLayout(w http.ResponseWriter, r *http.Request) {
+	userIDInt, ok := auth.GetUserIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+	userID := int64(userIDInt)
+
 	accountID, ok := auth.GetAccountIDFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
 	}
 
-	layout, err := db.GetDashboardLayout(accountID)
+	layout, err := db.GetDashboardLayout(userID)
 	if err != nil {
 		// If no layout exists, create default one
 		defaultLayout := &types.DashboardLayout{
+			UserID:    userID,
 			AccountID: accountID,
 			Name:      "Main Dashboard",
 			IsActive:  true,
@@ -41,6 +49,13 @@ func GETDashboardLayout(w http.ResponseWriter, r *http.Request) {
 }
 
 func POSTDashboardLayout(w http.ResponseWriter, r *http.Request) {
+	userIDInt, ok := auth.GetUserIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+	userID := int64(userIDInt)
+
 	accountID, ok := auth.GetAccountIDFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
@@ -68,6 +83,7 @@ func POSTDashboardLayout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	layout := &types.DashboardLayout{
+		UserID:    userID,
 		AccountID: accountID,
 		Name:      name,
 		Layout:    req.Layout,
