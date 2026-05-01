@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import { Plus, Trash2, PiggyBank, Target, Sparkles, Edit2 } from "lucide-react"
+import { Plus, Trash2, PiggyBank, Target, Sparkles, Edit2, X } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { budgetsApi, categoriesApi, accountsApi, type Budget, type Category, type Account } from "@/lib/api"
-import { formatCurrency } from "@/lib/utils"
+import { budgetsApi, categoriesApi, accountsApi, transactionsApi, type Budget, type Category, type Account, type Transaction } from "@/lib/api"
+import { formatCurrency, formatDate } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
 
@@ -16,6 +16,9 @@ export default function BudgetsPage() {
   const [showForm, setShowForm] = useState(false)
   const [showEditForm, setShowEditForm] = useState(false)
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
+  const [budgetTransactions, setBudgetTransactions] = useState<Transaction[]>([])
+  const [loadingTransactions, setLoadingTransactions] = useState(false)
   const { theme } = useTheme()
 
   const [form, setForm] = useState({
@@ -111,6 +114,24 @@ export default function BudgetsPage() {
       loadData()
     } catch {
       console.error("Failed to delete budget")
+    }
+  }
+
+  async function handleBudgetClick(budget: Budget) {
+    setSelectedBudget(budget)
+    setLoadingTransactions(true)
+    try {
+      const response = await transactionsApi.list(accountId!, {
+        category_id: String(budget.category_id),
+        from: budget.start_date,
+        to: budget.end_date || new Date().toISOString().split("T")[0],
+      })
+      setBudgetTransactions(response.data || [])
+    } catch {
+      console.error("Failed to load budget transactions")
+      setBudgetTransactions([])
+    } finally {
+      setLoadingTransactions(false)
     }
   }
 
@@ -409,7 +430,7 @@ export default function BudgetsPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -462,6 +483,73 @@ export default function BudgetsPage() {
               </Card>
             )
           })}
+        </div>
+      )}
+
+      {/* Budget transactions modal */}
+      {selectedBudget && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className={cn(
+            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
+            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+          )}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                  {selectedBudget.name} Transactions
+                </h2>
+                <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                  {selectedBudget.category?.name} · {selectedBudget.period}
+                </p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedBudget(null)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {loadingTransactions ? (
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading transactions...</p>
+            ) : budgetTransactions.length === 0 ? (
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found for this budget period.</p>
+            ) : (
+              <div className="space-y-2">
+                {budgetTransactions.map((t) => (
+                  <div
+                    key={t.id}
+                    className={cn(
+                      "flex items-center justify-between p-3 rounded-md border",
+                      theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white"
+                        style={{ backgroundColor: t.category?.colour || "#6BAF92" }}
+                      >
+                        {t.category?.icon || t.category?.name[0] || "??"}
+                      </div>
+                      <div>
+                        <p className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                          {t.description || t.category?.name}
+                        </p>
+                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                          {formatDate(t.date)}
+                        </p>
+                      </div>
+                    </div>
+                    <p className={cn(
+                      "text-sm font-medium",
+                      t.type === "income"
+                        ? theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
+                        : theme === "light" ? "text-[#C97C5D]" : "text-[#B46B52]"
+                    )}>
+                      {t.type === "income" ? "+" : "-"}{formatCurrency(parseFloat(t.amount))}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
