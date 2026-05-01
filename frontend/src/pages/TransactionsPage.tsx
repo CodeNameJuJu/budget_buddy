@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Plus, Trash2, Tag as TagIcon, Settings } from "lucide-react"
+import { Plus, Trash2, Tag as TagIcon, Settings, Download } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,6 +29,8 @@ export default function TransactionsPage() {
   const [showAdvancedForm, setShowAdvancedForm] = useState(false)
   const [filterType, setFilterType] = useState<string>("")
   const [filterCategory, setFilterCategory] = useState<string>("")
+  const [exporting, setExporting] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const { theme } = useTheme()
 
   const [form, setForm] = useState({
@@ -135,6 +137,44 @@ export default function TransactionsPage() {
     }
   }
 
+  async function handleExportData() {
+    if (!accountId) return
+    setExporting(true)
+    try {
+      const response = await transactionsApi.list(accountId)
+      const transactions = response.data || []
+      
+      // Convert to CSV
+      const headers = ["Date", "Description", "Amount", "Type", "Category", "Notes"]
+      const rows = transactions.map(t => [
+        t.date,
+        t.description || "",
+        t.amount,
+        t.type,
+        t.category?.name || "",
+        t.notes || "",
+      ])
+      
+      const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n")
+      const blob = new Blob([csvContent], { type: "text/csv" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `transactions_export_${new Date().toISOString().split("T")[0]}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+      
+      setMessage({ type: 'success', text: 'Data exported successfully' })
+      setTimeout(() => setMessage(null), 3000)
+    } catch (error) {
+      console.error("Failed to export data", error)
+      setMessage({ type: 'error', text: 'Failed to export data' })
+      setTimeout(() => setMessage(null), 3000)
+    } finally {
+      setExporting(false)
+    }
+  }
+
   return (
     <div className="space-y-3 xs:space-y-4 lg:space-y-6">
       <div className="responsive-flex responsive-margin">
@@ -143,6 +183,15 @@ export default function TransactionsPage() {
           <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2 ml-auto">
+          <Button 
+            onClick={handleExportData}
+            disabled={exporting}
+            variant="outline"
+            className="mobile-button"
+          >
+            <Download className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
+            <span className="hidden sm:inline ml-2">{exporting ? "Exporting..." : "Export"}</span>
+          </Button>
           <Button 
             variant="outline" 
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
@@ -155,8 +204,18 @@ export default function TransactionsPage() {
       </div>
 
       {/* Quick Add Transaction - Always Visible */}
-      <div className="responsive-margin flex justify-end" data-tutorial="quick-add-button">
+      <div className="responsive-margin flex justify-between items-center gap-2" data-tutorial="quick-add-button">
         <QuickAddTransaction onTransactionAdded={handleQuickAddTransaction} />
+        {message && (
+          <div className={cn(
+            "p-3 rounded-lg text-sm flex-shrink-0",
+            message.type === 'success'
+              ? theme === "light" ? "bg-[#6BAF92]/20 text-[#6BAF92]" : "bg-[#6BAF92]/20 text-[#88B39B]"
+              : "bg-red-500/20 text-red-400"
+          )}>
+            {message.text}
+          </div>
+        )}
       </div>
 
       {/* Filters */}
