@@ -445,7 +445,7 @@ export default function CustomDashboardPage() {
 
         {/* Widget Grid */}
         <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="dashboard-widgets">
+          <Droppable droppableId="dashboard-widgets" direction="horizontal">
             {(provided) => (
               <div
                 {...provided.droppableProps}
