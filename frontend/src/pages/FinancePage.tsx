@@ -59,6 +59,9 @@ export default function FinancePage() {
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [showBudgetForm, setShowBudgetForm] = useState(false)
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
+  const [budgetTransactions, setBudgetTransactions] = useState<Transaction[]>([])
+  const [loadingBudgetTransactions, setLoadingBudgetTransactions] = useState(false)
   const [budgetForm, setBudgetForm] = useState({
     name: "",
     amount: "",
@@ -71,6 +74,7 @@ export default function FinancePage() {
   // Transactions state
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [popularTags, setPopularTags] = useState<PopularTag[]>([])
+  const [count, setCount] = useState(0)
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [filterTransactionType, setFilterTransactionType] = useState<string>("")
   const [filterTransactionCategory, setFilterTransactionCategory] = useState<string>("")
@@ -139,6 +143,7 @@ export default function FinancePage() {
       if (filterTransactionCategory) params.category_id = filterTransactionCategory
       const response = await transactionsApi.list(accountId, params)
       setTransactions(response.data || [])
+      setCount(response.count)
     } catch (error) {
       console.error("Failed to load data", error)
     }
@@ -255,6 +260,63 @@ export default function FinancePage() {
       end_date: budget.end_date || "",
     })
     setShowBudgetForm(true)
+  }
+
+  async function handleEditBudgetSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!editingBudget || !accountId) return
+    
+    try {
+      await budgetsApi.update(editingBudget.id, {
+        name: budgetForm.name,
+        amount: budgetForm.amount,
+        category_id: Number(budgetForm.category_id),
+        period: budgetForm.period,
+        start_date: budgetForm.start_date,
+        end_date: budgetForm.end_date || undefined,
+      })
+      setShowBudgetForm(false)
+      setEditingBudget(null)
+      loadBudgets()
+    } catch {
+      console.error("Failed to update budget")
+    }
+  }
+
+  async function handleBudgetClick(budget: Budget) {
+    setSelectedBudget(budget)
+    setLoadingBudgetTransactions(true)
+    try {
+      const response = await transactionsApi.list(accountId!, {
+        category_id: String(budget.category_id),
+        from: budget.start_date,
+        to: budget.end_date || new Date().toISOString().split("T")[0],
+      })
+      setBudgetTransactions(response.data || [])
+    } catch {
+      console.error("Failed to load budget transactions")
+      setBudgetTransactions([])
+    } finally {
+      setLoadingBudgetTransactions(false)
+    }
+  }
+
+  function getProgressPercentage(budget: Budget): number {
+    if (!budget.spent) return 0
+    const spent = parseFloat(budget.spent)
+    const amount = parseFloat(budget.amount)
+    return amount > 0 ? Math.min((spent / amount) * 100, 100) : 0
+  }
+
+  function getProgressIcon(percentage: number) {
+    if (percentage >= 90) return <Sparkles className="h-4 w-4" />
+    return <Target className="h-4 w-4" />
+  }
+
+  function getProgressColour(percentage: number): string {
+    if (percentage >= 90) return "gradient-danger"
+    if (percentage >= 70) return "gradient-warning"
+    return "gradient-success"
   }
 
   // Transaction functions
