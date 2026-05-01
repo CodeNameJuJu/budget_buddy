@@ -36,13 +36,13 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	// -------------------------
 	var totalIncome decimal.Decimal
 	err := db.NewSelect().
-		Model((*types.Transaction)(nil)).
-		ColumnExpr("COALESCE(SUM(amount), 0)").
-		Where("account_id = ?", accountID).
-		Where("type = ?", "income").
-		Where("deleted_date IS NULL").
-		Where("date >= ?", from).
-		Where("date <= ?", to).
+		TableExpr("transactions t").
+		ColumnExpr("COALESCE(SUM(t.amount), 0)").
+		Where("t.account_id = ?", accountID).
+		Where("t.type = ?", "income").
+		Where("t.deleted_date IS NULL").
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
 		Scan(ctx, &totalIncome)
 	if err != nil {
 		return nil, err
@@ -55,13 +55,13 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	// -------------------------
 	var totalExpenses decimal.Decimal
 	err = db.NewSelect().
-		Model((*types.Transaction)(nil)).
-		ColumnExpr("COALESCE(SUM(amount), 0)").
-		Where("account_id = ?", accountID).
-		Where("type = ?", "expense").
-		Where("deleted_date IS NULL").
-		Where("date >= ?", from).
-		Where("date <= ?", to).
+		TableExpr("transactions t").
+		ColumnExpr("COALESCE(SUM(t.amount), 0)").
+		Where("t.account_id = ?", accountID).
+		Where("t.type = ?", "expense").
+		Where("t.deleted_date IS NULL").
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
 		Scan(ctx, &totalExpenses)
 	if err != nil {
 		return nil, err
@@ -76,13 +76,13 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	var recentTrans []types.Transaction
 
 	err = db.NewSelect().
-		Model((*types.Transaction)(nil)).
-		Relation("Category").
-		Where("account_id = ?", accountID).
-		Where("deleted_date IS NULL").
-		Where("date >= ?", from).
-		Where("date <= ?", to).
-		Order("date DESC").
+		TableExpr("transactions t").
+		ColumnExpr("t.*").
+		Where("t.account_id = ?", accountID).
+		Where("t.deleted_date IS NULL").
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
+		Order("t.date DESC").
 		Limit(10).
 		Scan(ctx, &recentTrans)
 
@@ -96,7 +96,7 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	var topCategories []CategorySpendingSummary
 
 	err = db.NewSelect().
-		TableExpr("transactions AS t").
+		TableExpr("transactions t").
 		ColumnExpr("t.category_id").
 		ColumnExpr("cat.name AS category_name").
 		ColumnExpr("COALESCE(SUM(t.amount), 0) AS total").
