@@ -41,7 +41,7 @@ export default function SettingsPage() {
     setSaving(true)
     setMessage(null)
     try {
-      await accountsApi.patch(accountId, { billing_cycle_day: billingCycleDay })
+      await accountsApi.update(accountId, { billing_cycle_day: billingCycleDay })
       setMessage({ type: 'success', text: 'Settings saved successfully' })
     } catch (error) {
       console.error("Failed to save settings", error)
