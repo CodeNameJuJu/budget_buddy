@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -154,18 +155,40 @@ func getWidgetDataByType(accountID int64, widgetType types.WidgetType) (interfac
 }
 
 func getBalanceWidgetData(accountID int64) (interface{}, error) {
-	// Get data from 25th of previous month to 24th of current month (25th to 25th cycle)
+	// Get account to fetch billing cycle day
+	var account types.Account
+	err := db.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err != nil {
+		// Return empty data if account not found
+		return map[string]interface{}{
+			"balance":  "0",
+			"income":   "0",
+			"expenses": "0",
+			"period":   "all time",
+		}, nil
+	}
+
+	// Use billing cycle day from account, default to 25th
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
+	// Get data from billing cycle day of previous month to billing cycle day of current month
 	now := time.Now()
 	var from, to time.Time
 
-	if now.Day() >= 25 {
-		// We're after the 25th, so range is 25th of current month to 24th of next month
-		from = time.Date(now.Year(), now.Month(), 25, 0, 0, 0, 0, now.Location())
+	if now.Day() >= billingCycleDay {
+		// We're after the billing cycle day, so range is billing cycle day of current month to billing cycle day of next month
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
 		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 	} else {
-		// We're before the 25th, so range is 25th of previous month to 24th of current month
-		from = time.Date(now.Year(), now.Month(), 25, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-		to = time.Date(now.Year(), now.Month(), 24, 23, 59, 59, 999999999, now.Location())
+		// We're before the billing cycle day, so range is billing cycle day of previous month to billing cycle day of current month
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
 	}
 
 	summary, err := db.GetDashboardSummary(accountID, from, to)
