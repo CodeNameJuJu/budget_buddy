@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
@@ -24,6 +25,7 @@ type CategorySpendingSummary struct {
 }
 
 func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*DashboardSummary, error) {
+	fmt.Printf("GetDashboardSummary - accountID: %d, from: %s, to: %s\n", accountID, from.Format("2006-01-02"), to.Format("2006-01-02"))
 	db := appcontext.GetDb()
 
 	// Total income
@@ -40,6 +42,7 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("GetDashboardSummary - totalIncome: %s\n", totalIncome.String())
 
 	// Total expenses
 	var totalExpenses decimal.Decimal
@@ -55,6 +58,7 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("GetDashboardSummary - totalExpenses: %s\n", totalExpenses.String())
 
 	// Recent transactions - filter by date range
 	var recentTrans []types.Transaction
