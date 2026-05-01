@@ -1,28 +1,49 @@
 import { useState, useEffect } from "react"
-import { Save, Moon, Sun, Bell, AlertTriangle } from "lucide-react"
+import { Save, Moon, Sun, Bell } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
+import { alertsApi } from "@/lib/api"
+import { useAuth } from "@/hooks"
 
 export default function SettingsPage() {
   const { theme, toggleTheme } = useTheme()
+  const { user } = useAuth()
   const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [accountId, setAccountId] = useState<number | null>(null)
   
   const [alertPreferences, setAlertPreferences] = useState({
     budgetOverspending: true,
-    billReminders: true,
     savingsGoals: true,
   })
 
   async function saveSettings() {
+    if (!accountId) {
+      setMessage({ type: 'error', text: 'No account found' })
+      return
+    }
     setSaving(true)
     setMessage(null)
     try {
-      // Save alert preferences to localStorage for now
-      localStorage.setItem('alertPreferences', JSON.stringify(alertPreferences))
+      // Save budget overspending preference (AlertBudgetThreshold)
+      await alertsApi.updatePreference({
+        account_id: accountId,
+        type: 'budget_threshold',
+        enabled: alertPreferences.budgetOverspending,
+        threshold: 70,
+      })
+
+      // Save savings goals preference (AlertGoalAchieved)
+      await alertsApi.updatePreference({
+        account_id: accountId,
+        type: 'goal_achieved',
+        enabled: alertPreferences.savingsGoals,
+      })
+
       setMessage({ type: 'success', text: 'Settings saved successfully' })
       setTimeout(() => setMessage(null), 3000)
     } catch (error) {
@@ -34,12 +55,51 @@ export default function SettingsPage() {
     }
   }
 
-  useEffect(() => {
-    const saved = localStorage.getItem('alertPreferences')
-    if (saved) {
-      setAlertPreferences(JSON.parse(saved))
+  async function loadPreferences() {
+    if (!accountId) return
+    setLoading(true)
+    try {
+      const response = await alertsApi.getPreferences(accountId)
+      const preferences = response.data || []
+      
+      // Map backend preferences to frontend state
+      const budgetPref = preferences.find((p: any) => p.type === 'budget_threshold')
+      const goalPref = preferences.find((p: any) => p.type === 'goal_achieved')
+      
+      setAlertPreferences({
+        budgetOverspending: budgetPref?.enabled ?? true,
+        savingsGoals: goalPref?.enabled ?? true,
+      })
+    } catch (error) {
+      console.error("Failed to load preferences", error)
+    } finally {
+      setLoading(false)
     }
-  }, [])
+  }
+
+  useEffect(() => {
+    if (user) {
+      // Get account ID from user
+      const fetchAccount = async () => {
+        try {
+          const { accountsApi } = await import('@/lib/api')
+          const response = await accountsApi.getMyAccount()
+          if (response.data && response.data.length > 0) {
+            setAccountId(response.data[0].id)
+          }
+        } catch (error) {
+          console.error("Failed to load account", error)
+        }
+      }
+      fetchAccount()
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (accountId) {
+      loadPreferences()
+    }
+  }, [accountId])
 
   return (
     <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
@@ -103,7 +163,7 @@ export default function SettingsPage() {
             <div>
               <Label>Budget Overspending Alerts</Label>
               <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                Get notified when you exceed your budget
+                Get notified when you exceed 70% of your budget
               </p>
             </div>
             <input
@@ -111,21 +171,7 @@ export default function SettingsPage() {
               checked={alertPreferences.budgetOverspending}
               onChange={(e) => setAlertPreferences({ ...alertPreferences, budgetOverspending: e.target.checked })}
               className="w-5 h-5 rounded"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label>Bill Reminders</Label>
-              <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                Get reminded before bills are due
-              </p>
-            </div>
-            <input
-              type="checkbox"
-              checked={alertPreferences.billReminders}
-              onChange={(e) => setAlertPreferences({ ...alertPreferences, billReminders: e.target.checked })}
-              className="w-5 h-5 rounded"
+              disabled={loading}
             />
           </div>
 
@@ -133,7 +179,7 @@ export default function SettingsPage() {
             <div>
               <Label>Savings Goal Alerts</Label>
               <p className={cn("text-sm mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-                Track progress towards your savings goals
+                Get notified when you achieve your savings goals
               </p>
             </div>
             <input
@@ -141,6 +187,7 @@ export default function SettingsPage() {
               checked={alertPreferences.savingsGoals}
               onChange={(e) => setAlertPreferences({ ...alertPreferences, savingsGoals: e.target.checked })}
               className="w-5 h-5 rounded"
+              disabled={loading}
             />
           </div>
 
