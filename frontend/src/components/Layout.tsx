@@ -493,10 +493,13 @@ export default function Layout() {
               <div>
                 <h3 className="font-semibold mb-2 text-lg">New Features</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Moved export functionality to transactions page</li>
+                  <li>Added budget editing functionality</li>
                   <li>Added category editing with custom color picker</li>
                   <li>Added savings pot editing with custom color picker</li>
                   <li>Click on budget to view transactions</li>
+                  <li>Added category filter to transactions page</li>
+                  <li>Added configurable billing cycle day</li>
+                  <li>Added drag and drop widget reordering</li>
                   <li>Clickable version number with release notes modal</li>
                 </ul>
               </div>
@@ -504,9 +507,15 @@ export default function Layout() {
               <div>
                 <h3 className="font-semibold mb-2 text-lg">Improvements</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Moved export functionality to transactions page</li>
                   <li>Changed "Advanced" button to "Add transaction" with green styling</li>
                   <li>Removed quick add transaction for cleaner UI</li>
                   <li>Removed settings page</li>
+                  <li>Updated transactions to default to current billing cycle</li>
+                  <li>Updated analytics to use billing cycle instead of calendar month</li>
+                  <li>Repurposed settings page for app level settings</li>
+                  <li>Added data management and privacy sections to settings</li>
+                  <li>Integrated alert preferences with backend API</li>
                 </ul>
               </div>
 
@@ -514,6 +523,11 @@ export default function Layout() {
                 <h3 className="font-semibold mb-2 text-lg">Bug Fixes</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>Fixed budget card click functionality</li>
+                  <li>Fixed account id retrieval in settings page</li>
+                  <li>Fixed settings save button API call</li>
+                  <li>Fixed verify email flow</li>
+                  <li>Fixed account invite links</li>
+                  <li>Fixed signup timezone and dashboard save</li>
                 </ul>
               </div>
             </div>
