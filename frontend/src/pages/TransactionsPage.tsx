@@ -181,10 +181,15 @@ export default function TransactionsPage() {
           <Button 
             variant="outline" 
             onClick={() => setShowAdvancedForm(!showAdvancedForm)}
-            className="mobile-button"
+            className={cn(
+              "mobile-button",
+              theme === "light"
+                ? "bg-[#6BAF92] text-[#1F2A24] border-[#6BAF92] hover:bg-[#5A9E82]"
+                : "bg-[#88B39B] text-[#E7EFEA] border-[#88B39B] hover:bg-[#78A38B]"
+            )}
           >
             <Settings className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
-            <span className="hidden sm:inline ml-2">Advanced</span>
+            <span className="hidden sm:inline ml-2">Add transaction</span>
           </Button>
         </div>
       </div>
