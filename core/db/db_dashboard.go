@@ -96,18 +96,18 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 	var topCategories []CategorySpendingSummary
 
 	err = db.NewSelect().
-		Model((*types.Transaction)(nil)).
-		ColumnExpr("category_id").
+		TableExpr("transactions AS t").
+		ColumnExpr("t.category_id").
 		ColumnExpr("cat.name AS category_name").
-		ColumnExpr("COALESCE(SUM(amount), 0) AS total").
-		Join("JOIN categories cat ON cat.id = transactions.category_id").
-		Where("transactions.account_id = ?", accountID).
-		Where("transactions.type = ?", "expense").
-		Where("transactions.deleted_date IS NULL").
-		Where("transactions.category_id IS NOT NULL").
-		Where("transactions.date >= ?", from).
-		Where("transactions.date <= ?", to).
-		GroupExpr("transactions.category_id, cat.name").
+		ColumnExpr("COALESCE(SUM(t.amount), 0) AS total").
+		Join("JOIN categories cat ON cat.id = t.category_id").
+		Where("t.account_id = ?", accountID).
+		Where("t.type = ?", "expense").
+		Where("t.deleted_date IS NULL").
+		Where("t.category_id IS NOT NULL").
+		Where("t.date >= ?", from).
+		Where("t.date <= ?", to).
+		GroupExpr("t.category_id, cat.name").
 		OrderExpr("total DESC").
 		Limit(5).
 		Scan(ctx, &topCategories)
