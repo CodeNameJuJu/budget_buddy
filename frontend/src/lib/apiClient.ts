@@ -33,7 +33,6 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    console.log(`API Request: ${options.method || 'GET'} ${url}`);
 
     try {
       const response = await fetch(url, {
@@ -44,8 +43,6 @@ class ApiClient {
         credentials: 'omit',
       });
 
-      console.log(`API Response Status: ${response.status}`);
-      console.log(`API Response Headers:`, Object.fromEntries(response.headers.entries()));
 
       // Handle non-JSON responses
       const contentType = response.headers.get('content-type');
@@ -65,7 +62,6 @@ class ApiClient {
 
       // Parse successful JSON response
       const data = await response.json();
-      console.log(`API Success:`, data);
       return data;
 
     } catch (error) {

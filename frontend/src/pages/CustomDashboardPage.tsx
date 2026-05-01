@@ -44,10 +44,8 @@ export default function CustomDashboardPage() {
   }, [accountId])
 
   async function loadWidgets() {
-    console.log("loadWidgets called, accountId:", accountId)
     try {
       const response = await dashboardLayoutsApi.get()
-      console.log("getDashboardLayout response:", response.data)
       if (response.data) {
         const layout = JSON.parse(response.data.layout)
         setWidgets(layout)
@@ -97,12 +95,10 @@ export default function CustomDashboardPage() {
     setIsSaving(true)
     try {
       const layoutJson = JSON.stringify(widgets)
-      console.log("Saving layout with JSON:", layoutJson)
       // Save to session storage
       sessionStorage.setItem(`dashboard-layout-${accountId}`, layoutJson)
       // Save to dashboard_layouts table
       await dashboardLayoutsApi.save(layoutJson)
-      console.log("Layout saved successfully")
       setIsCustomizing(false)
     } catch (error) {
       console.error("Failed to save layout", error)

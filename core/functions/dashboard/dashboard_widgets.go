@@ -3,7 +3,6 @@ package dashboard
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -155,15 +154,38 @@ func getWidgetDataByType(accountID int64, widgetType types.WidgetType) (interfac
 	}
 }
 
-func getBalanceWidgetData(accountID int64) (interface{}, error) {
-	// Get account to fetch billing cycle day
+func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
 	var account types.Account
 	err := db.GetDb().NewSelect().
 		Model(&account).
 		Where("id = ?", accountID).
 		Scan(context.Background())
 	if err != nil {
-		// Return empty data if account not found
+		return time.Time{}, time.Time{}, err
+	}
+
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
+	now := time.Now()
+	var from, to time.Time
+
+	if now.Day() >= billingCycleDay {
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
+		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	} else {
+		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
+	}
+
+	return from, to, nil
+}
+
+func getBalanceWidgetData(accountID int64) (interface{}, error) {
+	from, to, err := getBillingCycleDateRange(accountID)
+	if err != nil {
 		return map[string]interface{}{
 			"balance":  "0",
 			"income":   "0",
@@ -172,35 +194,8 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 		}, nil
 	}
 
-	// Use billing cycle day from account, default to 25th
-	billingCycleDay := 25
-	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
-		billingCycleDay = *account.BillingCycleDay
-	}
-
-	// Log the billing cycle day being used
-	fmt.Printf("Using billing cycle day: %d for account %d\n", billingCycleDay, accountID)
-
-	// Get data from billing cycle day of previous month to billing cycle day of current month
-	now := time.Now()
-	var from, to time.Time
-
-	if now.Day() >= billingCycleDay {
-		// We're after the billing cycle day, so range is billing cycle day of current month to billing cycle day of next month
-		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
-		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
-	} else {
-		// We're before the billing cycle day, so range is billing cycle day of previous month to billing cycle day of current month
-		from = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-		to = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
-	}
-
-	fmt.Printf("Date range: %s to %s\n", from.Format("2006-01-02"), to.Format("2006-01-02"))
-
 	summary, err := db.GetDashboardSummary(accountID, from, to)
 	if err != nil {
-		fmt.Printf("Error getting dashboard summary: %v\n", err)
-		// Return empty data instead of error
 		return map[string]interface{}{
 			"balance":  "0",
 			"income":   "0",
@@ -218,13 +213,16 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 }
 
 func getRecentTransactionsWidgetData(accountID int64) (interface{}, error) {
-	now := time.Now()
-	startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
-	endOfMonth := startOfMonth.AddDate(0, 1, 0).Add(-time.Nanosecond)
-
-	summary, err := db.GetDashboardSummary(accountID, startOfMonth, endOfMonth)
+	from, to, err := getBillingCycleDateRange(accountID)
 	if err != nil {
-		// Return empty data instead of error
+		return map[string]interface{}{
+			"transactions": []interface{}{},
+			"count":        0,
+		}, nil
+	}
+
+	summary, err := db.GetDashboardSummary(accountID, from, to)
+	if err != nil {
 		return map[string]interface{}{
 			"transactions": []interface{}{},
 			"count":        0,
@@ -234,6 +232,7 @@ func getRecentTransactionsWidgetData(accountID int64) (interface{}, error) {
 	return map[string]interface{}{
 		"transactions": summary.RecentTrans,
 		"count":        len(summary.RecentTrans),
+		"period":       from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 	}, nil
 }
 
@@ -311,31 +310,57 @@ func getGoalsOverviewWidgetData(accountID int64) (interface{}, error) {
 }
 
 func getSpendingTrendsWidgetData(accountID int64) (interface{}, error) {
-	// Get last 6 months of spending trends
-	trends, err := db.GetSpendingTrends(accountID, 6)
+	var account types.Account
+	err := db.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
 	if err != nil {
-		// Return empty data instead of error
 		return map[string]interface{}{
 			"trends": []interface{}{},
 			"period": "6 months",
 		}, nil
 	}
 
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
+	trends, err := db.GetSpendingTrendsByBillingCycle(accountID, billingCycleDay, 6)
+	if err != nil {
+		return map[string]interface{}{
+			"trends": []interface{}{},
+			"period": "6 billing cycles",
+		}, nil
+	}
+
 	return map[string]interface{}{
 		"trends": trends,
-		"period": "6 months",
+		"period": "6 billing cycles",
 	}, nil
 }
 
 func getCategoryBreakdownWidgetData(accountID int64) (interface{}, error) {
-	breakdown, err := db.GetCategoryBreakdown(accountID, "this_month")
+	from, to, err := getBillingCycleDateRange(accountID)
 	if err != nil {
-		return nil, err
+		return map[string]interface{}{
+			"breakdown": []interface{}{},
+			"period":    "this month",
+		}, nil
+	}
+
+	breakdown, err := db.GetCategoryBreakdownByDateRange(accountID, from, to)
+	if err != nil {
+		return map[string]interface{}{
+			"breakdown": []interface{}{},
+			"period":    from.Format("Jan 2") + " - " + to.Format("Jan 2"),
+		}, nil
 	}
 
 	return map[string]interface{}{
 		"breakdown": breakdown,
-		"period":    "this month",
+		"period":    from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 	}, nil
 }
 
