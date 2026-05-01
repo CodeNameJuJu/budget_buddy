@@ -404,43 +404,44 @@ export default function FinancePage() {
   const expenseCategories = categories.filter((c) => c.type === "expense")
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 sm:px-4">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Finance Management</h1>
-        <p className="text-muted-foreground">Manage your categories, budgets, and transactions in one place</p>
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Finance Management</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">Manage your categories, budgets, and transactions in one place</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {TABS.map((tab) => (
           <Button
             key={tab.id}
             variant={activeTab === tab.id ? "default" : "outline"}
             onClick={() => setActiveTab(tab.id as any)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-xs sm:text-sm"
+            size="sm"
           >
             <tab.icon className="h-4 w-4" />
-            {tab.label}
+            <span className="hidden sm:inline">{tab.label}</span>
           </Button>
         ))}
       </div>
 
       {/* Categories Section */}
       {activeTab === "categories" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h2 className={cn("text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Categories</h2>
-              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Organise your transactions</p>
+              <h2 className={cn("text-lg sm:text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Categories</h2>
+              <p className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Organise your transactions</p>
             </div>
-            <Button onClick={() => setShowCategoryForm(!showCategoryForm)}>
+            <Button onClick={() => setShowCategoryForm(!showCategoryForm)} size="sm" className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Add category
             </Button>
           </div>
 
           {/* Filters */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant={filterType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterType("")}>All</Button>
             <Button variant={filterType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterType("income")}>Income</Button>
             <Button variant={filterType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterType("expense")}>Expense</Button>
@@ -450,12 +451,12 @@ export default function FinancePage() {
           {showCategoryForm && (
             <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
               <CardHeader>
-                <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+                <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
                   {editingCategory ? "Edit category" : "New category"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleCategorySubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <form onSubmit={handleCategorySubmit} className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
                     <Input placeholder="e.g. Groceries" value={categoryForm.name} onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })} required />
@@ -560,18 +561,7 @@ export default function FinancePage() {
 
       {/* Budgets Section */}
       {activeTab === "budgets" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className={cn("text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Budgets</h2>
-              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Track your spending limits</p>
-            </div>
-            <Button onClick={() => setShowBudgetForm(!showBudgetForm)} className="hover:shadow-lg transition-all duration-300">
-              <Plus className="h-4 w-4 mr-2" />
-              Add budget
-            </Button>
-          </div>
-
+        <div className="space-y-4 sm:space-y-6">
           {/* Add budget form */}
           {showBudgetForm && (
             <Card className={cn("border hover:transition-all duration-200", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70")}>
@@ -628,7 +618,7 @@ export default function FinancePage() {
               <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create a budget to start tracking your spending.</p>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {budgets.map((budget) => {
                 const percentage = getProgressPercentage(budget)
                 const spent = budget.spent ? parseFloat(budget.spent) : 0
@@ -680,14 +670,14 @@ export default function FinancePage() {
 
       {/* Transactions Section */}
       {activeTab === "transactions" && (
-        <div className="space-y-3 xs:space-y-4 lg:space-y-6">
-          <div className="responsive-flex responsive-margin">
+        <div className="space-y-3 xs:space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h2 className={cn("mobile-title tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Transactions</h2>
-              <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
+              <h2 className={cn("text-lg sm:text-xl font-semibold tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Transactions</h2>
+              <p className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
             </div>
-            <div className="flex gap-2 ml-auto">
-              <Button onClick={() => setShowTransactionForm(!showTransactionForm)} className="hover:shadow-lg transition-all duration-300 mobile-button">
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button onClick={() => setShowTransactionForm(!showTransactionForm)} className="hover:shadow-lg transition-all duration-300 w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
                 Add transaction
               </Button>
@@ -695,24 +685,26 @@ export default function FinancePage() {
           </div>
 
           {/* Export button and message */}
-          <div className="responsive-margin flex justify-between items-center gap-2">
-            <Button onClick={handleExportData} disabled={exporting} variant="outline" className="mobile-button ml-auto">
-              <Download className="h-4 w-4 xs:h-4.5 xs:w-4.5" />
-              <span className="hidden sm:inline ml-2">{exporting ? "Exporting..." : "Export"}</span>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div className="w-full sm:w-auto">
+              {message && (
+                <div className={cn("p-3 rounded-lg text-sm", message.type === 'success' ? theme === "light" ? "bg-[#6BAF92]/20 text-[#6BAF92]" : "bg-[#6BAF92]/20 text-[#88B39B]" : "bg-red-500/20 text-red-400")}>
+                  {message.text}
+                </div>
+              )}
+            </div>
+            <Button onClick={handleExportData} disabled={exporting} variant="outline" className="w-full sm:w-auto">
+              <Download className="h-4 w-4" />
+              <span className="ml-2">{exporting ? "Exporting..." : "Export"}</span>
             </Button>
-            {message && (
-              <div className={cn("p-3 rounded-lg text-sm flex-shrink-0", message.type === 'success' ? theme === "light" ? "bg-[#6BAF92]/20 text-[#6BAF92]" : "bg-[#6BAF92]/20 text-[#88B39B]" : "bg-red-500/20 text-red-400")}>
-                {message.text}
-              </div>
-            )}
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-2 responsive-margin">
-            <Button variant={filterTransactionType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("")} className="mobile-button">All</Button>
-            <Button variant={filterTransactionType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("income")} className="mobile-button">Income</Button>
-            <Button variant={filterTransactionType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("expense")} className="mobile-button">Expenses</Button>
-            <select className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
+          <div className="flex flex-wrap gap-2">
+            <Button variant={filterTransactionType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("")}>All</Button>
+            <Button variant={filterTransactionType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("income")}>Income</Button>
+            <Button variant={filterTransactionType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("expense")}>Expenses</Button>
+            <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm flex-1 sm:flex-none", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
               <option value="">All Categories</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -720,49 +712,45 @@ export default function FinancePage() {
 
           {/* Advanced transaction form */}
           {showTransactionForm && (
-            <Card className="mobile-card">
-              <CardHeader className="responsive-padding">
-                <CardTitle className="mobile-title">Advanced Transaction Entry</CardTitle>
+            <Card>
+              <CardHeader className="px-4 py-3 sm:px-6 sm:py-4">
+                <CardTitle className="text-base sm:text-lg">Advanced Transaction Entry</CardTitle>
               </CardHeader>
-              <CardContent className="responsive-padding">
+              <CardContent className="px-4 py-3 sm:px-6 sm:py-4">
                 <form onSubmit={handleTransactionSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="space-y-2">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
-                      <Input type="number" step="0.01" placeholder="0.00" value={transactionForm.amount} onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })} className="responsive-input" required />
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                      <Input type="number" step="0.01" placeholder="0.00" value={transactionForm.amount} onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })} required />
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
-                      <select className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
-                      <Input type="date" value={transactionForm.date} onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })} className="responsive-input" required />
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
+                      <Input type="date" value={transactionForm.date} onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })} required />
                     </div>
-                    <div className="space-y-2">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Account Type</label>
-                      <select className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.account_type} onChange={(e) => setTransactionForm({ ...transactionForm, account_type: e.target.value as "checking" | "savings" })}>
-                        <option value="checking">Checking Account</option>
-                        <option value="savings">Savings Account</option>
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3 responsive-input">
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
+                        <option value="">Select category</option>
+                        {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
                     </div>
-                    <div className="space-y-2">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
-                      <Input placeholder="e.g. Grocery shopping" value={transactionForm.description} onChange={(e) => setTransactionForm({ ...transactionForm, description: e.target.value })} className="responsive-input" />
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3 responsive-input">
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
+                      <TagInput value={transactionForm.tags} onChange={(tags) => setTransactionForm({ ...transactionForm, tags })} placeholder="Add tags (press Enter or comma to add)" suggestions={popularTags.map(tag => tag.tag)} />
                     </div>
-                    <div className="space-y-2">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
-                      <select className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
-                        <option value="">No category</option>
-                        {categories.filter((c) => c.type === transactionForm.type).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                      </select>
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3 responsive-input">
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
+                      <textarea className={cn("flex w-full rounded-md border px-3 py-2 text-sm shadow-sm min-h-[80px]", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} placeholder="Optional notes..." value={transactionForm.notes} onChange={(e) => setTransactionForm({ ...transactionForm, notes: e.target.value })} />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 responsive-input">
                       <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
-                      <Input placeholder="Optional notes" value={transactionForm.notes} onChange={(e) => setTransactionForm({ ...transactionForm, notes: e.target.value })} className="responsive-input" />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -843,21 +831,21 @@ export default function FinancePage() {
 
       {/* Budget transactions modal */}
       {selectedBudget && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
           <div className={cn(
-            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
+            "w-full max-w-2xl max-h-[85vh] sm:max-h-[80vh] overflow-auto rounded-lg p-4 sm:p-6",
             theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
           )}>
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+              <div className="flex-1 min-w-0">
+                <h2 className={cn("text-lg sm:text-xl font-bold truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
                   {selectedBudget.name} Transactions
                 </h2>
-                <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <p className={cn("text-xs sm:text-sm truncate", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
                   {selectedBudget.category?.name} · {selectedBudget.period}
                 </p>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setSelectedBudget(null)}>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedBudget(null)} className="ml-2 flex-shrink-0">
                 <X className="h-5 w-5" />
               </Button>
             </div>
@@ -872,19 +860,19 @@ export default function FinancePage() {
                   <div
                     key={t.id}
                     className={cn(
-                      "flex items-center justify-between p-3 rounded-md border",
+                      "flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 rounded-md border",
                       theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
                     )}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
                       <div
-                        className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white"
+                        className="h-8 w-8 rounded-full flex items-center justify-center text-xs sm:text-sm text-white flex-shrink-0"
                         style={{ backgroundColor: t.category?.colour || "#6BAF92" }}
                       >
                         {t.category?.icon || t.category?.name[0] || "??"}
                       </div>
-                      <div>
-                        <p className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                      <div className="flex-1 min-w-0">
+                        <p className={cn("text-sm font-medium truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
                           {t.description || t.category?.name}
                         </p>
                         <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
