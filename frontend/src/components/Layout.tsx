@@ -474,10 +474,10 @@ export default function Layout() {
 
       {/* Release Notes Modal */}
       {showReleaseNotes && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className={cn(
-            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
-            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6 shadow-2xl",
+            theme === "light" ? "bg-[#E8DCC5] border border-[#E6E0D6]" : "bg-[#18231D] border border-[#2E3B35]"
           )}>
             <div className="flex items-center justify-between mb-4">
               <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
@@ -490,7 +490,7 @@ export default function Layout() {
 
             <div className={cn("space-y-4", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
               <div>
-                <h3 className="font-semibold mb-2">New Features</h3>
+                <h3 className="font-semibold mb-2 text-lg">New Features</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>Moved export functionality to transactions page</li>
                   <li>Added category editing with custom color picker</li>
@@ -501,7 +501,7 @@ export default function Layout() {
               </div>
 
               <div>
-                <h3 className="font-semibold mb-2">Improvements</h3>
+                <h3 className="font-semibold mb-2 text-lg">Improvements</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>Changed "Advanced" button to "Add transaction" with green styling</li>
                   <li>Removed quick add transaction for cleaner UI</li>
@@ -510,7 +510,7 @@ export default function Layout() {
               </div>
 
               <div>
-                <h3 className="font-semibold mb-2">Bug Fixes</h3>
+                <h3 className="font-semibold mb-2 text-lg">Bug Fixes</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>Fixed budget card click functionality</li>
                 </ul>
