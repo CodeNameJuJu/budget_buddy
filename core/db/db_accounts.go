@@ -23,7 +23,7 @@ func QueryAccounts(accountID *int64, userID *int64) ([]types.Account, int, error
 	}
 
 	if userID != nil {
-		query = query.Where("a.user_id = ?", *userID)
+		query = query.Where("(a.user_id = ? OR ? = ANY(COALESCE(a.user_ids, ARRAY[]::BIGINT[])))", *userID, *userID)
 	}
 
 	count, err := query.ScanAndCount(context.Background())
@@ -50,7 +50,7 @@ func GetAccountIDForUser(userID int64) (int64, error) {
 	err := db.NewSelect().
 		Model(&account).
 		Column("id").
-		Where("user_id = ?", userID).
+		Where("(user_id = ? OR ? = ANY(COALESCE(user_ids, ARRAY[]::BIGINT[])))", userID, userID).
 		Where("deleted_date IS NULL").
 		Order("id ASC").
 		Limit(1).
@@ -78,7 +78,7 @@ func GetAccountIDForUser(userID int64) (int64, error) {
 	err = db.NewSelect().
 		Model(&account).
 		Column("id").
-		Where("user_id = ?", mergeToken.FromUserID).
+		Where("(user_id = ? OR ? = ANY(COALESCE(user_ids, ARRAY[]::BIGINT[])))", mergeToken.FromUserID, mergeToken.FromUserID).
 		Where("deleted_date IS NULL").
 		Order("id ASC").
 		Limit(1).

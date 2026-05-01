@@ -49,26 +49,17 @@ func (s *AccountMergeService) CreateMergeToken(userID int, partnerEmail string) 
 		return nil, fmt.Errorf("partner user not found: %w", err)
 	}
 
-	// Check if users already share the same account
-	var userAccount types.Account
-	err = database.NewSelect().
-		Model(&userAccount).
-		Where("user_id = ?", userID).
-		Scan(context.Background())
+	userAccountID, err := db.GetAccountIDForUser(int64(userID))
 	if err != nil {
 		return nil, fmt.Errorf("user account not found: %w", err)
 	}
 
-	var partnerAccount types.Account
-	err = database.NewSelect().
-		Model(&partnerAccount).
-		Where("user_id = ?", partnerUser.ID).
-		Scan(context.Background())
+	partnerAccountID, err := db.GetAccountIDForUser(int64(partnerUser.ID))
 	if err != nil {
 		return nil, fmt.Errorf("partner account not found: %w", err)
 	}
 
-	if userAccount.ID == partnerAccount.ID {
+	if userAccountID == partnerAccountID {
 		return nil, fmt.Errorf("users already share the same account")
 	}
 
@@ -134,31 +125,42 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		return fmt.Errorf("email does not match merge token")
 	}
 
-	// Get the accounts
-	var fromAccount types.Account
-	err = database.NewSelect().
-		Model(&fromAccount).
-		Where("user_id = ?", mergeToken.FromUserID).
-		Scan(context.Background())
+	fromAccountID, err := db.GetAccountIDForUser(int64(mergeToken.FromUserID))
 	if err != nil {
 		return fmt.Errorf("from account not found: %w", err)
 	}
 
-	var toAccount types.Account
-	err = database.NewSelect().
-		Model(&toAccount).
-		Where("user_id = ?", userID).
-		Scan(context.Background())
+	toAccountID, err := db.GetAccountIDForUser(int64(userID))
 	if err != nil {
 		return fmt.Errorf("to account not found: %w", err)
+	}
+
+	if fromAccountID == toAccountID {
+		err = s.addUserToAccountMembers(fromAccountID, int64(userID))
+		if err != nil {
+			return fmt.Errorf("failed to add recipient to account members: %w", err)
+		}
+
+		now := time.Now()
+		_, err = database.NewUpdate().
+			Model(&mergeToken).
+			Set("status = ?", "accepted").
+			Set("accepted_at = ?", now).
+			Where("id = ?", mergeToken.ID).
+			Exec(context.Background())
+		if err != nil {
+			return fmt.Errorf("failed to update merge token: %w", err)
+		}
+
+		return nil
 	}
 
 	// Merge accounts: update all data from toAccount to fromAccount
 	// Update transactions
 	_, err = database.NewUpdate().
 		Model((*types.Transaction)(nil)).
-		Set("account_id = ?", fromAccount.ID).
-		Where("account_id = ?", toAccount.ID).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
 		Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to merge transactions: %w", err)
@@ -167,8 +169,8 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 	// Update budgets
 	_, err = database.NewUpdate().
 		Model((*types.Budget)(nil)).
-		Set("account_id = ?", fromAccount.ID).
-		Where("account_id = ?", toAccount.ID).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
 		Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to merge budgets: %w", err)
@@ -177,8 +179,8 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 	// Update savings goals
 	_, err = database.NewUpdate().
 		Model((*types.SavingsGoal)(nil)).
-		Set("account_id = ?", fromAccount.ID).
-		Where("account_id = ?", toAccount.ID).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
 		Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to merge savings goals: %w", err)
@@ -187,11 +189,16 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 	// Update alerts
 	_, err = database.NewUpdate().
 		Model((*types.Alert)(nil)).
-		Set("account_id = ?", fromAccount.ID).
-		Where("account_id = ?", toAccount.ID).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
 		Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to merge alerts: %w", err)
+	}
+
+	err = s.addUserToAccountMembers(fromAccountID, int64(userID))
+	if err != nil {
+		return fmt.Errorf("failed to update account members: %w", err)
 	}
 
 	// Map recipient user to source account owner for shared-account resolution
@@ -200,7 +207,7 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		Set("user_id = ?", mergeToken.FromUserID).
 		Set("deleted_date = ?", time.Now()).
 		Set("modified_date = ?", time.Now()).
-		Where("id = ?", toAccount.ID).
+		Where("id = ?", toAccountID).
 		Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to remap recipient account: %w", err)
@@ -270,4 +277,28 @@ func (s *AccountMergeService) generateSecureToken(length int) (string, error) {
 		return "", fmt.Errorf("failed to generate secure token: %w", err)
 	}
 	return base64.URLEncoding.EncodeToString(bytes), nil
+}
+
+func (s *AccountMergeService) addUserToAccountMembers(accountID int64, userID int64) error {
+	database := db.GetDb()
+	if database == nil {
+		return fmt.Errorf("database not connected")
+	}
+
+	_, err := database.NewRaw(`
+		UPDATE accounts
+		SET user_ids = (
+			SELECT ARRAY(
+				SELECT DISTINCT member_id
+				FROM unnest(COALESCE(user_ids, ARRAY[]::BIGINT[]) || ARRAY[?]::BIGINT[]) AS member_id
+			)
+		),
+		modified_date = ?
+		WHERE id = ?
+	`, userID, time.Now(), accountID).Exec(context.Background())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

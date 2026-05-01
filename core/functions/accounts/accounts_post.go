@@ -31,6 +31,12 @@ func (p *POSTAccountRequest) Validate() error {
 }
 
 func POSTAccount(w http.ResponseWriter, r *http.Request) {
+	userIDInt, ok := r.Context().Value("user_id").(int)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	var req POSTAccountRequest
 	if err := helpers.DecodeBody(r, &req); err != nil {
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
@@ -43,6 +49,8 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	account := types.Account{
+		UserID:   int64(userIDInt),
+		UserIDs:  []int64{int64(userIDInt)},
 		Name:     req.Name,
 		Email:    req.Email,
 		Currency: req.Currency,

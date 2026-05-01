@@ -11,6 +11,7 @@ type Account struct {
 
 	ID             int64            `json:"id" bun:"id,pk,autoincrement"`
 	UserID         int64            `json:"user_id" bun:"user_id,notnull"`
+	UserIDs        []int64          `json:"user_ids,omitempty" bun:"user_ids,array"`
 	Name           string           `json:"name" bun:"name,notnull"`
 	Email          string           `json:"email" bun:"email,notnull,unique"`
 	Currency       string           `json:"currency" bun:"currency,notnull,default:'ZAR'"`
