@@ -492,6 +492,7 @@ export default function Layout() {
               <div>
                 <h3 className="font-semibold mb-2 text-lg">New Features</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Combined Finance page with Categories, Budgets, and Transactions</li>
                   <li>Added budget editing functionality</li>
                   <li>Added category editing with custom color picker</li>
                   <li>Added savings pot editing with custom color picker</li>
