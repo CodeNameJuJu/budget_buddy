@@ -499,7 +499,6 @@ export default function Layout() {
                   <li>Click on budget to view transactions</li>
                   <li>Added category filter to transactions page</li>
                   <li>Added configurable billing cycle day</li>
-                  <li>Added drag and drop widget reordering</li>
                   <li>Clickable version number with release notes modal</li>
                 </ul>
               </div>
@@ -516,6 +515,7 @@ export default function Layout() {
                   <li>Repurposed settings page for app level settings</li>
                   <li>Added data management and privacy sections to settings</li>
                   <li>Integrated alert preferences with backend API</li>
+                  <li>Added visible drag handle grip icon for widgets in customize mode</li>
                 </ul>
               </div>
 
