@@ -154,19 +154,28 @@ func getWidgetDataByType(accountID int64, widgetType types.WidgetType) (interfac
 }
 
 func getBalanceWidgetData(accountID int64) (interface{}, error) {
-	// Get current month summary
+	// Get data from 25th of previous month to 24th of current month (25th to 25th cycle)
 	now := time.Now()
-	startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
-	endOfMonth := startOfMonth.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	var from, to time.Time
 
-	summary, err := db.GetDashboardSummary(accountID, startOfMonth, endOfMonth)
+	if now.Day() >= 25 {
+		// We're after the 25th, so range is 25th of current month to 24th of next month
+		from = time.Date(now.Year(), now.Month(), 25, 0, 0, 0, 0, now.Location())
+		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	} else {
+		// We're before the 25th, so range is 25th of previous month to 24th of current month
+		from = time.Date(now.Year(), now.Month(), 25, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+		to = time.Date(now.Year(), now.Month(), 24, 23, 59, 59, 999999999, now.Location())
+	}
+
+	summary, err := db.GetDashboardSummary(accountID, from, to)
 	if err != nil {
 		// Return empty data instead of error
 		return map[string]interface{}{
 			"balance":  "0",
 			"income":   "0",
 			"expenses": "0",
-			"period":   "this month",
+			"period":   from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 		}, nil
 	}
 
@@ -174,7 +183,7 @@ func getBalanceWidgetData(accountID int64) (interface{}, error) {
 		"balance":  summary.Balance.String(),
 		"income":   summary.TotalIncome.String(),
 		"expenses": summary.TotalExpenses.String(),
-		"period":   "this month",
+		"period":   from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 	}, nil
 }
 

@@ -70,20 +70,90 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 		return nil, err
 	}
 
-	// Top spending categories
+	// Top categories
 	var topCategories []CategorySpendingSummary
 	err = db.NewSelect().
 		Model((*types.Transaction)(nil)).
-		ColumnExpr("t.category_id AS category_id").
-		ColumnExpr("cat.name AS category_name").
-		ColumnExpr("SUM(t.amount) AS total").
-		Join("LEFT JOIN categories AS cat ON cat.id = t.category_id").
+		TableExpr("transactions t").
+		Join("JOIN categories cat ON t.category_id = cat.id").
+		ColumnExpr("t.category_id, cat.name as category_name, COALESCE(SUM(t.amount), 0) as total").
 		Where("t.account_id = ?", accountID).
 		Where("t.type = ?", "expense").
 		Where("t.deleted_date IS NULL").
 		Where("t.category_id IS NOT NULL").
 		Where("t.date >= ?", from).
 		Where("t.date <= ?", to).
+		GroupExpr("t.category_id, cat.name").
+		OrderExpr("total DESC").
+		Limit(5).
+		Scan(context.Background(), &topCategories)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DashboardSummary{
+		TotalIncome:   totalIncome,
+		TotalExpenses: totalExpenses,
+		Balance:       totalIncome.Sub(totalExpenses),
+		RecentTrans:   recentTrans,
+		TopCategories: topCategories,
+	}, nil
+}
+
+func GetDashboardSummaryAllTime(accountID int64) (*DashboardSummary, error) {
+	db := appcontext.GetDb()
+
+	// Total income
+	var totalIncome decimal.Decimal
+	err := db.NewSelect().
+		Model((*types.Transaction)(nil)).
+		ColumnExpr("COALESCE(SUM(amount), 0)").
+		Where("account_id = ?", accountID).
+		Where("type = ?", "income").
+		Where("deleted_date IS NULL").
+		Scan(context.Background(), &totalIncome)
+	if err != nil {
+		return nil, err
+	}
+
+	// Total expenses
+	var totalExpenses decimal.Decimal
+	err = db.NewSelect().
+		Model((*types.Transaction)(nil)).
+		ColumnExpr("COALESCE(SUM(amount), 0)").
+		Where("account_id = ?", accountID).
+		Where("type = ?", "expense").
+		Where("deleted_date IS NULL").
+		Scan(context.Background(), &totalExpenses)
+	if err != nil {
+		return nil, err
+	}
+
+	// Recent transactions
+	var recentTrans []types.Transaction
+	err = db.NewSelect().
+		Model(&recentTrans).
+		Relation("Category").
+		Where("t.account_id = ?", accountID).
+		Where("t.deleted_date IS NULL").
+		Order("t.date DESC").
+		Limit(10).
+		Scan(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	// Top categories (all time)
+	var topCategories []CategorySpendingSummary
+	err = db.NewSelect().
+		Model((*types.Transaction)(nil)).
+		TableExpr("transactions t").
+		Join("JOIN categories cat ON t.category_id = cat.id").
+		ColumnExpr("t.category_id, cat.name as category_name, COALESCE(SUM(t.amount), 0) as total").
+		Where("t.account_id = ?", accountID).
+		Where("t.type = ?", "expense").
+		Where("t.deleted_date IS NULL").
+		Where("t.category_id IS NOT NULL").
 		GroupExpr("t.category_id, cat.name").
 		OrderExpr("total DESC").
 		Limit(5).
