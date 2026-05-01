@@ -482,15 +482,9 @@ export default function Layout() {
           <div className={cn(
             "w-full max-w-2xl max-h-[85vh] overflow-auto rounded-2xl shadow-2xl relative",
             theme === "light" 
-              ? "bg-gradient-to-br from-[#E8DCC5] to-[#D4C4A8] border border-[#E6E0D6]" 
-              : "bg-gradient-to-br from-[#18231D] to-[#1F2A24] border border-[#2E3B35]"
+              ? "bg-[#E8DCC5] border border-[#E6E0D6]" 
+              : "bg-[#18231D] border border-[#2E3B35]"
           )}>
-            {/* Decorative header */}
-            <div className={cn(
-              "h-2 w-full rounded-t-2xl",
-              "bg-gradient-to-r from-[#6BAF92] via-[#88B39B] to-[#D9B44A]"
-            )} />
-            
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
