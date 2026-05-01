@@ -20,6 +20,7 @@ import {
   Sun,
   BookOpen,
 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import TutorialOverlay from "@/components/tutorial/TutorialOverlay"
 import { useAuth } from "@/hooks"
