@@ -26,10 +26,14 @@ export default function SettingsPage() {
     setLoading(true)
     try {
       const response = await accountsApi.getMyAccount()
+      console.log("getMyAccount response:", response)
       if (response.data && response.data.length > 0) {
         const account = response.data[0]
+        console.log("Account:", account)
         setAccountId(account.id)
         setBillingCycleDay(account.billing_cycle_day || 25)
+      } else {
+        console.error("No accounts found in response")
       }
     } catch (error) {
       console.error("Failed to load account settings", error)
@@ -39,6 +43,7 @@ export default function SettingsPage() {
   }
 
   async function saveSettings() {
+    console.log("saveSettings called, accountId:", accountId)
     if (!accountId) {
       setMessage({ type: 'error', text: 'No account found' })
       return
@@ -46,6 +51,7 @@ export default function SettingsPage() {
     setSaving(true)
     setMessage(null)
     try {
+      console.log("Calling update with accountId:", accountId, "billing_cycle_day:", billingCycleDay)
       await accountsApi.update(accountId, { billing_cycle_day: billingCycleDay })
       setMessage({ type: 'success', text: 'Settings saved successfully' })
     } catch (error) {
