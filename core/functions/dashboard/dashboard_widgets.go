@@ -183,6 +183,16 @@ func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
 	return from, to, nil
 }
 
+func getBillingCycleDateRangeOrDefault(accountID int64) (time.Time, time.Time) {
+	from, to, err := getBillingCycleDateRange(accountID)
+	if err != nil {
+		now := time.Now()
+		from = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	}
+	return from, to
+}
+
 func getBalanceWidgetData(accountID int64) (interface{}, error) {
 	from, to, err := getBillingCycleDateRange(accountID)
 	if err != nil {
