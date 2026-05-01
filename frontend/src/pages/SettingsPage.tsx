@@ -10,25 +10,26 @@ import { accountsApi } from "@/lib/api"
 import { useAuth } from "@/hooks"
 
 export default function SettingsPage() {
-  const { user, accountId } = useAuth()
+  const { user } = useAuth()
   const { theme } = useTheme()
   const [billingCycleDay, setBillingCycleDay] = useState(25)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [accountId, setAccountId] = useState<number | null>(null)
 
   useEffect(() => {
-    if (accountId) {
-      loadAccountSettings()
-    }
-  }, [accountId])
+    loadAccountSettings()
+  }, [])
 
   async function loadAccountSettings() {
     setLoading(true)
     try {
-      const response = await accountsApi.get(accountId)
-      if (response.data) {
-        setBillingCycleDay(response.data.billing_cycle_day || 25)
+      const response = await accountsApi.getMyAccount()
+      if (response.data && response.data.length > 0) {
+        const account = response.data[0]
+        setAccountId(account.id)
+        setBillingCycleDay(account.billing_cycle_day || 25)
       }
     } catch (error) {
       console.error("Failed to load account settings", error)
@@ -38,6 +39,10 @@ export default function SettingsPage() {
   }
 
   async function saveSettings() {
+    if (!accountId) {
+      setMessage({ type: 'error', text: 'No account found' })
+      return
+    }
     setSaving(true)
     setMessage(null)
     try {
