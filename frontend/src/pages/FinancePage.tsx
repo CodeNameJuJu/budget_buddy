@@ -734,32 +734,29 @@ export default function FinancePage() {
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
                       <Input type="date" value={transactionForm.date} onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })} required />
                     </div>
-                    <div className="space-y-2 sm:col-span-2 lg:col-span-3 responsive-input">
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3">
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
+                      <Input placeholder="e.g. Grocery shopping" value={transactionForm.description} onChange={(e) => setTransactionForm({ ...transactionForm, description: e.target.value })} />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3">
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
                       <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
                         <option value="">Select category</option>
                         {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
                     </div>
-                    <div className="space-y-2 sm:col-span-2 lg:col-span-3 responsive-input">
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3">
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
                       <TagInput value={transactionForm.tags} onChange={(tags) => setTransactionForm({ ...transactionForm, tags })} placeholder="Add tags (press Enter or comma to add)" suggestions={popularTags.map(tag => tag.tag)} />
                     </div>
-                    <div className="space-y-2 sm:col-span-2 lg:col-span-3 responsive-input">
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-3">
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
                       <textarea className={cn("flex w-full rounded-md border px-3 py-2 text-sm shadow-sm min-h-[80px]", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} placeholder="Optional notes..." value={transactionForm.notes} onChange={(e) => setTransactionForm({ ...transactionForm, notes: e.target.value })} />
                     </div>
-                    <div className="space-y-2 responsive-input">
-                      <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
-                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
-                    <TagInput value={transactionForm.tags} onChange={(tags) => setTransactionForm({ ...transactionForm, tags })} placeholder="Add tags (press Enter or comma to add)" suggestions={popularTags.map(tag => tag.tag)} />
-                  </div>
-                  <div className="flex flex-col xs:flex-row gap-2 justify-end">
-                    <Button type="submit" className="mobile-button">Save transaction</Button>
-                    <Button type="button" variant="outline" onClick={() => setShowTransactionForm(false)} className="mobile-button">Cancel</Button>
+                  <div className="flex flex-col sm:flex-row gap-2 justify-end">
+                    <Button type="submit" className="w-full sm:w-auto">Save transaction</Button>
+                    <Button type="button" variant="outline" onClick={() => setShowTransactionForm(false)} className="w-full sm:w-auto">Cancel</Button>
                   </div>
                 </form>
               </CardContent>
