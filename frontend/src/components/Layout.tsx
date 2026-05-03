@@ -537,6 +537,10 @@ export default function Layout() {
                     </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Budget transactions modal (click on budget cards to view transactions)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
                       <span>Added budget editing functionality</span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -546,10 +550,6 @@ export default function Layout() {
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
                       <span>Added savings pot editing with custom color picker</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
-                      <span>Click on budget to view transactions</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
@@ -580,6 +580,10 @@ export default function Layout() {
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Mobile responsiveness improvements for FinancePage and AlertsPage</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
                       <span>Moved export functionality to transactions page</span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -602,6 +606,10 @@ export default function Layout() {
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
                       <span>Integrated alert preferences with backend API</span>
                     </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Updated README and user guide with recent changes</span>
+                    </li>
                   </ul>
                 </div>
 
@@ -617,6 +625,18 @@ export default function Layout() {
                     <h3 className="font-semibold text-lg">Bug Fixes</h3>
                   </div>
                   <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed frequent logouts by improving session management</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed transactions filter not working</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed transaction form duplicate fields and added description</span>
+                    </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
                       <span>Fixed budget card click functionality</span>
