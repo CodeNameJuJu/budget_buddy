@@ -639,6 +639,10 @@ export default function Layout() {
                     </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed transaction form structure to match original TransactionsPage layout</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
                       <span>Fixed budget card click functionality</span>
                     </li>
                     <li className="flex items-start gap-2">
