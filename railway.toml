@@ -16,6 +16,7 @@ PORT = "8080"
 DB_SSLMODE = "disable"
 DB_DEBUG = "false"
 MIGRATE_ON_STARTUP = "true"
+JWT_SECRET = "budget-buddy-jwt-secret-key-production-2024-change-this-in-production-environment"
 
 [[services.ports]]
 port = 8080
