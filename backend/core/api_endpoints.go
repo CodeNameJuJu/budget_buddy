@@ -19,7 +19,6 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/tags"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/transactions"
-	"github.com/go-chi/chi/v5"
 )
 
 // FileServer conveniently sets up a http.FileServer handler to serve
@@ -142,11 +141,5 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/alerts/preferences", alerts.POSTAlertPreference)
 		r.Post("/alerts/trigger", alerts.POSTTriggerAlerts)
 		r.Post("/alerts/init", alerts.POSTInitializeAlerts)
-
-		/* ----------- PARTNERSHIPS ----------- */
-		r.Get("/partnerships", partnership.GETPartnerships)
-		r.Post("/partnerships", partnership.POSTPartnerships)
-		r.Post("/partnerships/{partnershipID}/invite", partnership.POSTInvitePartner)
-		r.Post("/partnerships/invitations/{token}/respond", partnership.POSTRespondToInvitation)
 	})
 }

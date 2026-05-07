@@ -26,6 +26,12 @@ func RespondError(w http.ResponseWriter, status int, message string) {
 	})
 }
 
+func RespondSuccess(w http.ResponseWriter, message string) {
+	RespondJSON(w, http.StatusOK, types.APIResponse{
+		Data: message,
+	})
+}
+
 func DecodeBody(r *http.Request, v interface{}) error {
 	defer r.Body.Close()
 	return json.NewDecoder(r.Body).Decode(v)

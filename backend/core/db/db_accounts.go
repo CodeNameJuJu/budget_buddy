@@ -90,12 +90,14 @@ func SaveDashboardLayout(accountID int64, layoutJSON string) error {
 
 	// Insert new layout
 	layout := types.DashboardLayout{
-		AccountID:    accountID,
-		Name:         "Custom Layout",
-		IsActive:     true,
-		Layout:       layoutJSON,
-		CreatedDate:  now,
-		ModifiedDate: now,
+		AccountID: accountID,
+		Name:      "Custom Layout",
+		IsActive:  true,
+		Layout:    layoutJSON,
+		Timestamps: types.Timestamps{
+			CreatedDate:  now,
+			ModifiedDate: &now,
+		},
 	}
 
 	_, err = db.NewInsert().Model(&layout).
