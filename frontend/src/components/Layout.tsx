@@ -645,7 +645,11 @@ export default function Layout() {
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
-                      <span>Fixed frequent logouts by improving session management</span>
+                      <span>Fixed frequent logouts bug</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Fixed profile switching bug</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
