@@ -1,7 +1,6 @@
 package accounts
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -63,168 +62,106 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Account created successfully with ID: %d", account.ID)
-
-	// Create default categories and budgets
-	if err := createDefaultData(account.ID); err != nil {
-		log.Printf("createDefaultData error: %v", err)
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not create default data")
-		return
-	}
-
-	// Create default dashboard layout
-	defaultLayout := `[
-		{"id": "welcome", "x": 0, "y": 0, "w": 12, "h": 4},
-		{"id": "balance", "x": 0, "y": 4, "w": 4, "h": 4},
-		{"id": "account_summary", "x": 4, "y": 4, "w": 4, "h": 4},
-		{"id": "spending_trends", "x": 8, "y": 4, "w": 4, "h": 4},
-		{"id": "recent_transactions", "x": 0, "y": 8, "w": 6, "h": 4},
-		{"id": "category_breakdown", "x": 6, "y": 8, "w": 6, "h": 4},
-		{"id": "goals_overview", "x": 0, "y": 12, "w": 4, "h": 4},
-		{"id": "budget_progress", "x": 4, "y": 12, "w": 4, "h": 4},
-		{"id": "alerts", "x": 8, "y": 12, "w": 4, "h": 4}
-	]`
-	if err := db.SaveDashboardLayout(account.ID, defaultLayout); err != nil {
-		log.Printf("SaveDashboardLayout error: %v", err)
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not create dashboard layout")
-		return
-	}
+	// Create default data in a goroutine to not block the response
+	go func() {
+		if err := createDefaultData(account.ID); err != nil {
+			log.Printf("createDefaultData error: %v", err)
+		}
+	}()
 
 	helpers.RespondData(w, account, 1)
 }
 
 func createDefaultData(accountID int64) error {
-	log.Printf("Starting createDefaultData for account ID: %d", accountID)
-
-	dbConn := db.GetDb()
-	if dbConn == nil {
-		return fmt.Errorf("database connection is nil")
-	}
-
 	now := time.Now()
-
-	// Create default categories using raw SQL
-	categoryIDs := make(map[string]int64)
-	categories := []struct {
-		Name string
-		Type string
-	}{
-		{"Salary", "income"},
-		{"Freelance", "income"},
-		{"Investments", "income"},
-		{"Other Income", "income"},
-		{"Groceries", "expense"},
-		{"Rent", "expense"},
-		{"Utilities", "expense"},
-		{"Transport", "expense"},
-		{"Entertainment", "expense"},
-		{"Healthcare", "expense"},
-		{"Dining Out", "expense"},
-		{"Shopping", "expense"},
-	}
-
-	for _, cat := range categories {
-		result, err := dbConn.NewInsert().
-			Model(&types.Category{Name: cat.Name, Type: cat.Type, AccountID: accountID}).
-			Returning("id").
-			Exec(context.Background())
-		if err != nil {
-			log.Printf("Failed to insert category %s: %v", cat.Name, err)
-			return err
-		}
-		id, _ := result.LastInsertId()
-		categoryIDs[cat.Name] = id
-	}
-	log.Printf("Created %d categories", len(categoryIDs))
-
-	// Create default budgets for main expense categories
 	startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 
-	budgets := []struct {
-		Name     string
-		Amount   int64
-		Category string
-	}{
-		{"Groceries Budget", 3000, "Groceries"},
-		{"Rent Budget", 8000, "Rent"},
-		{"Utilities Budget", 1500, "Utilities"},
-		{"Transport Budget", 2000, "Transport"},
-		{"Entertainment Budget", 1000, "Entertainment"},
+	// Create default categories
+	categories := []types.Category{
+		{Name: "Salary", Type: "income", AccountID: accountID},
+		{Name: "Freelance", Type: "income", AccountID: accountID},
+		{Name: "Investments", Type: "income", AccountID: accountID},
+		{Name: "Other Income", Type: "income", AccountID: accountID},
+		{Name: "Groceries", Type: "expense", AccountID: accountID},
+		{Name: "Rent", Type: "expense", AccountID: accountID},
+		{Name: "Utilities", Type: "expense", AccountID: accountID},
+		{Name: "Transport", Type: "expense", AccountID: accountID},
+		{Name: "Entertainment", Type: "expense", AccountID: accountID},
+		{Name: "Healthcare", Type: "expense", AccountID: accountID},
+		{Name: "Dining Out", Type: "expense", AccountID: accountID},
+		{Name: "Shopping", Type: "expense", AccountID: accountID},
+	}
+
+	categoryMap := make(map[string]int64)
+	for _, cat := range categories {
+		if err := db.InsertCategory(&cat); err != nil {
+			log.Printf("Failed to insert category %s: %v", cat.Name, err)
+			continue
+		}
+		categoryMap[cat.Name] = cat.ID
+	}
+
+	// Create default budgets
+	budgets := []types.Budget{
+		{AccountID: accountID, CategoryID: categoryMap["Groceries"], Name: "Groceries Budget", Amount: decimal.NewFromInt(3000), Period: "monthly", StartDate: startOfMonth},
+		{AccountID: accountID, CategoryID: categoryMap["Rent"], Name: "Rent Budget", Amount: decimal.NewFromInt(8000), Period: "monthly", StartDate: startOfMonth},
+		{AccountID: accountID, CategoryID: categoryMap["Utilities"], Name: "Utilities Budget", Amount: decimal.NewFromInt(1500), Period: "monthly", StartDate: startOfMonth},
+		{AccountID: accountID, CategoryID: categoryMap["Transport"], Name: "Transport Budget", Amount: decimal.NewFromInt(2000), Period: "monthly", StartDate: startOfMonth},
+		{AccountID: accountID, CategoryID: categoryMap["Entertainment"], Name: "Entertainment Budget", Amount: decimal.NewFromInt(1000), Period: "monthly", StartDate: startOfMonth},
 	}
 
 	for _, budget := range budgets {
-		catID, ok := categoryIDs[budget.Category]
-		if !ok {
-			log.Printf("Skipping budget %s due to missing category", budget.Name)
+		if budget.CategoryID == 0 {
 			continue
 		}
-		_, err := dbConn.NewInsert().
-			Model(&types.Budget{
-				AccountID:  accountID,
-				CategoryID: catID,
-				Name:       budget.Name,
-				Amount:     decimal.NewFromInt(budget.Amount),
-				Period:     "monthly",
-				StartDate:  startOfMonth,
-			}).
-			Exec(context.Background())
-		if err != nil {
+		if err := db.InsertBudget(&budget); err != nil {
 			log.Printf("Failed to insert budget %s: %v", budget.Name, err)
-			return err
 		}
 	}
-	log.Printf("Created %d budgets", len(budgets))
 
 	// Create sample transactions
-	salaryID := categoryIDs["Salary"]
-	freelanceID := categoryIDs["Freelance"]
-	groceriesID := categoryIDs["Groceries"]
-	rentID := categoryIDs["Rent"]
-	utilitiesID := categoryIDs["Utilities"]
-	transportID := categoryIDs["Transport"]
-	entertainmentID := categoryIDs["Entertainment"]
-	diningOutID := categoryIDs["Dining Out"]
-	shoppingID := categoryIDs["Shopping"]
-	healthcareID := categoryIDs["Healthcare"]
+	salaryID := categoryMap["Salary"]
+	freelanceID := categoryMap["Freelance"]
+	groceriesID := categoryMap["Groceries"]
+	rentID := categoryMap["Rent"]
+	utilitiesID := categoryMap["Utilities"]
+	transportID := categoryMap["Transport"]
+	entertainmentID := categoryMap["Entertainment"]
+	diningOutID := categoryMap["Dining Out"]
+	shoppingID := categoryMap["Shopping"]
+	healthcareID := categoryMap["Healthcare"]
 
-	transactions := []struct {
-		Amount      int64
-		Type        string
-		Description string
-		Date        time.Time
-		CategoryID  int64
-	}{
-		{25000, "income", "Monthly salary", now, salaryID},
-		{3500, "income", "Freelance project payment", now.AddDate(0, 0, -7), freelanceID},
-		{850, "expense", "Weekly grocery shopping", now.AddDate(0, 0, -2), groceriesID},
-		{8000, "expense", "Monthly rent", startOfMonth, rentID},
-		{650, "expense", "Electricity and water bill", now.AddDate(0, 0, -10), utilitiesID},
-		{450, "expense", "Petrol and public transport", now.AddDate(0, 0, -3), transportID},
-		{300, "expense", "Movie tickets and snacks", now.AddDate(0, 0, -5), entertainmentID},
-		{550, "expense", "Dinner at restaurant", now.AddDate(0, 0, -4), diningOutID},
-		{1200, "expense", "New clothes and shoes", now.AddDate(0, 0, -8), shoppingID},
-		{200, "expense", "Pharmacy and medication", now.AddDate(0, 0, -6), healthcareID},
+	transactions := []types.Transaction{
+		{AccountID: accountID, CategoryID: &salaryID, Amount: decimal.NewFromInt(25000), Type: "income", Description: stringPtr("Monthly salary"), Date: now},
+		{AccountID: accountID, CategoryID: &freelanceID, Amount: decimal.NewFromInt(3500), Type: "income", Description: stringPtr("Freelance project payment"), Date: now.AddDate(0, 0, -7)},
+		{AccountID: accountID, CategoryID: &groceriesID, Amount: decimal.NewFromInt(850), Type: "expense", Description: stringPtr("Weekly grocery shopping"), Date: now.AddDate(0, 0, -2)},
+		{AccountID: accountID, CategoryID: &rentID, Amount: decimal.NewFromInt(8000), Type: "expense", Description: stringPtr("Monthly rent"), Date: startOfMonth},
+		{AccountID: accountID, CategoryID: &utilitiesID, Amount: decimal.NewFromInt(650), Type: "expense", Description: stringPtr("Electricity and water bill"), Date: now.AddDate(0, 0, -10)},
+		{AccountID: accountID, CategoryID: &transportID, Amount: decimal.NewFromInt(450), Type: "expense", Description: stringPtr("Petrol and public transport"), Date: now.AddDate(0, 0, -3)},
+		{AccountID: accountID, CategoryID: &entertainmentID, Amount: decimal.NewFromInt(300), Type: "expense", Description: stringPtr("Movie tickets and snacks"), Date: now.AddDate(0, 0, -5)},
+		{AccountID: accountID, CategoryID: &diningOutID, Amount: decimal.NewFromInt(550), Type: "expense", Description: stringPtr("Dinner at restaurant"), Date: now.AddDate(0, 0, -4)},
+		{AccountID: accountID, CategoryID: &shoppingID, Amount: decimal.NewFromInt(1200), Type: "expense", Description: stringPtr("New clothes and shoes"), Date: now.AddDate(0, 0, -8)},
+		{AccountID: accountID, CategoryID: &healthcareID, Amount: decimal.NewFromInt(200), Type: "expense", Description: stringPtr("Pharmacy and medication"), Date: now.AddDate(0, 0, -6)},
 	}
 
-	for _, t := range transactions {
-		desc := t.Description
-		_, err := dbConn.NewInsert().
-			Model(&types.Transaction{
-				AccountID:   accountID,
-				CategoryID:  &t.CategoryID,
-				Amount:      decimal.NewFromInt(t.Amount),
-				Type:        t.Type,
-				Description: &desc,
-				Date:        t.Date,
-			}).
-			Exec(context.Background())
-		if err != nil {
+	for _, transaction := range transactions {
+		if transaction.CategoryID != nil && *transaction.CategoryID == 0 {
+			continue
+		}
+		if err := db.InsertTransaction(&transaction); err != nil {
 			log.Printf("Failed to insert transaction: %v", err)
-			return err
 		}
 	}
-	log.Printf("Created %d transactions", len(transactions))
-	log.Printf("createDefaultData completed for account ID: %d", accountID)
+
+	// Create default dashboard layout
+	defaultLayout := `[{"id":"welcome","x":0,"y":0,"w":12,"h":4},{"id":"balance","x":0,"y":4,"w":4,"h":4},{"id":"account_summary","x":4,"y":4,"w":4,"h":4},{"id":"spending_trends","x":8,"y":4,"w":4,"h":4},{"id":"recent_transactions","x":0,"y":8,"w":6,"h":4},{"id":"category_breakdown","x":6,"y":8,"w":6,"h":4},{"id":"goals_overview","x":0,"y":12,"w":4,"h":4},{"id":"budget_progress","x":4,"y":12,"w":4,"h":4},{"id":"alerts","x":8,"y":12,"w":4,"h":4}]`
+	if err := db.SaveDashboardLayout(accountID, defaultLayout); err != nil {
+		log.Printf("Failed to save dashboard layout: %v", err)
+	}
 
 	return nil
+}
+
+func stringPtr(s string) *string {
+	return &s
 }
