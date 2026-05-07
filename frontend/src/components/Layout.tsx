@@ -573,6 +573,10 @@ export default function Layout() {
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
                       <span>Clickable version number with release notes modal</span>
                     </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added default budgets and categories on account creation to help new users get started</span>
+                    </li>
                   </ul>
                 </div>
 
@@ -611,6 +615,10 @@ export default function Layout() {
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
                       <span>Updated analytics to use billing cycle instead of calendar month</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />
+                      <span>Moved User Guide to bottom of navigation list</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#D9B44A]" : "bg-[#C9A24A]")} />

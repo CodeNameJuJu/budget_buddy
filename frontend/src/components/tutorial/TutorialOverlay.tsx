@@ -83,6 +83,11 @@ export default function TutorialOverlay() {
         case "alerts-preferences":
           element = document.querySelector("h1") as HTMLElement
           break
+        case "credits-page":
+        case "add-credit-button":
+          element = document.querySelector("h1") as HTMLElement
+          if (!element) element = document.querySelector('button[aria-label*="Add"]') as HTMLElement
+          break
         case "partners-page":
           element = document.querySelector("h1") as HTMLElement
           break
