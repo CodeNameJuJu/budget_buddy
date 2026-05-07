@@ -80,6 +80,23 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 		// Don't fail the account creation if default data fails
 	}
 
+	// Create default dashboard layout
+	defaultLayout := `[
+		{"id": "welcome", "x": 0, "y": 0, "w": 12, "h": 4},
+		{"id": "balance", "x": 0, "y": 4, "w": 4, "h": 4},
+		{"id": "account_summary", "x": 4, "y": 4, "w": 4, "h": 4},
+		{"id": "spending_trends", "x": 8, "y": 4, "w": 4, "h": 4},
+		{"id": "recent_transactions", "x": 0, "y": 8, "w": 6, "h": 4},
+		{"id": "category_breakdown", "x": 6, "y": 8, "w": 6, "h": 4},
+		{"id": "goals_overview", "x": 0, "y": 12, "w": 4, "h": 4},
+		{"id": "budget_progress", "x": 4, "y": 12, "w": 4, "h": 4},
+		{"id": "alerts", "x": 8, "y": 12, "w": 4, "h": 4}
+	]`
+	if err := db.SaveDashboardLayout(account.ID, defaultLayout); err != nil {
+		log.Printf("SaveDashboardLayout error: %v", err)
+		// Don't fail the account creation if dashboard layout fails
+	}
+
 	helpers.RespondData(w, account, 1)
 }
 
