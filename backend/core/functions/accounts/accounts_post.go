@@ -56,18 +56,6 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 		Timezone: req.Timezone,
 	}
 
-	// Check if account with this email already exists
-	exists, err := db.AccountExistsByEmail(req.Email)
-	if err != nil {
-		log.Printf("AccountExistsByEmail error: %v", err)
-		helpers.RespondError(w, http.StatusInternalServerError, "Could not check account")
-		return
-	}
-	if exists {
-		helpers.RespondError(w, http.StatusConflict, "Account with this email already exists")
-		return
-	}
-
 	if err := db.InsertAccount(&account); err != nil {
 		log.Printf("InsertAccount error: %v", err)
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not create account")

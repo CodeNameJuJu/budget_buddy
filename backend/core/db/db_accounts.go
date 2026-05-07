@@ -43,16 +43,6 @@ func InsertAccount(account *types.Account) error {
 	return err
 }
 
-func AccountExistsByEmail(email string) (bool, error) {
-	db := appcontext.GetDb()
-	count, err := db.NewSelect().
-		Model(&types.Account{}).
-		Where("email = ?", email).
-		Where("deleted_date IS NULL").
-		Count(context.Background())
-	return count > 0, err
-}
-
 func UpdateAccount(account *types.Account) error {
 	db := appcontext.GetDb()
 	now := time.Now()
