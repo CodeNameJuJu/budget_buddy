@@ -199,12 +199,13 @@ func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 		}
 
 		activeBudgets = append(activeBudgets, map[string]interface{}{
-			"id":       budget.ID,
-			"name":     budget.Name,
-			"spent":    budget.Spent.String(),
-			"amount":   budget.Amount.String(),
-			"progress": progress,
-			"category": budget.Category.Name,
+			"id":          budget.ID,
+			"name":        budget.Name,
+			"spent":       budget.Spent.String(),
+			"amount":      budget.Amount.String(),
+			"progress":    progress,
+			"category":    budget.Category.Name,
+			"category_id": budget.CategoryID,
 		})
 	}
 
