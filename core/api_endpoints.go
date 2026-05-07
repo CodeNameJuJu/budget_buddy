@@ -9,6 +9,7 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/budgets"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/categories"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/credits"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/dashboard"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/goals"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
@@ -101,6 +102,20 @@ func RegisterRoutes(r chi.Router) {
 			r.Delete("/savings/allocations/{id}", savings.DELETEAllocation)
 			r.Get("/savings/summary", savings.GETSavingsSummary)
 			r.Get("/savings/forecast", savings.GETSavingsForecast)
+		})
+
+		/* ----------- CREDITS ----------- */
+		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
+			r.Get("/credits/pots", credits.GETCreditPots)
+			r.Get("/credits/pots/{id}", credits.GETCreditPots)
+			r.Post("/credits/pots", credits.POSTCreditPot)
+			r.Patch("/credits/pots/{id}", credits.PATCHCreditPot)
+			r.Delete("/credits/pots/{id}", credits.DELETECreditPot)
+			r.Get("/credits/payments", credits.GETCreditPayments)
+			r.Post("/credits/payments", credits.POSTCreditPayment)
+			r.Delete("/credits/payments/{id}", credits.DELETECreditPayment)
+			r.Get("/credits/summary", credits.GETCreditSummary)
+			r.Get("/credits/forecast", credits.GETCreditForecast)
 		})
 
 		/* ----------- DASHBOARD ----------- */

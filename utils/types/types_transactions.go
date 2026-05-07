@@ -22,12 +22,14 @@ type Transaction struct {
 	Notes               *string         `json:"notes,omitempty" bun:"notes"`
 	Tags                *string         `json:"tags,omitempty" bun:"tags"` // JSON array of tags
 	SavingsAllocationID *int64          `json:"savings_allocation_id,omitempty" bun:"savings_allocation_id"`
-	AccountType         *string         `json:"account_type,omitempty" bun:"account_type"` // "checking" or "savings"
+	CreditPaymentID     *int64          `json:"credit_payment_id,omitempty" bun:"credit_payment_id"`
+	AccountType         *string         `json:"account_type,omitempty" bun:"account_type"` // "checking", "savings", or "credit"
 
 	Account           *Account           `json:"account,omitempty" bun:"rel:belongs-to,join:account_id=id"`
 	Category          *Category          `json:"category,omitempty" bun:"rel:belongs-to,join:category_id=id"`
 	Budget            *Budget            `json:"budget,omitempty" bun:"rel:belongs-to,join:budget_id=id"`
 	SavingsAllocation *SavingsAllocation `json:"savings_allocation,omitempty" bun:"rel:belongs-to,join:savings_allocation_id=id"`
+	CreditPayment     *CreditPayment     `json:"credit_payment,omitempty" bun:"rel:belongs-to,join:credit_payment_id=id"`
 
 	Timestamps
 }

@@ -428,6 +428,83 @@ export const savingsApi = {
     get<APIResponse<ForecastResponse>>("/savings/forecast", { account_id: String(accountID) }),
 }
 
+// Credits types
+export interface CreditPot {
+  id: number
+  account_id: number
+  name: string
+  icon?: string
+  colour?: string
+  total_payable: string
+  monthly_payment?: string
+  payment_period?: string
+  interest_rate?: string
+  interest_period?: string
+  paid?: string
+  created_date: string
+}
+
+export interface CreditPayment {
+  id: number
+  account_id: number
+  credit_pot_id: number
+  amount: string
+  notes?: string
+  credit_pot?: CreditPot
+  created_date: string
+}
+
+export interface CreditPotForecast {
+  pot_id: number
+  pot_name: string
+  total_payable: string
+  paid: string
+  remaining: string
+  monthly_payment?: string
+  payment_period?: string
+  months_to_payoff?: number
+  payoff_date?: string
+  projections: string[]
+}
+
+export interface CreditForecastResponse {
+  pots: CreditPotForecast[]
+  total_monthly: string
+  projected_total_3mo: string
+  projected_total_6mo: string
+  projected_total_12mo: string
+}
+
+export interface CreditSummary {
+  total_payable: string
+  total_paid: string
+  remaining: string
+  pots: CreditPot[]
+}
+
+// Credits API
+export const creditsApi = {
+  summary: (accountID: number) =>
+    get<APIResponse<CreditSummary>>("/credits/summary", { account_id: String(accountID) }),
+  listPots: (accountID: number) =>
+    get<APIResponse<CreditPot[]>>("/credits/pots", { account_id: String(accountID) }),
+  createPot: (data: { account_id: number; name: string; icon?: string; colour?: string; total_payable: string; monthly_payment?: string; payment_period?: string; interest_rate?: string; interest_period?: string }) =>
+    post<APIResponse<CreditPot>>("/credits/pots", data),
+  updatePot: (id: number, data: Partial<CreditPot>) =>
+    patch<APIResponse<CreditPot>>(`/credits/pots/${id}`, data),
+  deletePot: (id: number) => del<APIResponse<null>>(`/credits/pots/${id}`),
+  listPayments: (accountID: number, potID?: number) => {
+    const params: Record<string, string> = { account_id: String(accountID) }
+    if (potID) params.credit_pot_id = String(potID)
+    return get<APIResponse<CreditPayment[]>>("/credits/payments", params)
+  },
+  createPayment: (data: { account_id: number; credit_pot_id: number; amount: string; notes?: string }) =>
+    post<APIResponse<CreditPayment>>("/credits/payments", data),
+  deletePayment: (id: number) => del<APIResponse<null>>(`/credits/payments/${id}`),
+  forecast: (accountID: number) =>
+    get<APIResponse<CreditForecastResponse>>("/credits/forecast", { account_id: String(accountID) }),
+}
+
 // Tags API
 export const tagsApi = {
   stats: (accountID: number) =>

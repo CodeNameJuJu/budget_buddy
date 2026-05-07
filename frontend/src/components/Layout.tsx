@@ -24,6 +24,7 @@ import {
   Star,
   TrendingUp,
   CheckCircle,
+  CreditCard,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -38,6 +39,7 @@ const navItems = [
   { to: "/guide", icon: BookOpen, label: "User Guide" },
   { to: "/finance", icon: Target, label: "Finance" },
   { to: "/savings", icon: Landmark, label: "Savings" },
+  { to: "/credits", icon: CreditCard, label: "Credits" },
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
   { to: "/partners", icon: Users, label: "Partners" },
@@ -531,6 +533,14 @@ export default function Layout() {
                     <h3 className="font-semibold text-lg">New Features</h3>
                   </div>
                   <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Added Credits feature to track credit and debt payoff progress</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
+                      <span>Credit pots with monthly payment setup and payoff forecast</span>
+                    </li>
                     <li className="flex items-start gap-2">
                       <div className={cn("w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0", theme === "light" ? "bg-[#6BAF92]" : "bg-[#88B39B]")} />
                       <span>Combined Finance page with Categories, Budgets, and Transactions</span>

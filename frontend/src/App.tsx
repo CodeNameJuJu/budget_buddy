@@ -8,6 +8,7 @@ import TransactionsPage from "./pages/TransactionsPage"
 import BudgetsPage from "./pages/BudgetsPage"
 import CategoriesPage from "./pages/CategoriesPage"
 import SavingsPage from "./pages/SavingsPage"
+import CreditsPage from "./pages/CreditsPage"
 import AnalyticsPage from "./pages/AnalyticsPage"
 import AlertsPage from "./pages/AlertsPage"
 import PartnersPage from "./pages/PartnersPage"
@@ -56,6 +57,11 @@ export default function App() {
             <Route path="/savings" element={
               <ProtectedRoute>
                 <SavingsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/credits" element={
+              <ProtectedRoute>
+                <CreditsPage />
               </ProtectedRoute>
             } />
             <Route path="/categories" element={
