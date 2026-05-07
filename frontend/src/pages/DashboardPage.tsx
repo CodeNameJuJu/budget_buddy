@@ -173,10 +173,10 @@ export default function DashboardPage() {
                       <p className="text-xs text-muted-foreground">{formatDate(t.date)}</p>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
-                      <Badge variant={t.type === "income" ? "income" : "expense"}>
+                      <Badge variant={t.type === "income" ? "default" : "destructive"} className="text-xs">
                         {t.type}
                       </Badge>
-                      <span className={cn("text-sm font-semibold", t.type === "income" ? (theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]") : "text-red-400")}>
+                      <span className={cn("text-sm font-semibold", t.type === "income" ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400")}>
                         {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                       </span>
                     </div>

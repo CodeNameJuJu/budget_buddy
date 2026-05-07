@@ -378,7 +378,7 @@ export default function TransactionsPage() {
                           <p className="mobile-text font-medium truncate">
                             {t.description || "Untitled transaction"}
                           </p>
-                          <Badge variant={t.type === "income" ? "secondary" : "destructive"} className={cn("text-xs", t.type === "income" ? (theme === "light" ? "bg-[#6BAF92]/20 text-[#4A7A60] border-[#6BAF92]/50" : "bg-[#88B39B]/20 text-[#88B39B] border-[#88B39B]/50") : "bg-[#DC2626]/30 text-[#DC2626] border-[#DC2626]/50")}>
+                          <Badge variant={t.type === "income" ? "default" : "destructive"} className="text-xs">
                             {t.type}
                           </Badge>
                         </div>
@@ -413,7 +413,7 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={cn("mobile-text font-semibold", t.type === "income" ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400")}>
+                        <span className={cn("mobile-text font-semibold", t.type === "income" ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400")}>
                           {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                         </span>
                         <Button

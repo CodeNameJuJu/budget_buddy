@@ -546,8 +546,8 @@ export default function BudgetsPage() {
                     <p className={cn(
                       "text-sm font-medium",
                       t.type === "income"
-                        ? theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
-                        : theme === "light" ? "text-[#C97C5D]" : "text-[#B46B52]"
+                        ? theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
+                        : "text-red-400"
                     )}>
                       {t.type === "income" ? "+" : "-"}{formatCurrency(parseFloat(t.amount))}
                     </p>
