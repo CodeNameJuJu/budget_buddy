@@ -184,5 +184,115 @@ func createDefaultData(accountID int64) error {
 		}
 	}
 
+	// Create sample transactions to help users understand the app
+	salaryID := categoryMap["Salary"]
+	freelanceID := categoryMap["Freelance"]
+	groceriesID := categoryMap["Groceries"]
+	rentID := categoryMap["Rent"]
+	utilitiesID := categoryMap["Utilities"]
+	transportID := categoryMap["Transport"]
+	entertainmentID := categoryMap["Entertainment"]
+	diningOutID := categoryMap["Dining Out"]
+	shoppingID := categoryMap["Shopping"]
+	healthcareID := categoryMap["Healthcare"]
+
+	transactions := []types.Transaction{
+		// Income transactions
+		{
+			AccountID:   accountID,
+			CategoryID:  &salaryID,
+			Amount:      decimal.NewFromInt(25000),
+			Type:        "income",
+			Description: stringPtr("Monthly salary"),
+			Date:        now,
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &freelanceID,
+			Amount:      decimal.NewFromInt(3500),
+			Type:        "income",
+			Description: stringPtr("Freelance project payment"),
+			Date:        now.AddDate(0, 0, -7),
+		},
+		// Expense transactions
+		{
+			AccountID:   accountID,
+			CategoryID:  &groceriesID,
+			Amount:      decimal.NewFromInt(850),
+			Type:        "expense",
+			Description: stringPtr("Weekly grocery shopping"),
+			Date:        now.AddDate(0, 0, -2),
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &rentID,
+			Amount:      decimal.NewFromInt(8000),
+			Type:        "expense",
+			Description: stringPtr("Monthly rent"),
+			Date:        startOfMonth,
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &utilitiesID,
+			Amount:      decimal.NewFromInt(650),
+			Type:        "expense",
+			Description: stringPtr("Electricity and water bill"),
+			Date:        now.AddDate(0, 0, -10),
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &transportID,
+			Amount:      decimal.NewFromInt(450),
+			Type:        "expense",
+			Description: stringPtr("Petrol and public transport"),
+			Date:        now.AddDate(0, 0, -3),
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &entertainmentID,
+			Amount:      decimal.NewFromInt(300),
+			Type:        "expense",
+			Description: stringPtr("Movie tickets and snacks"),
+			Date:        now.AddDate(0, 0, -5),
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &diningOutID,
+			Amount:      decimal.NewFromInt(550),
+			Type:        "expense",
+			Description: stringPtr("Dinner at restaurant"),
+			Date:        now.AddDate(0, 0, -4),
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &shoppingID,
+			Amount:      decimal.NewFromInt(1200),
+			Type:        "expense",
+			Description: stringPtr("New clothes and shoes"),
+			Date:        now.AddDate(0, 0, -8),
+		},
+		{
+			AccountID:   accountID,
+			CategoryID:  &healthcareID,
+			Amount:      decimal.NewFromInt(200),
+			Type:        "expense",
+			Description: stringPtr("Pharmacy and medication"),
+			Date:        now.AddDate(0, 0, -6),
+		},
+	}
+
+	for _, transaction := range transactions {
+		if transaction.CategoryID != nil && *transaction.CategoryID == 0 {
+			continue // Skip if category creation failed
+		}
+		if err := db.InsertTransaction(&transaction); err != nil {
+			log.Printf("Failed to insert transaction: %v", err)
+		}
+	}
+
 	return nil
+}
+
+func stringPtr(s string) *string {
+	return &s
 }
