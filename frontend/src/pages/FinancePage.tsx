@@ -33,9 +33,9 @@ const COLOUR_OPTIONS = [
 ]
 
 const TABS = [
-  { id: "categories", label: "Categories", icon: Tags },
-  { id: "budgets", label: "Budgets", icon: PiggyBank },
-  { id: "transactions", label: "Transactions", icon: Target },
+  { id: "categories", label: "Categories", icon: Tags, step: 1 },
+  { id: "budgets", label: "Budgets", icon: PiggyBank, step: 2 },
+  { id: "transactions", label: "Transactions", icon: Target, step: 3 },
 ]
 
 export default function FinancePage() {
@@ -420,6 +420,16 @@ export default function FinancePage() {
             className="flex items-center gap-2 text-xs sm:text-sm"
             size="sm"
           >
+            <div className={cn(
+              "h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold",
+              activeTab === tab.id
+                ? "bg-white text-primary"
+                : theme === "light"
+                  ? "bg-[#6BAF92] text-white"
+                  : "bg-[#6BAF92] text-white"
+            )}>
+              {tab.step}
+            </div>
             <tab.icon className="h-4 w-4" />
             <span className="hidden sm:inline">{tab.label}</span>
           </Button>
