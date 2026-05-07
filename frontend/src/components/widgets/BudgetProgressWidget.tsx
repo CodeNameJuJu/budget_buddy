@@ -60,9 +60,20 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
       const budget = selectedBudget
       if (!budget) return
 
-      // Filter by category name since that's what we have in the data
+      console.log("Loading transactions for budget:", budget)
+      console.log("Budget category:", budget.category)
+
+      // Load all transactions
       const response = await transactionsApi.list(accountId)
-      const filtered = response.data?.filter(t => t.category?.name === budget.category) || []
+      console.log("All transactions:", response.data)
+
+      // Filter by category name
+      const filtered = response.data?.filter(t => {
+        console.log("Transaction category:", t.category?.name, "vs budget category:", budget.category)
+        return t.category?.name === budget.category
+      }) || []
+
+      console.log("Filtered transactions:", filtered)
       setTransactions(filtered)
     } catch (error) {
       console.error("Failed to load budget transactions", error)
