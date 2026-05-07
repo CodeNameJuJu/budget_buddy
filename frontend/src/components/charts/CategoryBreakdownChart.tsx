@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
 import { useState, useEffect } from 'react'
 
@@ -82,7 +82,7 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={chartHeight}>
-        <LineChart
+        <BarChart
           data={chartData}
           margin={{ top: 5, right: 30, left: 20, bottom: 60 }}
         >
@@ -96,15 +96,8 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
           />
           <YAxis tickFormatter={(value) => formatCurrency(value)} />
           <Tooltip content={<CustomTooltip />} />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="#6BAF92"
-            strokeWidth={2}
-            dot={{ fill: "#6BAF92", r: 4 }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
+          <Bar dataKey="value" fill="#6BAF92" radius={[4, 4, 0, 0]} />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   )
