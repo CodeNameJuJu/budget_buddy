@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/shopspring/decimal"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/shopspring/decimal"
 )
 
 type POSTBudgetRequest struct {
@@ -34,8 +34,12 @@ func (p *POSTBudgetRequest) Validate() error {
 	if p.Amount == "" {
 		return fmt.Errorf("amount is required")
 	}
-	if _, err := decimal.NewFromString(p.Amount); err != nil {
+	amount, err := decimal.NewFromString(p.Amount)
+	if err != nil {
 		return fmt.Errorf("amount must be a valid number")
+	}
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return fmt.Errorf("amount must be greater than zero")
 	}
 	if p.Period != "monthly" && p.Period != "weekly" && p.Period != "yearly" {
 		return fmt.Errorf("period must be 'monthly', 'weekly', or 'yearly'")

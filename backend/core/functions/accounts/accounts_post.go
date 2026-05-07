@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
@@ -25,6 +26,10 @@ func (p *POSTAccountRequest) Validate() error {
 	}
 	if p.Email == "" {
 		return fmt.Errorf("email is required")
+	}
+	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	if !emailRegex.MatchString(p.Email) {
+		return fmt.Errorf("email must be a valid email address")
 	}
 	if p.Currency == "" {
 		p.Currency = "ZAR"
@@ -49,6 +54,18 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 		Email:    req.Email,
 		Currency: req.Currency,
 		Timezone: req.Timezone,
+	}
+
+	// Check if account with this email already exists
+	exists, err := db.AccountExistsByEmail(req.Email)
+	if err != nil {
+		log.Printf("AccountExistsByEmail error: %v", err)
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not check account")
+		return
+	}
+	if exists {
+		helpers.RespondError(w, http.StatusConflict, "Account with this email already exists")
+		return
 	}
 
 	if err := db.InsertAccount(&account); err != nil {

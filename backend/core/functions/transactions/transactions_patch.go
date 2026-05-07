@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/go-chi/chi/v5"
 	"github.com/shopspring/decimal"
 )
 
@@ -54,6 +54,10 @@ func PATCHTransaction(w http.ResponseWriter, r *http.Request) {
 		transaction.Amount = amount
 	}
 	if req.Type != nil {
+		if *req.Type != "income" && *req.Type != "expense" {
+			helpers.RespondError(w, http.StatusBadRequest, "type must be 'income' or 'expense'")
+			return
+		}
 		transaction.Type = *req.Type
 	}
 	if req.Description != nil {

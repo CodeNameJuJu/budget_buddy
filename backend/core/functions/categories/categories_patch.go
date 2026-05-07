@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/go-chi/chi/v5"
 )
 
 type PATCHCategoryRequest struct {
@@ -33,6 +33,10 @@ func PATCHCategory(w http.ResponseWriter, r *http.Request) {
 
 	category := types.Category{ID: id}
 	if req.Name != nil {
+		if *req.Name == "" {
+			helpers.RespondError(w, http.StatusBadRequest, "name cannot be empty")
+			return
+		}
 		category.Name = *req.Name
 	}
 	if req.Icon != nil {
@@ -42,6 +46,10 @@ func PATCHCategory(w http.ResponseWriter, r *http.Request) {
 		category.Colour = req.Colour
 	}
 	if req.Type != nil {
+		if *req.Type != "income" && *req.Type != "expense" {
+			helpers.RespondError(w, http.StatusBadRequest, "type must be 'income' or 'expense'")
+			return
+		}
 		category.Type = *req.Type
 	}
 

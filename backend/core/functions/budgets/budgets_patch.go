@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/shopspring/decimal"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/go-chi/chi/v5"
+	"github.com/shopspring/decimal"
 )
 
 type PATCHBudgetRequest struct {
@@ -52,6 +52,10 @@ func PATCHBudget(w http.ResponseWriter, r *http.Request) {
 		budget.Amount = amount
 	}
 	if req.Period != nil {
+		if *req.Period != "monthly" && *req.Period != "weekly" && *req.Period != "yearly" {
+			helpers.RespondError(w, http.StatusBadRequest, "period must be 'monthly', 'weekly', or 'yearly'")
+			return
+		}
 		budget.Period = *req.Period
 	}
 	if req.StartDate != nil {

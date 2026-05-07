@@ -28,13 +28,21 @@ func (p *POSTPotRequest) Validate() error {
 		return fmt.Errorf("name is required")
 	}
 	if p.Target != nil {
-		if _, err := decimal.NewFromString(*p.Target); err != nil {
+		target, err := decimal.NewFromString(*p.Target)
+		if err != nil {
 			return fmt.Errorf("target must be a valid number")
+		}
+		if target.LessThanOrEqual(decimal.Zero) {
+			return fmt.Errorf("target must be greater than zero")
 		}
 	}
 	if p.Contribution != nil {
-		if _, err := decimal.NewFromString(*p.Contribution); err != nil {
+		contribution, err := decimal.NewFromString(*p.Contribution)
+		if err != nil {
 			return fmt.Errorf("contribution must be a valid number")
+		}
+		if contribution.LessThanOrEqual(decimal.Zero) {
+			return fmt.Errorf("contribution must be greater than zero")
 		}
 	}
 	if p.ContributionPeriod != nil {
@@ -103,8 +111,12 @@ func (p *POSTAllocationRequest) Validate() error {
 	if p.Amount == "" {
 		return fmt.Errorf("amount is required")
 	}
-	if _, err := decimal.NewFromString(p.Amount); err != nil {
+	amount, err := decimal.NewFromString(p.Amount)
+	if err != nil {
 		return fmt.Errorf("amount must be a valid number")
+	}
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return fmt.Errorf("amount must be greater than zero")
 	}
 	return nil
 }

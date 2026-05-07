@@ -30,8 +30,12 @@ func (p *POSTTransactionRequest) Validate() error {
 	if p.Amount == "" {
 		return fmt.Errorf("amount is required")
 	}
-	if _, err := decimal.NewFromString(p.Amount); err != nil {
+	amount, err := decimal.NewFromString(p.Amount)
+	if err != nil {
 		return fmt.Errorf("amount must be a valid number")
+	}
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return fmt.Errorf("amount must be greater than zero")
 	}
 	if p.Type != "income" && p.Type != "expense" {
 		return fmt.Errorf("type must be 'income' or 'expense'")
