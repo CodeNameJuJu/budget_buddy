@@ -21,6 +21,7 @@ interface Budget {
   amount: string
   progress: number
   category: string
+  category_id?: number
 }
 
 interface BudgetProgressData {
@@ -56,8 +57,21 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
   async function loadBudgetTransactions(budgetId: number) {
     setTransactionsLoading(true)
     try {
-      const response = await transactionsApi.list(accountId, { budget_id: String(budgetId) })
-      setTransactions(response.data || [])
+      const budget = selectedBudget
+      if (!budget) return
+
+      // Mimic the finance page approach: filter by category_id
+      if (budget.category_id) {
+        const response = await transactionsApi.list(accountId, {
+          category_id: String(budget.category_id),
+        })
+        setTransactions(response.data || [])
+      } else {
+        // Fallback: filter by category name if category_id not available
+        const response = await transactionsApi.list(accountId)
+        const filtered = response.data?.filter(t => t.category?.name === budget.category) || []
+        setTransactions(filtered)
+      }
     } catch (error) {
       console.error("Failed to load budget transactions", error)
       setTransactions([])
