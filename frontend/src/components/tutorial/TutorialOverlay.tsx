@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useTutorial } from "@/contexts/TutorialContext"
 import TutorialBubble from "./TutorialBubble"
@@ -7,20 +7,16 @@ export default function TutorialOverlay() {
   const { isActive, currentStepIndex, steps, nextStep, previousStep, skipTutorial } = useTutorial()
   const location = useLocation()
   const navigate = useNavigate()
-  const [targetElement, setTargetElement] = useState<HTMLElement | null>(null)
-  const [bubblePosition, setBubblePosition] = useState<{ top: number; left: number } | null>(null)
 
   const currentStep = steps[currentStepIndex]
   const shouldShow = isActive && currentStep && currentStep.route === location.pathname
 
   useEffect(() => {
     if (!shouldShow || !currentStep) {
-      setTargetElement(null)
-      setBubblePosition(null)
       return
     }
 
-    // Find target element
+    // Find target element to scroll into view
     let element: HTMLElement | null = null
 
     // Try to find element by ID first
@@ -98,39 +94,6 @@ export default function TutorialOverlay() {
     }
 
     if (element) {
-      setTargetElement(element)
-      const rect = element.getBoundingClientRect()
-      let top = 0
-      let left = 0
-
-      switch (currentStep.position) {
-        case "top":
-          top = rect.top - 350
-          left = rect.left + rect.width / 2 - 160
-          break
-        case "bottom":
-          top = rect.bottom + 20
-          left = rect.left + rect.width / 2 - 160
-          break
-        case "left":
-          top = rect.top + rect.height / 2 - 50
-          left = rect.left - 340
-          break
-        case "right":
-          top = rect.top + rect.height / 2 - 50
-          left = rect.right + 20
-          break
-      }
-
-      // Ensure bubble stays within viewport
-      if (left < 20) left = 20
-      if (left > window.innerWidth - 340) left = window.innerWidth - 340
-      if (top < 20) top = 20
-      if (top > window.innerHeight - 200) top = window.innerHeight - 200
-
-      setBubblePosition({ top, left })
-
-      // Scroll element into view
       element.scrollIntoView({ behavior: "smooth", block: "center" })
     }
   }, [shouldShow, currentStep, location.pathname])
@@ -157,75 +120,24 @@ export default function TutorialOverlay() {
     previousStep()
   }
 
-  if (!shouldShow || !currentStep || !bubblePosition) {
+  if (!shouldShow || !currentStep) {
     return null
   }
 
   return (
-    <>
-      {/* Dimmed background */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.3)",
-          zIndex: 40,
-          pointerEvents: "none",
-        }}
+    <div className="fixed top-0 left-0 right-0 z-50 p-4">
+      <TutorialBubble
+        title={currentStep.title}
+        description={currentStep.description}
+        position="bottom"
+        onNext={handleNext}
+        onPrevious={handlePrevious}
+        onSkip={skipTutorial}
+        currentStep={currentStepIndex + 1}
+        totalSteps={steps.length}
+        isLastStep={currentStepIndex === steps.length - 1}
+        isFirstStep={currentStepIndex === 0}
       />
-
-      {/* Highlight overlay */}
-      {targetElement && (
-        <>
-          <div
-            style={{
-              position: "fixed",
-              top: targetElement.getBoundingClientRect().top - 4,
-              left: targetElement.getBoundingClientRect().left - 4,
-              width: targetElement.getBoundingClientRect().width + 8,
-              height: targetElement.getBoundingClientRect().height + 8,
-              boxShadow: "0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.3)",
-              zIndex: 41,
-              pointerEvents: "none",
-              borderRadius: "12px",
-              animation: "pulse 2s ease-in-out infinite",
-            }}
-          />
-          <style>{`
-            @keyframes pulse {
-              0%, 100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7), 0 0 0 9999px rgba(0, 0, 0, 0.3);
-              }
-              50% {
-                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.3);
-              }
-            }
-          `}</style>
-        </>
-      )}
-
-      {/* Tutorial Bubble */}
-      <div
-        style={{
-          position: "fixed",
-          top: bubblePosition.top,
-          left: bubblePosition.left,
-          zIndex: 50,
-        }}
-      >
-        <TutorialBubble
-          title={currentStep.title}
-          description={currentStep.description}
-          position={currentStep.position}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-          onSkip={skipTutorial}
-          currentStep={currentStepIndex + 1}
-          totalSteps={steps.length}
-          isLastStep={currentStepIndex === steps.length - 1}
-          isFirstStep={currentStepIndex === 0}
-        />
-      </div>
-    </>
+    </div>
   )
 }
