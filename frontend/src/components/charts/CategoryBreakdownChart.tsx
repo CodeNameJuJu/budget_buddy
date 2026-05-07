@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
 import { useState, useEffect } from 'react'
 
@@ -77,30 +77,34 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
   }
 
   // Calculate height based on number of categories
-  const chartHeight = Math.max(300, data.length * 40 + 100)
+  const chartHeight = Math.max(300, data.length * 50 + 100)
 
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={chartHeight}>
-        <BarChart
+        <LineChart
           data={chartData}
-          layout="horizontal"
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          margin={{ top: 5, right: 30, left: 20, bottom: 60 }}
         >
-          <XAxis type="number" tickFormatter={(value) => formatCurrency(value)} />
-          <YAxis
-            type="category"
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
             dataKey="name"
-            width={100}
+            angle={-45}
+            textAnchor="end"
+            height={80}
             tick={{ fontSize: 12 }}
           />
+          <YAxis tickFormatter={(value) => formatCurrency(value)} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Bar>
-        </BarChart>
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke="#6BAF92"
+            strokeWidth={2}
+            dot={{ fill: "#6BAF92", r: 4 }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   )
