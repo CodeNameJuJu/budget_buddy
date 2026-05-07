@@ -36,13 +36,13 @@ import { useTheme } from "@/contexts/ThemeContext"
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/guide", icon: BookOpen, label: "User Guide" },
   { to: "/finance", icon: Target, label: "Finance" },
   { to: "/savings", icon: Landmark, label: "Savings" },
   { to: "/credits", icon: CreditCard, label: "Credits" },
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/alerts", icon: Bell, label: "Alerts" },
   { to: "/partners", icon: Users, label: "Partners" },
+  { to: "/guide", icon: BookOpen, label: "User Guide" },
 ]
 
 export default function Layout() {
