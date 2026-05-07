@@ -8,6 +8,7 @@ import {
   Info,
   Check,
   Settings,
+  ExternalLink,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -19,9 +20,11 @@ import { alertsApi, accountsApi, type Alert, type AlertPreference, type Account 
 import { formatDate } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
+import { useNavigate } from "react-router-dom"
 
 export default function AlertsPage() {
   const { theme } = useTheme()
+  const navigate = useNavigate()
   const [accountId, setAccountId] = useState<number | null>(null)
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [preferences, setPreferences] = useState<AlertPreference[]>([])
@@ -154,7 +157,61 @@ export default function AlertsPage() {
       case "goal_milestone": return "Goal Milestone"
       case "weekly_summary": return "Weekly Summary"
       case "monthly_summary": return "Monthly Summary"
+      case "unusual_transaction": return "Unusual Transaction"
+      case "bill_reminder": return "Bill Reminder"
+      case "bill_overdue": return "Bill Overdue"
       default: return type
+    }
+  }
+
+  function getAlertNavigation(alert: Alert): { path: string; label: string } | null {
+    if (!alert.reference_id) return null
+
+    switch (alert.type) {
+      case "budget_threshold":
+      case "budget_exceeded":
+        return { path: "/finance", label: "View Budget" }
+      case "goal_achieved":
+      case "goal_milestone":
+        return { path: "/savings", label: "View Goal" }
+      case "unusual_transaction":
+        return { path: "/finance", label: "View Transaction" }
+      case "bill_reminder":
+      case "bill_overdue":
+        return { path: "/finance", label: "View Bill" }
+      default:
+        return null
+    }
+  }
+
+  function getQuickActions(alert: Alert): { label: string; action: () => void }[] {
+    const actions: { label: string; action: () => void }[] = []
+
+    switch (alert.type) {
+      case "budget_threshold":
+      case "budget_exceeded":
+        actions.push({ label: "Adjust Budget", action: () => navigate("/finance") })
+        break
+      case "goal_achieved":
+      case "goal_milestone":
+        actions.push({ label: "View Goal", action: () => navigate("/savings") })
+        break
+      case "unusual_transaction":
+        actions.push({ label: "View Transaction", action: () => navigate("/finance") })
+        break
+      case "bill_reminder":
+      case "bill_overdue":
+        actions.push({ label: "Pay Bill", action: () => navigate("/finance") })
+        break
+    }
+
+    return actions
+  }
+
+  function handleAlertClick(alert: Alert) {
+    const nav = getAlertNavigation(alert)
+    if (nav) {
+      navigate(nav.path)
     }
   }
 
@@ -304,9 +361,15 @@ export default function AlertsPage() {
           </Card>
         ) : (
           alerts.map((alert) => (
-            <Card 
-              key={alert.id} 
-              className={`transition-all duration-200 ${!alert.is_read ? 'shadow-md' : ''} ${getSeverityColor(alert.severity)}`}
+            <Card
+              key={alert.id}
+              className={`transition-all duration-200 ${!alert.is_read ? 'shadow-md' : ''} ${getSeverityColor(alert.severity)} ${getAlertNavigation(alert) ? 'cursor-pointer hover:shadow-lg' : ''}`}
+              onClick={() => {
+                const nav = getAlertNavigation(alert)
+                if (nav) {
+                  handleAlertClick(alert)
+                }
+              }}
             >
               <CardContent className="p-3 sm:p-4">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
@@ -318,6 +381,12 @@ export default function AlertsPage() {
                         {!alert.is_read && (
                           <Badge variant="secondary" className="text-xs">
                             New
+                          </Badge>
+                        )}
+                        {getAlertNavigation(alert) && (
+                          <Badge variant="outline" className="text-xs flex items-center gap-1">
+                            <ExternalLink className="h-3 w-3" />
+                            {getAlertNavigation(alert)?.label}
                           </Badge>
                         )}
                       </div>
@@ -336,11 +405,28 @@ export default function AlertsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 sm:ml-4 w-full sm:w-auto justify-end">
+                    {getQuickActions(alert).map((action, idx) => (
+                      <Button
+                        key={idx}
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          action.action()
+                        }}
+                        className="text-xs h-8"
+                      >
+                        {action.label}
+                      </Button>
+                    ))}
                     {!alert.is_read && (
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => markAsRead(alert.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          markAsRead(alert.id)
+                        }}
                         className="h-8 w-8 p-0"
                       >
                         <Check className="h-4 w-4" />
