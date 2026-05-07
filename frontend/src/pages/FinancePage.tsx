@@ -430,7 +430,6 @@ export default function FinancePage() {
             )}>
               {tab.step}
             </div>
-            <tab.icon className="h-4 w-4" />
             <span className="hidden sm:inline">{tab.label}</span>
           </Button>
         ))}
