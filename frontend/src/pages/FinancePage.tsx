@@ -513,7 +513,7 @@ export default function FinancePage() {
                 <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
                   <CardHeader>
                     <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
-                      <Badge variant="income">Income</Badge>
+                      <Badge variant="default" className="text-xs">Income</Badge>
                       <span>{incomeCategories.length} categories</span>
                     </CardTitle>
                   </CardHeader>
@@ -541,7 +541,7 @@ export default function FinancePage() {
                 <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
                   <CardHeader>
                     <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
-                      <Badge variant="expense">Expense</Badge>
+                      <Badge variant="destructive" className="text-xs">Expense</Badge>
                       <span>{expenseCategories.length} categories</span>
                     </CardTitle>
                   </CardHeader>
