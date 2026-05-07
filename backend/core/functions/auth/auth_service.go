@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -30,6 +31,9 @@ func NewAuthService() *AuthService {
 	secret := []byte("your-super-secret-jwt-key-change-in-production")
 	if envSecret := []byte(getEnv("JWT_SECRET", "")); len(envSecret) > 0 {
 		secret = envSecret
+		log.Println("JWT_SECRET loaded from environment variable")
+	} else {
+		log.Println("WARNING: JWT_SECRET not set in environment, using default insecure key")
 	}
 
 	return &AuthService{
