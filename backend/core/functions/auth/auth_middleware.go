@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"strings"
 
@@ -30,12 +31,14 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 		// Validate token
 		claims, err := h.authService.ValidateToken(parts[1])
 		if err != nil {
+			log.Printf("Token validation failed for user %s: %v", claims.Email, err)
 			helpers.RespondError(w, http.StatusUnauthorized, "Invalid token")
 			return
 		}
 
 		// Check token type
 		if claims.Type != "access" {
+			log.Printf("Invalid token type: %s for user %s", claims.Type, claims.Email)
 			helpers.RespondError(w, http.StatusUnauthorized, "Invalid token type")
 			return
 		}
@@ -43,6 +46,7 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 		// Get user from database
 		database := appcontext.GetDb()
 		if database == nil {
+			log.Printf("Database not connected")
 			helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
 			return
 		}
@@ -54,12 +58,21 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 			Scan(context.Background())
 
 		if err != nil {
+			log.Printf("User not found in database for ID %d: %v", claims.UserID, err)
 			helpers.RespondError(w, http.StatusUnauthorized, "User not found")
+			return
+		}
+
+		// Verify the email matches the token to prevent profile switching
+		if user.Email != claims.Email {
+			log.Printf("Email mismatch: token email %s != db email %s for user ID %d", claims.Email, user.Email, claims.UserID)
+			helpers.RespondError(w, http.StatusUnauthorized, "Token email does not match user email")
 			return
 		}
 
 		// Check if user is active
 		if !user.IsActive {
+			log.Printf("User %s is deactivated", user.Email)
 			helpers.RespondError(w, http.StatusForbidden, "Account is deactivated")
 			return
 		}
@@ -124,6 +137,13 @@ func (h *AuthHandler) OptionalAuthMiddleware(next http.Handler) http.Handler {
 
 		if err != nil || !user.IsActive {
 			// User not found or inactive, continue without user
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Verify the email matches the token to prevent profile switching
+		if user.Email != claims.Email {
+			// Email mismatch, continue without user
 			next.ServeHTTP(w, r)
 			return
 		}
