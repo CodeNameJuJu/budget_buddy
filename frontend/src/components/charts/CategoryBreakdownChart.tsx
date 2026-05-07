@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
 import { useState, useEffect } from 'react'
 
@@ -37,13 +37,15 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Transform data for Recharts
-  const chartData = data.map(item => ({
-    name: item.category_name,
-    value: parseFloat(item.amount),
-    percentage: parseFloat(item.percentage),
-    transactions: item.transaction_count
-  }))
+  // Transform data for Recharts and sort by amount descending
+  const chartData = data
+    .map(item => ({
+      name: item.category_name,
+      value: parseFloat(item.amount),
+      percentage: parseFloat(item.percentage),
+      transactions: item.transaction_count
+    }))
+    .sort((a, b) => b.value - a.value)
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -66,10 +68,6 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
     return null
   }
 
-  const renderCustomLabel = (entry: any) => {
-    return `${entry.percentage.toFixed(1)}%`
-  }
-
   if (data.length === 0) {
     return (
       <div className="flex items-center justify-center h-80 text-muted-foreground">
@@ -78,36 +76,31 @@ export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartP
     )
   }
 
+  // Calculate height based on number of categories
+  const chartHeight = Math.max(300, data.length * 40 + 100)
+
   return (
-    <div className="w-full pt-6 xs:pt-8 pb-4 xs:pb-6" style={{ height: isMobile ? 'auto' : '320px' }}>
-      <ResponsiveContainer width="100%" height={isMobile ? 350 : '100%'}>
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx={isMobile ? "50%" : "40%"}
-            cy={isMobile ? "45%" : "50%"}
-            labelLine={false}
-            label={renderCustomLabel}
-            outerRadius={isMobile ? 60 : 80}
-            fill="#8884d8"
-            dataKey="value"
-          >
+    <div className="w-full">
+      <ResponsiveContainer width="100%" height={chartHeight}>
+        <BarChart
+          data={chartData}
+          layout="horizontal"
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        >
+          <XAxis type="number" tickFormatter={(value) => formatCurrency(value)} />
+          <YAxis
+            type="category"
+            dataKey="name"
+            width={100}
+            tick={{ fontSize: 12 }}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-          <Legend 
-            verticalAlign={isMobile ? "bottom" : "middle"}
-            align={isMobile ? "center" : "right"}
-            layout={isMobile ? "horizontal" : "vertical"}
-            wrapperStyle={isMobile ? { paddingTop: '10px', paddingBottom: '10px' } : {}}
-            formatter={(value: any, entry: any) => [
-              `${entry.payload.name}: ${formatCurrency(entry.payload.value)}`,
-              ''
-            ]}
-          />
-        </PieChart>
+          </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   )
