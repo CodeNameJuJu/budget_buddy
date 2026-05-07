@@ -74,10 +74,13 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("Account created successfully with ID: %d", account.ID)
+
 	// Create default categories and budgets
 	if err := createDefaultData(account.ID); err != nil {
 		log.Printf("createDefaultData error: %v", err)
-		// Don't fail the account creation if default data fails
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not create default data")
+		return
 	}
 
 	// Create default dashboard layout
@@ -94,13 +97,16 @@ func POSTAccount(w http.ResponseWriter, r *http.Request) {
 	]`
 	if err := db.SaveDashboardLayout(account.ID, defaultLayout); err != nil {
 		log.Printf("SaveDashboardLayout error: %v", err)
-		// Don't fail the account creation if dashboard layout fails
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not create dashboard layout")
+		return
 	}
 
 	helpers.RespondData(w, account, 1)
 }
 
 func createDefaultData(accountID int64) error {
+	log.Printf("Starting createDefaultData for account ID: %d", accountID)
+
 	// Create default categories
 	categories := []types.Category{
 		// Income categories
@@ -119,6 +125,7 @@ func createDefaultData(accountID int64) error {
 		{Name: "Shopping", Type: "expense", AccountID: accountID},
 	}
 
+	log.Printf("Creating %d categories", len(categories))
 	categoryMap := make(map[string]int64)
 	for _, cat := range categories {
 		if err := db.InsertCategory(&cat); err != nil {
@@ -126,7 +133,9 @@ func createDefaultData(accountID int64) error {
 			continue
 		}
 		categoryMap[cat.Name] = cat.ID
+		log.Printf("Created category: %s with ID: %d", cat.Name, cat.ID)
 	}
+	log.Printf("Created %d categories successfully", len(categoryMap))
 
 	// Create default budgets for main expense categories
 	now := time.Now()
@@ -175,12 +184,16 @@ func createDefaultData(accountID int64) error {
 		},
 	}
 
+	log.Printf("Creating %d budgets", len(budgets))
 	for _, budget := range budgets {
 		if budget.CategoryID == 0 {
+			log.Printf("Skipping budget %s due to missing category", budget.Name)
 			continue // Skip if category creation failed
 		}
 		if err := db.InsertBudget(&budget); err != nil {
 			log.Printf("Failed to insert budget %s: %v", budget.Name, err)
+		} else {
+			log.Printf("Created budget: %s with ID: %d", budget.Name, budget.ID)
 		}
 	}
 
@@ -281,14 +294,19 @@ func createDefaultData(accountID int64) error {
 		},
 	}
 
+	log.Printf("Creating %d transactions", len(transactions))
 	for _, transaction := range transactions {
 		if transaction.CategoryID != nil && *transaction.CategoryID == 0 {
+			log.Printf("Skipping transaction due to missing category")
 			continue // Skip if category creation failed
 		}
 		if err := db.InsertTransaction(&transaction); err != nil {
 			log.Printf("Failed to insert transaction: %v", err)
+		} else {
+			log.Printf("Created transaction with ID: %d", transaction.ID)
 		}
 	}
+	log.Printf("createDefaultData completed for account ID: %d", accountID)
 
 	return nil
 }
