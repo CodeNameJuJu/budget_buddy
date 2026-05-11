@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { savingsApi, accountsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account, type ForecastResponse } from "@/lib/api"
+import { savingsApi, accountsApi, transactionsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account, type ForecastResponse, type Transaction } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
@@ -69,6 +69,11 @@ export default function SavingsPage() {
 
   // Allocation history view
   const [viewingPotID, setViewingPotID] = useState<number | null>(null)
+
+  // Transactions view
+  const [viewingTransactionsPotID, setViewingTransactionsPotID] = useState<number | null>(null)
+  const [potTransactions, setPotTransactions] = useState<Transaction[]>([])
+  const [loadingTransactions, setLoadingTransactions] = useState(false)
 
   useEffect(() => {
     loadUserAccount()
@@ -225,6 +230,28 @@ export default function SavingsPage() {
       loadData()
     } catch {
       console.error("Failed to delete allocation")
+    }
+  }
+
+  async function loadPotTransactions(potID: number) {
+    setLoadingTransactions(true)
+    try {
+      const response = await transactionsApi.getBySavingsPot(potID)
+      setPotTransactions(response.data || [])
+    } catch {
+      console.error("Failed to load pot transactions")
+    } finally {
+      setLoadingTransactions(false)
+    }
+  }
+
+  function handleViewTransactions(potID: number) {
+    if (viewingTransactionsPotID === potID) {
+      setViewingTransactionsPotID(null)
+      setPotTransactions([])
+    } else {
+      setViewingTransactionsPotID(potID)
+      loadPotTransactions(potID)
     }
   }
 
@@ -816,6 +843,13 @@ export default function SavingsPage() {
                     >
                       {viewingPotID === pot.id ? "Hide" : "History"}
                     </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleViewTransactions(pot.id)}
+                    >
+                      {viewingTransactionsPotID === pot.id ? "Hide" : "Transactions"}
+                    </Button>
                   </div>
 
                   {/* Inline allocation form */}
@@ -935,6 +969,51 @@ export default function SavingsPage() {
                             </div>
                           )
                         })
+                      )}
+                    </div>
+                  )}
+
+                  {/* Transactions table */}
+                  {viewingTransactionsPotID === pot.id && (
+                    <div className="pt-2 border-t space-y-2">
+                      <p className="text-xs font-medium text-muted-foreground">
+                        Transactions
+                      </p>
+                      {loadingTransactions ? (
+                        <p className="text-xs text-muted-foreground">Loading transactions...</p>
+                      ) : potTransactions.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">No transactions yet</p>
+                      ) : (
+                        <div className="border rounded-lg overflow-hidden">
+                          <table className="w-full text-xs">
+                            <thead>
+                              <tr className="border-b bg-secondary/30">
+                                <th className="text-left p-2 font-medium">Date</th>
+                                <th className="text-left p-2 font-medium">Description</th>
+                                <th className="text-right p-2 font-medium">Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {potTransactions.map((txn) => (
+                                <tr key={txn.id} className="border-b last:border-0">
+                                  <td className="p-2 text-muted-foreground">
+                                    {new Date(txn.date).toLocaleDateString()}
+                                  </td>
+                                  <td className="p-2">
+                                    {txn.description || txn.category?.name || "Transaction"}
+                                  </td>
+                                  <td className={cn(
+                                    "p-2 text-right font-medium",
+                                    txn.type === "income" ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400"
+                                  )}>
+                                    {txn.type === "income" ? "+" : "-"}
+                                    {formatCurrency(parseFloat(txn.amount))}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       )}
                     </div>
                   )}

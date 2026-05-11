@@ -126,3 +126,39 @@ func SoftDeleteTransactionForAccount(id int64, accountID int64) error {
 		Exec(context.Background())
 	return err
 }
+
+func QueryTransactionsBySavingsPot(accountID int64, savingsPotID int64) ([]types.Transaction, int, error) {
+	db := appcontext.GetDb()
+	var transactions []types.Transaction
+
+	query := db.NewSelect().Model(&transactions).
+		Relation("Category").
+		Relation("Budget").
+		Relation("SavingsAllocation").
+		Relation("SavingsAllocation.SavingsPot").
+		Where("t.account_id = ?", accountID).
+		Where("t.deleted_date IS NULL").
+		Where("savings_allocation.savings_pot_id = ?", savingsPotID).
+		Order("t.date DESC")
+
+	count, err := query.ScanAndCount(context.Background())
+	return transactions, count, err
+}
+
+func QueryTransactionsByCreditPot(accountID int64, creditPotID int64) ([]types.Transaction, int, error) {
+	db := appcontext.GetDb()
+	var transactions []types.Transaction
+
+	query := db.NewSelect().Model(&transactions).
+		Relation("Category").
+		Relation("Budget").
+		Relation("CreditPayment").
+		Relation("CreditPayment.CreditPot").
+		Where("t.account_id = ?", accountID).
+		Where("t.deleted_date IS NULL").
+		Where("credit_payment.credit_pot_id = ?", creditPotID).
+		Order("t.date DESC")
+
+	count, err := query.ScanAndCount(context.Background())
+	return transactions, count, err
+}

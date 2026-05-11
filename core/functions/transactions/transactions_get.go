@@ -125,3 +125,59 @@ func GETTransactions(w http.ResponseWriter, r *http.Request) {
 
 	helpers.RespondData(w, transactions, count)
 }
+
+func GETTransactionsBySavingsPot(w http.ResponseWriter, r *http.Request) {
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	savingsPotIDStr := r.URL.Query().Get("savings_pot_id")
+	if savingsPotIDStr == "" {
+		helpers.RespondError(w, http.StatusBadRequest, "savings_pot_id is required")
+		return
+	}
+
+	savingsPotID, err := strconv.ParseInt(savingsPotIDStr, 10, 64)
+	if err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "Invalid savings_pot_id")
+		return
+	}
+
+	transactions, count, err := db.QueryTransactionsBySavingsPot(accountID, savingsPotID)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not query transactions")
+		return
+	}
+
+	helpers.RespondData(w, transactions, count)
+}
+
+func GETTransactionsByCreditPot(w http.ResponseWriter, r *http.Request) {
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	creditPotIDStr := r.URL.Query().Get("credit_pot_id")
+	if creditPotIDStr == "" {
+		helpers.RespondError(w, http.StatusBadRequest, "credit_pot_id is required")
+		return
+	}
+
+	creditPotID, err := strconv.ParseInt(creditPotIDStr, 10, 64)
+	if err != nil {
+		helpers.RespondError(w, http.StatusBadRequest, "Invalid credit_pot_id")
+		return
+	}
+
+	transactions, count, err := db.QueryTransactionsByCreditPot(accountID, creditPotID)
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Could not query transactions")
+		return
+	}
+
+	helpers.RespondData(w, transactions, count)
+}

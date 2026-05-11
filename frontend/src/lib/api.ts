@@ -247,6 +247,10 @@ export const categoriesApi = {
 export const transactionsApi = {
   list: (accountID: number, params?: Record<string, string>) =>
     get<APIResponse<Transaction[]>>("/transactions", { account_id: String(accountID), ...params }),
+  getBySavingsPot: (savingsPotID: number) =>
+    get<APIResponse<Transaction[]>>("/transactions/by-savings-pot", { savings_pot_id: String(savingsPotID) }),
+  getByCreditPot: (creditPotID: number) =>
+    get<APIResponse<Transaction[]>>("/transactions/by-credit-pot", { credit_pot_id: String(creditPotID) }),
   create: (data: {
     account_id: number
     category_id?: number

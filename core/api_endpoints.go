@@ -76,6 +76,8 @@ func RegisterRoutes(r chi.Router) {
 		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
 			r.Get("/transactions", transactions.GETTransactions)
 			r.Get("/transactions/{id}", transactions.GETTransactions)
+			r.Get("/transactions/by-savings-pot", transactions.GETTransactionsBySavingsPot)
+			r.Get("/transactions/by-credit-pot", transactions.GETTransactionsByCreditPot)
 			r.Post("/transactions", transactions.POSTTransaction)
 			r.Patch("/transactions/{id}", transactions.PATCHTransaction)
 			r.Delete("/transactions/{id}", transactions.DELETETransaction)
