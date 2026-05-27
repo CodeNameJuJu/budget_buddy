@@ -179,6 +179,7 @@ export default function TransactionsPage() {
   }
 
   return (
+    <>
     <div className="space-y-3 xs:space-y-4 lg:space-y-6">
       <div className="responsive-flex responsive-margin">
         <div>
@@ -441,17 +442,18 @@ export default function TransactionsPage() {
           )}
         </CardContent>
       </Card>
-
-      <ConfirmDialog
-        open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-        title="Delete transaction"
-        description="Are you sure you want to delete this transaction? This action cannot be undone."
-        onConfirm={handleDeleteConfirm}
-        confirmText="Delete"
-        cancelText="Cancel"
-        variant="destructive"
-      />
     </div>
+
+    <ConfirmDialog
+      open={deleteDialogOpen}
+      onOpenChange={setDeleteDialogOpen}
+      title="Delete transaction"
+      description="Are you sure you want to delete this transaction? This action cannot be undone."
+      onConfirm={handleDeleteConfirm}
+      confirmText="Delete"
+      cancelText="Cancel"
+      variant="destructive"
+    />
+    </>
   )
 }

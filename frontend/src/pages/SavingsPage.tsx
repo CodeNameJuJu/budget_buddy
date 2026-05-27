@@ -294,6 +294,7 @@ export default function SavingsPage() {
   const pots = summary?.pots || []
 
   return (
+    <>
     <div className="space-y-8" data-tutorial="savings-page">
       <div className="flex items-center justify-between">
         <div>
@@ -1060,5 +1061,6 @@ export default function SavingsPage() {
         variant="destructive"
       />
     </div>
+    </>
   )
 }

@@ -149,6 +149,7 @@ export default function CategoriesPage() {
   const expenseCategories = categories.filter((c) => c.type === "expense")
 
   return (
+    <>
     <div className="space-y-6">
       <div className="flex items-center justify-between" data-tutorial="categories-page">
         <div>
@@ -439,5 +440,6 @@ export default function CategoriesPage() {
         variant="destructive"
       />
     </div>
+    </>
   )
 }

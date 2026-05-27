@@ -274,6 +274,7 @@ export default function CreditsPage() {
   const pots = summary?.pots || []
 
   return (
+    <>
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
@@ -885,5 +886,6 @@ export default function CreditsPage() {
         variant="destructive"
       />
     </div>
+    </>
   )
 }

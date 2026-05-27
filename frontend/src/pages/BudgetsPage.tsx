@@ -196,6 +196,7 @@ export default function BudgetsPage() {
   }
 
   return (
+    <>
     <div className="space-y-6">
       <div className="flex items-center justify-between" data-tutorial="budgets-page">
         <div>
@@ -578,5 +579,6 @@ export default function BudgetsPage() {
         variant="destructive"
       />
     </div>
+    </>
   )
 }
