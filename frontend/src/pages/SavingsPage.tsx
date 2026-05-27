@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { savingsApi, accountsApi, transactionsApi, type SavingsSummary, type SavingsPot, type SavingsAllocation, type Account, type ForecastResponse, type Transaction } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -74,6 +75,8 @@ export default function SavingsPage() {
   const [viewingTransactionsPotID, setViewingTransactionsPotID] = useState<number | null>(null)
   const [potTransactions, setPotTransactions] = useState<Transaction[]>([])
   const [loadingTransactions, setLoadingTransactions] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState<{ type: 'pot' | 'allocation', id: number } | null>(null)
 
   useEffect(() => {
     loadUserAccount()
@@ -158,10 +161,15 @@ export default function SavingsPage() {
     }
   }
 
-  async function handleDeletePot(id: number) {
-    if (!confirm("Are you sure you want to delete this savings pot?")) return
+  function handleDeletePotClick(id: number) {
+    setItemToDelete({ type: 'pot', id })
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeletePotConfirm() {
+    if (!itemToDelete || itemToDelete.type !== 'pot') return
     try {
-      await savingsApi.deletePot(id)
+      await savingsApi.deletePot(itemToDelete.id)
       loadData()
     } catch {
       console.error("Failed to delete savings pot")
@@ -224,12 +232,27 @@ export default function SavingsPage() {
     }
   }
 
-  async function handleDeleteAllocation(id: number) {
+  function handleDeleteAllocationClick(id: number) {
+    setItemToDelete({ type: 'allocation', id })
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeleteAllocationConfirm() {
+    if (!itemToDelete || itemToDelete.type !== 'allocation') return
     try {
-      await savingsApi.deleteAllocation(id)
+      await savingsApi.deleteAllocation(itemToDelete.id)
       loadData()
     } catch {
       console.error("Failed to delete allocation")
+    }
+  }
+
+  async function handleDeleteConfirm() {
+    if (!itemToDelete) return
+    if (itemToDelete.type === 'pot') {
+      await handleDeletePotConfirm()
+    } else if (itemToDelete.type === 'allocation') {
+      await handleDeleteAllocationConfirm()
     }
   }
 
@@ -751,7 +774,7 @@ export default function SavingsPage() {
                       variant="ghost"
                       size="icon"
                       className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
-                      onClick={() => handleDeletePot(pot.id)}
+                      onClick={() => handleDeletePotClick(pot.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -960,7 +983,7 @@ export default function SavingsPage() {
                                 <button
                                   className="text-muted-foreground hover:text-destructive"
                                   onClick={() =>
-                                    handleDeleteAllocation(alloc.id)
+                                    handleDeleteAllocationClick(alloc.id)
                                   }
                                 >
                                   <Trash2 className="h-3 w-3" />
@@ -1023,6 +1046,19 @@ export default function SavingsPage() {
           })}
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={itemToDelete?.type === 'pot' ? "Delete savings pot" : "Delete allocation"}
+        description={itemToDelete?.type === 'pot' 
+          ? "Are you sure you want to delete this savings pot? This action cannot be undone." 
+          : "Are you sure you want to delete this allocation? This action cannot be undone."}
+        onConfirm={handleDeleteConfirm}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
     </div>
   )
 }

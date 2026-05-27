@@ -3,6 +3,7 @@ import { Plus, Trash2, PiggyBank, Target, Sparkles, Edit2, X } from "lucide-reac
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { budgetsApi, categoriesApi, accountsApi, transactionsApi, type Budget, type Category, type Account, type Transaction } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -19,6 +20,8 @@ export default function BudgetsPage() {
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
   const [budgetTransactions, setBudgetTransactions] = useState<Transaction[]>([])
   const [loadingTransactions, setLoadingTransactions] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [budgetToDelete, setBudgetToDelete] = useState<number | null>(null)
   const { theme } = useTheme()
 
   const [form, setForm] = useState({
@@ -107,10 +110,15 @@ export default function BudgetsPage() {
     }
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm("Are you sure you want to delete this budget?")) return
+  function handleDeleteClick(id: number) {
+    setBudgetToDelete(id)
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeleteConfirm() {
+    if (!budgetToDelete) return
     try {
-      await budgetsApi.delete(id)
+      await budgetsApi.delete(budgetToDelete)
       loadData()
     } catch {
       console.error("Failed to delete budget")
@@ -449,7 +457,7 @@ export default function BudgetsPage() {
                       variant="ghost"
                       size="icon"
                       className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
-                      onClick={() => handleDelete(budget.id)}
+                      onClick={() => handleDeleteClick(budget.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -558,6 +566,17 @@ export default function BudgetsPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete budget"
+        description="Are you sure you want to delete this budget? This action cannot be undone."
+        onConfirm={handleDeleteConfirm}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
     </div>
   )
 }

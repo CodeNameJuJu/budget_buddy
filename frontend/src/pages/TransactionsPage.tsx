@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import TagInput from "@/components/ui/tag-input"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import {
   transactionsApi,
   categoriesApi,
@@ -30,6 +31,8 @@ export default function TransactionsPage() {
   const [filterCategory, setFilterCategory] = useState<string>("")
   const [exporting, setExporting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [transactionToDelete, setTransactionToDelete] = useState<number | null>(null)
   const { theme } = useTheme()
 
   const [form, setForm] = useState({
@@ -122,10 +125,15 @@ export default function TransactionsPage() {
     }
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm("Are you sure you want to delete this transaction?")) return
+  function handleDeleteClick(id: number) {
+    setTransactionToDelete(id)
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeleteConfirm() {
+    if (!transactionToDelete) return
     try {
-      await transactionsApi.delete(id)
+      await transactionsApi.delete(transactionToDelete)
       loadData()
     } catch {
       console.error("Failed to delete transaction")
@@ -420,7 +428,7 @@ export default function TransactionsPage() {
                           variant="ghost"
                           size="icon"
                           className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")}
-                          onClick={() => handleDelete(t.id)}
+                          onClick={() => handleDeleteClick(t.id)}
                         >
                           <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
                         </Button>
@@ -433,6 +441,17 @@ export default function TransactionsPage() {
           )}
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete transaction"
+        description="Are you sure you want to delete this transaction? This action cannot be undone."
+        onConfirm={handleDeleteConfirm}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
     </div>
   )
 }

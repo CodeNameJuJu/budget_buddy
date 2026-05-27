@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { creditsApi, accountsApi, transactionsApi, type CreditSummary, type CreditPot, type CreditPayment, type CreditForecastResponse, type Transaction } from "@/lib/api"
 import { formatCurrency } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -68,6 +69,8 @@ export default function CreditsPage() {
   const [viewingTransactionsPotID, setViewingTransactionsPotID] = useState<number | null>(null)
   const [potTransactions, setPotTransactions] = useState<Transaction[]>([])
   const [loadingTransactions, setLoadingTransactions] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState<{ type: 'pot' | 'payment', id: number } | null>(null)
 
   useEffect(() => {
     loadUserAccount()
@@ -139,10 +142,15 @@ export default function CreditsPage() {
     }
   }
 
-  async function handleDeletePot(id: number) {
-    if (!confirm("Are you sure you want to delete this credit pot?")) return
+  function handleDeletePotClick(id: number) {
+    setItemToDelete({ type: 'pot', id })
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeletePotConfirm() {
+    if (!itemToDelete || itemToDelete.type !== 'pot') return
     try {
-      await creditsApi.deletePot(id)
+      await creditsApi.deletePot(itemToDelete.id)
       loadData()
     } catch {
       console.error("Failed to delete credit pot")
@@ -206,12 +214,27 @@ export default function CreditsPage() {
     }
   }
 
-  async function handleDeletePayment(id: number) {
+  function handleDeletePaymentClick(id: number) {
+    setItemToDelete({ type: 'payment', id })
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeletePaymentConfirm() {
+    if (!itemToDelete || itemToDelete.type !== 'payment') return
     try {
-      await creditsApi.deletePayment(id)
+      await creditsApi.deletePayment(itemToDelete.id)
       loadData()
     } catch {
       console.error("Failed to delete payment")
+    }
+  }
+
+  async function handleDeleteConfirm() {
+    if (!itemToDelete) return
+    if (itemToDelete.type === 'pot') {
+      await handleDeletePotConfirm()
+    } else if (itemToDelete.type === 'payment') {
+      await handleDeletePaymentConfirm()
     }
   }
 
@@ -652,7 +675,7 @@ export default function CreditsPage() {
                       variant="ghost"
                       size="icon"
                       className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
-                      onClick={() => handleDeletePot(pot.id)}
+                      onClick={() => handleDeletePotClick(pot.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -788,7 +811,7 @@ export default function CreditsPage() {
                               variant="ghost"
                               size="icon"
                               className="h-5 w-5 text-red-400 hover:text-red-500"
-                              onClick={() => handleDeletePayment(payment.id)}
+                              onClick={() => handleDeletePaymentClick(payment.id)}
                             >
                               <Trash2 className="h-3 w-3" />
                             </Button>
@@ -848,6 +871,19 @@ export default function CreditsPage() {
           })}
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={itemToDelete?.type === 'pot' ? "Delete credit pot" : "Delete payment"}
+        description={itemToDelete?.type === 'pot' 
+          ? "Are you sure you want to delete this credit pot? This action cannot be undone." 
+          : "Are you sure you want to delete this payment? This action cannot be undone."}
+        onConfirm={handleDeleteConfirm}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { categoriesApi, accountsApi, type Category, type Account } from "@/lib/api"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
@@ -27,6 +28,8 @@ export default function CategoriesPage() {
   const [showForm, setShowForm] = useState(false)
   const [filterType, setFilterType] = useState<string>("")
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null)
 
   const [form, setForm] = useState({
     name: "",
@@ -96,10 +99,15 @@ export default function CategoriesPage() {
     }
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm("Are you sure you want to delete this category?")) return
+  function handleDeleteClick(id: number) {
+    setCategoryToDelete(id)
+    setDeleteDialogOpen(true)
+  }
+
+  async function handleDeleteConfirm() {
+    if (!categoryToDelete) return
     try {
-      await categoriesApi.delete(id)
+      await categoriesApi.delete(categoryToDelete)
       loadCategories()
     } catch {
       console.error("Failed to delete category")
@@ -341,7 +349,7 @@ export default function CategoriesPage() {
                           className={cn(
                             theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
                           )}
-                          onClick={() => handleDelete(cat.id)}
+                          onClick={() => handleDeleteClick(cat.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -406,7 +414,7 @@ export default function CategoriesPage() {
                           className={cn(
                             theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
                           )}
-                          onClick={() => handleDelete(cat.id)}
+                          onClick={() => handleDeleteClick(cat.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -419,6 +427,17 @@ export default function CategoriesPage() {
           )}
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete category"
+        description="Are you sure you want to delete this category? This action cannot be undone."
+        onConfirm={handleDeleteConfirm}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
     </div>
   )
 }
