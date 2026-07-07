@@ -84,19 +84,16 @@ func calculateBudgetSpent(categoryID int64, accountID int64, startDate time.Time
 }
 
 // getCurrentPeriodWindow computes the start and end of the current budget period
-// based on the billing cycle day and Period type. For recurring budgets (no EndDate),
-// the window rolls forward so spent amounts reset each period. If EndDate is set and
-// has passed, the budget is expired and a zero range is returned.
+// based on the billing cycle day and Period type. The window always rolls forward
+// so spent amounts reset each period. EndDate only caps the period end when the
+// current rolling period genuinely starts before it (the budget's last partial
+// period); once the rolling period has moved past EndDate entirely, EndDate is
+// ignored so the budget keeps recurring indefinitely.
 func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Time, billingCycleDay int, loc *time.Location) (time.Time, *time.Time) {
 	now := time.Now().In(loc)
 
 	// If the budget hasn't started yet, use the original start date
 	if startDate.After(now) {
-		return startDate, endDate
-	}
-
-	// If EndDate is set and has passed, the budget is expired
-	if endDate != nil && endDate.Before(now) {
 		return startDate, endDate
 	}
 
@@ -127,8 +124,10 @@ func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Ti
 		periodEnd = periodStart.AddDate(0, 1, 0)
 	}
 
-	// If EndDate is set, cap the period end at EndDate
-	if endDate != nil && periodEnd.After(*endDate) {
+	// If EndDate is set and the current period genuinely starts before it,
+	// cap the period end there (the budget's last partial period). If the
+	// rolling period has moved past EndDate entirely, ignore EndDate.
+	if endDate != nil && periodStart.Before(*endDate) && periodEnd.After(*endDate) {
 		periodEnd = *endDate
 	}
 

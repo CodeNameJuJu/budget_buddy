@@ -272,7 +272,7 @@ func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 	// Filter active budgets and calculate progress
 	activeBudgets := []map[string]interface{}{}
 	for _, budget := range budgets {
-		if budget.StartDate.After(now) || (budget.EndDate != nil && budget.EndDate.Before(now)) {
+		if budget.StartDate.After(now) {
 			continue
 		}
 

@@ -110,7 +110,7 @@ func GenerateBudgetThresholdAlerts(accountID int64) error {
 	}
 
 	for _, budget := range budgets {
-		if budget.StartDate.After(time.Now()) || (budget.EndDate != nil && budget.EndDate.Before(time.Now())) {
+		if budget.StartDate.After(time.Now()) {
 			continue // Skip inactive budgets
 		}
 
