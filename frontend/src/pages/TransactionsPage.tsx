@@ -149,13 +149,19 @@ export default function TransactionsPage() {
       
       // Convert to CSV
       const headers = ["Date", "Description", "Amount", "Type", "Category", "Notes"]
+      const escapeCsv = (value: string) => {
+        if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+          return `"${value.replace(/"/g, '""')}"`
+        }
+        return value
+      }
       const rows = transactions.map(t => [
-        t.date,
-        t.description || "",
-        t.amount,
-        t.type,
-        t.category?.name || "",
-        t.notes || "",
+        escapeCsv(t.date),
+        escapeCsv(t.description || ""),
+        escapeCsv(t.amount),
+        escapeCsv(t.type),
+        escapeCsv(t.category?.name || ""),
+        escapeCsv(t.notes || ""),
       ])
       
       const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n")
@@ -401,22 +407,34 @@ export default function TransactionsPage() {
                           )}
                           {t.tags && (
                             <>
-                              <span>·</span>
-                              <div className="flex items-center gap-1">
-                                <TagIcon className="h-3 w-3" />
-                                <div className="flex gap-1 flex-wrap">
-                                  {JSON.parse(t.tags).slice(0, 2).map((tag: string, index: number) => (
-                                    <Badge key={index} variant="outline" className="text-xs px-1 py-0">
-                                      {tag}
-                                    </Badge>
-                                  ))}
-                                  {JSON.parse(t.tags).length > 2 && (
-                                    <Badge variant="outline" className="text-xs px-1 py-0">
-                                      +{JSON.parse(t.tags).length - 2}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
+                              {(() => {
+                                try {
+                                  const parsedTags = JSON.parse(t.tags) as string[]
+                                  if (!Array.isArray(parsedTags) || parsedTags.length === 0) return null
+                                  return (
+                                    <>
+                                      <span>·</span>
+                                      <div className="flex items-center gap-1">
+                                        <TagIcon className="h-3 w-3" />
+                                        <div className="flex gap-1 flex-wrap">
+                                          {parsedTags.slice(0, 2).map((tag: string, index: number) => (
+                                            <Badge key={index} variant="outline" className="text-xs px-1 py-0">
+                                              {tag}
+                                            </Badge>
+                                          ))}
+                                          {parsedTags.length > 2 && (
+                                            <Badge variant="outline" className="text-xs px-1 py-0">
+                                              +{parsedTags.length - 2}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
+                                } catch {
+                                  return null
+                                }
+                              })()}
                             </>
                           )}
                         </div>

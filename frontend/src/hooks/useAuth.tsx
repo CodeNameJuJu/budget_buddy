@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi, apiClient } from '@/lib/apiClient';
+import { authApi } from '@/lib/api';
 
 // Types
 interface User {
@@ -197,8 +197,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
     setIsLoading(true);
     try {
-      const data = await authApi.login({ email, password });
-      setTokens(data, rememberMe);
+      const response = await authApi.login({ email, password });
+      const data = response.data;
+      setTokens({
+        user: data.user,
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        token_type: 'Bearer',
+        expires_in: 3600,
+      }, rememberMe);
       setUser(data.user);
     } catch (error) {
       console.error('Login error:', error);
@@ -211,10 +218,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (credentials: RegisterCredentials): Promise<void> => {
     setIsLoading(true);
     try {
-      const data = await authApi.register(credentials);
-      
-      // For registration, we'll use localStorage by default (remember me = true)
-      setTokens(data, true);
+      const response = await authApi.register(credentials);
+      const data = response.data;
+      setTokens({
+        user: data.user,
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        token_type: 'Bearer',
+        expires_in: 3600,
+      }, true);
       setUser(data.user);
     } catch (error) {
       console.error('Registration error:', error);
@@ -228,7 +240,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     console.log('Logging out user');
     try {
       // Try to call logout API, but don't fail if it doesn't work
-      await apiClient.post('/auth/logout', {});
+      await authApi.logout();
     } catch (error) {
       // Even if logout API fails, clear local tokens
       console.error('Logout API error:', error);

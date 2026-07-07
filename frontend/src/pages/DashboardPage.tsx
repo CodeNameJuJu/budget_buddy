@@ -20,6 +20,22 @@ import { formatCurrency, formatDate, formatPercentage } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
 
+interface SpendingTrendsData {
+  trends?: { period: string; total: string }[]
+  vs_last_month?: string
+  vs_budget?: string
+  avg_daily?: string
+}
+
+interface FinancialHealthData {
+  score: number
+  grade: string
+  savings_rate: string
+  budget_adherence: string
+  income_stability: string
+  recommendations: string[]
+}
+
 export default function DashboardPage() {
   const { theme } = useTheme()
   const [accountId, setAccountId] = useState<number | null>(null)
@@ -27,6 +43,8 @@ export default function DashboardPage() {
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [savings, setSavings] = useState<SavingsPot[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
+  const [spendingTrends, setSpendingTrends] = useState<SpendingTrendsData | null>(null)
+  const [financialHealth, setFinancialHealth] = useState<FinancialHealthData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -54,17 +72,21 @@ export default function DashboardPage() {
     if (!accountId) return
     
     try {
-      const [summaryRes, budgetsRes, savingsRes, alertsRes] = await Promise.all([
+      const [summaryRes, budgetsRes, savingsRes, alertsRes, trendsRes, healthRes] = await Promise.all([
         dashboardApi.summary(accountId),
         budgetsApi.list(accountId),
         savingsApi.listPots(accountId),
-        alertsApi.list(accountId, false, 5), // Get last 5 alerts
+        alertsApi.list(accountId, false, 5),
+        dashboardApi.getWidgetData(accountId, "spending_trends"),
+        dashboardApi.getWidgetData(accountId, "financial_health"),
       ])
       
       setSummary(summaryRes.data)
       setBudgets(budgetsRes.data || [])
       setSavings(savingsRes.data || [])
       setAlerts(alertsRes.data || [])
+      setSpendingTrends(trendsRes.data || null)
+      setFinancialHealth(healthRes.data || null)
     } catch (error) {
       console.error("Failed to load dashboard data", error)
     } finally {
@@ -248,8 +270,9 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-3">
                 {budgets.slice(0, 3).map((budget) => {
-                  const spent = parseFloat(budget.amount || "0") * 0.65 // Mock spent amount
-                  const percentage = (spent / parseFloat(budget.amount || "1")) * 100
+                  const spent = parseFloat(budget.spent || "0")
+                  const amount = parseFloat(budget.amount || "0")
+                  const percentage = amount > 0 ? (spent / amount) * 100 : 0
                   return (
                     <div key={budget.id} className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
@@ -421,29 +444,46 @@ export default function DashboardPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className={cn("text-lg font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>+12%</div>
+                  <div className={cn("text-lg font-bold", parseFloat(spendingTrends?.vs_last_month || "0") >= 0 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]") : "text-red-400")}>
+                    {spendingTrends?.vs_last_month ? `${parseFloat(spendingTrends.vs_last_month) >= 0 ? "+" : ""}${spendingTrends.vs_last_month}%` : "—"}
+                  </div>
                   <p className="text-xs text-muted-foreground">vs Last Month</p>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-red-400">-8%</div>
+                  <div className={cn("text-lg font-bold", parseFloat(spendingTrends?.vs_budget || "0") <= 0 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]") : "text-red-400")}>
+                    {spendingTrends?.vs_budget ? `${spendingTrends.vs_budget}%` : "—"}
+                  </div>
                   <p className="text-xs text-muted-foreground">vs Budget</p>
                 </div>
                 <div>
-                  <div className={cn("text-lg font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>R2,450</div>
+                  <div className={cn("text-lg font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
+                    {spendingTrends?.avg_daily ? formatCurrency(spendingTrends.avg_daily) : "—"}
+                  </div>
                   <p className="text-xs text-muted-foreground">Avg Daily</p>
                 </div>
               </div>
-              <div className="h-20 flex items-end justify-between gap-1">
-                {[65, 80, 45, 90, 70, 85, 60, 75, 55, 88, 72, 68].map((height, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 bg-gradient-to-t from-[#6BAF92] to-[#88B39B] rounded-t transition-all duration-300 hover:from-[#5E9C7E] hover:to-[#6BAF92]"
-                    style={{ height: `${height}%` }}
-                  />
-                ))}
-              </div>
+              {spendingTrends?.trends && spendingTrends.trends.length > 0 ? (
+                <div className="h-20 flex items-end justify-between gap-1">
+                  {spendingTrends.trends.map((trend, i) => {
+                    const maxTotal = Math.max(...spendingTrends.trends!.map(t => parseFloat(t.total)), 1)
+                    const height = (parseFloat(trend.total) / maxTotal) * 100
+                    return (
+                      <div
+                        key={i}
+                        className="flex-1 bg-gradient-to-t from-[#6BAF92] to-[#88B39B] rounded-t transition-all duration-300 hover:from-[#5E9C7E] hover:to-[#6BAF92]"
+                        style={{ height: `${Math.max(height, 2)}%` }}
+                        title={`${trend.period}: ${formatCurrency(trend.total)}`}
+                      />
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="h-20 flex items-center justify-center">
+                  <p className="text-xs text-muted-foreground">No spending data yet</p>
+                </div>
+              )}
               <p className="text-xs text-muted-foreground text-center">
-                Last 12 days spending pattern
+                {spendingTrends?.trends?.length ? `Last ${spendingTrends.trends.length} periods` : "Spending pattern will appear here"}
               </p>
             </div>
           </CardContent>
@@ -470,22 +510,28 @@ export default function DashboardPage() {
                 <div className="text-center">
                   <div className={cn(
                     "text-4xl font-bold",
-                    theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
-                  )}>78</div>
-                  <p className="text-sm text-muted-foreground">Good Health</p>
+                    (financialHealth?.score || 0) >= 70 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : (financialHealth?.score || 0) >= 50 ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400"
+                  )}>{financialHealth?.score ?? "—"}</div>
+                  <p className="text-sm text-muted-foreground">{financialHealth?.grade ? `Grade ${financialHealth.grade}` : "No data"}</p>
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Savings Rate</span>
-                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>+15%</span>
+                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
+                      {financialHealth?.savings_rate ? `${parseFloat(financialHealth.savings_rate).toFixed(1)}%` : "—"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Budget Adherence</span>
-                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>92%</span>
+                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
+                      {financialHealth?.budget_adherence ? `${parseFloat(financialHealth.budget_adherence).toFixed(1)}%` : "—"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Income Stability</span>
-                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>Stable</span>
+                    <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
+                      {financialHealth?.income_stability ? `${parseFloat(financialHealth.income_stability).toFixed(1)}%` : "—"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -494,13 +540,13 @@ export default function DashboardPage() {
               <div className="w-20 h-20 rounded-full border-4 border-zinc-600 relative">
                 <div className={cn(
                   "absolute inset-0 rounded-full border-4 border-t-transparent border-r-transparent transform rotate-45",
-                  theme === "light" ? "border-[#6BAF92]" : "border-[#6BAF92]"
+                  (financialHealth?.score || 0) >= 70 ? (theme === "light" ? "border-[#6BAF92]" : "border-[#6BAF92]") : (financialHealth?.score || 0) >= 50 ? (theme === "light" ? "border-[#D9B44A]" : "border-[#C9A24A]") : "border-red-400"
                 )}></div>
                 <div className="absolute inset-2 flex items-center justify-center">
                   <span className={cn(
                     "text-lg font-bold",
-                    theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
-                  )}>78%</span>
+                    (financialHealth?.score || 0) >= 70 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : (financialHealth?.score || 0) >= 50 ? (theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]") : "text-red-400"
+                  )}>{financialHealth?.score ? `${financialHealth.score}%` : "—"}</span>
                 </div>
               </div>
             </div>

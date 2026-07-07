@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 
 export default function BudgetsPage() {
   const [accountId, setAccountId] = useState<number | null>(null)
+  const [account, setAccount] = useState<Account | null>(null)
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -57,6 +58,7 @@ export default function BudgetsPage() {
       const response = await accountsApi.getMyAccount()
       if (response.data && response.data.length > 0) {
         setAccountId(response.data[0].id)
+        setAccount(response.data[0])
       }
     } catch (error) {
       console.error("Failed to load user account", error)
@@ -125,14 +127,62 @@ export default function BudgetsPage() {
     }
   }
 
+  function getCurrentPeriodWindow(budget: Budget): { from: string; to: string } {
+    const billingCycleDay = account?.billing_cycle_day || 25
+    const now = new Date()
+    const startDate = new Date(budget.start_date)
+
+    if (budget.period === "weekly") {
+      const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+      const periodsElapsed = Math.floor(daysElapsed / 7)
+      const periodStart = new Date(startDate)
+      periodStart.setDate(startDate.getDate() + periodsElapsed * 7)
+      const periodEnd = new Date(periodStart)
+      periodEnd.setDate(periodStart.getDate() + 7)
+      return {
+        from: periodStart.toISOString().split("T")[0],
+        to: periodEnd.toISOString().split("T")[0],
+      }
+    }
+
+    if (budget.period === "yearly") {
+      let yearsElapsed = now.getFullYear() - startDate.getFullYear()
+      if (now.getMonth() < startDate.getMonth() || (now.getMonth() === startDate.getMonth() && now.getDate() < billingCycleDay)) {
+        yearsElapsed--
+      }
+      const periodStart = new Date(startDate.getFullYear() + yearsElapsed, startDate.getMonth(), billingCycleDay)
+      const periodEnd = new Date(periodStart)
+      periodEnd.setFullYear(periodStart.getFullYear() + 1)
+      return {
+        from: periodStart.toISOString().split("T")[0],
+        to: periodEnd.toISOString().split("T")[0],
+      }
+    }
+
+    // monthly
+    let monthsElapsed = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth())
+    if (now.getDate() < billingCycleDay) {
+      monthsElapsed--
+    }
+    const periodStart = new Date(startDate.getFullYear(), startDate.getMonth(), billingCycleDay)
+    periodStart.setMonth(periodStart.getMonth() + monthsElapsed)
+    const periodEnd = new Date(periodStart)
+    periodEnd.setMonth(periodStart.getMonth() + 1)
+    return {
+      from: periodStart.toISOString().split("T")[0],
+      to: periodEnd.toISOString().split("T")[0],
+    }
+  }
+
   async function handleBudgetClick(budget: Budget) {
     setSelectedBudget(budget)
     setLoadingTransactions(true)
     try {
+      const periodWindow = getCurrentPeriodWindow(budget)
       const response = await transactionsApi.list(accountId!, {
         category_id: String(budget.category_id),
-        from: budget.start_date,
-        to: budget.end_date || new Date().toISOString().split("T")[0],
+        from: periodWindow.from,
+        to: periodWindow.to,
       })
       setBudgetTransactions(response.data || [])
     } catch {
