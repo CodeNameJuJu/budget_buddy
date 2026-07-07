@@ -5,6 +5,8 @@
 *.so
 *.dylib
 budget-buddy
+budget_buddy
+budgetbuddy
 
 # Test binary, built with `go test -c`
 *.test

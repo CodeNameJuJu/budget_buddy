@@ -6,22 +6,22 @@ A full-stack budgeting application built with **Go** (chi + bun ORM) and **React
 
 ```
 budgetBuddy/
-├── backend/
-│   ├── core/
-│   │   ├── api_endpoints.go        # Route definitions
-│   │   ├── context/                # DB connection management
-│   │   ├── db/                     # Database queries (db_*.go)
-│   │   ├── functions/              # Business logic by domain
-│   │   │   ├── accounts/
-│   │   │   ├── budgets/
-│   │   │   ├── categories/
-│   │   │   ├── dashboard/
-│   │   │   └── transactions/
-│   │   └── helpers/                # Shared HTTP helpers
-│   ├── utils/types/                # Type definitions (types_*.go)
-│   ├── migrations/                 # SQL migration files
-│   ├── main.go                     # Entrypoint
-│   └── go.mod
+├── core/
+│   ├── api_endpoints.go        # Route definitions
+│   ├── context/                # DB connection management
+│   ├── db/                     # Database queries (db_*.go)
+│   ├── functions/              # Business logic by domain
+│   │   ├── accounts/
+│   │   ├── budgets/
+│   │   ├── categories/
+│   │   ├── dashboard/
+│   │   └── transactions/
+│   └── helpers/                # Shared HTTP helpers
+├── utils/types/                # Type definitions (types_*.go)
+├── backend/migrations/         # SQL migration files
+├── main.go                     # Entrypoint
+├── go.mod
+├── Dockerfile
 ├── frontend/
 │   ├── src/
 │   │   ├── components/             # Reusable UI components
@@ -54,14 +54,13 @@ psql -d budget_buddy -f backend/migrations/001_initial_schema.sql
 ### 2. Configure the backend
 
 ```bash
-cp backend/.env.example backend/.env
-# Edit backend/.env with your database credentials
+cp .env.example .env
+# Edit .env with your database credentials
 ```
 
 ### 3. Start the backend
 
 ```bash
-cd backend
 go run main.go
 ```
 
