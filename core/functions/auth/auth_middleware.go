@@ -143,10 +143,18 @@ func (h *AuthHandler) OptionalAuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		accountID, err := db.GetAccountIDForUser(int64(user.ID))
+		if err != nil {
+			// Account not found, continue without user
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		// Add user to context
 		ctx := context.WithValue(r.Context(), "user", &user)
 		ctx = context.WithValue(ctx, "user_id", user.ID)
 		ctx = context.WithValue(ctx, "user_email", user.Email)
+		ctx = context.WithValue(ctx, "account_id", accountID)
 		ctx = context.WithValue(ctx, "device_id", claims.DeviceID)
 
 		// Call next handler with updated context

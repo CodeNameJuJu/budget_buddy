@@ -155,18 +155,9 @@ func getWidgetDataByType(accountID int64, widgetType types.WidgetType) (interfac
 }
 
 func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
-	var account types.Account
-	err := db.GetDb().NewSelect().
-		Model(&account).
-		Where("id = ?", accountID).
-		Scan(context.Background())
+	billingCycleDay, err := getBillingCycleDay(accountID)
 	if err != nil {
 		return time.Time{}, time.Time{}, err
-	}
-
-	billingCycleDay := 25
-	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
-		billingCycleDay = *account.BillingCycleDay
 	}
 
 	now := time.Now()
@@ -183,24 +174,29 @@ func getBillingCycleDateRange(accountID int64) (time.Time, time.Time, error) {
 	return from, to, nil
 }
 
+func getBillingCycleDay(accountID int64) (int, error) {
+	var account types.Account
+	err := db.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err != nil {
+		return 0, err
+	}
+
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+	return billingCycleDay, nil
+}
+
 func getBillingCycleDateRangeOrDefault(accountID int64) (time.Time, time.Time) {
 	from, to, err := getBillingCycleDateRange(accountID)
 	if err != nil {
-		var account types.Account
-		_ = db.GetDb().NewSelect().
-			Model(&account).
-			Where("id = ?", accountID).
-			Scan(context.Background())
-
-		loc := time.UTC
-		if account.Timezone != nil {
-			if tz, err := time.LoadLocation(*account.Timezone); err == nil {
-				loc = tz
-			}
-		}
-
-		now := time.Now().In(loc)
-		from = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, loc)
+		// Account query failed, default to current calendar month in UTC
+		now := time.Now().UTC()
+		from = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
 		to = from.AddDate(0, 1, 0).Add(-time.Nanosecond)
 	}
 	return from, to
@@ -376,11 +372,7 @@ func getCategoryBreakdownWidgetData(accountID int64) (interface{}, error) {
 func getFinancialHealthWidgetData(accountID int64) (interface{}, error) {
 	from, to := getBillingCycleDateRangeOrDefault(accountID)
 
-	var account types.Account
-	err := db.GetDb().NewSelect().
-		Model(&account).
-		Where("id = ?", accountID).
-		Scan(context.Background())
+	billingCycleDay, err := getBillingCycleDay(accountID)
 	if err != nil {
 		return map[string]interface{}{
 			"score":            0,
@@ -390,11 +382,6 @@ func getFinancialHealthWidgetData(accountID int64) (interface{}, error) {
 			"recommendations":  []string{},
 			"period":           from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 		}, nil
-	}
-
-	billingCycleDay := 25
-	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
-		billingCycleDay = *account.BillingCycleDay
 	}
 
 	health, err := db.CalculateFinancialHealth(accountID, billingCycleDay)
