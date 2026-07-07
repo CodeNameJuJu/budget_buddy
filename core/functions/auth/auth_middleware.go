@@ -164,11 +164,7 @@ func (h *AuthHandler) AdminMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// Check if user is admin (you might want to add an is_admin field to users table)
-		// For now, we'll check if email contains admin or if user ID is 1 (first user)
-		isAdmin := strings.Contains(strings.ToLower(user.Email), "admin") || user.ID == 1
-
-		if !isAdmin {
+		if !user.IsAdmin {
 			helpers.RespondError(w, http.StatusForbidden, "Admin access required")
 			return
 		}

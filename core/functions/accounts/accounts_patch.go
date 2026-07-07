@@ -19,10 +19,24 @@ type PATCHAccountRequest struct {
 }
 
 func PATCHAccount(w http.ResponseWriter, r *http.Request) {
+	userIDInt, ok := r.Context().Value("user_id").(int)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+	userID := int64(userIDInt)
+
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid account ID")
+		return
+	}
+
+	// Verify ownership
+	existing, _, err := db.QueryAccounts(&id, &userID)
+	if err != nil || len(existing) == 0 {
+		helpers.RespondError(w, http.StatusNotFound, "Account not found")
 		return
 	}
 

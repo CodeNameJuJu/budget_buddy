@@ -176,6 +176,16 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		return fmt.Errorf("failed to merge budgets: %w", err)
 	}
 
+	// Update categories
+	_, err = database.NewUpdate().
+		Model((*types.Category)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge categories: %w", err)
+	}
+
 	// Update savings goals
 	_, err = database.NewUpdate().
 		Model((*types.SavingsGoal)(nil)).
@@ -186,6 +196,56 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		return fmt.Errorf("failed to merge savings goals: %w", err)
 	}
 
+	// Update goal contributions
+	_, err = database.NewUpdate().
+		Model((*types.GoalContribution)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge goal contributions: %w", err)
+	}
+
+	// Update savings pots
+	_, err = database.NewUpdate().
+		Model((*types.SavingsPot)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge savings pots: %w", err)
+	}
+
+	// Update savings allocations
+	_, err = database.NewUpdate().
+		Model((*types.SavingsAllocation)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge savings allocations: %w", err)
+	}
+
+	// Update credit pots
+	_, err = database.NewUpdate().
+		Model((*types.CreditPot)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge credit pots: %w", err)
+	}
+
+	// Update credit payments
+	_, err = database.NewUpdate().
+		Model((*types.CreditPayment)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge credit payments: %w", err)
+	}
+
 	// Update alerts
 	_, err = database.NewUpdate().
 		Model((*types.Alert)(nil)).
@@ -194,6 +254,26 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		Exec(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to merge alerts: %w", err)
+	}
+
+	// Update dashboard layouts
+	_, err = database.NewUpdate().
+		Model((*types.DashboardLayout)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge dashboard layouts: %w", err)
+	}
+
+	// Update alert preferences
+	_, err = database.NewUpdate().
+		Model((*types.AlertPreference)(nil)).
+		Set("account_id = ?", fromAccountID).
+		Where("account_id = ?", toAccountID).
+		Exec(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to merge alert preferences: %w", err)
 	}
 
 	err = s.addUserToAccountMembers(fromAccountID, int64(userID))

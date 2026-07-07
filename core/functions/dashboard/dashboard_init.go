@@ -4,14 +4,20 @@ import (
 	"net/http"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func POSTInitializeDashboard(w http.ResponseWriter, r *http.Request) {
-	// Create default dashboard layout for account 1
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	defaultLayout := &types.DashboardLayout{
-		AccountID: 1,
+		AccountID: accountID,
 		Name:      "Main Dashboard",
 		IsActive:  true,
 		Layout:    db.GetDefaultDashboardLayout(),

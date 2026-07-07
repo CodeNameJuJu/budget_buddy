@@ -26,10 +26,9 @@ type AuthService struct {
 }
 
 func NewAuthService() *AuthService {
-	// Get JWT secret from environment or use a default for development
-	secret := []byte("your-super-secret-jwt-key-change-in-production")
-	if envSecret := []byte(getEnv("JWT_SECRET", "")); len(envSecret) > 0 {
-		secret = envSecret
+	secret := []byte(getEnv("JWT_SECRET", ""))
+	if len(secret) == 0 {
+		panic("JWT_SECRET environment variable is required")
 	}
 
 	return &AuthService{
@@ -167,10 +166,13 @@ func (s *AuthService) ValidateRefreshToken(tokenString string) (*types.RefreshTo
 	}
 
 	// Hash the token for comparison
-	tokenHash := s.hashToken(tokenString)
+	tokenHash, err := s.hashToken(tokenString)
+	if err != nil {
+		return nil, fmt.Errorf("failed to hash token: %w", err)
+	}
 
 	var refreshToken types.RefreshToken
-	err := database.NewSelect().
+	err = database.NewSelect().
 		Model(&refreshToken).
 		Where("token_hash = ? AND expires_at > ?", tokenHash, time.Now()).
 		Scan(context.Background())
@@ -221,11 +223,12 @@ func (s *AuthService) RevokeAllUserTokens(userID int) error {
 }
 
 // hashToken creates a hash of the token for storage
-func (s *AuthService) hashToken(token string) string {
-	// For simplicity, we'll use bcrypt to hash the token
-	// In production, you might want to use a different approach
-	hash, _ := bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
-	return string(hash)
+func (s *AuthService) hashToken(token string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
+	if err != nil {
+		return "", fmt.Errorf("failed to hash token: %w", err)
+	}
+	return string(hash), nil
 }
 
 // getEnv gets an environment variable with a default value

@@ -135,7 +135,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store refresh token
-	refreshTokenHash := h.authService.hashToken(refreshToken)
+	refreshTokenHash, err := h.authService.hashToken(refreshToken)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to process refresh token")
 		return
@@ -250,7 +250,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store refresh token
-	refreshTokenHash := h.authService.hashToken(refreshToken)
+	refreshTokenHash, err := h.authService.hashToken(refreshToken)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to process refresh token")
 		return
@@ -366,7 +366,7 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store new refresh token
-	newRefreshTokenHash := h.authService.hashToken(newRefreshToken)
+	newRefreshTokenHash, err := h.authService.hashToken(newRefreshToken)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to process refresh token")
 		return
@@ -391,13 +391,6 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 
 // Logout handles user logout for the current device
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
-	// Get user from context (set by auth middleware)
-	user, ok := r.Context().Value("user").(*types.User)
-	if !ok {
-		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
-		return
-	}
-
 	// Get device_id from token
 	userID, ok := GetUserIDFromContext(r)
 	if !ok {
@@ -428,14 +421,7 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Revoke refresh tokens for this user (optional - could be device-specific)
-	err = h.authService.RevokeAllUserTokens(user.ID)
-	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to revoke tokens")
-		return
-	}
-
-	helpers.RespondData(w, map[string]string{"message": "Logged out successfully"}, http.StatusOK)
+	helpers.RespondData(w, map[string]string{"message": "Logged out successfully"}, 1)
 }
 
 // GetProfile handles getting user profile
@@ -447,7 +433,7 @@ func (h *AuthHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.RespondData(w, user, http.StatusOK)
+	helpers.RespondData(w, user, 1)
 }
 
 // UpdateProfile handles profile update
@@ -520,7 +506,7 @@ func (h *AuthHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.RespondData(w, updatedUser, http.StatusOK)
+	helpers.RespondData(w, updatedUser, 1)
 }
 
 // SendVerificationEmail handles sending a verification email
@@ -549,7 +535,7 @@ func (h *AuthHandler) SendVerificationEmail(w http.ResponseWriter, r *http.Reque
 	helpers.RespondData(w, map[string]string{
 		"message": "Verification email sent",
 		"email":   user.Email,
-	}, http.StatusOK)
+	}, 1)
 }
 
 // VerifyEmail handles email verification
@@ -591,7 +577,7 @@ func (h *AuthHandler) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.RespondData(w, map[string]string{"message": "Email verified successfully"}, http.StatusOK)
+	helpers.RespondData(w, map[string]string{"message": "Email verified successfully"}, 1)
 }
 
 // ChangePassword handles password change
@@ -654,7 +640,7 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.RespondData(w, map[string]string{"message": "Password changed successfully"}, http.StatusOK)
+	helpers.RespondData(w, map[string]string{"message": "Password changed successfully"}, 1)
 }
 
 // ListDevices lists all devices/sessions for the current user
@@ -683,7 +669,7 @@ func (h *AuthHandler) ListDevices(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.RespondData(w, sessions, http.StatusOK)
+	helpers.RespondData(w, sessions, len(sessions))
 }
 
 // RevokeDevice revokes a specific device/session
@@ -716,7 +702,7 @@ func (h *AuthHandler) RevokeDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.RespondData(w, map[string]string{"message": "Device revoked successfully"}, http.StatusOK)
+	helpers.RespondData(w, map[string]string{"message": "Device revoked successfully"}, 1)
 }
 
 // POSTProfilePicture updates the user's profile picture URL
@@ -828,5 +814,5 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 	helpers.RespondData(w, map[string]interface{}{
 		"message":             "Profile picture updated successfully",
 		"profile_picture_url": result.SecureURL,
-	}, http.StatusOK)
+	}, 1)
 }

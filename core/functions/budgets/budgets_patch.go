@@ -5,11 +5,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/shopspring/decimal"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/go-chi/chi/v5"
+	"github.com/shopspring/decimal"
 )
 
 type PATCHBudgetRequest struct {
@@ -22,10 +23,23 @@ type PATCHBudgetRequest struct {
 }
 
 func PATCHBudget(w http.ResponseWriter, r *http.Request) {
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid budget ID")
+		return
+	}
+
+	// Verify ownership
+	existing, _, err := db.QueryBudgets(accountID, &id)
+	if err != nil || len(existing) == 0 {
+		helpers.RespondError(w, http.StatusNotFound, "Budget not found")
 		return
 	}
 
@@ -52,7 +66,13 @@ func PATCHBudget(w http.ResponseWriter, r *http.Request) {
 		budget.Amount = amount
 	}
 	if req.Period != nil {
-		budget.Period = *req.Period
+		switch *req.Period {
+		case "weekly", "monthly", "yearly":
+			budget.Period = *req.Period
+		default:
+			helpers.RespondError(w, http.StatusBadRequest, "period must be weekly, monthly, or yearly")
+			return
+		}
 	}
 	if req.StartDate != nil {
 		startDate, parseErr := time.Parse("2006-01-02", *req.StartDate)

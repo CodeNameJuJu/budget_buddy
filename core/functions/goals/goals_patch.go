@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/go-chi/chi/v5"
 	"github.com/shopspring/decimal"
 )
 
@@ -22,7 +24,7 @@ type UpdateGoalRequest struct {
 }
 
 func PATCHGoal(w http.ResponseWriter, r *http.Request) {
-	goalIDStr := r.URL.Query().Get("id")
+	goalIDStr := chi.URLParam(r, "id")
 	if goalIDStr == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "id is required")
 		return
@@ -34,6 +36,12 @@ func PATCHGoal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	var req UpdateGoalRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		helpers.RespondError(w, http.StatusBadRequest, "Invalid request body")
@@ -41,7 +49,7 @@ func PATCHGoal(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get existing goal
-	goals, _, err := db.QuerySavingsGoals(0, &goalID)
+	goals, _, err := db.QuerySavingsGoals(accountID, &goalID)
 	if err != nil || len(goals) == 0 {
 		helpers.RespondError(w, http.StatusNotFound, "Goal not found")
 		return

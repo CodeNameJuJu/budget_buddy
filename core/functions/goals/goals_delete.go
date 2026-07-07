@@ -5,11 +5,19 @@ import (
 	"strconv"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/go-chi/chi/v5"
 )
 
 func DELETEGoal(w http.ResponseWriter, r *http.Request) {
-	goalIDStr := r.URL.Query().Get("id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	goalIDStr := chi.URLParam(r, "id")
 	if goalIDStr == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "id is required")
 		return
@@ -21,7 +29,7 @@ func DELETEGoal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.SoftDeleteSavingsGoal(goalID)
+	err = db.SoftDeleteSavingsGoalForAccount(goalID, accountID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not delete savings goal")
 		return
@@ -31,7 +39,13 @@ func DELETEGoal(w http.ResponseWriter, r *http.Request) {
 }
 
 func DELETEGoalContribution(w http.ResponseWriter, r *http.Request) {
-	contributionIDStr := r.URL.Query().Get("id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
+	contributionIDStr := chi.URLParam(r, "id")
 	if contributionIDStr == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "id is required")
 		return
@@ -43,7 +57,7 @@ func DELETEGoalContribution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.SoftDeleteGoalContribution(contributionID)
+	err = db.SoftDeleteGoalContributionForAccount(contributionID, accountID)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not delete goal contribution")
 		return

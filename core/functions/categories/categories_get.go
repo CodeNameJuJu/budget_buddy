@@ -6,6 +6,7 @@ import (
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/go-chi/chi/v5"
 )
 
 func GETCategories(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,11 @@ func GETCategories(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var categoryID *int64
-	if idStr := r.URL.Query().Get("id"); idStr != "" {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		idStr = r.URL.Query().Get("id")
+	}
+	if idStr != "" {
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
 			helpers.RespondError(w, http.StatusBadRequest, "Invalid category ID")

@@ -91,6 +91,20 @@ func SoftDeleteCreditPot(id int64) error {
 	return err
 }
 
+func SoftDeleteCreditPotForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.CreditPot)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Exec(context.Background())
+	return err
+}
+
 // endregion
 
 // ====================================================================================================
@@ -135,6 +149,20 @@ func SoftDeleteCreditPayment(id int64) error {
 	return err
 }
 
+func SoftDeleteCreditPaymentForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.CreditPayment)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Exec(context.Background())
+	return err
+}
+
 // endregion
 
 // ====================================================================================================
@@ -142,10 +170,10 @@ func SoftDeleteCreditPayment(id int64) error {
 // ====================================================================================================
 
 type CreditSummary struct {
-	TotalPayable decimal.Decimal      `json:"total_payable"`
-	TotalPaid     decimal.Decimal      `json:"total_paid"`
-	Remaining     decimal.Decimal      `json:"remaining"`
-	Pots          []types.CreditPot   `json:"pots"`
+	TotalPayable decimal.Decimal   `json:"total_payable"`
+	TotalPaid    decimal.Decimal   `json:"total_paid"`
+	Remaining    decimal.Decimal   `json:"remaining"`
+	Pots         []types.CreditPot `json:"pots"`
 }
 
 func GetCreditSummary(accountID int64) (*CreditSummary, error) {
@@ -185,9 +213,9 @@ func GetCreditSummary(accountID int64) (*CreditSummary, error) {
 
 	return &CreditSummary{
 		TotalPayable: totalPayable,
-		TotalPaid:     totalPaid,
-		Remaining:     remaining,
-		Pots:          pots,
+		TotalPaid:    totalPaid,
+		Remaining:    remaining,
+		Pots:         pots,
 	}, nil
 }
 

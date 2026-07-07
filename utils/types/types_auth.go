@@ -10,6 +10,7 @@ type User struct {
 	FirstName         *string    `json:"first_name,omitempty" bun:"first_name"`
 	LastName          *string    `json:"last_name,omitempty" bun:"last_name"`
 	IsActive          bool       `json:"is_active" bun:"is_active"`
+	IsAdmin           bool       `json:"is_admin" bun:"is_admin"`
 	EmailVerified     bool       `json:"email_verified" bun:"email_verified"`
 	LastLogin         *time.Time `json:"last_login,omitempty" bun:"last_login"`
 	CreatedAt         time.Time  `json:"created_at" bun:"created_at"`

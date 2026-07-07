@@ -11,6 +11,7 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/go-chi/chi/v5"
 )
 
 func GETTransactions(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +25,11 @@ func GETTransactions(w http.ResponseWriter, r *http.Request) {
 		AccountID: accountID,
 	}
 
-	if idStr := r.URL.Query().Get("id"); idStr != "" {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		idStr = r.URL.Query().Get("id")
+	}
+	if idStr != "" {
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
 			helpers.RespondError(w, http.StatusBadRequest, "Invalid transaction ID")

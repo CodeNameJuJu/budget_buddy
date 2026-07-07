@@ -43,7 +43,7 @@ func (h *AccountMergeHandler) CreateMergeToken(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	helpers.RespondData(w, mergeToken, http.StatusCreated)
+	helpers.RespondData(w, mergeToken, 1)
 }
 
 // AcceptMerge accepts a merge request
@@ -71,7 +71,7 @@ func (h *AccountMergeHandler) AcceptMerge(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	helpers.RespondData(w, map[string]string{"message": "Accounts merged successfully"}, http.StatusOK)
+	helpers.RespondData(w, map[string]string{"message": "Accounts merged successfully"}, 1)
 }
 
 // GetPendingMergeTokens gets pending merge tokens for the current user
@@ -88,5 +88,5 @@ func (h *AccountMergeHandler) GetPendingMergeTokens(w http.ResponseWriter, r *ht
 		return
 	}
 
-	helpers.RespondData(w, tokens, http.StatusOK)
+	helpers.RespondData(w, tokens, len(tokens))
 }

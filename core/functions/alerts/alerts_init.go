@@ -4,41 +4,47 @@ import (
 	"net/http"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func POSTInitializeAlerts(w http.ResponseWriter, r *http.Request) {
-	// Create default alert preferences for account 1
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
+		return
+	}
+
 	preferences := []types.AlertPreference{
 		{
-			AccountID: 1,
+			AccountID: accountID,
 			Type:      types.AlertBudgetThreshold,
 			Enabled:   true,
 			Threshold: intPtr(70),
 		},
 		{
-			AccountID: 1,
+			AccountID: accountID,
 			Type:      types.AlertBudgetExceeded,
 			Enabled:   true,
 		},
 		{
-			AccountID: 1,
+			AccountID: accountID,
 			Type:      types.AlertGoalAchieved,
 			Enabled:   true,
 		},
 		{
-			AccountID: 1,
+			AccountID: accountID,
 			Type:      types.AlertGoalMilestone,
 			Enabled:   true,
 		},
 		{
-			AccountID: 1,
+			AccountID: accountID,
 			Type:      types.AlertWeeklySummary,
 			Enabled:   false,
 		},
 		{
-			AccountID: 1,
+			AccountID: accountID,
 			Type:      types.AlertMonthlySummary,
 			Enabled:   false,
 		},

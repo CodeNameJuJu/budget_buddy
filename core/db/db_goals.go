@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/shopspring/decimal"
 	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/shopspring/decimal"
 )
 
 func QuerySavingsGoals(accountID int64, goalID *int64) ([]types.SavingsGoal, int, error) {
@@ -32,7 +32,7 @@ func QuerySavingsGoals(accountID int64, goalID *int64) ([]types.SavingsGoal, int
 	now := time.Now()
 	for i := range goals {
 		goal := &goals[i]
-		
+
 		// Calculate progress percentage
 		if goal.TargetAmount.GreaterThan(decimal.Zero) {
 			goal.ProgressPercentage = goal.CurrentAmount.Div(goal.TargetAmount).Mul(decimal.NewFromInt(100))
@@ -120,6 +120,20 @@ func SoftDeleteSavingsGoal(id int64) error {
 	return err
 }
 
+func SoftDeleteSavingsGoalForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.SavingsGoal)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Exec(context.Background())
+	return err
+}
+
 func InsertGoalContribution(contribution *types.GoalContribution) error {
 	db := appcontext.GetDb()
 	_, err := db.NewInsert().Model(contribution).
@@ -135,14 +149,14 @@ func InsertGoalContribution(contribution *types.GoalContribution) error {
 
 func UpdateGoalCurrentAmount(goalID int64, accountID int64, additionalAmount decimal.Decimal) error {
 	db := appcontext.GetDb()
-	
+
 	_, err := db.NewUpdate().
 		Model((*types.SavingsGoal)(nil)).
 		Set("current_amount = current_amount + ?", additionalAmount).
 		Where("id = ?", goalID).
 		Where("account_id = ?", accountID).
 		Exec(context.Background())
-	
+
 	return err
 }
 
@@ -175,15 +189,46 @@ func SoftDeleteGoalContribution(id int64) error {
 	return UpdateGoalCurrentAmount(contribution.GoalID, contribution.AccountID, contribution.Amount.Neg())
 }
 
+func SoftDeleteGoalContributionForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	// Get the contribution to subtract from goal, scoped to account
+	var contribution types.GoalContribution
+	err := db.NewSelect().
+		Model(&contribution).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Scan(context.Background())
+	if err != nil {
+		return err
+	}
+
+	// Soft delete the contribution
+	_, err = db.NewUpdate().
+		Model((*types.GoalContribution)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Exec(context.Background())
+	if err != nil {
+		return err
+	}
+
+	// Subtract the amount from the goal
+	return UpdateGoalCurrentAmount(contribution.GoalID, contribution.AccountID, contribution.Amount.Neg())
+}
+
 func GetGoalsSummary(accountID int64) (map[string]int, error) {
 	db := appcontext.GetDb()
-	
+
 	// Get goal counts by category
 	type CategoryCount struct {
 		Category string `bun:"category"`
 		Count    int    `bun:"count"`
 	}
-	
+
 	var categoryCounts []CategoryCount
 	err := db.NewSelect().
 		ColumnExpr("category, COUNT(*) as count").

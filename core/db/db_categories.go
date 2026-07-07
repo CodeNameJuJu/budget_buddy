@@ -61,3 +61,17 @@ func SoftDeleteCategory(id int64) error {
 		Exec(context.Background())
 	return err
 }
+
+func SoftDeleteCategoryForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.Category)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Exec(context.Background())
+	return err
+}

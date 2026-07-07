@@ -7,6 +7,7 @@ import (
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/shopspring/decimal"
 )
 
 type TagStats struct {
@@ -69,13 +70,17 @@ func GETTagStats(w http.ResponseWriter, r *http.Request) {
 			var tags []string
 			if err := json.Unmarshal([]byte(*transaction.Tags), &tags); err == nil {
 				for _, tag := range tags {
-					if stats, exists := tagMap[tag]; exists {
+					stats, exists := tagMap[tag]
+					if exists {
 						stats.Count++
-						// Note: We would need to parse and add the amount, but for simplicity, we'll just count
+						currentTotal, _ := decimal.NewFromString(stats.TotalAmount)
+						stats.TotalAmount = currentTotal.Add(transaction.Amount).String()
+						tagMap[tag] = stats
 					} else {
 						tagMap[tag] = TagStats{
-							Tag:   tag,
-							Count: 1,
+							Tag:         tag,
+							Count:       1,
+							TotalAmount: transaction.Amount.String(),
 						}
 					}
 				}

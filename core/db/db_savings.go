@@ -91,6 +91,20 @@ func SoftDeleteSavingsPot(id int64) error {
 	return err
 }
 
+func SoftDeleteSavingsPotForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.SavingsPot)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
+		Exec(context.Background())
+	return err
+}
+
 // endregion
 
 // ====================================================================================================
@@ -131,6 +145,20 @@ func SoftDeleteSavingsAllocation(id int64) error {
 		Model((*types.SavingsAllocation)(nil)).
 		Set("deleted_date = ?", now).
 		Where("id = ?", id).
+		Exec(context.Background())
+	return err
+}
+
+func SoftDeleteSavingsAllocationForAccount(id int64, accountID int64) error {
+	db := appcontext.GetDb()
+	now := time.Now()
+
+	_, err := db.NewUpdate().
+		Model((*types.SavingsAllocation)(nil)).
+		Set("deleted_date = ?", now).
+		Where("id = ?", id).
+		Where("account_id = ?", accountID).
+		Where("deleted_date IS NULL").
 		Exec(context.Background())
 	return err
 }

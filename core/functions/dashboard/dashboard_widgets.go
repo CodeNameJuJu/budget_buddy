@@ -374,16 +374,61 @@ func getCategoryBreakdownWidgetData(accountID int64) (interface{}, error) {
 }
 
 func getFinancialHealthWidgetData(accountID int64) (interface{}, error) {
-	// For now, return a simple health score
-	// In a real implementation, this would call the financial health calculation
+	from, to := getBillingCycleDateRangeOrDefault(accountID)
+
+	var account types.Account
+	err := db.GetDb().NewSelect().
+		Model(&account).
+		Where("id = ?", accountID).
+		Scan(context.Background())
+	if err != nil {
+		return map[string]interface{}{
+			"score":            0,
+			"savings_rate":     "0",
+			"budget_adherence": "0",
+			"income_stability": "0",
+			"recommendations":  []string{},
+			"period":           from.Format("Jan 2") + " - " + to.Format("Jan 2"),
+		}, nil
+	}
+
+	billingCycleDay := 25
+	if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
+		billingCycleDay = *account.BillingCycleDay
+	}
+
+	health, err := db.CalculateFinancialHealth(accountID, billingCycleDay)
+	if err != nil {
+		return map[string]interface{}{
+			"score":            0,
+			"savings_rate":     "0",
+			"budget_adherence": "0",
+			"income_stability": "0",
+			"recommendations":  []string{},
+			"period":           from.Format("Jan 2") + " - " + to.Format("Jan 2"),
+		}, nil
+	}
+
+	grade := "F"
+	switch {
+	case health.Score >= 90:
+		grade = "A"
+	case health.Score >= 80:
+		grade = "B"
+	case health.Score >= 70:
+		grade = "C"
+	case health.Score >= 60:
+		grade = "D"
+	}
+
 	return map[string]interface{}{
-		"score": 75,
-		"grade": "B",
-		"factors": map[string]interface{}{
-			"savings_rate":     15,
-			"budget_adherence": 80,
-			"debt_ratio":       25,
-		},
+		"score":            health.Score,
+		"grade":            grade,
+		"savings_rate":     health.SavingsRate.String(),
+		"budget_adherence": health.BudgetAdherence.String(),
+		"income_stability": health.IncomeStability.String(),
+		"recommendations":  health.Recommendations,
+		"period":           from.Format("Jan 2") + " - " + to.Format("Jan 2"),
 	}, nil
 }
 
@@ -393,10 +438,16 @@ func getAlertsWidgetData(accountID int64) (interface{}, error) {
 		return nil, err
 	}
 
+	// Get actual unread count
+	_, unreadCount, err := db.GetAlerts(accountID, true, 0)
+	if err != nil {
+		unreadCount = 0
+	}
+
 	return map[string]interface{}{
 		"alerts": alerts,
 		"count":  len(alerts),
-		"unread": len(alerts),
+		"unread": unreadCount,
 	}, nil
 }
 

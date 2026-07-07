@@ -6,6 +6,7 @@ import (
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
+	"github.com/go-chi/chi/v5"
 )
 
 func GETGoals(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,11 @@ func GETGoals(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var goalID *int64
-	if idStr := r.URL.Query().Get("id"); idStr != "" {
+	idStr := chi.URLParam(r, "id")
+	if idStr == "" {
+		idStr = r.URL.Query().Get("id")
+	}
+	if idStr != "" {
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
 			helpers.RespondError(w, http.StatusBadRequest, "Invalid goal ID")
@@ -54,7 +59,15 @@ func GETGoalContributions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var goalID *int64
-	if idStr := r.URL.Query().Get("goal_id"); idStr != "" {
+	contributionIDStr := chi.URLParam(r, "id")
+	if contributionIDStr != "" {
+		cid, err := strconv.ParseInt(contributionIDStr, 10, 64)
+		if err != nil {
+			helpers.RespondError(w, http.StatusBadRequest, "Invalid goal ID")
+			return
+		}
+		goalID = &cid
+	} else if idStr := r.URL.Query().Get("goal_id"); idStr != "" {
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
 			helpers.RespondError(w, http.StatusBadRequest, "Invalid goal_id")
