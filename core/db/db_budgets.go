@@ -28,18 +28,24 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 		return nil, 0, err
 	}
 
-	// Get the account's billing cycle day
+	// Get the account's billing cycle day and timezone
 	billingCycleDay := 25
+	loc := time.Local
 	var account types.Account
 	if err := db.NewSelect().Model(&account).Where("id = ?", accountID).Scan(context.Background()); err == nil {
 		if account.BillingCycleDay != nil && *account.BillingCycleDay > 0 && *account.BillingCycleDay <= 31 {
 			billingCycleDay = *account.BillingCycleDay
 		}
+		if account.Timezone != nil {
+			if tz, err := time.LoadLocation(*account.Timezone); err == nil {
+				loc = tz
+			}
+		}
 	}
 
 	// Calculate spent amount for each budget
 	for i := range budgets {
-		periodStart, periodEnd := getCurrentPeriodWindow(budgets[i].StartDate, budgets[i].Period, budgets[i].EndDate, billingCycleDay)
+		periodStart, periodEnd := getCurrentPeriodWindow(budgets[i].StartDate, budgets[i].Period, budgets[i].EndDate, billingCycleDay, loc)
 		spent, calcErr := calculateBudgetSpent(budgets[i].CategoryID, budgets[i].AccountID, periodStart, periodEnd)
 		if calcErr != nil {
 			// If calculation fails, set spent to 0 instead of skipping
@@ -81,8 +87,8 @@ func calculateBudgetSpent(categoryID int64, accountID int64, startDate time.Time
 // based on the billing cycle day and Period type. For recurring budgets (no EndDate),
 // the window rolls forward so spent amounts reset each period. If EndDate is set and
 // has passed, the budget is expired and a zero range is returned.
-func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Time, billingCycleDay int) (time.Time, *time.Time) {
-	now := time.Now()
+func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Time, billingCycleDay int, loc *time.Location) (time.Time, *time.Time) {
+	now := time.Now().In(loc)
 
 	// If the budget hasn't started yet, use the original start date
 	if startDate.After(now) {
@@ -109,7 +115,7 @@ func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Ti
 		if now.Month() < startDate.Month() || (now.Month() == startDate.Month() && now.Day() < billingCycleDay) {
 			yearsElapsed--
 		}
-		periodStart = time.Date(startDate.Year()+yearsElapsed, startDate.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
+		periodStart = time.Date(startDate.Year()+yearsElapsed, startDate.Month(), billingCycleDay, 0, 0, 0, 0, loc)
 		periodEnd = periodStart.AddDate(1, 0, 0)
 	default: // "monthly"
 		// Monthly periods reset on the billing cycle day
@@ -117,7 +123,7 @@ func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Ti
 		if now.Day() < billingCycleDay {
 			monthsElapsed--
 		}
-		periodStart = time.Date(startDate.Year(), startDate.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, monthsElapsed, 0)
+		periodStart = time.Date(startDate.Year(), startDate.Month(), billingCycleDay, 0, 0, 0, 0, loc).AddDate(0, monthsElapsed, 0)
 		periodEnd = periodStart.AddDate(0, 1, 0)
 	}
 
