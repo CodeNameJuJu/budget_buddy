@@ -197,14 +197,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await authApi.login({ email, password });
-      const data = response.data;
+      const data = await authApi.login({ email, password });
       setTokens({
         user: data.user,
         access_token: data.access_token,
         refresh_token: data.refresh_token,
-        token_type: 'Bearer',
-        expires_in: 3600,
+        token_type: data.token_type || 'Bearer',
+        expires_in: data.expires_in || 3600,
       }, rememberMe);
       setUser(data.user);
     } catch (error) {
@@ -218,14 +217,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = async (credentials: RegisterCredentials): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await authApi.register(credentials);
-      const data = response.data;
+      const data = await authApi.register(credentials);
       setTokens({
         user: data.user,
         access_token: data.access_token,
         refresh_token: data.refresh_token,
-        token_type: 'Bearer',
-        expires_in: 3600,
+        token_type: data.token_type || 'Bearer',
+        expires_in: data.expires_in || 3600,
       }, true);
       setUser(data.user);
     } catch (error) {

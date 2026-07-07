@@ -582,9 +582,9 @@ export interface AcceptAccountMergeRequest {
 // Auth API
 export const authApi = {
   register: (data: { email: string; password: string; first_name?: string; last_name?: string; timezone?: string }) =>
-    post<APIResponse<{ user: User; access_token: string; refresh_token: string }>>("/auth/register", data),
+    post<{ user: User; access_token: string; refresh_token: string; token_type: string; expires_in: number }>("/auth/register", data),
   login: (data: { email: string; password: string }) =>
-    post<APIResponse<{ user: User; access_token: string; refresh_token: string }>>("/auth/login", data),
+    post<{ user: User; access_token: string; refresh_token: string; token_type: string; expires_in: number }>("/auth/login", data),
   refresh: (data: { refresh_token: string }) =>
     post<APIResponse<{ access_token: string; refresh_token: string }>>("/auth/refresh", data),
   getProfile: () => get<APIResponse<User>>("/auth/me"),
