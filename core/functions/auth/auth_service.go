@@ -3,7 +3,9 @@ package auth
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"time"
@@ -222,13 +224,10 @@ func (s *AuthService) RevokeAllUserTokens(userID int) error {
 	return nil
 }
 
-// hashToken creates a hash of the token for storage
+// hashToken creates a SHA-256 hash of the token for storage
 func (s *AuthService) hashToken(token string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
-	if err != nil {
-		return "", fmt.Errorf("failed to hash token: %w", err)
-	}
-	return string(hash), nil
+	hash := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(hash[:]), nil
 }
 
 // getEnv gets an environment variable with a default value
