@@ -3,10 +3,10 @@ package savings
 import (
 	"math"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/shopspring/decimal"
 )
@@ -51,15 +51,9 @@ func contributionsPerMonth(amount decimal.Decimal, period string) decimal.Decima
 
 // GETSavingsForecast returns projected savings data for all pots with contributions.
 func GETSavingsForecast(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
-		return
-	}
-
-	accountID, err := strconv.ParseInt(accountIDStr, 10, 64)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid account_id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "Account not found in context")
 		return
 	}
 

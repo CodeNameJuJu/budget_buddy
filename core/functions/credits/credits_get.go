@@ -5,20 +5,15 @@ import (
 	"strconv"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/go-chi/chi/v5"
 )
 
 func GETCreditPots(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
-		return
-	}
-
-	accountID, err := strconv.ParseInt(accountIDStr, 10, 64)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid account_id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "Account not found in context")
 		return
 	}
 
@@ -46,15 +41,9 @@ func GETCreditPots(w http.ResponseWriter, r *http.Request) {
 }
 
 func GETCreditSummary(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
-		return
-	}
-
-	accountID, err := strconv.ParseInt(accountIDStr, 10, 64)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid account_id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "Account not found in context")
 		return
 	}
 
@@ -68,15 +57,9 @@ func GETCreditSummary(w http.ResponseWriter, r *http.Request) {
 }
 
 func GETCreditPayments(w http.ResponseWriter, r *http.Request) {
-	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		helpers.RespondError(w, http.StatusBadRequest, "account_id is required")
-		return
-	}
-
-	accountID, err := strconv.ParseInt(accountIDStr, 10, 64)
-	if err != nil {
-		helpers.RespondError(w, http.StatusBadRequest, "Invalid account_id")
+	accountID, ok := auth.GetAccountIDFromContext(r)
+	if !ok {
+		helpers.RespondError(w, http.StatusUnauthorized, "Account not found in context")
 		return
 	}
 

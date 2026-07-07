@@ -46,7 +46,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     loadAccount();
-    setProfilePictureUrl(user.profile_picture_url || '');
+    if (user) {
+      setProfilePictureUrl(user.profile_picture_url || '');
+    }
   }, [user]);
 
   async function loadAccount() {
@@ -69,6 +71,7 @@ export default function ProfilePage() {
   };
 
   const handleEditClick = () => {
+    if (!user) return;
     setEditForm({
       email: user.email,
       first_name: user.first_name || '',
@@ -105,7 +108,7 @@ export default function ProfilePage() {
       setSaveMessage({ type: 'success', text: 'Profile updated successfully' });
 
       // If email changed, show verification UI
-      if (editForm.email !== user.email) {
+      if (user && editForm.email !== user.email) {
         setShowVerification(true);
       }
 
@@ -155,11 +158,11 @@ export default function ProfilePage() {
       formData.append('file', file);
       
       const response = await authApi.updateProfilePicture(formData);
-      setProfilePictureUrl(response.profile_picture_url);
+      setProfilePictureUrl(response.data.profile_picture_url);
       
       // Update user in auth context
       if (user) {
-        (user as any).profile_picture_url = response.profile_picture_url;
+        (user as any).profile_picture_url = response.data.profile_picture_url;
       }
       
       setSaveMessage({ type: 'success', text: 'Profile picture updated successfully' });

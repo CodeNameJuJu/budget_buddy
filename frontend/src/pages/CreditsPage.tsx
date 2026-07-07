@@ -201,7 +201,7 @@ export default function CreditsPage() {
     if (!payingPotID) return
     try {
       await creditsApi.createPayment({
-        account_id: accountId,
+        account_id: accountId!,
         credit_pot_id: payingPotID,
         amount: payForm.amount,
         notes: payForm.notes || undefined,

@@ -215,7 +215,7 @@ export default function BudgetsPage() {
         name: editForm.name,
         amount: editForm.amount,
         category_id: Number(editForm.category_id),
-        period: editForm.period,
+        period: editForm.period as "monthly" | "weekly" | "yearly",
         start_date: editForm.start_date,
         end_date: editForm.end_date || undefined,
       })

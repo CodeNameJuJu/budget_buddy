@@ -14,6 +14,7 @@ interface Widget {
   type: string
   title: string
   size: string
+  position?: { x: number; y: number; w: number; h: number }
   is_visible: boolean
   updated_at: string
 }

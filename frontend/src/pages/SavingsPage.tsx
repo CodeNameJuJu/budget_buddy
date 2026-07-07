@@ -219,7 +219,7 @@ export default function SavingsPage() {
         ? `-${allocForm.amount}`
         : allocForm.amount
       await savingsApi.createAllocation({
-        account_id: accountId,
+        account_id: accountId!,
         savings_pot_id: allocatingPotID,
         amount,
         notes: allocForm.notes || undefined,

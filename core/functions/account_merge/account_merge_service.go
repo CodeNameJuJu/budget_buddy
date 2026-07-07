@@ -10,6 +10,7 @@ import (
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/uptrace/bun"
 )
 
 const (
@@ -155,164 +156,182 @@ func (s *AccountMergeService) AcceptMerge(userID int, token string) error {
 		return nil
 	}
 
-	// Merge accounts: update all data from toAccount to fromAccount
-	// Update transactions
-	_, err = database.NewUpdate().
-		Model((*types.Transaction)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge transactions: %w", err)
-	}
+	// Merge accounts: update all data from toAccount to fromAccount in a transaction
+	txErr := database.RunInTx(context.Background(), nil, func(ctx context.Context, tx bun.Tx) error {
+		// Update transactions
+		_, err := tx.NewUpdate().
+			Model((*types.Transaction)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge transactions: %w", err)
+		}
 
-	// Update budgets
-	_, err = database.NewUpdate().
-		Model((*types.Budget)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge budgets: %w", err)
-	}
+		// Update budgets
+		_, err = tx.NewUpdate().
+			Model((*types.Budget)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge budgets: %w", err)
+		}
 
-	// Update categories
-	_, err = database.NewUpdate().
-		Model((*types.Category)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge categories: %w", err)
-	}
+		// Update categories
+		_, err = tx.NewUpdate().
+			Model((*types.Category)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge categories: %w", err)
+		}
 
-	// Update savings goals
-	_, err = database.NewUpdate().
-		Model((*types.SavingsGoal)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge savings goals: %w", err)
-	}
+		// Update savings goals
+		_, err = tx.NewUpdate().
+			Model((*types.SavingsGoal)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge savings goals: %w", err)
+		}
 
-	// Update goal contributions
-	_, err = database.NewUpdate().
-		Model((*types.GoalContribution)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge goal contributions: %w", err)
-	}
+		// Update goal contributions
+		_, err = tx.NewUpdate().
+			Model((*types.GoalContribution)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge goal contributions: %w", err)
+		}
 
-	// Update savings pots
-	_, err = database.NewUpdate().
-		Model((*types.SavingsPot)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge savings pots: %w", err)
-	}
+		// Update savings pots
+		_, err = tx.NewUpdate().
+			Model((*types.SavingsPot)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge savings pots: %w", err)
+		}
 
-	// Update savings allocations
-	_, err = database.NewUpdate().
-		Model((*types.SavingsAllocation)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge savings allocations: %w", err)
-	}
+		// Update savings allocations
+		_, err = tx.NewUpdate().
+			Model((*types.SavingsAllocation)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge savings allocations: %w", err)
+		}
 
-	// Update credit pots
-	_, err = database.NewUpdate().
-		Model((*types.CreditPot)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge credit pots: %w", err)
-	}
+		// Update credit pots
+		_, err = tx.NewUpdate().
+			Model((*types.CreditPot)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge credit pots: %w", err)
+		}
 
-	// Update credit payments
-	_, err = database.NewUpdate().
-		Model((*types.CreditPayment)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge credit payments: %w", err)
-	}
+		// Update credit payments
+		_, err = tx.NewUpdate().
+			Model((*types.CreditPayment)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge credit payments: %w", err)
+		}
 
-	// Update alerts
-	_, err = database.NewUpdate().
-		Model((*types.Alert)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge alerts: %w", err)
-	}
+		// Update alerts
+		_, err = tx.NewUpdate().
+			Model((*types.Alert)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge alerts: %w", err)
+		}
 
-	// Update dashboard layouts
-	_, err = database.NewUpdate().
-		Model((*types.DashboardLayout)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge dashboard layouts: %w", err)
-	}
+		// Update dashboard layouts
+		_, err = tx.NewUpdate().
+			Model((*types.DashboardLayout)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge dashboard layouts: %w", err)
+		}
 
-	// Update alert preferences
-	_, err = database.NewUpdate().
-		Model((*types.AlertPreference)(nil)).
-		Set("account_id = ?", fromAccountID).
-		Where("account_id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to merge alert preferences: %w", err)
-	}
+		// Update alert preferences
+		_, err = tx.NewUpdate().
+			Model((*types.AlertPreference)(nil)).
+			Set("account_id = ?", fromAccountID).
+			Where("account_id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to merge alert preferences: %w", err)
+		}
 
-	err = s.addUserToAccountMembers(fromAccountID, int64(userID))
-	if err != nil {
-		return fmt.Errorf("failed to update account members: %w", err)
-	}
+		// Add recipient to account members
+		_, err = tx.NewRaw(`
+			UPDATE accounts
+			SET user_ids = (
+				SELECT ARRAY(
+					SELECT DISTINCT member_id
+					FROM unnest(COALESCE(user_ids, ARRAY[]::BIGINT[]) || ARRAY[?]::BIGINT[]) AS member_id
+				)
+			),
+			modified_date = ?
+			WHERE id = ?
+		`, userID, time.Now(), fromAccountID).Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to update account members: %w", err)
+		}
 
-	// Map recipient user to source account owner for shared-account resolution
-	_, err = database.NewUpdate().
-		Model((*types.Account)(nil)).
-		Set("user_id = ?", mergeToken.FromUserID).
-		Set("deleted_date = ?", time.Now()).
-		Set("modified_date = ?", time.Now()).
-		Where("id = ?", toAccountID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to remap recipient account: %w", err)
-	}
+		// Map recipient user to source account owner for shared-account resolution
+		_, err = tx.NewUpdate().
+			Model((*types.Account)(nil)).
+			Set("user_id = ?", mergeToken.FromUserID).
+			Set("deleted_date = ?", time.Now()).
+			Set("modified_date = ?", time.Now()).
+			Where("id = ?", toAccountID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to remap recipient account: %w", err)
+		}
 
-	// Keep recipient user active and linked through accepted merge token
-	_, err = database.NewUpdate().
-		Model((*types.User)(nil)).
-		Set("updated_at = ?", time.Now()).
-		Where("id = ?", userID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to update recipient user: %w", err)
-	}
+		// Keep recipient user active and linked through accepted merge token
+		_, err = tx.NewUpdate().
+			Model((*types.User)(nil)).
+			Set("updated_at = ?", time.Now()).
+			Where("id = ?", userID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to update recipient user: %w", err)
+		}
 
-	// Update merge token status
-	now := time.Now()
-	_, err = database.NewUpdate().
-		Model(&mergeToken).
-		Set("status = ?", "accepted").
-		Set("accepted_at = ?", now).
-		Where("id = ?", mergeToken.ID).
-		Exec(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to update merge token: %w", err)
+		// Update merge token status
+		now := time.Now()
+		_, err = tx.NewUpdate().
+			Model(&mergeToken).
+			Set("status = ?", "accepted").
+			Set("accepted_at = ?", now).
+			Where("id = ?", mergeToken.ID).
+			Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to update merge token: %w", err)
+		}
+
+		return nil
+	})
+	if txErr != nil {
+		return txErr
 	}
 
 	return nil

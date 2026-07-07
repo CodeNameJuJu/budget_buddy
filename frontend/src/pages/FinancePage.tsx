@@ -220,7 +220,7 @@ export default function FinancePage() {
         name: budgetForm.name,
         amount: budgetForm.amount,
         category_id: parseInt(budgetForm.category_id),
-        period: budgetForm.period,
+        period: budgetForm.period as "monthly" | "weekly" | "yearly",
         start_date: budgetForm.start_date,
         end_date: budgetForm.end_date || undefined,
       })
@@ -277,7 +277,7 @@ export default function FinancePage() {
         name: budgetForm.name,
         amount: budgetForm.amount,
         category_id: Number(budgetForm.category_id),
-        period: budgetForm.period,
+        period: budgetForm.period as "monthly" | "weekly" | "yearly",
         start_date: budgetForm.start_date,
         end_date: budgetForm.end_date || undefined,
       })

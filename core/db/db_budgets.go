@@ -150,18 +150,6 @@ func UpdateBudget(budget *types.Budget) error {
 	return err
 }
 
-func SoftDeleteBudget(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.Budget)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
-		Exec(context.Background())
-	return err
-}
-
 func SoftDeleteBudgetForAccount(id int64, accountID int64) error {
 	db := appcontext.GetDb()
 	now := time.Now()

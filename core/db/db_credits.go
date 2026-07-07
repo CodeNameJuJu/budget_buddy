@@ -79,18 +79,6 @@ func UpdateCreditPot(pot *types.CreditPot) error {
 	return err
 }
 
-func SoftDeleteCreditPot(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.CreditPot)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
-		Exec(context.Background())
-	return err
-}
-
 func SoftDeleteCreditPotForAccount(id int64, accountID int64) error {
 	db := appcontext.GetDb()
 	now := time.Now()
@@ -133,18 +121,6 @@ func InsertCreditPayment(payment *types.CreditPayment) error {
 	db := appcontext.GetDb()
 	_, err := db.NewInsert().Model(payment).
 		Returning("*").
-		Exec(context.Background())
-	return err
-}
-
-func SoftDeleteCreditPayment(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.CreditPayment)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
 		Exec(context.Background())
 	return err
 }

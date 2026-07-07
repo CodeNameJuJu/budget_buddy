@@ -85,18 +85,6 @@ func UpdateTransaction(transaction *types.Transaction) error {
 	return err
 }
 
-func SoftDeleteTransaction(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.Transaction)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
-		Exec(context.Background())
-	return err
-}
-
 func UpdateTransactionForAccount(transaction *types.Transaction, accountID int64) error {
 	db := appcontext.GetDb()
 	now := time.Now()

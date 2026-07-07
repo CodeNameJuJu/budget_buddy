@@ -108,18 +108,6 @@ func UpdateSavingsGoal(goal *types.SavingsGoal) error {
 	return err
 }
 
-func SoftDeleteSavingsGoal(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.SavingsGoal)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
-		Exec(context.Background())
-	return err
-}
-
 func SoftDeleteSavingsGoalForAccount(id int64, accountID int64) error {
 	db := appcontext.GetDb()
 	now := time.Now()
@@ -158,35 +146,6 @@ func UpdateGoalCurrentAmount(goalID int64, accountID int64, additionalAmount dec
 		Exec(context.Background())
 
 	return err
-}
-
-func SoftDeleteGoalContribution(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	// Get the contribution to subtract from goal
-	var contribution types.GoalContribution
-	err := db.NewSelect().
-		Model(&contribution).
-		Where("id = ?", id).
-		Where("deleted_date IS NULL").
-		Scan(context.Background())
-	if err != nil {
-		return err
-	}
-
-	// Soft delete the contribution
-	_, err = db.NewUpdate().
-		Model((*types.GoalContribution)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
-		Exec(context.Background())
-	if err != nil {
-		return err
-	}
-
-	// Subtract the amount from the goal
-	return UpdateGoalCurrentAmount(contribution.GoalID, contribution.AccountID, contribution.Amount.Neg())
 }
 
 func SoftDeleteGoalContributionForAccount(id int64, accountID int64) error {

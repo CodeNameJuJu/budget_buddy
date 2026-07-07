@@ -19,7 +19,7 @@ export interface SelectItemProps extends React.OptionHTMLAttributes<HTMLOptionEl
   value: string
 }
 
-export interface SelectValueProps extends React.SpanHTMLAttributes<HTMLSpanElement> {
+export interface SelectValueProps extends React.HTMLAttributes<HTMLSpanElement> {
   placeholder?: string
 }
 

@@ -79,18 +79,6 @@ func UpdateSavingsPot(pot *types.SavingsPot) error {
 	return err
 }
 
-func SoftDeleteSavingsPot(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.SavingsPot)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
-		Exec(context.Background())
-	return err
-}
-
 func SoftDeleteSavingsPotForAccount(id int64, accountID int64) error {
 	db := appcontext.GetDb()
 	now := time.Now()
@@ -133,18 +121,6 @@ func InsertSavingsAllocation(allocation *types.SavingsAllocation) error {
 	db := appcontext.GetDb()
 	_, err := db.NewInsert().Model(allocation).
 		Returning("*").
-		Exec(context.Background())
-	return err
-}
-
-func SoftDeleteSavingsAllocation(id int64) error {
-	db := appcontext.GetDb()
-	now := time.Now()
-
-	_, err := db.NewUpdate().
-		Model((*types.SavingsAllocation)(nil)).
-		Set("deleted_date = ?", now).
-		Where("id = ?", id).
 		Exec(context.Background())
 	return err
 }
