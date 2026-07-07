@@ -263,10 +263,16 @@ func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 		}, nil
 	}
 
+	_, loc, locErr := getBillingCycleDay(accountID)
+	if locErr != nil {
+		loc = time.Local
+	}
+	now := time.Now().In(loc)
+
 	// Filter active budgets and calculate progress
-	var activeBudgets []map[string]interface{}
+	activeBudgets := []map[string]interface{}{}
 	for _, budget := range budgets {
-		if budget.StartDate.After(time.Now()) || (budget.EndDate != nil && budget.EndDate.Before(time.Now())) {
+		if budget.StartDate.After(now) || (budget.EndDate != nil && budget.EndDate.Before(now)) {
 			continue
 		}
 
@@ -279,12 +285,15 @@ func getBudgetProgressWidgetData(accountID int64) (interface{}, error) {
 		}
 
 		activeBudgets = append(activeBudgets, map[string]interface{}{
-			"id":       budget.ID,
-			"name":     budget.Name,
-			"spent":    spentStr,
-			"amount":   budget.Amount.String(),
-			"progress": progress,
-			"category": budget.Category.Name,
+			"id":          budget.ID,
+			"name":        budget.Name,
+			"spent":       spentStr,
+			"amount":      budget.Amount.String(),
+			"progress":    progress,
+			"category":    budget.Category.Name,
+			"category_id": budget.CategoryID,
+			"start_date":  budget.StartDate,
+			"period":      budget.Period,
 		})
 	}
 

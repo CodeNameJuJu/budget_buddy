@@ -22,6 +22,8 @@ interface Budget {
   progress: number
   category: string
   category_id?: number
+  start_date?: string
+  period?: string
 }
 
 interface BudgetProgressData {
@@ -54,29 +56,71 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     }
   }
 
+  function getCurrentPeriodWindow(budget: Budget): { from: string; to: string } {
+    const now = new Date()
+    const startDate = budget.start_date ? new Date(budget.start_date) : now
+    const period = budget.period || "monthly"
+    const billingCycleDay = 25
+
+    if (period === "weekly") {
+      const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+      const periodsElapsed = Math.floor(daysElapsed / 7)
+      const periodStart = new Date(startDate)
+      periodStart.setDate(startDate.getDate() + periodsElapsed * 7)
+      const periodEnd = new Date(periodStart)
+      periodEnd.setDate(periodStart.getDate() + 7)
+      return {
+        from: periodStart.toISOString().split("T")[0],
+        to: periodEnd.toISOString().split("T")[0],
+      }
+    }
+
+    if (period === "yearly") {
+      let yearsElapsed = now.getFullYear() - startDate.getFullYear()
+      if (now.getMonth() < startDate.getMonth() || (now.getMonth() === startDate.getMonth() && now.getDate() < billingCycleDay)) {
+        yearsElapsed--
+      }
+      const periodStart = new Date(startDate.getFullYear() + yearsElapsed, startDate.getMonth(), billingCycleDay)
+      const periodEnd = new Date(periodStart)
+      periodEnd.setFullYear(periodStart.getFullYear() + 1)
+      return {
+        from: periodStart.toISOString().split("T")[0],
+        to: periodEnd.toISOString().split("T")[0],
+      }
+    }
+
+    // monthly
+    let monthsElapsed = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth())
+    if (now.getDate() < billingCycleDay) {
+      monthsElapsed--
+    }
+    const periodStart = new Date(startDate.getFullYear(), startDate.getMonth(), billingCycleDay)
+    periodStart.setMonth(periodStart.getMonth() + monthsElapsed)
+    const periodEnd = new Date(periodStart)
+    periodEnd.setMonth(periodStart.getMonth() + 1)
+    return {
+      from: periodStart.toISOString().split("T")[0],
+      to: periodEnd.toISOString().split("T")[0],
+    }
+  }
+
   async function loadBudgetTransactions(budgetId: number) {
     setTransactionsLoading(true)
     try {
       const budget = selectedBudget
       if (!budget) return
 
-      console.log("Loading transactions for budget:", budget)
-      console.log("Budget category:", budget.category)
+      const params: Record<string, string> = {}
+      if (budget.category_id) {
+        params.category_id = String(budget.category_id)
+      }
+      const periodWindow = getCurrentPeriodWindow(budget)
+      params.from = periodWindow.from
+      params.to = periodWindow.to
 
-      // Load all transactions
-      const response = await transactionsApi.list(accountId)
-      console.log("All transactions:", response.data)
-
-      // Filter by category name
-      const filtered = response.data?.filter(t => {
-        console.log("Transaction category:", t.category?.name, "vs budget category:", budget.category)
-        return t.category?.name === budget.category
-      }) || []
-
-      console.log("Filtered transactions:", filtered)
-      setTransactions(filtered)
+      const response = await transactionsApi.list(accountId, params)
+      setTransactions(response.data || [])
     } catch (error) {
-      console.error("Failed to load budget transactions", error)
       setTransactions([])
     } finally {
       setTransactionsLoading(false)
