@@ -1,154 +1,114 @@
+// Package migrations runs the SQL migration files in this directory against
+// the connected database. It is the single migration entry point, triggered
+// on startup via the MIGRATE_ON_STARTUP environment variable.
 package migrations
 
 import (
 	"context"
 	"fmt"
-	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
-	"time"
+	"sort"
+	"strings"
 
 	coredb "github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/uptrace/bun"
 )
 
-// Migration represents a database migration record
-type Migration struct {
-	ID         int64     `bun:"id,pk,autoincrement"`
-	Filename   string    `bun:"filename,notnull,unique"`
-	ExecutedAt time.Time `bun:"executed_at,notnull"`
-}
+// DefaultDir is the migrations directory relative to the working directory
+const DefaultDir = "backend/migrations"
 
-// RunMigrations executes all SQL migration files in the migrations directory
+// RunMigrations executes all pending SQL migration files in order. Any
+// failure aborts the process so a broken migration is never recorded as
+// applied.
 func RunMigrations() error {
-	// Get database connection with error handling
-	db := coredb.GetDb()
-	if db == nil {
-		return fmt.Errorf("failed to get database connection")
+	database := coredb.GetDb()
+	if database == nil {
+		return fmt.Errorf("database not connected")
 	}
 
-	// Create migrations table if it doesn't exist
-	if err := createMigrationsTable(db); err != nil {
-		log.Printf("Warning: Failed to create migrations table: %v", err)
-		// Continue anyway - table might already exist
-	}
+	ctx := context.Background()
 
-	// Get list of migration files
-	migrationFiles, err := getMigrationFiles()
+	// Create the migrations bookkeeping table if it doesn't exist
+	_, err := database.NewRaw(`
+		CREATE TABLE IF NOT EXISTS schema_migrations (
+			version VARCHAR(255) PRIMARY KEY,
+			applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		)
+	`).Exec(ctx)
 	if err != nil {
-		log.Printf("Warning: Failed to get migration files: %v", err)
-		log.Printf("This is expected in production - migrations might be in a different location")
-		return nil // Don't fail the whole startup
+		return fmt.Errorf("failed to create migrations table: %w", err)
 	}
 
-	if len(migrationFiles) == 0 {
-		log.Println("No migration files found - continuing without migrations")
-		return nil
+	migrationFiles, err := listMigrationFiles(DefaultDir)
+	if err != nil {
+		return err
 	}
 
-	// Run each migration that hasn't been run yet
-	for _, file := range migrationFiles {
-		if err := runMigration(db, file); err != nil {
-			log.Printf("Warning: Failed to run migration %s: %v", file, err)
-			// Continue with other migrations instead of failing completely
+	log.Printf("Found %d migration files", len(migrationFiles))
+
+	for _, filename := range migrationFiles {
+		if err := runMigration(ctx, database, DefaultDir, filename); err != nil {
+			return fmt.Errorf("failed to run migration %s: %w", filename, err)
 		}
 	}
 
-	log.Println("Migration process completed")
 	return nil
 }
 
-func createMigrationsTable(db *bun.DB) error {
-	ctx := context.Background()
-	_, err := db.NewCreateTable().
-		Model((*Migration)(nil)).
-		IfNotExists().
-		Exec(ctx)
-	return err
+func listMigrationFiles(dir string) ([]string, error) {
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read migrations directory: %w", err)
+	}
+
+	var migrationFiles []string
+	for _, file := range files {
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".sql") {
+			migrationFiles = append(migrationFiles, file.Name())
+		}
+	}
+	sort.Strings(migrationFiles)
+
+	return migrationFiles, nil
 }
 
-func getMigrationFiles() ([]string, error) {
-	var files []string
-
-	// Get the current working directory
-	wd, err := os.Getwd()
+func runMigration(ctx context.Context, database *bun.DB, dir, filename string) error {
+	// Skip migrations that have already been applied
+	var count int
+	err := database.NewRaw(`
+		SELECT COUNT(*) FROM schema_migrations WHERE version = ?
+	`, filename).Scan(ctx, &count)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get working directory: %w", err)
-	}
-
-	// Look for migration files in the migrations directory
-	migrationsDir := filepath.Join(wd, "migrations")
-
-	// Check if migrations directory exists
-	if _, err := os.Stat(migrationsDir); os.IsNotExist(err) {
-		log.Printf("Migrations directory does not exist: %s", migrationsDir)
-		return files, nil // Return empty list, not an error
-	}
-
-	err = filepath.WalkDir(migrationsDir, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if !d.IsDir() && filepath.Ext(path) == ".sql" {
-			files = append(files, filepath.Base(path))
-		}
-		return nil
-	})
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to walk migration directory: %w", err)
-	}
-
-	return files, nil
-}
-
-func runMigration(db *bun.DB, filename string) error {
-	ctx := context.Background()
-
-	// Check if migration has already been run
-	count, err := db.NewSelect().
-		Model((*Migration)(nil)).
-		Where("filename = ?", filename).
-		Count(ctx)
-	if err != nil {
-		return err
+		return fmt.Errorf("failed to check migration status: %w", err)
 	}
 
 	if count > 0 {
-		log.Printf("Migration %s already executed, skipping", filename)
 		return nil
 	}
 
-	// Read migration file
-	wd, err := os.Getwd()
+	log.Printf("Running migration: %s", filename)
+
+	content, err := os.ReadFile(filepath.Join(dir, filename))
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read migration file: %w", err)
 	}
 
-	migrationPath := filepath.Join(wd, "migrations", filename)
-	content, err := os.ReadFile(migrationPath)
-	if err != nil {
-		return err
-	}
+	// Run the whole file and the bookkeeping insert in one transaction so a
+	// partially applied migration is rolled back and never marked as applied
+	return database.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+		if _, err := tx.ExecContext(ctx, string(content)); err != nil {
+			return fmt.Errorf("failed to execute migration: %w", err)
+		}
 
-	// Execute migration
-	_, err = db.NewRaw(string(content)).Exec(ctx)
-	if err != nil {
-		return fmt.Errorf("error executing migration %s: %w", filename, err)
-	}
+		if _, err := tx.NewRaw(`
+			INSERT INTO schema_migrations (version) VALUES (?)
+		`, filename).Exec(ctx); err != nil {
+			return fmt.Errorf("failed to record migration: %w", err)
+		}
 
-	// Record migration as executed
-	migration := &Migration{
-		Filename:   filename,
-		ExecutedAt: time.Now(),
-	}
-	_, err = db.NewInsert().Model(migration).Exec(ctx)
-	if err != nil {
-		return fmt.Errorf("error recording migration %s: %w", filename, err)
-	}
-
-	log.Printf("Migration %s executed successfully", filename)
-	return nil
+		log.Printf("Migration %s applied successfully", filename)
+		return nil
+	})
 }

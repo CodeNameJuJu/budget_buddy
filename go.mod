@@ -1,6 +1,6 @@
 module github.com/CodeNameJuJu/budget_buddy
 
-go 1.23
+go 1.23.0
 
 require (
 	github.com/go-chi/chi/v5 v5.1.0
@@ -22,9 +22,11 @@ require (
 	github.com/cloudinary/cloudinary-go/v2 v2.15.0 // indirect
 	github.com/creasty/defaults v1.7.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
+	github.com/go-chi/httprate v0.16.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/gorilla/schema v1.4.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -34,7 +36,8 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.9-0.20240816141633-0a40785b4f41 // indirect
-	golang.org/x/sys v0.27.0 // indirect
+	github.com/zeebo/xxh3 v1.0.2 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 )

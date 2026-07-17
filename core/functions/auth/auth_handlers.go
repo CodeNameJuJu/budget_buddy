@@ -14,6 +14,7 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/uptrace/bun"
 )
 
 // AuthHandler handles authentication requests
@@ -90,33 +91,39 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt:     now,
 	}
 
-	err = database.NewInsert().Model(user).Returning("*").Scan(context.Background())
-	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create user")
-		return
-	}
-
 	accountOwnerName := "My"
 	if req.FirstName != nil && strings.TrimSpace(*req.FirstName) != "" {
 		accountOwnerName = strings.TrimSpace(*req.FirstName)
 	}
 
-	// Create associated account for the user
-	account := &types.Account{
-		UserID:   int64(user.ID),
-		UserIDs:  []int64{int64(user.ID)},
-		Name:     fmt.Sprintf("%s's Account", accountOwnerName),
-		Email:    user.Email,
-		Currency: "ZAR",
-		Timezone: req.Timezone,
-		Timestamps: types.Timestamps{
-			CreatedDate: now,
-		},
-	}
+	// Create the user and their account atomically so a failure cannot leave
+	// an orphaned user without an account (which breaks the auth middleware)
+	err = database.RunInTx(context.Background(), nil, func(ctx context.Context, tx bun.Tx) error {
+		if err := tx.NewInsert().Model(user).Returning("*").Scan(ctx); err != nil {
+			return fmt.Errorf("failed to create user: %w", err)
+		}
 
-	err = database.NewInsert().Model(account).Returning("*").Scan(context.Background())
+		account := &types.Account{
+			UserID:   int64(user.ID),
+			UserIDs:  []int64{int64(user.ID)},
+			Name:     fmt.Sprintf("%s's Account", accountOwnerName),
+			Email:    user.Email,
+			Currency: "ZAR",
+			Timezone: req.Timezone,
+			Timestamps: types.Timestamps{
+				CreatedDate: now,
+			},
+		}
+
+		if err := tx.NewInsert().Model(account).Returning("*").Scan(ctx); err != nil {
+			return fmt.Errorf("failed to create user account: %w", err)
+		}
+
+		return nil
+	})
 	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create user account")
+		log.Printf("Registration failed for %s: %v", req.Email, err)
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create user")
 		return
 	}
 
@@ -230,6 +237,9 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		helpers.RespondError(w, http.StatusUnauthorized, "Invalid email or password")
 		return
 	}
+
+	// Best-effort housekeeping of expired tokens and sessions
+	h.authService.CleanupExpiredAuth(user.ID)
 
 	// Generate device ID
 	deviceID, err := h.authService.GenerateDeviceID()

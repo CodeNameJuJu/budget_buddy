@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -232,6 +233,33 @@ func (s *AuthService) RevokeAllUserTokens(userID int) error {
 	}
 
 	return nil
+}
+
+// CleanupExpiredAuth removes expired refresh tokens and sessions for a user.
+// Called on login as best-effort housekeeping so these tables don't grow
+// unboundedly.
+func (s *AuthService) CleanupExpiredAuth(userID int) {
+	database := db.GetDb()
+	if database == nil {
+		return
+	}
+
+	ctx := context.Background()
+	timeNow := time.Now()
+
+	if _, err := database.NewDelete().
+		Model((*types.RefreshToken)(nil)).
+		Where("user_id = ? AND expires_at <= ?", userID, timeNow).
+		Exec(ctx); err != nil {
+		log.Printf("Warning: failed to clean up expired refresh tokens for user %d: %v", userID, err)
+	}
+
+	if _, err := database.NewDelete().
+		Model((*types.UserSession)(nil)).
+		Where("user_id = ? AND expires_at <= ?", userID, timeNow).
+		Exec(ctx); err != nil {
+		log.Printf("Warning: failed to clean up expired sessions for user %d: %v", userID, err)
+	}
 }
 
 // hashToken creates a SHA-256 hash of the token for storage

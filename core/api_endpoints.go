@@ -1,6 +1,8 @@
 package core
 
 import (
+	"time"
+
 	"github.com/CodeNameJuJu/budget_buddy/core/functions"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/account_merge"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/accounts"
@@ -16,6 +18,7 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/tags"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/transactions"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/httprate"
 )
 
 func RegisterRoutes(r chi.Router) {
@@ -29,10 +32,12 @@ func RegisterRoutes(r chi.Router) {
 
 		/* ----------- AUTH ----------- */
 		r.Route("/auth", func(r chi.Router) {
-			r.Post("/register", authHandler.Register)
-			r.Post("/login", authHandler.Login)
-			r.Post("/refresh", authHandler.RefreshToken)
-			r.Post("/verify-email", authHandler.VerifyEmail)
+			// Strict limit on credential endpoints to slow brute-force attempts
+			strictLimit := httprate.LimitByIP(10, 1*time.Minute)
+			r.With(strictLimit).Post("/register", authHandler.Register)
+			r.With(strictLimit).Post("/login", authHandler.Login)
+			r.With(httprate.LimitByIP(30, 1*time.Minute)).Post("/refresh", authHandler.RefreshToken)
+			r.With(strictLimit).Post("/verify-email", authHandler.VerifyEmail)
 
 			// Protected routes
 			r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
