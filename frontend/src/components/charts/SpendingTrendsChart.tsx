@@ -57,9 +57,18 @@ export default function SpendingTrendsChart({ data }: SpendingTrendsChartProps) 
             tick={{ fill: theme === "light" ? "#6C7A73" : "#A7B3AD" }}
           />
           <YAxis 
+            yAxisId="currency"
             stroke={theme === "light" ? "#6C7A73" : "#A7B3AD"}
             tick={{ fill: theme === "light" ? "#6C7A73" : "#A7B3AD" }}
             tickFormatter={(value) => `R${value}`}
+          />
+          <YAxis
+            yAxisId="percentage"
+            orientation="right"
+            domain={[0, (dataMax: number) => Math.max(100, Math.ceil(dataMax))]}
+            stroke={theme === "light" ? "#6C7A73" : "#A7B3AD"}
+            tick={{ fill: theme === "light" ? "#6C7A73" : "#A7B3AD" }}
+            tickFormatter={(value) => `${value}%`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend 
@@ -67,6 +76,7 @@ export default function SpendingTrendsChart({ data }: SpendingTrendsChartProps) 
             iconType="circle"
           />
           <Line 
+            yAxisId="currency"
             type="monotone" 
             dataKey="income" 
             stroke="#6BAF92" 
@@ -76,6 +86,7 @@ export default function SpendingTrendsChart({ data }: SpendingTrendsChartProps) 
             name="Income"
           />
           <Line 
+            yAxisId="currency"
             type="monotone" 
             dataKey="expenses" 
             stroke="#EF4444" 
@@ -85,6 +96,7 @@ export default function SpendingTrendsChart({ data }: SpendingTrendsChartProps) 
             name="Expenses"
           />
           <Line 
+            yAxisId="currency"
             type="monotone" 
             dataKey="savings" 
             stroke="#88B39B" 
@@ -94,10 +106,12 @@ export default function SpendingTrendsChart({ data }: SpendingTrendsChartProps) 
             name="Savings"
           />
           <Line 
+            yAxisId="percentage"
             type="monotone" 
             dataKey="budgetUsed" 
             stroke="#D9B44A" 
             strokeWidth={2}
+            strokeDasharray="5 5"
             dot={{ fill: '#D9B44A', r: 4 }}
             activeDot={{ r: 6 }}
             name="Budget Used"

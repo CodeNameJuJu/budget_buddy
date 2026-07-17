@@ -32,86 +32,15 @@ type FinancialHealth struct {
 	Recommendations []string        `json:"recommendations"`
 }
 
-func GetSpendingTrends(accountID int64, months int) ([]SpendingTrend, error) {
-	db := GetDb()
-	var trends []SpendingTrend
-
-	endDate := time.Now().Truncate(time.Hour * 24).Add(time.Hour * 24)
-	startDate := endDate.AddDate(0, -months, 0)
-
-	for i := 0; i < months; i++ {
-		monthStart := startDate.AddDate(0, i, 0)
-		monthEnd := monthStart.AddDate(0, 1, 0).Add(-time.Nanosecond)
-
-		var income decimal.Decimal
-		err := db.NewSelect().
-			Model((*types.Transaction)(nil)).
-			ColumnExpr("COALESCE(SUM(amount), 0)").
-			Where("account_id = ?", accountID).
-			Where("type = ?", "income").
-			Where("date >= ? AND date <= ?", monthStart, monthEnd).
-			Where("deleted_date IS NULL").
-			Scan(context.Background(), &income)
-		if err != nil {
-			return nil, err
-		}
-
-		var expenses decimal.Decimal
-		err = db.NewSelect().
-			Model((*types.Transaction)(nil)).
-			ColumnExpr("COALESCE(SUM(amount), 0)").
-			Where("account_id = ?", accountID).
-			Where("type = ?", "expense").
-			Where("date >= ? AND date <= ?", monthStart, monthEnd).
-			Where("deleted_date IS NULL").
-			Scan(context.Background(), &expenses)
-		if err != nil {
-			return nil, err
-		}
-
-		var budgetUsed decimal.Decimal
-		budgets, _, err := QueryBudgets(accountID, nil)
-		if err == nil {
-			var totalBudget decimal.Decimal
-			for _, budget := range budgets {
-				if budget.StartDate.Before(monthEnd) && (budget.EndDate == nil || budget.EndDate.After(monthStart)) {
-					totalBudget = totalBudget.Add(budget.Amount)
-				}
-			}
-
-			if totalBudget.GreaterThan(decimal.Zero) {
-				budgetUsed = expenses.Div(totalBudget).Mul(decimal.NewFromInt(100))
-			}
-		}
-
-		savings := income.Sub(expenses)
-
-		trends = append(trends, SpendingTrend{
-			Month:      monthStart.Format("2006-01"),
-			Income:     income,
-			Expenses:   expenses,
-			Savings:    savings,
-			BudgetUsed: budgetUsed,
-		})
-	}
-
-	return trends, nil
-}
-
 func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, months int) ([]SpendingTrend, error) {
 	db := GetDb()
 	var trends []SpendingTrend
 
 	now := time.Now()
-	var currentCycleStart, currentCycleEnd time.Time
+	currentCycleStart, currentCycleEnd := currentCycleBounds(billingCycleDay, now)
 
-	if now.Day() >= billingCycleDay {
-		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
-		currentCycleEnd = currentCycleStart.AddDate(0, 1, 0).Add(-time.Nanosecond)
-	} else {
-		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-		currentCycleEnd = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
-	}
+	// Budgets do not change per cycle iteration, so fetch them once
+	budgets, _, budgetsErr := QueryBudgets(accountID, nil)
 
 	for i := months - 1; i >= 0; i-- {
 		cycleStart := currentCycleStart.AddDate(0, -i, 0)
@@ -144,8 +73,7 @@ func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, month
 		}
 
 		var budgetUsed decimal.Decimal
-		budgets, _, err := QueryBudgets(accountID, nil)
-		if err == nil {
+		if budgetsErr == nil {
 			var totalBudget decimal.Decimal
 			for _, budget := range budgets {
 				if budget.StartDate.Before(cycleEnd) && (budget.EndDate == nil || budget.EndDate.After(cycleStart)) {
@@ -172,36 +100,38 @@ func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, month
 	return trends, nil
 }
 
+// currentCycleBounds returns the start and end of the billing cycle that
+// contains the current moment
+func currentCycleBounds(billingCycleDay int, now time.Time) (time.Time, time.Time) {
+	var start time.Time
+	if now.Day() >= billingCycleDay {
+		start = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
+	} else {
+		start = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+	}
+	return start, start.AddDate(0, 1, 0).Add(-time.Nanosecond)
+}
+
 func GetCategoryBreakdown(accountID int64, period string, billingCycleDay int) ([]CategoryBreakdown, error) {
 	var startDate, endDate time.Time
 	now := time.Now()
 
 	switch period {
-	case "current_cycle":
-		if now.Day() >= billingCycleDay {
-			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
-			endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
-		} else {
-			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-			endDate = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
-		}
 	case "last_cycle":
-		if now.Day() >= billingCycleDay {
-			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-			endDate = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
-		} else {
-			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -2, 0)
-			endDate = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).AddDate(0, -1, 0).Add(-time.Nanosecond)
-		}
-	default:
-		// Default to current billing cycle for all other periods
-		if now.Day() >= billingCycleDay {
-			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
-			endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
-		} else {
-			startDate = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-			endDate = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
-		}
+		cycleStart, cycleEnd := currentCycleBounds(billingCycleDay, now)
+		startDate = cycleStart.AddDate(0, -1, 0)
+		endDate = cycleEnd.AddDate(0, -1, 0)
+	case "current_month":
+		startDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+		endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	case "last_month":
+		startDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
+		endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
+	case "current_year":
+		startDate = time.Date(now.Year(), 1, 1, 0, 0, 0, 0, now.Location())
+		endDate = startDate.AddDate(1, 0, 0).Add(-time.Nanosecond)
+	default: // "current_cycle" and anything unrecognised
+		startDate, endDate = currentCycleBounds(billingCycleDay, now)
 	}
 
 	return GetCategoryBreakdownByDateRange(accountID, startDate, endDate)
@@ -219,17 +149,22 @@ func GetCategoryBreakdownByDateRange(accountID int64, startDate, endDate time.Ti
 		TransactionCount int             `bun:"transaction_count"`
 	}
 
+	// Include uncategorised spending so percentages reflect all expenses in
+	// the period, and resolve category names in a single joined query
 	var categorySpending []CategorySpending
 	err := db.NewSelect().
 		Model((*types.Transaction)(nil)).
-		ColumnExpr("category_id, COALESCE(SUM(amount), 0) as total_amount, COUNT(id) as transaction_count").
-		Where("account_id = ?", accountID).
-		Where("type = ?", "expense").
-		Where("date >= ? AND date <= ?", startDate, endDate).
-		Where("deleted_date IS NULL").
-		Where("category_id IS NOT NULL").
-		Group("category_id").
-		Order("total_amount DESC").
+		ColumnExpr("COALESCE(t.category_id, 0) as category_id").
+		ColumnExpr("COALESCE(cat.name, 'Uncategorised') as category_name").
+		ColumnExpr("COALESCE(SUM(t.amount), 0) as total_amount").
+		ColumnExpr("COUNT(t.id) as transaction_count").
+		Join("LEFT JOIN categories AS cat ON cat.id = t.category_id").
+		Where("t.account_id = ?", accountID).
+		Where("t.type = ?", "expense").
+		Where("t.date >= ? AND t.date <= ?", startDate, endDate).
+		Where("t.deleted_date IS NULL").
+		GroupExpr("COALESCE(t.category_id, 0), COALESCE(cat.name, 'Uncategorised')").
+		OrderExpr("total_amount DESC").
 		Scan(context.Background(), &categorySpending)
 	if err != nil {
 		return nil, err
@@ -241,18 +176,7 @@ func GetCategoryBreakdownByDateRange(accountID int64, startDate, endDate time.Ti
 		totalExpenses = totalExpenses.Add(cs.TotalAmount)
 	}
 
-	// Convert to breakdown format and get category names
 	for _, cs := range categorySpending {
-		// Get category name
-		var category types.Category
-		err := db.NewSelect().
-			Model(&category).
-			Where("id = ?", cs.CategoryID).
-			Scan(context.Background())
-		if err != nil {
-			continue // Skip if category not found
-		}
-
 		percentage := decimal.Zero
 		if totalExpenses.GreaterThan(decimal.Zero) {
 			percentage = cs.TotalAmount.Div(totalExpenses).Mul(decimal.NewFromInt(100))
@@ -260,7 +184,7 @@ func GetCategoryBreakdownByDateRange(accountID int64, startDate, endDate time.Ti
 
 		breakdown = append(breakdown, CategoryBreakdown{
 			CategoryID:       cs.CategoryID,
-			CategoryName:     category.Name,
+			CategoryName:     cs.CategoryName,
 			Amount:           cs.TotalAmount,
 			Percentage:       percentage,
 			TransactionCount: cs.TransactionCount,
@@ -277,19 +201,9 @@ func CalculateFinancialHealth(accountID int64, billingCycleDay int) (*FinancialH
 	}
 
 	now := time.Now()
-	var currentCycleStart, currentCycleEnd time.Time
-
-	if now.Day() >= billingCycleDay {
-		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location())
-		currentCycleEnd = currentCycleStart.AddDate(0, 1, 0).Add(-time.Nanosecond)
-	} else {
-		currentCycleStart = time.Date(now.Year(), now.Month(), billingCycleDay, 0, 0, 0, 0, now.Location()).AddDate(0, -1, 0)
-		currentCycleEnd = time.Date(now.Year(), now.Month(), billingCycleDay, 23, 59, 59, 999999999, now.Location()).Add(-time.Nanosecond)
-	}
-
-	var previousCycleStart, previousCycleEnd time.Time
-	previousCycleStart = currentCycleStart.AddDate(0, -1, 0)
-	previousCycleEnd = currentCycleEnd.AddDate(0, -1, 0)
+	currentCycleStart, currentCycleEnd := currentCycleBounds(billingCycleDay, now)
+	previousCycleStart := currentCycleStart.AddDate(0, -1, 0)
+	previousCycleEnd := currentCycleEnd.AddDate(0, -1, 0)
 
 	// Calculate savings rate (income - expenses) / income
 	var currentIncome, currentExpenses decimal.Decimal
@@ -311,24 +225,30 @@ func CalculateFinancialHealth(accountID int64, billingCycleDay int) (*FinancialH
 		health.SavingsRate = decimal.Zero
 	}
 
-	// Calculate budget adherence
+	// Calculate budget adherence: the share of active budgets that are still
+	// within their limit. Staying under budget scores 100; each overspent
+	// budget lowers the score.
 	budgets, _, err := QueryBudgets(accountID, nil)
-	if err == nil && len(budgets) > 0 {
-		var totalBudget, totalSpent decimal.Decimal
+	if err == nil {
+		activeBudgets := 0
+		withinBudget := 0
 		for _, budget := range budgets {
 			if budget.StartDate.Before(now) && (budget.EndDate == nil || budget.EndDate.After(now)) {
-				totalBudget = totalBudget.Add(budget.Amount)
+				activeBudgets++
+				spent := decimal.Zero
 				if budget.Spent != nil {
-					totalSpent = totalSpent.Add(*budget.Spent)
+					spent = *budget.Spent
+				}
+				if spent.LessThanOrEqual(budget.Amount) {
+					withinBudget++
 				}
 			}
 		}
 
-		if totalBudget.GreaterThan(decimal.Zero) {
-			health.BudgetAdherence = decimal.NewFromInt(100).Sub(totalSpent.Div(totalBudget).Mul(decimal.NewFromInt(100)))
-			if health.BudgetAdherence.LessThan(decimal.Zero) {
-				health.BudgetAdherence = decimal.Zero
-			}
+		if activeBudgets > 0 {
+			health.BudgetAdherence = decimal.NewFromInt(int64(withinBudget)).
+				Div(decimal.NewFromInt(int64(activeBudgets))).
+				Mul(decimal.NewFromInt(100))
 		}
 	}
 
@@ -358,16 +278,34 @@ func CalculateFinancialHealth(accountID int64, billingCycleDay int) (*FinancialH
 		health.IncomeStability = decimal.Zero
 	}
 
-	// Calculate overall score (weighted average)
-	savingsScore := health.SavingsRate.Mul(decimal.NewFromFloat(0.4))
+	// Calculate overall score (weighted average). The savings component is
+	// clamped to 0-100 so a negative savings rate cannot push the score
+	// below zero, and 20%+ savings already counts as a full savings score.
+	savingsComponent := health.SavingsRate.Mul(decimal.NewFromInt(5)) // 20% savings = 100
+	if savingsComponent.LessThan(decimal.Zero) {
+		savingsComponent = decimal.Zero
+	}
+	if savingsComponent.GreaterThan(decimal.NewFromInt(100)) {
+		savingsComponent = decimal.NewFromInt(100)
+	}
+
+	savingsScore := savingsComponent.Mul(decimal.NewFromFloat(0.4))
 	budgetScore := health.BudgetAdherence.Mul(decimal.NewFromFloat(0.4))
 	stabilityScore := health.IncomeStability.Mul(decimal.NewFromFloat(0.2))
 
 	totalScore := savingsScore.Add(budgetScore).Add(stabilityScore)
 	health.Score = int(totalScore.IntPart())
+	if health.Score < 0 {
+		health.Score = 0
+	}
+	if health.Score > 100 {
+		health.Score = 100
+	}
 
 	// Generate recommendations
-	if health.SavingsRate.LessThan(decimal.NewFromInt(10)) {
+	if health.SavingsRate.LessThan(decimal.Zero) {
+		health.Recommendations = append(health.Recommendations, "You are spending more than you earn this cycle - review your expenses")
+	} else if health.SavingsRate.LessThan(decimal.NewFromInt(10)) {
 		health.Recommendations = append(health.Recommendations, "Consider increasing your savings rate to at least 10%")
 	}
 	if health.BudgetAdherence.LessThan(decimal.NewFromInt(80)) {

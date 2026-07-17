@@ -11,8 +11,8 @@ export default function FinancialHealthGauge({ score }: FinancialHealthGaugeProp
   ]
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#F59E0B' // amber
-    if (score >= 60) return '#F59E0B' // amber
+    if (score >= 60) return '#6BAF92' // green
+    if (score >= 40) return '#F59E0B' // amber
     return '#EF4444' // red
   }
 

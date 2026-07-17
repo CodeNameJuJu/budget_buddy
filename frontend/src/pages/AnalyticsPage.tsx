@@ -17,8 +17,21 @@ export default function AnalyticsPage() {
   const [categoryBreakdown, setCategoryBreakdown] = useState<CategoryBreakdown[]>([])
   const [financialHealth, setFinancialHealth] = useState<FinancialHealth | null>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedPeriod, setSelectedPeriod] = useState("current_month")
+  const [selectedPeriod, setSelectedPeriod] = useState("current_cycle")
   const { theme } = useTheme()
+
+  // Latest and previous billing cycles from the trends series, used for the
+  // summary cards and cycle-over-cycle comparison
+  const latestTrend = trends.length > 0 ? trends[trends.length - 1] : null
+  const previousTrend = trends.length > 1 ? trends[trends.length - 2] : null
+
+  function percentChange(current: string, previous: string | undefined): number | null {
+    if (previous === undefined) return null
+    const currentValue = parseFloat(current)
+    const previousValue = parseFloat(previous)
+    if (!isFinite(currentValue) || !isFinite(previousValue) || previousValue === 0) return null
+    return ((currentValue - previousValue) / Math.abs(previousValue)) * 100
+  }
 
   useEffect(() => {
     loadUserAccount()
@@ -79,6 +92,62 @@ export default function AnalyticsPage() {
         )}>Analytics</h1>
         <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Insights into your financial patterns</p>
       </div>
+
+      {/* Cycle summary */}
+      {latestTrend && (
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              label: "Income this cycle",
+              value: latestTrend.income,
+              change: percentChange(latestTrend.income, previousTrend?.income),
+              higherIsBetter: true,
+              icon: <TrendingUp className="h-4 w-4" />
+            },
+            {
+              label: "Spent this cycle",
+              value: latestTrend.expenses,
+              change: percentChange(latestTrend.expenses, previousTrend?.expenses),
+              higherIsBetter: false,
+              icon: <TrendingDown className="h-4 w-4" />
+            },
+            {
+              label: "Net savings this cycle",
+              value: latestTrend.savings,
+              change: percentChange(latestTrend.savings, previousTrend?.savings),
+              higherIsBetter: true,
+              icon: <DollarSign className="h-4 w-4" />
+            }
+          ].map(card => {
+            const isPositiveChange = card.change !== null && (card.higherIsBetter ? card.change >= 0 : card.change <= 0)
+            return (
+              <Card key={card.label} className={cn(
+                "border",
+                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+              )}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{card.label}</p>
+                    <div className="p-2 rounded-full bg-[#6BAF92] text-white">{card.icon}</div>
+                  </div>
+                  <p className={cn(
+                    "text-2xl font-bold mt-2",
+                    theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                  )}>{formatCurrency(card.value)}</p>
+                  {card.change !== null && (
+                    <Badge className={cn(
+                      "mt-2",
+                      isPositiveChange ? "bg-[#6BAF92]/20 text-[#3E7A5E]" : "bg-[#EF4444]/20 text-[#B91C1C]"
+                    )}>
+                      {card.change >= 0 ? "+" : ""}{card.change.toFixed(1)}% vs previous cycle
+                    </Badge>
+                  )}
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      )}
 
       {/* Financial Health Score */}
       {financialHealth && (
@@ -154,7 +223,7 @@ export default function AnalyticsPage() {
             <div className="p-2 rounded-full bg-primary text-white">
               <BarChart3 className="h-4 w-4" />
             </div>
-            6-Month Spending Trends
+            Spending trends (last 6 billing cycles)
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -185,9 +254,11 @@ export default function AnalyticsPage() {
                   : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA]"
               )}
             >
-              <option value="current_month">Current Month</option>
-              <option value="last_month">Last Month</option>
-              <option value="current_year">Current Year</option>
+              <option value="current_cycle">Current cycle</option>
+              <option value="last_cycle">Last cycle</option>
+              <option value="current_month">Current month</option>
+              <option value="last_month">Last month</option>
+              <option value="current_year">Current year</option>
             </select>
           </CardTitle>
         </CardHeader>
