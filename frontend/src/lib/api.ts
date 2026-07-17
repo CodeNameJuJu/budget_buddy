@@ -3,12 +3,11 @@ const API_BASE = import.meta.env.PROD
   : 'https://budgetbuddy-production-b70f.up.railway.app/api'
 
 async function request<T>(path: string, options?: RequestInit, isFormData?: boolean): Promise<T> {
-  // Read the access token from either storage. Login may persist to either
-  // localStorage (remember me) or sessionStorage; we must use whichever holds
-  // the *current* user's token. Reading from only one place caused stale
-  // tokens (from a previous login) to be sent, which leaked another user's
-  // information into the dashboard.
-  const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token')
+  // Read the access token from either storage. The tab-scoped sessionStorage
+  // session takes precedence over the shared localStorage (remember me)
+  // session, so a non-remembered login in this tab is not shadowed by
+  // another user's remembered tokens.
+  const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token')
   
   const headers: Record<string, string> = {}
   
@@ -29,21 +28,20 @@ async function request<T>(path: string, options?: RequestInit, isFormData?: bool
 
   // Handle 401 Unauthorized - token expired or invalid
   if (res.status === 401) {
-    // Try to refresh the token. Read the refresh token from whichever storage
-    // currently holds it and remember which one so we can persist the new
-    // tokens back to the same location. Writing tokens to a different storage
-    // than they came from caused another user's session to take precedence.
-    const localRefresh = localStorage.getItem('refresh_token')
-    const refreshToken = localRefresh || sessionStorage.getItem('refresh_token')
-    const storage: Storage = localRefresh ? localStorage : sessionStorage
+    // Try to refresh the token. The tab-scoped sessionStorage session takes
+    // precedence, and the new tokens must be persisted back to the same
+    // storage they came from. Writing tokens to a different storage than
+    // they came from caused another user's session to take precedence.
+    const sessionRefresh = sessionStorage.getItem('refresh_token')
+    const refreshToken = sessionRefresh || localStorage.getItem('refresh_token')
+    const storage: Storage = sessionRefresh ? sessionStorage : localStorage
 
-    const clearAllTokens = () => {
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('refresh_token')
-      localStorage.removeItem('token_expires_at')
-      sessionStorage.removeItem('access_token')
-      sessionStorage.removeItem('refresh_token')
-      sessionStorage.removeItem('token_expires_at')
+    // Only clear the storage holding the session that failed to refresh so
+    // another user's remembered session in this browser is left intact.
+    const clearSessionTokens = () => {
+      storage.removeItem('access_token')
+      storage.removeItem('refresh_token')
+      storage.removeItem('token_expires_at')
     }
 
     if (refreshToken) {
@@ -58,9 +56,6 @@ async function request<T>(path: string, options?: RequestInit, isFormData?: bool
 
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json()
-          // Clear both storages first so we don't leave behind tokens from a
-          // previous user session.
-          clearAllTokens()
           storage.setItem('access_token', refreshData.access_token)
           storage.setItem('refresh_token', refreshData.refresh_token)
           storage.setItem('token_expires_at', (Date.now() + refreshData.expires_in * 1000).toString())
@@ -79,14 +74,14 @@ async function request<T>(path: string, options?: RequestInit, isFormData?: bool
 
           return retryResponse.json()
         } else {
-          // Refresh failed, clear tokens and redirect to login
-          clearAllTokens()
+          // Refresh failed, clear this session's tokens and redirect to login
+          clearSessionTokens()
           window.location.href = '/login'
           throw new Error('Session expired. Please log in again.')
         }
       } catch (error) {
-        // Refresh failed, clear tokens and redirect to login
-        clearAllTokens()
+        // Refresh failed, clear this session's tokens and redirect to login
+        clearSessionTokens()
         window.location.href = '/login'
         throw new Error('Session expired. Please log in again.')
       }

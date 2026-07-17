@@ -51,6 +51,21 @@ interface AuthContextType {
 // API base URL
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://budgetbuddy-production-b70f.up.railway.app/api';
 
+const tokenKeys = ['access_token', 'refresh_token', 'token_expires_at'];
+
+function clearStorageTokens(storage: Storage) {
+  tokenKeys.forEach(key => storage.removeItem(key));
+}
+
+// The tab-scoped sessionStorage session always takes precedence over the
+// shared localStorage (remember me) session. This lets a non-remembered
+// login in one tab coexist with a remembered login in other tabs.
+function getActiveStorage(): Storage | null {
+  if (sessionStorage.getItem('refresh_token')) return sessionStorage;
+  if (localStorage.getItem('refresh_token')) return localStorage;
+  return null;
+}
+
 // Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -63,14 +78,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Check for existing tokens on mount
   useEffect(() => {
     const initAuth = async () => {
-      // Check both localStorage and sessionStorage for tokens
-      const localStorageToken = localStorage.getItem('access_token');
-      const sessionStorageToken = sessionStorage.getItem('access_token');
-      const accessToken = localStorageToken || sessionStorageToken;
-      
-      const localStorageRefresh = localStorage.getItem('refresh_token');
-      const sessionStorageRefresh = sessionStorage.getItem('refresh_token');
-      const refreshToken = localStorageRefresh || sessionStorageRefresh;
+      // Use the active storage so the access and refresh tokens always come
+      // from the same session (session tokens win over remembered tokens)
+      const storage = getActiveStorage();
+      const accessToken = storage?.getItem('access_token');
+      const refreshToken = storage?.getItem('refresh_token');
 
       if (accessToken && refreshToken) {
         try {
@@ -120,16 +132,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const refreshAccessToken = async (): Promise<void> => {
-    const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
-    if (!refreshToken) {
+    const storage = getActiveStorage();
+    const refreshToken = storage?.getItem('refresh_token');
+    if (!storage || !refreshToken) {
       console.error('No refresh token available in either storage');
       throw new Error('No refresh token available');
     }
-
-    // Determine which storage type to use based on where the token was found
-    const useLocalStorage = localStorage.getItem('refresh_token') === refreshToken;
-
-    console.log('Attempting to refresh access token...');
 
     const response = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
@@ -154,43 +162,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     const data: AuthResponse = await response.json();
-    console.log('Token refresh successful');
-    // Use the same storage type as before
-    setTokens(data, useLocalStorage);
+    // Persist the new tokens to the same storage they came from
+    setTokens(data, storage === localStorage);
     setUser(data.user);
   };
 
   const setTokens = (data: AuthResponse, rememberMe: boolean = false) => {
-    console.log('Setting tokens, rememberMe:', rememberMe);
-    
-    // Clear any tokens from BOTH storages first. Leaving stale tokens behind
-    // (e.g. from a previous user who used a different rememberMe setting)
-    // caused the auth bootstrap to pick up the wrong user's session, which
-    // leaked another user's information onto the dashboard.
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('token_expires_at');
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('refresh_token');
-    sessionStorage.removeItem('token_expires_at');
+    // Always clear this tab's session tokens so the new session takes effect
+    // (session tokens take precedence over remembered tokens). Only replace
+    // the shared localStorage tokens when this login is a "remember me"
+    // login - clearing them unconditionally logged out any other user who
+    // was remembered in this browser.
+    clearStorageTokens(sessionStorage);
+    if (rememberMe) {
+      clearStorageTokens(localStorage);
+    }
 
     const storage = rememberMe ? localStorage : sessionStorage;
     storage.setItem('access_token', data.access_token);
     storage.setItem('refresh_token', data.refresh_token);
     storage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
-    
-    console.log('Tokens stored in:', rememberMe ? 'localStorage' : 'sessionStorage');
   };
 
   const clearTokens = () => {
-    console.log('Clearing tokens from both storage locations');
-    // Clear from both storage locations
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('token_expires_at');
-    sessionStorage.removeItem('access_token');
-    sessionStorage.removeItem('refresh_token');
-    sessionStorage.removeItem('token_expires_at');
+    // Only clear the storage holding the active session. A non-remembered
+    // session logging out should not wipe another user's remembered session.
+    const storage = getActiveStorage();
+    if (storage) {
+      clearStorageTokens(storage);
+    } else {
+      clearStorageTokens(sessionStorage);
+      clearStorageTokens(localStorage);
+    }
     setUser(null);
   };
 
@@ -259,7 +262,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const updateProfile = async (data: Partial<User>): Promise<void> => {
-    const accessToken = localStorage.getItem('access_token');
+    const accessToken = getActiveStorage()?.getItem('access_token');
     if (!accessToken) {
       throw new Error('No access token available');
     }
@@ -287,11 +290,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!user) return;
 
     const checkTokenExpiry = () => {
-      // Check both storage locations for token expiry
-      const localStorageExpires = localStorage.getItem('token_expires_at');
-      const sessionStorageExpires = sessionStorage.getItem('token_expires_at');
-      const expiresAt = localStorageExpires || sessionStorageExpires;
-      
+      const expiresAt = getActiveStorage()?.getItem('token_expires_at');
       if (!expiresAt) return;
 
       const timeUntilExpiry = parseInt(expiresAt) - Date.now();
