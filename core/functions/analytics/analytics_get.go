@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
@@ -21,7 +20,7 @@ func GETAnalyticsTrends(w http.ResponseWriter, r *http.Request) {
 
 	// Get account to retrieve billing cycle day
 	var account types.Account
-	err := appcontext.GetDb().NewSelect().
+	err := db.GetDb().NewSelect().
 		Model(&account).
 		Where("id = ?", accountID).
 		Scan(context.Background())
@@ -61,7 +60,7 @@ func GETAnalyticsCategoryBreakdown(w http.ResponseWriter, r *http.Request) {
 
 	// Get account to retrieve billing cycle day
 	var account types.Account
-	err := appcontext.GetDb().NewSelect().
+	err := db.GetDb().NewSelect().
 		Model(&account).
 		Where("id = ?", accountID).
 		Scan(context.Background())
@@ -99,7 +98,7 @@ func GETAnalyticsFinancialHealth(w http.ResponseWriter, r *http.Request) {
 
 	// Get account to retrieve billing cycle day
 	var account types.Account
-	err := appcontext.GetDb().NewSelect().
+	err := db.GetDb().NewSelect().
 		Model(&account).
 		Where("id = ?", accountID).
 		Scan(context.Background())

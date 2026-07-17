@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
@@ -24,7 +23,7 @@ type CategorySpendingSummary struct {
 }
 
 func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*DashboardSummary, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	ctx := context.Background()
 
 	// -------------------------
@@ -121,7 +120,7 @@ func GetDashboardSummary(accountID int64, from time.Time, to time.Time) (*Dashbo
 }
 
 func GetDashboardSummaryAllTime(accountID int64) (*DashboardSummary, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 
 	// Total income
 	var totalIncome decimal.Decimal
@@ -193,7 +192,7 @@ func GetDashboardSummaryAllTime(accountID int64) (*DashboardSummary, error) {
 
 // Dashboard Layout Functions
 func GetDashboardLayout(userID int64) (*types.DashboardLayout, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var layout types.DashboardLayout
 
 	err := db.NewSelect().Model(&layout).
@@ -208,7 +207,7 @@ func GetDashboardLayout(userID int64) (*types.DashboardLayout, error) {
 }
 
 func CreateOrUpdateDashboardLayout(layout *types.DashboardLayout) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	if layout.Name == "" {
 		layout.Name = "Main Dashboard"
 	}

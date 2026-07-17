@@ -3,15 +3,15 @@ package dashboard
 import (
 	"net/http"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 )
 
 func POSTCreateTables(w http.ResponseWriter, r *http.Request) {
-	db := appcontext.GetDb()
+	database := db.GetDb()
 
 	// Create dashboard_layouts table
-	_, err := db.Exec(`
+	_, err := database.Exec(`
 		CREATE TABLE IF NOT EXISTS dashboard_layouts (
 			id SERIAL PRIMARY KEY,
 			account_id INTEGER NOT NULL,
@@ -28,13 +28,13 @@ func POSTCreateTables(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create indexes
-	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_dashboard_layouts_account_id ON dashboard_layouts(account_id)`)
+	_, err = database.Exec(`CREATE INDEX IF NOT EXISTS idx_dashboard_layouts_account_id ON dashboard_layouts(account_id)`)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not create indexes")
 		return
 	}
 
-	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_dashboard_layouts_is_active ON dashboard_layouts(is_active)`)
+	_, err = database.Exec(`CREATE INDEX IF NOT EXISTS idx_dashboard_layouts_is_active ON dashboard_layouts(is_active)`)
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Could not create indexes")
 		return

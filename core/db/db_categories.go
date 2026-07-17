@@ -4,12 +4,11 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func QueryCategories(accountID int64, categoryID *int64, categoryType *string) ([]types.Category, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var categories []types.Category
 
 	query := db.NewSelect().Model(&categories).
@@ -30,7 +29,7 @@ func QueryCategories(accountID int64, categoryID *int64, categoryType *string) (
 }
 
 func InsertCategory(category *types.Category) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(category).
 		Returning("*").
 		Exec(context.Background())
@@ -38,7 +37,7 @@ func InsertCategory(category *types.Category) error {
 }
 
 func UpdateCategory(category *types.Category) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	category.ModifiedDate = &now
 
@@ -51,7 +50,7 @@ func UpdateCategory(category *types.Category) error {
 }
 
 func SoftDeleteCategoryForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().

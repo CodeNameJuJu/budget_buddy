@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
@@ -21,7 +20,7 @@ type TransactionFilters struct {
 }
 
 func QueryTransactions(filters TransactionFilters) ([]types.Transaction, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var transactions []types.Transaction
 
 	query := db.NewSelect().Model(&transactions).
@@ -65,7 +64,7 @@ func QueryTransactions(filters TransactionFilters) ([]types.Transaction, int, er
 }
 
 func InsertTransaction(transaction *types.Transaction) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(transaction).
 		Returning("*").
 		Exec(context.Background())
@@ -73,7 +72,7 @@ func InsertTransaction(transaction *types.Transaction) error {
 }
 
 func UpdateTransaction(transaction *types.Transaction) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	transaction.ModifiedDate = &now
 
@@ -86,7 +85,7 @@ func UpdateTransaction(transaction *types.Transaction) error {
 }
 
 func UpdateTransactionForAccount(transaction *types.Transaction, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	transaction.ModifiedDate = &now
 
@@ -102,7 +101,7 @@ func UpdateTransactionForAccount(transaction *types.Transaction, accountID int64
 }
 
 func SoftDeleteTransactionForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -116,7 +115,7 @@ func SoftDeleteTransactionForAccount(id int64, accountID int64) error {
 }
 
 func QueryTransactionsBySavingsPot(accountID int64, savingsPotID int64) ([]types.Transaction, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var transactions []types.Transaction
 
 	query := db.NewSelect().Model(&transactions).
@@ -134,7 +133,7 @@ func QueryTransactionsBySavingsPot(accountID int64, savingsPotID int64) ([]types
 }
 
 func QueryTransactionsByCreditPot(accountID int64, creditPotID int64) ([]types.Transaction, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var transactions []types.Transaction
 
 	query := db.NewSelect().Model(&transactions).

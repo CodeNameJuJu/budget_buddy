@@ -5,15 +5,16 @@ import (
 	"strconv"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/go-chi/chi/v5"
 )
 
 func GETAccount(w http.ResponseWriter, r *http.Request) {
 	// Get user ID from context (set by auth middleware). The middleware stores
-	// the user's ID as int (matching types.User.ID), so we must assert int and
-	// then convert to int64 for the db query.
-	userIDInt, ok := r.Context().Value("user_id").(int)
+	// the user's ID as int (matching types.User.ID), so we convert to int64 for
+	// the db query.
+	userIDInt, ok := auth.GetUserIDFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -46,7 +47,7 @@ func GETAccount(w http.ResponseWriter, r *http.Request) {
 func GETMyAccount(w http.ResponseWriter, r *http.Request) {
 	// Get user ID from context (set by auth middleware). The middleware stores
 	// it as int; convert to int64 for the db query.
-	userIDInt, ok := r.Context().Value("user_id").(int)
+	userIDInt, ok := auth.GetUserIDFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return

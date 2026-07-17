@@ -10,6 +10,17 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
+// contextKey is a private type for request context keys to avoid collisions
+type contextKey string
+
+const (
+	contextKeyUser      contextKey = "user"
+	contextKeyUserID    contextKey = "user_id"
+	contextKeyUserEmail contextKey = "user_email"
+	contextKeyAccountID contextKey = "account_id"
+	contextKeyDeviceID  contextKey = "device_id"
+)
+
 // AuthMiddleware creates a middleware for JWT authentication
 func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -78,11 +89,11 @@ func (h *AuthHandler) AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Add user to context
-		ctx := context.WithValue(r.Context(), "user", &user)
-		ctx = context.WithValue(ctx, "user_id", user.ID)
-		ctx = context.WithValue(ctx, "user_email", user.Email)
-		ctx = context.WithValue(ctx, "account_id", accountID)
-		ctx = context.WithValue(ctx, "device_id", claims.DeviceID)
+		ctx := context.WithValue(r.Context(), contextKeyUser, &user)
+		ctx = context.WithValue(ctx, contextKeyUserID, user.ID)
+		ctx = context.WithValue(ctx, contextKeyUserEmail, user.Email)
+		ctx = context.WithValue(ctx, contextKeyAccountID, accountID)
+		ctx = context.WithValue(ctx, contextKeyDeviceID, claims.DeviceID)
 
 		// Call next handler with updated context
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -151,11 +162,11 @@ func (h *AuthHandler) OptionalAuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Add user to context
-		ctx := context.WithValue(r.Context(), "user", &user)
-		ctx = context.WithValue(ctx, "user_id", user.ID)
-		ctx = context.WithValue(ctx, "user_email", user.Email)
-		ctx = context.WithValue(ctx, "account_id", accountID)
-		ctx = context.WithValue(ctx, "device_id", claims.DeviceID)
+		ctx := context.WithValue(r.Context(), contextKeyUser, &user)
+		ctx = context.WithValue(ctx, contextKeyUserID, user.ID)
+		ctx = context.WithValue(ctx, contextKeyUserEmail, user.Email)
+		ctx = context.WithValue(ctx, contextKeyAccountID, accountID)
+		ctx = context.WithValue(ctx, contextKeyDeviceID, claims.DeviceID)
 
 		// Call next handler with updated context
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -166,7 +177,7 @@ func (h *AuthHandler) OptionalAuthMiddleware(next http.Handler) http.Handler {
 func (h *AuthHandler) AdminMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// First check if user is authenticated
-		user, ok := r.Context().Value("user").(*types.User)
+		user, ok := GetUserFromContext(r)
 		if !ok {
 			helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 			return
@@ -184,29 +195,29 @@ func (h *AuthHandler) AdminMiddleware(next http.Handler) http.Handler {
 
 // GetUserFromContext gets the user from the request context
 func GetUserFromContext(r *http.Request) (*types.User, bool) {
-	user, ok := r.Context().Value("user").(*types.User)
+	user, ok := r.Context().Value(contextKeyUser).(*types.User)
 	return user, ok
 }
 
 // GetUserIDFromContext gets the user ID from the request context
 func GetUserIDFromContext(r *http.Request) (int, bool) {
-	userID, ok := r.Context().Value("user_id").(int)
+	userID, ok := r.Context().Value(contextKeyUserID).(int)
 	return userID, ok
 }
 
 // GetUserEmailFromContext gets the user email from the request context
 func GetUserEmailFromContext(r *http.Request) (string, bool) {
-	email, ok := r.Context().Value("user_email").(string)
+	email, ok := r.Context().Value(contextKeyUserEmail).(string)
 	return email, ok
 }
 
 func GetAccountIDFromContext(r *http.Request) (int64, bool) {
-	accountID, ok := r.Context().Value("account_id").(int64)
+	accountID, ok := r.Context().Value(contextKeyAccountID).(int64)
 	return accountID, ok
 }
 
 // GetDeviceIDFromContext gets the device ID from the request context
 func GetDeviceIDFromContext(r *http.Request) (string, bool) {
-	deviceID, ok := r.Context().Value("device_id").(string)
+	deviceID, ok := r.Context().Value(contextKeyDeviceID).(string)
 	return deviceID, ok
 }

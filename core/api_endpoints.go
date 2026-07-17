@@ -32,11 +32,11 @@ func RegisterRoutes(r chi.Router) {
 			r.Post("/register", authHandler.Register)
 			r.Post("/login", authHandler.Login)
 			r.Post("/refresh", authHandler.RefreshToken)
-			r.Post("/logout", authHandler.Logout) // Requires auth middleware
 			r.Post("/verify-email", authHandler.VerifyEmail)
 
 			// Protected routes
 			r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
+				r.Post("/logout", authHandler.Logout)
 				r.Get("/profile", authHandler.GetProfile)
 				r.Patch("/profile", authHandler.UpdateProfile)
 				r.Post("/change-password", authHandler.ChangePassword)

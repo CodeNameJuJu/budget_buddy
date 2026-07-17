@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/CodeNameJuJu/budget_buddy/core"
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -26,6 +24,9 @@ func main() {
 		log.Println("Warning: Could not load .env file")
 	}
 
+	// Initialize database
+	db.ConnectToDatabase()
+
 	// Check if we should run migrations on startup
 	if os.Getenv("MIGRATE_ON_STARTUP") == "true" {
 		log.Println("Running database migrations on startup...")
@@ -34,13 +35,6 @@ func main() {
 		}
 		log.Println("Migrations completed successfully!")
 	}
-
-	// Initialize database. There are two parallel db package globals
-	// (core/db and core/context); handlers query through core/context while
-	// the auth middleware uses core/db, so we must connect both or any DB
-	// query in a handler hits a nil *bun.DB and panics (502 to the client).
-	db.ConnectToDatabase()
-	appcontext.ConnectToDatabase()
 
 	// Create router
 	r := chi.NewRouter()
@@ -88,7 +82,7 @@ func runMigrations() error {
 
 	// Get migration files
 	migrationsDir := "backend/migrations"
-	files, err := ioutil.ReadDir(migrationsDir)
+	files, err := os.ReadDir(migrationsDir)
 	if err != nil {
 		return fmt.Errorf("failed to read migrations directory: %s", err)
 	}
@@ -136,7 +130,7 @@ func runMigration(db *bun.DB, migrationsDir, filename string) error {
 
 	// Read migration file
 	migrationPath := filepath.Join(migrationsDir, filename)
-	content, err := ioutil.ReadFile(migrationPath)
+	content, err := os.ReadFile(migrationPath)
 	if err != nil {
 		return fmt.Errorf("failed to read migration file %s: %s", filename, err)
 	}

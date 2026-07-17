@@ -168,13 +168,10 @@ func (s *AuthService) ValidateRefreshToken(tokenString string) (*types.RefreshTo
 	}
 
 	// Hash the token for comparison
-	tokenHash, err := s.hashToken(tokenString)
-	if err != nil {
-		return nil, fmt.Errorf("failed to hash token: %w", err)
-	}
+	tokenHash := s.hashToken(tokenString)
 
 	var refreshToken types.RefreshToken
-	err = database.NewSelect().
+	err := database.NewSelect().
 		Model(&refreshToken).
 		Where("token_hash = ? AND expires_at > ?", tokenHash, time.Now()).
 		Scan(context.Background())
@@ -225,22 +222,17 @@ func (s *AuthService) RevokeAllUserTokens(userID int) error {
 }
 
 // hashToken creates a SHA-256 hash of the token for storage
-func (s *AuthService) hashToken(token string) (string, error) {
+func (s *AuthService) hashToken(token string) string {
 	hash := sha256.Sum256([]byte(token))
-	return hex.EncodeToString(hash[:]), nil
+	return hex.EncodeToString(hash[:])
 }
 
 // getEnv gets an environment variable with a default value
 func getEnv(key, defaultValue string) string {
-	if value := getEnvDirect(key); value != "" {
+	if value := os.Getenv(key); value != "" {
 		return value
 	}
 	return defaultValue
-}
-
-// getEnvDirect gets an environment variable
-func getEnvDirect(key string) string {
-	return os.Getenv(key)
 }
 
 // GenerateDeviceID generates a unique device ID

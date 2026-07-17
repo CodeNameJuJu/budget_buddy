@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/shopspring/decimal"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
+	"github.com/shopspring/decimal"
 )
 
 type POSTBudgetRequest struct {

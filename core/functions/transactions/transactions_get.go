@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
@@ -67,7 +66,7 @@ func GETTransactions(w http.ResponseWriter, r *http.Request) {
 	if !dateFromProvided && !dateToProvided {
 		// Get account to retrieve billing cycle day
 		var account types.Account
-		err := appcontext.GetDb().NewSelect().
+		err := db.GetDb().NewSelect().
 			Model(&account).
 			Where("id = ?", accountID).
 			Scan(context.Background())

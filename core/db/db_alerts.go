@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
 
 func CreateAlert(alert *types.Alert) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(alert).
 		Returning("*").
 		Exec(context.Background())
@@ -19,7 +18,7 @@ func CreateAlert(alert *types.Alert) error {
 }
 
 func GetAlerts(accountID int64, unreadOnly bool, limit int) ([]types.Alert, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var alerts []types.Alert
 
 	query := db.NewSelect().Model(&alerts).
@@ -46,7 +45,7 @@ func GetAlerts(accountID int64, unreadOnly bool, limit int) ([]types.Alert, int,
 }
 
 func MarkAlertAsRead(alertID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -59,7 +58,7 @@ func MarkAlertAsRead(alertID int64) error {
 }
 
 func MarkAllAlertsAsRead(accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -73,7 +72,7 @@ func MarkAllAlertsAsRead(accountID int64) error {
 }
 
 func cleanupExpiredAlerts(accountID int64) {
-	dbConn := appcontext.GetDb()
+	dbConn := GetDb()
 	now := time.Now()
 
 	dbConn.NewDelete().
@@ -394,7 +393,7 @@ func GenerateGoalMilestoneAlerts(accountID int64) error {
 }
 
 func alertExistsForMilestone(accountID int64, alertType types.AlertType, referenceID int64, milestone int) (bool, error) {
-	dbConn := appcontext.GetDb()
+	dbConn := GetDb()
 	var count int
 
 	count, err := dbConn.NewSelect().
@@ -409,7 +408,7 @@ func alertExistsForMilestone(accountID int64, alertType types.AlertType, referen
 }
 
 func alertExistsForPeriod(accountID int64, alertType types.AlertType, period string) (bool, error) {
-	dbConn := appcontext.GetDb()
+	dbConn := GetDb()
 	var count int
 
 	if alertType == types.AlertWeeklySummary {
@@ -436,7 +435,7 @@ func alertExistsForPeriod(accountID int64, alertType types.AlertType, period str
 }
 
 func GetAlertPreferences(accountID int64) ([]types.AlertPreference, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var preferences []types.AlertPreference
 
 	err := db.NewSelect().Model(&preferences).
@@ -450,7 +449,7 @@ func GetAlertPreferences(accountID int64) ([]types.AlertPreference, error) {
 }
 
 func UpdateAlertPreference(preference *types.AlertPreference) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	preference.ModifiedDate = &now
 
@@ -481,7 +480,7 @@ func UpdateAlertPreference(preference *types.AlertPreference) error {
 }
 
 func alertExists(accountID int64, alertType types.AlertType, referenceID int64) (bool, error) {
-	dbConn := appcontext.GetDb()
+	dbConn := GetDb()
 	var count int
 
 	count, err := dbConn.NewSelect().

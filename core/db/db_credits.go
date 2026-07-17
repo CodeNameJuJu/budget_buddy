@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
@@ -14,7 +13,7 @@ import (
 // ====================================================================================================
 
 func QueryCreditPots(accountID int64, potID *int64) ([]types.CreditPot, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var pots []types.CreditPot
 
 	query := db.NewSelect().Model(&pots).
@@ -44,7 +43,7 @@ func QueryCreditPots(accountID int64, potID *int64) ([]types.CreditPot, int, err
 }
 
 func calculatePotPaid(potID int64, accountID int64) (decimal.Decimal, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var paid decimal.Decimal
 
 	err := db.NewSelect().
@@ -59,7 +58,7 @@ func calculatePotPaid(potID int64, accountID int64) (decimal.Decimal, error) {
 }
 
 func InsertCreditPot(pot *types.CreditPot) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(pot).
 		Returning("*").
 		Exec(context.Background())
@@ -67,7 +66,7 @@ func InsertCreditPot(pot *types.CreditPot) error {
 }
 
 func UpdateCreditPot(pot *types.CreditPot) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	pot.ModifiedDate = &now
 
@@ -80,7 +79,7 @@ func UpdateCreditPot(pot *types.CreditPot) error {
 }
 
 func SoftDeleteCreditPotForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -100,7 +99,7 @@ func SoftDeleteCreditPotForAccount(id int64, accountID int64) error {
 // ====================================================================================================
 
 func QueryCreditPayments(accountID int64, potID *int64) ([]types.CreditPayment, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var payments []types.CreditPayment
 
 	query := db.NewSelect().Model(&payments).
@@ -118,7 +117,7 @@ func QueryCreditPayments(accountID int64, potID *int64) ([]types.CreditPayment, 
 }
 
 func InsertCreditPayment(payment *types.CreditPayment) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(payment).
 		Returning("*").
 		Exec(context.Background())
@@ -126,7 +125,7 @@ func InsertCreditPayment(payment *types.CreditPayment) error {
 }
 
 func SoftDeleteCreditPaymentForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -153,7 +152,7 @@ type CreditSummary struct {
 }
 
 func GetCreditSummary(accountID int64) (*CreditSummary, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 
 	// Calculate total payable from all credit pots
 	var totalPayable decimal.Decimal

@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
@@ -14,7 +13,7 @@ import (
 // ====================================================================================================
 
 func QuerySavingsPots(accountID int64, potID *int64) ([]types.SavingsPot, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var pots []types.SavingsPot
 
 	query := db.NewSelect().Model(&pots).
@@ -44,7 +43,7 @@ func QuerySavingsPots(accountID int64, potID *int64) ([]types.SavingsPot, int, e
 }
 
 func calculatePotAllocated(potID int64, accountID int64) (decimal.Decimal, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var allocated decimal.Decimal
 
 	err := db.NewSelect().
@@ -59,7 +58,7 @@ func calculatePotAllocated(potID int64, accountID int64) (decimal.Decimal, error
 }
 
 func InsertSavingsPot(pot *types.SavingsPot) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(pot).
 		Returning("*").
 		Exec(context.Background())
@@ -67,7 +66,7 @@ func InsertSavingsPot(pot *types.SavingsPot) error {
 }
 
 func UpdateSavingsPot(pot *types.SavingsPot) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	pot.ModifiedDate = &now
 
@@ -80,7 +79,7 @@ func UpdateSavingsPot(pot *types.SavingsPot) error {
 }
 
 func SoftDeleteSavingsPotForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -100,7 +99,7 @@ func SoftDeleteSavingsPotForAccount(id int64, accountID int64) error {
 // ====================================================================================================
 
 func QuerySavingsAllocations(accountID int64, potID *int64) ([]types.SavingsAllocation, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var allocations []types.SavingsAllocation
 
 	query := db.NewSelect().Model(&allocations).
@@ -118,7 +117,7 @@ func QuerySavingsAllocations(accountID int64, potID *int64) ([]types.SavingsAllo
 }
 
 func InsertSavingsAllocation(allocation *types.SavingsAllocation) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(allocation).
 		Returning("*").
 		Exec(context.Background())
@@ -126,7 +125,7 @@ func InsertSavingsAllocation(allocation *types.SavingsAllocation) error {
 }
 
 func SoftDeleteSavingsAllocationForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -153,7 +152,7 @@ type SavingsSummary struct {
 }
 
 func GetSavingsSummary(accountID int64) (*SavingsSummary, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 
 	// Calculate savings balance from all savings allocations (sum of all allocation amounts)
 	var savingsBalance decimal.Decimal

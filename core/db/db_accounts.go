@@ -6,12 +6,11 @@ import (
 	"errors"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 )
 
 func QueryAccounts(accountID *int64, userID *int64) ([]types.Account, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var accounts []types.Account
 
 	query := db.NewSelect().Model(&accounts).
@@ -35,7 +34,7 @@ func QueryAccounts(accountID *int64, userID *int64) ([]types.Account, int, error
 }
 
 func InsertAccount(account *types.Account) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(account).
 		Returning("*").
 		Exec(context.Background())
@@ -43,7 +42,7 @@ func InsertAccount(account *types.Account) error {
 }
 
 func GetAccountIDForUser(userID int64) (int64, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	ctx := context.Background()
 
 	var account types.Account
@@ -91,7 +90,7 @@ func GetAccountIDForUser(userID int64) (int64, error) {
 }
 
 func UpdateAccount(account *types.Account) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	account.ModifiedDate = &now
 

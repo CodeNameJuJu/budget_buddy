@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/CodeNameJuJu/budget_buddy/core/db"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/auth"
 	"github.com/CodeNameJuJu/budget_buddy/core/helpers"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/go-chi/chi/v5"
@@ -19,7 +20,7 @@ type PATCHAccountRequest struct {
 }
 
 func PATCHAccount(w http.ResponseWriter, r *http.Request) {
-	userIDInt, ok := r.Context().Value("user_id").(int)
+	userIDInt, ok := auth.GetUserIDFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return

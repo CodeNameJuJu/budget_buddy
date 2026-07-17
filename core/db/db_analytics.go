@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
@@ -34,7 +33,7 @@ type FinancialHealth struct {
 }
 
 func GetSpendingTrends(accountID int64, months int) ([]SpendingTrend, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var trends []SpendingTrend
 
 	endDate := time.Now().Truncate(time.Hour * 24).Add(time.Hour * 24)
@@ -100,7 +99,7 @@ func GetSpendingTrends(accountID int64, months int) ([]SpendingTrend, error) {
 }
 
 func GetSpendingTrendsByBillingCycle(accountID int64, billingCycleDay int, months int) ([]SpendingTrend, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var trends []SpendingTrend
 
 	now := time.Now()
@@ -209,7 +208,7 @@ func GetCategoryBreakdown(accountID int64, period string, billingCycleDay int) (
 }
 
 func GetCategoryBreakdownByDateRange(accountID int64, startDate, endDate time.Time) ([]CategoryBreakdown, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var breakdown []CategoryBreakdown
 
 	// Get category spending
@@ -272,7 +271,7 @@ func GetCategoryBreakdownByDateRange(accountID int64, startDate, endDate time.Ti
 }
 
 func CalculateFinancialHealth(accountID int64, billingCycleDay int) (*FinancialHealth, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	health := &FinancialHealth{
 		Recommendations: []string{},
 	}

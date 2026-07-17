@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -22,7 +23,7 @@ func ConnectToDatabase() {
 	// Check if DATABASE_URL is provided (preferred for Supabase)
 	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
 		dsn = databaseURL
-		fmt.Printf("Using DATABASE_URL: %s\n", maskPassword(databaseURL))
+		log.Printf("Using DATABASE_URL: %s", maskPassword(databaseURL))
 	} else {
 		// Build connection string from individual components
 		sslmode := os.Getenv("DB_SSLMODE")
@@ -38,7 +39,7 @@ func ConnectToDatabase() {
 			os.Getenv("DB_NAME"),
 			sslmode,
 		)
-		fmt.Printf("Using individual DB settings, host: %s\n", os.Getenv("DB_HOST"))
+		log.Printf("Using individual DB settings, host: %s", os.Getenv("DB_HOST"))
 	}
 
 	sqlDB := sql.OpenDB(pgdriver.NewConnector(
@@ -63,18 +64,18 @@ func ConnectToDatabase() {
 			lastErr = err
 			if i < maxRetries-1 {
 				waitTime := time.Duration(i+1) * time.Second
-				fmt.Printf("Database connection attempt %d failed, retrying in %v: %s\n", i+1, waitTime, err)
+				log.Printf("Database connection attempt %d failed, retrying in %v: %s", i+1, waitTime, err)
 				time.Sleep(waitTime)
 				continue
 			}
 		} else {
-			fmt.Println("Connected to database")
+			log.Println("Connected to database")
 			return
 		}
 	}
 
-	fmt.Printf("Warning: Failed to connect to database after %d attempts: %s\n", maxRetries, lastErr)
-	fmt.Println("Continuing without database connection for testing purposes")
+	log.Printf("Warning: Failed to connect to database after %d attempts: %s", maxRetries, lastErr)
+	log.Println("Continuing without database connection for testing purposes")
 }
 
 func GetDb() *bun.DB {

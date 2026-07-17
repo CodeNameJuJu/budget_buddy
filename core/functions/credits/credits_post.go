@@ -163,13 +163,13 @@ func POSTCreditPayment(w http.ResponseWriter, r *http.Request) {
 	description := "Credit payment"
 
 	transaction := types.Transaction{
-		AccountID:           req.AccountID,
-		Amount:              amount,
-		Type:                transactionType,
-		Description:         &description,
-		Date:                time.Now(),
-		CreditPaymentID:     &payment.ID,
-		AccountType:         &accountType,
+		AccountID:       req.AccountID,
+		Amount:          amount,
+		Type:            transactionType,
+		Description:     &description,
+		Date:            time.Now(),
+		CreditPaymentID: &payment.ID,
+		AccountType:     &accountType,
 	}
 
 	if err := db.InsertTransaction(&transaction); err != nil {

@@ -135,12 +135,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store refresh token
-	refreshTokenHash, err := h.authService.hashToken(refreshToken)
-	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to process refresh token")
-		return
-	}
-
+	refreshTokenHash := h.authService.hashToken(refreshToken)
 	err = h.authService.StoreRefreshToken(user.ID, refreshTokenHash, time.Now().Add(RefreshTokenDuration))
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to store refresh token")
@@ -157,11 +152,12 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update last login
-	user.LastLogin = &time.Time{}
-	*user.LastLogin = time.Now()
+	timeNow := time.Now()
+	user.LastLogin = &timeNow
 	_, err = database.NewUpdate().Model(user).Set("last_login = ?", user.LastLogin).Where("id = ?", user.ID).Exec(context.Background())
 	if err != nil {
 		// Don't fail the request if we can't update last login
+		log.Printf("Warning: failed to update last login for user %d: %v", user.ID, err)
 	}
 
 	response := types.AuthResponse{
@@ -250,12 +246,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store refresh token
-	refreshTokenHash, err := h.authService.hashToken(refreshToken)
-	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to process refresh token")
-		return
-	}
-
+	refreshTokenHash := h.authService.hashToken(refreshToken)
 	err = h.authService.StoreRefreshToken(user.ID, refreshTokenHash, time.Now().Add(RefreshTokenDuration))
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to store refresh token")
@@ -272,11 +263,12 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update last login
-	user.LastLogin = &time.Time{}
-	*user.LastLogin = time.Now()
+	timeNow := time.Now()
+	user.LastLogin = &timeNow
 	_, err = database.NewUpdate().Model(&user).Set("last_login = ?", user.LastLogin).Where("id = ?", user.ID).Exec(context.Background())
 	if err != nil {
 		// Don't fail the request if we can't update last login
+		log.Printf("Warning: failed to update last login for user %d: %v", user.ID, err)
 	}
 
 	response := types.AuthResponse{
@@ -366,12 +358,7 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store new refresh token
-	newRefreshTokenHash, err := h.authService.hashToken(newRefreshToken)
-	if err != nil {
-		helpers.RespondError(w, http.StatusInternalServerError, "Failed to process refresh token")
-		return
-	}
-
+	newRefreshTokenHash := h.authService.hashToken(newRefreshToken)
 	err = h.authService.StoreRefreshToken(user.ID, newRefreshTokenHash, time.Now().Add(RefreshTokenDuration))
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to store refresh token")
@@ -427,7 +414,7 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 // GetProfile handles getting user profile
 func (h *AuthHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	// Get user from context (set by auth middleware)
-	user, ok := r.Context().Value("user").(*types.User)
+	user, ok := GetUserFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -439,7 +426,7 @@ func (h *AuthHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 // UpdateProfile handles profile update
 func (h *AuthHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	// Get user from context (set by auth middleware)
-	user, ok := r.Context().Value("user").(*types.User)
+	user, ok := GetUserFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -512,7 +499,7 @@ func (h *AuthHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 // SendVerificationEmail handles sending a verification email
 func (h *AuthHandler) SendVerificationEmail(w http.ResponseWriter, r *http.Request) {
 	// Get user from context (set by auth middleware)
-	user, ok := r.Context().Value("user").(*types.User)
+	user, ok := GetUserFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -583,7 +570,7 @@ func (h *AuthHandler) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 // ChangePassword handles password change
 func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 	// Get user from context (set by auth middleware)
-	user, ok := r.Context().Value("user").(*types.User)
+	user, ok := GetUserFromContext(r)
 	if !ok {
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -715,7 +702,7 @@ func (h *AuthHandler) POSTProfilePicture(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	user, ok := r.Context().Value("user").(*types.User)
+	user, ok := GetUserFromContext(r)
 	if !ok {
 		log.Println("User not authenticated")
 		helpers.RespondError(w, http.StatusUnauthorized, "User not authenticated")

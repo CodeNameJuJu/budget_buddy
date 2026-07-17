@@ -4,13 +4,12 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
 
 func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var budgets []types.Budget
 
 	query := db.NewSelect().Model(&budgets).
@@ -63,7 +62,7 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 }
 
 func calculateBudgetSpent(categoryID int64, accountID int64, startDate time.Time, endDate *time.Time) (decimal.Decimal, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var spent decimal.Decimal
 
 	query := db.NewSelect().
@@ -135,7 +134,7 @@ func getCurrentPeriodWindow(startDate time.Time, period string, endDate *time.Ti
 }
 
 func InsertBudget(budget *types.Budget) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(budget).
 		Returning("*").
 		Exec(context.Background())
@@ -143,7 +142,7 @@ func InsertBudget(budget *types.Budget) error {
 }
 
 func UpdateBudget(budget *types.Budget) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	budget.ModifiedDate = &now
 
@@ -156,7 +155,7 @@ func UpdateBudget(budget *types.Budget) error {
 }
 
 func SoftDeleteBudgetForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().

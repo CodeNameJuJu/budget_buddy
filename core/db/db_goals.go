@@ -4,13 +4,12 @@ import (
 	"context"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
 )
 
 func QuerySavingsGoals(accountID int64, goalID *int64) ([]types.SavingsGoal, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var goals []types.SavingsGoal
 
 	query := db.NewSelect().Model(&goals).
@@ -66,7 +65,7 @@ func QuerySavingsGoals(accountID int64, goalID *int64) ([]types.SavingsGoal, int
 }
 
 func QueryGoalContributions(accountID int64, goalID *int64) ([]types.GoalContribution, int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 	var contributions []types.GoalContribution
 
 	query := db.NewSelect().Model(&contributions).
@@ -88,7 +87,7 @@ func QueryGoalContributions(accountID int64, goalID *int64) ([]types.GoalContrib
 }
 
 func InsertSavingsGoal(goal *types.SavingsGoal) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(goal).
 		Returning("*").
 		Exec(context.Background())
@@ -96,7 +95,7 @@ func InsertSavingsGoal(goal *types.SavingsGoal) error {
 }
 
 func UpdateSavingsGoal(goal *types.SavingsGoal) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 	goal.ModifiedDate = &now
 
@@ -109,7 +108,7 @@ func UpdateSavingsGoal(goal *types.SavingsGoal) error {
 }
 
 func SoftDeleteSavingsGoalForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	_, err := db.NewUpdate().
@@ -123,7 +122,7 @@ func SoftDeleteSavingsGoalForAccount(id int64, accountID int64) error {
 }
 
 func InsertGoalContribution(contribution *types.GoalContribution) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	_, err := db.NewInsert().Model(contribution).
 		Returning("*").
 		Exec(context.Background())
@@ -136,7 +135,7 @@ func InsertGoalContribution(contribution *types.GoalContribution) error {
 }
 
 func UpdateGoalCurrentAmount(goalID int64, accountID int64, additionalAmount decimal.Decimal) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 
 	_, err := db.NewUpdate().
 		Model((*types.SavingsGoal)(nil)).
@@ -149,7 +148,7 @@ func UpdateGoalCurrentAmount(goalID int64, accountID int64, additionalAmount dec
 }
 
 func SoftDeleteGoalContributionForAccount(id int64, accountID int64) error {
-	db := appcontext.GetDb()
+	db := GetDb()
 	now := time.Now()
 
 	// Get the contribution to subtract from goal, scoped to account
@@ -180,7 +179,7 @@ func SoftDeleteGoalContributionForAccount(id int64, accountID int64) error {
 }
 
 func GetGoalsSummary(accountID int64) (map[string]int, error) {
-	db := appcontext.GetDb()
+	db := GetDb()
 
 	// Get goal counts by category
 	type CategoryCount struct {

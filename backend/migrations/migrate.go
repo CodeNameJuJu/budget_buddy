@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	appcontext "github.com/CodeNameJuJu/budget_buddy/core/context"
+	coredb "github.com/CodeNameJuJu/budget_buddy/core/db"
 	"github.com/uptrace/bun"
 )
 
@@ -23,7 +23,7 @@ type Migration struct {
 // RunMigrations executes all SQL migration files in the migrations directory
 func RunMigrations() error {
 	// Get database connection with error handling
-	db := appcontext.GetDb()
+	db := coredb.GetDb()
 	if db == nil {
 		return fmt.Errorf("failed to get database connection")
 	}
