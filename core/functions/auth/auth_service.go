@@ -87,12 +87,23 @@ func (s *AuthService) generateToken(user *types.User, tokenType string, duration
 
 // ValidateToken validates a JWT token and returns the claims
 func (s *AuthService) ValidateToken(tokenString string) (*types.JWTClaims, error) {
+	return s.parseToken(tokenString)
+}
+
+// ExtractClaimsIgnoringExpiry verifies the token signature but skips claim
+// validation (e.g. expiry). Used during token refresh to recover the device
+// ID from an expired but authentic access token.
+func (s *AuthService) ExtractClaimsIgnoringExpiry(tokenString string) (*types.JWTClaims, error) {
+	return s.parseToken(tokenString, jwt.WithoutClaimsValidation())
+}
+
+func (s *AuthService) parseToken(tokenString string, options ...jwt.ParserOption) (*types.JWTClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return s.jwtSecret, nil
-	})
+	}, options...)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse token: %w", err)

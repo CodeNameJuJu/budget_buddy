@@ -139,11 +139,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       throw new Error('No refresh token available');
     }
 
+    // Send the (possibly expired) access token so the backend can reuse the
+    // device ID and keep the existing device session alive
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    const accessToken = storage.getItem('access_token');
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const response = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
 

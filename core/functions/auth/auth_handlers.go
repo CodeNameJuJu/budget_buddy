@@ -321,14 +321,17 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get device_id from current access token if available
+	// Get device_id from the current access token if available. The access
+	// token is usually expired at this point, so only its signature is
+	// verified - reusing the device ID keeps the existing session alive
+	// instead of minting a new device on every refresh.
 	authHeader := r.Header.Get("Authorization")
 	deviceID := ""
 	if authHeader != "" {
 		parts := strings.Split(authHeader, " ")
 		if len(parts) == 2 && parts[0] == "Bearer" {
-			claims, err := h.authService.ValidateToken(parts[1])
-			if err == nil && claims.DeviceID != "" {
+			claims, err := h.authService.ExtractClaimsIgnoringExpiry(parts[1])
+			if err == nil && claims.DeviceID != "" && claims.UserID == user.ID {
 				deviceID = claims.DeviceID
 			}
 		}
@@ -362,6 +365,15 @@ func (h *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	err = h.authService.StoreRefreshToken(user.ID, newRefreshTokenHash, time.Now().Add(RefreshTokenDuration))
 	if err != nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Failed to store refresh token")
+		return
+	}
+
+	// Create or extend the session for this device. The new access token is
+	// bound to deviceID, so without a matching session every subsequent
+	// request would fail session validation and log the device out.
+	err = h.authService.CreateOrUpdateSession(user.ID, deviceID, "", "", r.UserAgent(), r.RemoteAddr, time.Now().Add(RefreshTokenDuration))
+	if err != nil {
+		helpers.RespondError(w, http.StatusInternalServerError, "Failed to create session")
 		return
 	}
 

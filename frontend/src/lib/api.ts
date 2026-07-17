@@ -46,11 +46,16 @@ async function request<T>(path: string, options?: RequestInit, isFormData?: bool
 
     if (refreshToken) {
       try {
+        // Send the expired access token so the backend can reuse the device
+        // ID and keep the existing device session alive
+        const refreshHeaders: Record<string, string> = { 'Content-Type': 'application/json' }
+        if (token) {
+          refreshHeaders['Authorization'] = `Bearer ${token}`
+        }
+
         const refreshResponse = await fetch(`${API_BASE}/auth/refresh`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: refreshHeaders,
           body: JSON.stringify({ refresh_token: refreshToken }),
         })
 
