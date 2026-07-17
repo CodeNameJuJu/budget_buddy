@@ -78,7 +78,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Loading analytics...</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Loading analytics...</p>
       </div>
     )
   }
@@ -88,9 +88,9 @@ export default function AnalyticsPage() {
       <div>
         <h1 className={cn(
           "text-2xl font-bold tracking-tight",
-          theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
         )}>Analytics</h1>
-        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Insights into your financial patterns</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Insights into your financial patterns</p>
       </div>
 
       {/* Cycle summary */}
@@ -123,16 +123,16 @@ export default function AnalyticsPage() {
             return (
               <Card key={card.label} className={cn(
                 "border",
-                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
               )}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
-                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{card.label}</p>
+                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{card.label}</p>
                     <div className="p-2 rounded-full bg-[#6BAF92] text-white">{card.icon}</div>
                   </div>
                   <p className={cn(
                     "text-2xl font-bold mt-2",
-                    theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                    theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
                   )}>{formatCurrency(card.value)}</p>
                   {card.change !== null && (
                     <Badge className={cn(
@@ -155,12 +155,12 @@ export default function AnalyticsPage() {
           "border hover:transition-all duration-200",
           theme === "light"
             ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-            : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
+            : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
         )}>
           <CardHeader>
             <CardTitle className={cn(
               "flex items-center gap-2",
-              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
             )}>
               <div className={cn(
                 "p-2 rounded-full text-white transition-colors duration-200",
@@ -178,16 +178,16 @@ export default function AnalyticsPage() {
               </div>
               <div className="ml-8 space-y-3">
                 <div>
-                  <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Savings Rate</p>
-                  <p className={cn("text-lg font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{formatPercentage(financialHealth.savings_rate)}</p>
+                  <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Savings Rate</p>
+                  <p className={cn("text-lg font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{formatPercentage(financialHealth.savings_rate)}</p>
                 </div>
                 <div>
-                  <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Budget Adherence</p>
-                  <p className={cn("text-lg font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{formatPercentage(financialHealth.budget_adherence)}</p>
+                  <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Budget Adherence</p>
+                  <p className={cn("text-lg font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{formatPercentage(financialHealth.budget_adherence)}</p>
                 </div>
                 <div>
-                  <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Income Stability</p>
-                  <p className={cn("text-lg font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{formatPercentage(financialHealth.income_stability)}</p>
+                  <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Income Stability</p>
+                  <p className={cn("text-lg font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{formatPercentage(financialHealth.income_stability)}</p>
                 </div>
               </div>
             </div>
@@ -195,13 +195,13 @@ export default function AnalyticsPage() {
               <div className="mt-6">
                 <p className={cn(
                   "text-sm font-medium mb-2",
-                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                 )}>Recommendations:</p>
                 <ul className="space-y-1">
                   {financialHealth.recommendations.map((rec, index) => (
                     <li key={index} className={cn(
                       "text-sm flex items-start gap-2",
-                      theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                      theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                     )}>
                       <span className={cn(
                         theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]"
@@ -251,7 +251,7 @@ export default function AnalyticsPage() {
                 "px-3 py-1 rounded-md border text-sm",
                 theme === "light"
                   ? "bg-white border-[#E6E0D6] text-[#1F2A24]"
-                  : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA]"
+                  : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6]"
               )}
             >
               <option value="current_cycle">Current cycle</option>

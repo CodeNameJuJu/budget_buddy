@@ -252,9 +252,9 @@ export default function BudgetsPage() {
         <div>
           <h1 className={cn(
             "text-2xl font-bold tracking-tight",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>Budgets</h1>
-          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Track your spending limits</p>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Track your spending limits</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} className="hover:shadow-lg transition-all duration-300">
           <Plus className="h-4 w-4 mr-2" />
@@ -268,15 +268,15 @@ export default function BudgetsPage() {
           "border hover:transition-all duration-200",
           theme === "light"
             ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-            : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
+            : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>Edit budget</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>Edit budget</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEditSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                 <Input
                   placeholder="e.g. Monthly groceries"
                   value={editForm.name}
@@ -285,7 +285,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Amount</label>
                 <Input
                   type="number"
                   step="0.01"
@@ -296,7 +296,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={editForm.category_id}
@@ -312,7 +312,7 @@ export default function BudgetsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Period</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Period</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={editForm.period}
@@ -324,7 +324,7 @@ export default function BudgetsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Start date</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Start date</label>
                 <Input
                   type="date"
                   value={editForm.start_date}
@@ -333,7 +333,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>End date (optional)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>End date (optional)</label>
                 <Input
                   type="date"
                   value={editForm.end_date}
@@ -360,15 +360,15 @@ export default function BudgetsPage() {
           "border hover:transition-all duration-200",
           theme === "light"
             ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-            : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
+            : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New budget</CardTitle>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>New budget</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                 <Input
                   placeholder="e.g. Monthly groceries"
                   value={form.name}
@@ -377,7 +377,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Amount</label>
                 <Input
                   type="number"
                   step="0.01"
@@ -388,7 +388,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={form.category_id}
@@ -404,7 +404,7 @@ export default function BudgetsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Period</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Period</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={form.period}
@@ -416,7 +416,7 @@ export default function BudgetsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Start date</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Start date</label>
                 <Input
                   type="date"
                   value={form.start_date}
@@ -425,7 +425,7 @@ export default function BudgetsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>End date (optional)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>End date (optional)</label>
                 <Input
                   type="date"
                   value={form.end_date}
@@ -445,18 +445,18 @@ export default function BudgetsPage() {
 
       {/* Budgets grid */}
       {loading ? (
-        <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading...</p>
+        <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Loading...</p>
       ) : budgets.length === 0 ? (
         <div className="text-center py-16">
           <PiggyBank className={cn(
             "h-12 w-12 mx-auto mb-4",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )} />
           <h2 className={cn(
             "text-lg font-semibold mb-1",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>No budgets yet</h2>
-          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create a budget to start tracking your spending.</p>
+          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Create a budget to start tracking your spending.</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -472,7 +472,7 @@ export default function BudgetsPage() {
                   "border hover:transition-all duration-200 group cursor-pointer",
                   theme === "light"
                     ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-                    : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70"
+                    : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
                 )}
               >
                 <CardHeader 
@@ -490,7 +490,7 @@ export default function BudgetsPage() {
                     </div>
                     <div>
                       <CardTitle className={cn("text-base transition-colors", theme === "light" ? "group-hover:text-[#6BAF92]" : "group-hover:text-[#88B39B]")}>{budget.name}</CardTitle>
-                      <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                      <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                         {budget.category?.name} · {budget.period}
                       </p>
                     </div>
@@ -499,7 +499,7 @@ export default function BudgetsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#A7B3AD] hover:text-[#88B39B]", "-mt-1")}
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#ABA9A2] hover:text-[#88B39B]", "-mt-1")}
                       onClick={() => handleEdit(budget)}
                     >
                       <Edit2 className="h-4 w-4" />
@@ -507,7 +507,7 @@ export default function BudgetsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400", "-mt-1")}
                       onClick={() => handleDeleteClick(budget.id)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -516,14 +516,14 @@ export default function BudgetsPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
                   <div className="flex justify-between text-sm">
-                    <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                    <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                       {formatCurrency(spent)} spent
                     </span>
                     <span className="font-medium">
                       {formatCurrency(budget.amount)}
                     </span>
                   </div>
-                  <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}>
+                  <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}>
                     <div
                       className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColour(percentage)} progress-bar-fill`}
                       style={{ width: `${percentage}%` }}
@@ -540,7 +540,7 @@ export default function BudgetsPage() {
                         ? `${formatCurrency(remaining)} remaining`
                         : `${formatCurrency(Math.abs(remaining))} over budget`}
                     </p>
-                    <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                    <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                       {percentage.toFixed(1)}% used
                     </div>
                   </div>
@@ -556,14 +556,14 @@ export default function BudgetsPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className={cn(
             "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
-            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
           )}>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                   {selectedBudget.name} Transactions
                 </h2>
-                <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   {selectedBudget.category?.name} · {selectedBudget.period}
                 </p>
               </div>
@@ -573,9 +573,9 @@ export default function BudgetsPage() {
             </div>
 
             {loadingTransactions ? (
-              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading transactions...</p>
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Loading transactions...</p>
             ) : budgetTransactions.length === 0 ? (
-              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found for this budget period.</p>
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>No transactions found for this budget period.</p>
             ) : (
               <div className="space-y-2">
                 {budgetTransactions.map((t) => (
@@ -583,7 +583,7 @@ export default function BudgetsPage() {
                     key={t.id}
                     className={cn(
                       "flex items-center justify-between p-3 rounded-md border",
-                      theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+                      theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
                     )}
                   >
                     <div className="flex items-center gap-3">
@@ -594,10 +594,10 @@ export default function BudgetsPage() {
                         {t.category?.icon || t.category?.name[0] || "??"}
                       </div>
                       <div>
-                        <p className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                        <p className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                           {t.description || t.category?.name}
                         </p>
-                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                           {formatDate(t.date)}
                         </p>
                       </div>

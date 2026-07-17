@@ -27,12 +27,12 @@ export default function WelcomeWidget() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className={cn(
-          theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+          theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
         )}>
           <p className="text-lg font-medium">Hi there! Ready to take control of your finances?</p>
           <p className={cn(
             "text-sm mt-2",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )}>
             You've successfully registered and can now start managing your budget, tracking expenses, and achieving your financial goals.
           </p>

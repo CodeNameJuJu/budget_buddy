@@ -82,7 +82,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Bell className="h-4 w-4" />
             Alerts
           </CardTitle>
@@ -105,7 +105,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Bell className="h-4 w-4" />
             Alerts
           </CardTitle>
@@ -129,7 +129,7 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           <div className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
             Alerts
@@ -168,8 +168,8 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
               key={alert.id}
               className={cn("p-3 rounded-lg border",
                 alert.is_read
-                  ? (theme === "light" ? "bg-[#E8DCC5]/30 border-[#E6E0D6]/50" : "bg-[#18231D]/30 border-[#2E3B35]/50")
-                  : (theme === "light" ? "bg-[#E8DCC5]/60 border-[#E6E0D6]" : "bg-[#18231D]/60 border-[#2E3B35]")
+                  ? (theme === "light" ? "bg-[#E8DCC5]/30 border-[#E6E0D6]/50" : "bg-[#201E1B]/30 border-[#38352F]/50")
+                  : (theme === "light" ? "bg-[#E8DCC5]/60 border-[#E6E0D6]" : "bg-[#201E1B]/60 border-[#38352F]")
               )}
             >
               <div className="flex items-start gap-3">

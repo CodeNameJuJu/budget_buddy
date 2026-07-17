@@ -44,39 +44,40 @@
   }
 
   .dark {
-    /* Dark mode - Kalahari theme */
-    --background: 150 15% 5%; /* #0F1512 - Kalahari background */
-    --foreground: 150 20% 90%; /* #E7EFEA - light text */
-    --card: 150 12% 8%; /* #18231D - surface with slight hue shift */
-    --card-foreground: 150 20% 90%; /* #E7EFEA - light text */
+    /* Dark mode - Kalahari theme. Neutrals are warm sand-tinted greys so the
+       earthy feel remains, with green reserved for accents only */
+    --background: 40 8% 5%; /* #141311 - Kalahari background */
+    --foreground: 43 12% 90%; /* #EDEBE6 - light text */
+    --card: 40 8% 8%; /* #201E1B - surface */
+    --card-foreground: 43 12% 90%; /* #EDEBE6 - light text */
     --primary: 150 35% 50%; /* #5E9C7E - primary green */
-    --primary-foreground: 150 20% 95%; /* #E7EFEA - light text */
-    --secondary: 160 25% 60%; /* #88B39B - secondary green with different hue */
-    --secondary-foreground: 150 20% 90%; /* #E7EFEA - light text */
-    --muted: 140 10% 12%; /* #18231D - muted surface with different hue */
-    --muted-foreground: 150 15% 70%; /* #A7B3AD - muted text */
+    --primary-foreground: 43 12% 95%; /* light text */
+    --secondary: 160 25% 60%; /* #88B39B - secondary green */
+    --secondary-foreground: 43 12% 90%; /* light text */
+    --muted: 40 8% 12%; /* muted surface */
+    --muted-foreground: 45 6% 70%; /* #ABA9A2 - muted text */
     --accent: 150 35% 50%; /* #5E9C7E - primary green */
-    --accent-foreground: 150 20% 95%; /* #E7EFEA - light text */
+    --accent-foreground: 43 12% 95%; /* light text */
     --destructive: 15 50% 55%; /* #B46B52 - warning */
-    --destructive-foreground: 150 20% 95%; /* light text */
-    --border: 150 15% 12%; /* Darker border for dark mode */
-    --input: 140 12% 8%; /* Input with different hue */
+    --destructive-foreground: 43 12% 95%; /* light text */
+    --border: 40 8% 14%; /* warm dark border */
+    --input: 40 8% 8%; /* input surface */
     --ring: 150 35% 50%; /* #5E9C7E - primary green */
     --radius: 0.75rem;
-    --popover: 160 12% 8%; /* Popover with different hue */
-    --popover-foreground: 150 20% 90%;
+    --popover: 40 8% 8%; /* popover surface */
+    --popover-foreground: 43 12% 90%;
     --chart-1: 30 20% 95%;
     --chart-2: 160 10% 45%;
     --chart-3: 180 20% 15%;
     --chart-4: 180 20% 15%;
     --chart-5: 180 20% 15%;
-    --sidebar: 140 12% 8%; /* Sidebar with different hue */
-    --sidebar-foreground: 150 20% 90%;
+    --sidebar: 40 8% 8%; /* sidebar surface */
+    --sidebar-foreground: 43 12% 90%;
     --sidebar-primary: 150 35% 50%;
-    --sidebar-primary-foreground: 150 20% 95%;
+    --sidebar-primary-foreground: 43 12% 95%;
     --sidebar-accent: 160 30% 65%;
-    --sidebar-accent-foreground: 150 20% 90%;
-    --sidebar-border: 150 15% 12%;
+    --sidebar-accent-foreground: 43 12% 90%;
+    --sidebar-border: 40 8% 14%;
     --sidebar-ring: 150 35% 50%;
   }
 

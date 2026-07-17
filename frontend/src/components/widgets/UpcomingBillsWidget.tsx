@@ -67,7 +67,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Calendar className="h-4 w-4" />
             Upcoming Bills
           </CardTitle>
@@ -96,7 +96,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Calendar className="h-4 w-4" />
             Upcoming Bills
           </CardTitle>
@@ -120,7 +120,7 @@ export default function UpcomingBillsWidget({ accountId, size }: UpcomingBillsWi
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Upcoming Bills

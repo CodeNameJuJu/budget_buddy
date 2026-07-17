@@ -189,8 +189,8 @@ export default function TransactionsPage() {
     <div className="space-y-3 xs:space-y-4 lg:space-y-6">
       <div className="responsive-flex responsive-margin">
         <div>
-          <h1 className={cn("mobile-title tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Transactions</h1>
-          <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
+          <h1 className={cn("mobile-title tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Transactions</h1>
+          <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-2 ml-auto">
           <Button 
@@ -253,7 +253,7 @@ export default function TransactionsPage() {
           Expenses
         </Button>
         <select
-          className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
+          className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
@@ -276,7 +276,7 @@ export default function TransactionsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Amount</label>
                   <Input
                     type="number"
                     step="0.01"
@@ -288,9 +288,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
                   <select
-                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
                     value={form.type}
                     onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
                   >
@@ -299,7 +299,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Date</label>
                   <Input
                     type="date"
                     value={form.date}
@@ -309,9 +309,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Account Type</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Account Type</label>
                   <select
-                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
                     value={form.account_type}
                     onChange={(e) => setForm({ ...form, account_type: e.target.value as "checking" | "savings" })}
                   >
@@ -320,7 +320,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Description</label>
                   <Input
                     placeholder="e.g. Grocery shopping"
                     value={form.description}
@@ -329,9 +329,9 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
                   <select
-                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")}
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
                     value={form.category_id}
                     onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                   >
@@ -346,7 +346,7 @@ export default function TransactionsPage() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
+                  <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Notes</label>
                   <Input
                     placeholder="Optional notes"
                     value={form.notes}
@@ -356,7 +356,7 @@ export default function TransactionsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
+                <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Tags</label>
                 <TagInput
                   value={form.tags}
                   onChange={(tags) => setForm({ ...form, tags })}
@@ -379,13 +379,13 @@ export default function TransactionsPage() {
       <Card className="mobile-card">
         <CardContent className="p-0">
           {loading ? (
-            <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading...</p>
+            <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Loading...</p>
           ) : transactions.length === 0 ? (
-            <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found</p>
+            <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>No transactions found</p>
           ) : (
             <div className="divide-y">
               {transactions.map((t) => (
-                <div key={t.id} className={cn("px-3 xs:px-4 lg:px-6 py-3 xs:py-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/20" : "hover:bg-[#2E3B35]/20")}>
+                <div key={t.id} className={cn("px-3 xs:px-4 lg:px-6 py-3 xs:py-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/20" : "hover:bg-[#38352F]/20")}>
                   <div className="flex flex-col gap-2 xs:gap-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -397,7 +397,7 @@ export default function TransactionsPage() {
                             {t.type}
                           </Badge>
                         </div>
-                        <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                        <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                           <span>{formatDate(t.date)}</span>
                           {t.category && (
                             <>
@@ -446,7 +446,7 @@ export default function TransactionsPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")}
+                          className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400")}
                           onClick={() => handleDeleteClick(t.id)}
                         >
                           <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />

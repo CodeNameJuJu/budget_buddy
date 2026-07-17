@@ -31,22 +31,22 @@ export default function TutorialBubble({
   const { theme } = useTheme()
 
   return (
-    <Card className={cn("w-full max-w-2xl mx-auto shadow-2xl backdrop-blur-md", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/95" : "border-[#C9A24A]/50 bg-[#18231D]/95")}>
+    <Card className={cn("w-full max-w-2xl mx-auto shadow-2xl backdrop-blur-md", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/95" : "border-[#C9A24A]/50 bg-[#201E1B]/95")}>
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
-          <h3 className={cn("font-semibold text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{title}</h3>
+          <h3 className={cn("font-semibold text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{title}</h3>
           <Button
             variant="ghost"
             size="icon"
-            className={cn("h-6 w-6", theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")}
+            className={cn("h-6 w-6", theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")}
             onClick={onSkip}
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <p className={cn("text-sm mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{description}</p>
+        <p className={cn("text-sm mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{description}</p>
         <div className="flex items-center justify-between">
-          <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
             {currentStep && totalSteps && `${currentStep} of ${totalSteps}`}
           </div>
           <div className="flex gap-2">

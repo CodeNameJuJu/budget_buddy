@@ -65,7 +65,7 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Heart className="h-4 w-4" />
             Financial Health
           </CardTitle>
@@ -94,7 +94,7 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Heart className="h-4 w-4" />
             Financial Health
           </CardTitle>
@@ -173,10 +173,10 @@ export default function FinancialHealthWidget({ accountId, size }: FinancialHeal
           {/* Recommendations */}
           {data.recommendations && data.recommendations.length > 0 && (
             <div className="space-y-2">
-              <p className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Recommendations:</p>
+              <p className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Recommendations:</p>
               <ul className="space-y-1">
                 {data.recommendations.map((rec, index) => (
-                  <li key={index} className={cn("text-xs flex items-start gap-2", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                  <li key={index} className={cn("text-xs flex items-start gap-2", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                     <span className={cn("mt-1", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>•</span>
                     <span>{rec}</span>
                   </li>

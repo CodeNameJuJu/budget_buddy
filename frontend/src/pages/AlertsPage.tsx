@@ -218,7 +218,7 @@ export default function AlertsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Loading alerts...</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Loading alerts...</p>
       </div>
     )
   }
@@ -229,7 +229,7 @@ export default function AlertsPage() {
         <div>
           <h1 className={cn(
             "text-xl sm:text-2xl font-bold tracking-tight flex items-center gap-2",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>
             <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
             Alerts
@@ -239,7 +239,7 @@ export default function AlertsPage() {
               </Badge>
             )}
           </h1>
-          <p className={cn("text-sm sm:text-base", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Stay informed about your finances</p>
+          <p className={cn("text-sm sm:text-base", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Stay informed about your finances</p>
         </div>
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <select
@@ -249,7 +249,7 @@ export default function AlertsPage() {
               "flex h-10 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 flex-1 sm:flex-none sm:w-[140px]",
               theme === "light"
                 ? "border-[#E6E0D6] bg-white text-[#1F2A24] focus:ring-[#D9B44A]"
-                : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA] focus:ring-[#C9A24A]"
+                : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6] focus:ring-[#C9A24A]"
             )}
           >
             <option value="all">All Alerts</option>
@@ -275,22 +275,22 @@ export default function AlertsPage() {
       {showPreferences && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader>
-            <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Alert Preferences</CardTitle>
+            <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Alert Preferences</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {preferences.map((pref) => (
               <div key={pref.id} className={cn(
                 "flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 border rounded-lg",
-                theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+                theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
               )}>
                 <div className="flex-1">
-                  <Label className={cn("font-medium text-sm sm:text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{getAlertTypeLabel(pref.type)}</Label>
+                  <Label className={cn("font-medium text-sm sm:text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{getAlertTypeLabel(pref.type)}</Label>
                   <p className={cn(
                     "text-xs sm:text-sm mt-1",
-                    theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                    theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                   )}>
                     {pref.type === "budget_threshold" && 
                       "Get notified when you reach a certain percentage of your budget"
@@ -303,7 +303,7 @@ export default function AlertsPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                   {pref.type === "budget_threshold" && (
                     <div className="flex items-center gap-2">
-                      <Label htmlFor={`threshold-${pref.id}`} className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Threshold:</Label>
+                      <Label htmlFor={`threshold-${pref.id}`} className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Threshold:</Label>
                       <Input
                         id={`threshold-${pref.id}`}
                         type="number"
@@ -317,7 +317,7 @@ export default function AlertsPage() {
                         }}
                         className="w-16 h-8 text-sm"
                       />
-                      <span className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>%</span>
+                      <span className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>%</span>
                     </div>
                   )}
                   <Switch
@@ -340,20 +340,20 @@ export default function AlertsPage() {
         {alerts.length === 0 ? (
           <Card className={cn(
             "border",
-            theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+            theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
           )}>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <BellOff className={cn(
                 "h-12 w-12 mb-4",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )} />
               <h3 className={cn(
                 "text-lg font-medium",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>No alerts</h3>
               <p className={cn(
                 "text-center mt-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 You're all caught up! Check back later for new notifications.
               </p>
@@ -392,11 +392,11 @@ export default function AlertsPage() {
                       </div>
                       <p className={cn(
                         "text-xs sm:text-sm mb-2",
-                        theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                        theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                       )}>{alert.message}</p>
                       <div className={cn(
                         "flex flex-wrap items-center gap-2 text-xs",
-                        theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                        theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                       )}>
                         <span>{formatDate(alert.created_date)}</span>
                         <span>•</span>

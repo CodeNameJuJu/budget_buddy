@@ -27,9 +27,9 @@ const COLOUR_OPTIONS = [
   { label: "Accent Gold", value: "#D9B44A" },
   { label: "Warning", value: "#C97C5D" },
   { label: "Muted", value: "#6C7A73" },
-  { label: "Dark Muted", value: "#A7B3AD" },
+  { label: "Dark Muted", value: "#ABA9A2" },
   { label: "Border", value: "#E6E0D6" },
-  { label: "Dark Border", value: "#2E3B35" },
+  { label: "Dark Border", value: "#38352F" },
 ]
 
 export default function CreditsPage() {
@@ -263,7 +263,7 @@ export default function CreditsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Loading credits...</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Loading credits...</p>
       </div>
     )
   }
@@ -280,9 +280,9 @@ export default function CreditsPage() {
         <div>
           <h1 className={cn(
             "text-2xl font-bold tracking-tight",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>Credits</h1>
-          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>
             Track your credit and debt payoff progress
           </p>
         </div>
@@ -296,10 +296,10 @@ export default function CreditsPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Total payable
             </CardTitle>
             <CreditCard className={cn("h-4 w-4", theme === "light" ? "text-[#C97C5D]" : "text-[#C97C5D]")} />
@@ -308,7 +308,7 @@ export default function CreditsPage() {
             <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#C97C5D]" : "text-[#C97C5D]")}>
               {formatCurrency(totalPayable)}
             </div>
-            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Total credit debt
             </p>
           </CardContent>
@@ -316,10 +316,10 @@ export default function CreditsPage() {
 
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Total paid
             </CardTitle>
             <TrendingDown className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
@@ -328,7 +328,7 @@ export default function CreditsPage() {
             <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
               {formatCurrency(totalPaid)}
             </div>
-            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Amount paid off
             </p>
           </CardContent>
@@ -336,10 +336,10 @@ export default function CreditsPage() {
 
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Remaining
             </CardTitle>
             <ArrowDownRight className={cn("h-4 w-4", theme === "light" ? "text-[#C97C5D]" : "text-[#C97C5D]")} />
@@ -348,7 +348,7 @@ export default function CreditsPage() {
             <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#C97C5D]" : "text-[#C97C5D]")}>
               {formatCurrency(remaining)}
             </div>
-            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Debt still owed
             </p>
           </CardContent>
@@ -359,12 +359,12 @@ export default function CreditsPage() {
       {forecast && parseFloat(forecast.total_monthly) > 0 && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className={cn(
               "flex items-center gap-2",
-              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
             )}>
               <TrendingDown className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
               Payoff forecast
@@ -463,10 +463,10 @@ export default function CreditsPage() {
       {showPotForm && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>
               {editingPot ? "Edit credit pot" : "New credit pot"}
             </CardTitle>
           </CardHeader>
@@ -476,7 +476,7 @@ export default function CreditsPage() {
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
             >
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                 <Input
                   placeholder="e.g. Credit card"
                   value={potForm.name}
@@ -487,7 +487,7 @@ export default function CreditsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Total payable
                 </label>
                 <Input
@@ -502,7 +502,7 @@ export default function CreditsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Colour</label>
                 <div className="flex gap-1.5 flex-wrap items-center">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -530,7 +530,7 @@ export default function CreditsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Monthly payment (optional)
                 </label>
                 <Input
@@ -544,7 +544,7 @@ export default function CreditsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Payment period
                 </label>
                 <select
@@ -560,7 +560,7 @@ export default function CreditsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Interest rate % (optional)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Interest rate % (optional)</label>
                 <Input
                   type="number"
                   step="0.01"
@@ -572,7 +572,7 @@ export default function CreditsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Interest period</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Interest period</label>
                 <select
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                   value={potForm.interest_period}
@@ -585,7 +585,7 @@ export default function CreditsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 💳"
                   value={potForm.icon}
@@ -619,13 +619,13 @@ export default function CreditsPage() {
         <div className="text-center py-16">
           <CreditCard className={cn(
             "h-12 w-12 mx-auto mb-4",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )} />
           <h2 className={cn(
             "text-lg font-semibold mb-1",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>No credit pots yet</h2>
-          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
             Create credit pots to track your debt payoff progress.
           </p>
         </div>
@@ -644,7 +644,7 @@ export default function CreditsPage() {
             return (
               <Card key={pot.id} className={cn(
                 "border",
-                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
               )}>
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
@@ -657,8 +657,8 @@ export default function CreditsPage() {
                       {pot.icon || pot.name[0]}
                     </div>
                     <div>
-                      <CardTitle className={cn("text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{pot.name}</CardTitle>
-                      <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                      <CardTitle className={cn("text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{pot.name}</CardTitle>
+                      <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                         Total: {formatCurrency(total)}
                       </p>
                     </div>
@@ -667,7 +667,7 @@ export default function CreditsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]", "-mt-1")}
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]", "-mt-1")}
                       onClick={() => handleEditPotClick(pot)}
                     >
                       <Edit2 className="h-4 w-4" />
@@ -675,7 +675,7 @@ export default function CreditsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400", "-mt-1")}
                       onClick={() => handleDeletePotClick(pot.id)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -683,7 +683,7 @@ export default function CreditsPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                     {formatCurrency(remaining)}
                   </div>
 

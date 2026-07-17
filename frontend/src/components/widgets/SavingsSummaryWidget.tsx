@@ -54,7 +54,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <PiggyBank className="h-4 w-4" />
             Savings Summary
           </CardTitle>
@@ -83,7 +83,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <PiggyBank className="h-4 w-4" />
             Savings Summary
           </CardTitle>
@@ -110,7 +110,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           <div className="flex items-center gap-2">
             <PiggyBank className="h-4 w-4" />
             Savings Summary
@@ -145,7 +145,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
               "text-center p-2 rounded-lg border",
               theme === "light"
                 ? "bg-white/50 border-[#E6E0D6]"
-                : "bg-[#18231D]/50 border-[#2E3B35]"
+                : "bg-[#201E1B]/50 border-[#38352F]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Balance</div>
               <div className={cn(
@@ -157,7 +157,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
               "text-center p-2 rounded-lg border",
               theme === "light"
                 ? "bg-white/50 border-[#E6E0D6]"
-                : "bg-[#18231D]/50 border-[#2E3B35]"
+                : "bg-[#201E1B]/50 border-[#38352F]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Allocated</div>
               <div className={cn(
@@ -169,7 +169,7 @@ export default function SavingsSummaryWidget({ accountId, size }: SavingsSummary
               "text-center p-2 rounded-lg border",
               theme === "light"
                 ? "bg-white/50 border-[#E6E0D6]"
-                : "bg-[#18231D]/50 border-[#2E3B35]"
+                : "bg-[#201E1B]/50 border-[#38352F]"
             )}>
               <div className="text-xs text-muted-foreground mb-1 truncate">Available</div>
               <div className={cn(

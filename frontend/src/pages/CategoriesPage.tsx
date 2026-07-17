@@ -15,9 +15,9 @@ const COLOUR_OPTIONS = [
   { label: "Accent Gold", value: "#D9B44A" },
   { label: "Warning", value: "#C97C5D" },
   { label: "Muted", value: "#6C7A73" },
-  { label: "Dark Muted", value: "#A7B3AD" },
+  { label: "Dark Muted", value: "#ABA9A2" },
   { label: "Border", value: "#E6E0D6" },
-  { label: "Dark Border", value: "#2E3B35" },
+  { label: "Dark Border", value: "#38352F" },
 ]
 
 export default function CategoriesPage() {
@@ -155,9 +155,9 @@ export default function CategoriesPage() {
         <div>
           <h1 className={cn(
             "text-2xl font-bold tracking-tight",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>Categories</h1>
-          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Organise your transactions</p>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Organise your transactions</p>
         </div>
         <Button onClick={() => setShowForm(!showForm)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -194,17 +194,17 @@ export default function CategoriesPage() {
       {showForm && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>
               {editingCategory ? "Edit category" : "New category"}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                 <Input
                   placeholder="e.g. Groceries"
                   value={form.name}
@@ -213,13 +213,13 @@ export default function CategoriesPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
                 <select
                   className={cn(
                     "flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm",
                     theme === "light"
                       ? "border-[#E6E0D6] bg-white text-[#1F2A24]"
-                      : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]"
+                      : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]"
                   )}
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
@@ -229,7 +229,7 @@ export default function CategoriesPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Colour</label>
                 <div className="flex gap-1.5 flex-wrap items-center">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -253,7 +253,7 @@ export default function CategoriesPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 🛒"
                   value={form.icon}
@@ -282,18 +282,18 @@ export default function CategoriesPage() {
 
       {/* Categories */}
       {loading ? (
-        <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading...</p>
+        <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Loading...</p>
       ) : categories.length === 0 ? (
         <div className="text-center py-16">
           <Tags className={cn(
             "h-12 w-12 mx-auto mb-4",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )} />
           <h2 className={cn(
             "text-lg font-semibold mb-1",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>No categories yet</h2>
-          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create categories to organise your transactions.</p>
+          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Create categories to organise your transactions.</p>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
@@ -301,12 +301,12 @@ export default function CategoriesPage() {
           {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
             <Card className={cn(
               "border",
-              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
             )}>
               <CardHeader>
                 <CardTitle className={cn(
                   "text-base flex items-center gap-2",
-                  theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                  theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
                 )}>
                   <Badge variant="income">Income</Badge>
                   <span>{incomeCategories.length} categories</span>
@@ -321,7 +321,7 @@ export default function CategoriesPage() {
                         "flex items-center justify-between p-3 rounded-md border transition-colors",
                         theme === "light"
                           ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20"
-                          : "border-[#2E3B35] hover:bg-[#6BAF92]/20"
+                          : "border-[#38352F] hover:bg-[#6BAF92]/20"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -331,14 +331,14 @@ export default function CategoriesPage() {
                         >
                           {cat.icon || cat.name[0]}
                         </div>
-                        <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
+                        <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{cat.name}</span>
                       </div>
                       <div className="flex gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
                           className={cn(
-                            theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]"
+                            theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]"
                           )}
                           onClick={() => handleEditClick(cat)}
                         >
@@ -348,7 +348,7 @@ export default function CategoriesPage() {
                           variant="ghost"
                           size="icon"
                           className={cn(
-                            theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
+                            theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400"
                           )}
                           onClick={() => handleDeleteClick(cat.id)}
                         >
@@ -366,12 +366,12 @@ export default function CategoriesPage() {
           {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
             <Card className={cn(
               "border",
-              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
             )}>
               <CardHeader>
                 <CardTitle className={cn(
                   "text-base flex items-center gap-2",
-                  theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                  theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
                 )}>
                   <Badge variant="expense">Expense</Badge>
                   <span>{expenseCategories.length} categories</span>
@@ -386,7 +386,7 @@ export default function CategoriesPage() {
                         "flex items-center justify-between p-3 rounded-md border transition-colors",
                         theme === "light"
                           ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20"
-                          : "border-[#2E3B35] hover:bg-[#6BAF92]/20"
+                          : "border-[#38352F] hover:bg-[#6BAF92]/20"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -396,14 +396,14 @@ export default function CategoriesPage() {
                         >
                           {cat.icon || cat.name[0]}
                         </div>
-                        <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
+                        <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{cat.name}</span>
                       </div>
                       <div className="flex gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
                           className={cn(
-                            theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]"
+                            theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]"
                           )}
                           onClick={() => handleEditClick(cat)}
                         >
@@ -413,7 +413,7 @@ export default function CategoriesPage() {
                           variant="ghost"
                           size="icon"
                           className={cn(
-                            theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400"
+                            theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400"
                           )}
                           onClick={() => handleDeleteClick(cat.id)}
                         >

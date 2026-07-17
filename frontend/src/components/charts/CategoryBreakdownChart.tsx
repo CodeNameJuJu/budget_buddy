@@ -20,9 +20,9 @@ const COLORS = [
   '#D9B44A', // Accent Gold
   '#C97C5D', // Warning
   '#6C7A73', // Muted
-  '#A7B3AD', // Dark Muted
+  '#ABA9A2', // Dark Muted
   '#E6E0D6', // Border
-  '#2E3B35', // Dark Border
+  '#38352F', // Dark Border
 ]
 
 export default function CategoryBreakdownChart({ data }: CategoryBreakdownChartProps) {

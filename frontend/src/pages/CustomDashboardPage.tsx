@@ -282,11 +282,11 @@ export default function CustomDashboardPage() {
     return (
       <div className="space-y-4 xs:space-y-6">
         <div className="responsive-margin">
-          <h1 className={cn("mobile-title flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <h1 className={cn("mobile-title flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <LayoutDashboard className="h-4 w-4 xs:h-5 xs:w-5 lg:h-6 lg:w-6" />
             Dashboard
           </h1>
-          <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Your elegant financial overview</p>
+          <p className={cn("mobile-text", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Your elegant financial overview</p>
         </div>
         
         <div className="grid-responsive-xs">
@@ -319,7 +319,7 @@ export default function CustomDashboardPage() {
             </h1>
             <p className={cn(
               "mt-1 text-xs xs:text-sm",
-              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
             )}>Your elegant financial overview</p>
           </div>
           <Button
@@ -329,7 +329,7 @@ export default function CustomDashboardPage() {
               "flex-shrink-0 text-xs xs:text-sm px-3 xs:px-4 py-2",
               isCustomizing
                 ? "text-white shadow-lg"
-                : cn(theme === "light" ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5] hover:border-[#6BAF92]" : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D] hover:border-[#6BAF92]"),
+                : cn(theme === "light" ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5] hover:border-[#6BAF92]" : "border-[#38352F] text-[#ABA9A2] hover:bg-[#201E1B] hover:border-[#6BAF92]"),
               theme === "light"
                 ? isCustomizing ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] shadow-[#6BAF92]/20" : ""
                 : isCustomizing ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] hover:from-[#5E9C7E] hover:to-[#5A6B45] shadow-[#6BAF92]/20" : ""
@@ -361,12 +361,12 @@ export default function CustomDashboardPage() {
             "mb-6 backdrop-blur-xl shadow-xl",
             theme === "light"
               ? "bg-[#E8DCC5]/80 border-[#E6E0D6]/50"
-              : "bg-[#18231D]/80 border-[#2E3B35]/50"
+              : "bg-[#201E1B]/80 border-[#38352F]/50"
           )}>
             <CardHeader>
               <CardTitle className={cn(
                 "flex items-center gap-2",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 <Settings className={cn(
                   "h-5 w-5",
@@ -380,7 +380,7 @@ export default function CustomDashboardPage() {
               <div>
                 <h3 className={cn(
                   "text-sm font-semibold mb-4 flex items-center gap-2",
-                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                 )}>
                   <span className={cn(
                     "w-2 h-2 rounded-full",
@@ -396,7 +396,7 @@ export default function CustomDashboardPage() {
                         "flex flex-col gap-2 p-4 rounded-xl border transition-all duration-200",
                         theme === "light"
                           ? "bg-white/60 border-[#E6E0D6]/50 hover:border-[#6BAF92]"
-                          : "bg-[#18231D]/60 border-[#2E3B35]/50 hover:border-[#6BAF92]"
+                          : "bg-[#201E1B]/60 border-[#38352F]/50 hover:border-[#6BAF92]"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -408,17 +408,17 @@ export default function CustomDashboardPage() {
                             "w-5 h-5 rounded cursor-pointer flex-shrink-0",
                             theme === "light"
                               ? "border-[#E6E0D6] bg-white text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
-                              : "border-[#2E3B35] bg-[#18231D] text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
+                              : "border-[#38352F] bg-[#201E1B] text-[#6BAF92] focus:ring-[#6BAF92] focus:ring-offset-0"
                           )}
                         />
                         <span className={cn(
                           "font-medium text-sm",
-                          theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                          theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
                         )}>{widget.title || widget.name}</span>
                       </div>
                       <p className={cn(
                         "text-xs",
-                        theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                        theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                       )}>
                         {getWidgetDescription(widget.type)}
                       </p>
@@ -435,7 +435,7 @@ export default function CustomDashboardPage() {
                   "w-full transition-all duration-200",
                   theme === "light"
                     ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#D9B44A] hover:border-[#6BAF92]/50 hover:text-[#1F2A24]"
-                    : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#C9A24A] hover:border-[#6BAF92]/50 hover:text-[#E7EFEA]"
+                    : "border-[#38352F] text-[#ABA9A2] hover:bg-[#C9A24A] hover:border-[#6BAF92]/50 hover:text-[#EDEBE6]"
                 )}
               >
                 Reset to Default Layout

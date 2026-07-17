@@ -120,24 +120,24 @@ export default function UserGuidePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className={cn("text-3xl font-bold tracking-tight mb-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <h1 className={cn("text-3xl font-bold tracking-tight mb-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           User Guide
         </h1>
-        <p className={cn("text-lg", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+        <p className={cn("text-lg", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
           Learn how to use <span className={cn("brand-name", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>Bêre Bietjie</span> to manage your finances effectively
         </p>
       </div>
 
       {/* Getting Started Section */}
-      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
         <CardHeader>
-          <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <CheckCircle className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
             Getting Started
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
             Welcome to <span className={cn("brand-name", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>Bêre Bietjie</span>! Here's how to get started with managing your finances:
           </p>
           <div className="space-y-3">
@@ -145,7 +145,7 @@ export default function UserGuidePage() {
               <div className={cn("flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#88B39B] text-white")}>
                 1
               </div>
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                 <span className="font-semibold">Register or log in</span> to create your account
               </p>
             </div>
@@ -153,7 +153,7 @@ export default function UserGuidePage() {
               <div className={cn("flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#88B39B] text-white")}>
                 2
               </div>
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                 <span className="font-semibold">Add your first transaction</span> using the Quick Add widget or Finance page
               </p>
             </div>
@@ -161,7 +161,7 @@ export default function UserGuidePage() {
               <div className={cn("flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#88B39B] text-white")}>
                 3
               </div>
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                 <span className="font-semibold">Create categories</span> in the Finance page to organize transactions
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function UserGuidePage() {
               <div className={cn("flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#88B39B] text-white")}>
                 4
               </div>
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                 <span className="font-semibold">Set up budgets</span> in the Finance page to track spending limits
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function UserGuidePage() {
               <div className={cn("flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#88B39B] text-white")}>
                 5
               </div>
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                 <span className="font-semibold">Create savings goals</span> to build your financial future
               </p>
             </div>
@@ -186,15 +186,15 @@ export default function UserGuidePage() {
       </Card>
 
       {/* Navigation Guide */}
-      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
         <CardHeader>
-          <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <LayoutDashboard className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
             Navigation
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className={cn("mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          <p className={cn("mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
             Use the sidebar to navigate between different sections of the app:
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -205,13 +205,13 @@ export default function UserGuidePage() {
                   "flex flex-col sm:flex-row items-center gap-2 p-3 rounded-lg border transition-colors text-center sm:text-left",
                   theme === "light"
                     ? "bg-white/60 border-[#E6E0D6]/50 hover:border-[#6BAF92]"
-                    : "bg-[#18231D]/60 border-[#2E3B35]/50 hover:border-[#88B39B]"
+                    : "bg-[#201E1B]/60 border-[#38352F]/50 hover:border-[#88B39B]"
                 )}
               >
                 <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
                   {item.icon}
                 </span>
-                <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                   {item.label}
                 </span>
               </div>
@@ -222,16 +222,16 @@ export default function UserGuidePage() {
 
       {/* Feature Details */}
       <div className="space-y-6">
-        <h2 className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <h2 className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           Key Features
         </h2>
         {steps.map((step, index) => (
           <Card key={index} className={cn(
             "transition-all duration-200 hover:shadow-lg",
-            theme === "light" ? "bg-white/60 border-[#E6E0D6]" : "bg-[#18231D]/60 border-[#2E3B35]"
+            theme === "light" ? "bg-white/60 border-[#E6E0D6]" : "bg-[#201E1B]/60 border-[#38352F]"
           )}>
             <CardHeader>
-              <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+              <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                 <span className={cn("p-2 rounded-full", theme === "light" ? "bg-[#6BAF92]/20 text-[#6BAF92]" : "bg-[#88B39B]/20 text-[#88B39B]")}>
                   {step.icon}
                 </span>
@@ -239,14 +239,14 @@ export default function UserGuidePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+              <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                 {step.description}
               </p>
               <div className="space-y-2">
                 {step.details.map((detail, i) => (
                   <div key={i} className="flex items-start gap-2">
                     <ArrowRight className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
-                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                       {detail}
                     </p>
                   </div>
@@ -259,18 +259,18 @@ export default function UserGuidePage() {
 
       {/* Widget Descriptions */}
       <div className="space-y-6">
-        <h2 className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <h2 className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           Dashboard Widgets
         </h2>
-        <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+        <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
           Customize your dashboard with these widgets to track what matters most to you. Visit the Customize Dashboard page to enable or disable widgets.
         </p>
       </div>
 
       {/* Tips Section */}
-      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
         <CardHeader>
-          <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <TrendingUp className={cn("h-5 w-5", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
             Pro Tips
           </CardTitle>
@@ -278,31 +278,31 @@ export default function UserGuidePage() {
         <CardContent className="space-y-3">
           <div className="flex items-start gap-3">
             <CheckCircle className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
-            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               <span className="font-semibold">Be consistent:</span> Add transactions regularly for accurate tracking
             </p>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
-            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               <span className="font-semibold">Review regularly:</span> Check your dashboard weekly to stay on track
             </p>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
-            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               <span className="font-semibold">Use the Finance page:</span> Access categories, budgets, and transactions in one place
             </p>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
-            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               <span className="font-semibold">Set realistic budgets:</span> Start conservative and adjust as needed
             </p>
           </div>
           <div className="flex items-start gap-3">
             <CheckCircle className={cn("h-4 w-4 mt-0.5 flex-shrink-0", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
-            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               <span className="font-semibold">Save automatically:</span> Allocate a portion of income to savings pots
             </p>
           </div>

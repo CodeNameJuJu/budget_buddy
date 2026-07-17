@@ -30,9 +30,9 @@ const COLOUR_OPTIONS = [
   { label: "Accent Gold", value: "#D9B44A" },
   { label: "Warning", value: "#C97C5D" },
   { label: "Muted", value: "#6C7A73" },
-  { label: "Dark Muted", value: "#A7B3AD" },
+  { label: "Dark Muted", value: "#ABA9A2" },
   { label: "Border", value: "#E6E0D6" },
-  { label: "Dark Border", value: "#2E3B35" },
+  { label: "Dark Border", value: "#38352F" },
 ]
 
 export default function SavingsPage() {
@@ -281,7 +281,7 @@ export default function SavingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>Loading savings...</p>
+        <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>Loading savings...</p>
       </div>
     )
   }
@@ -300,9 +300,9 @@ export default function SavingsPage() {
         <div>
           <h1 className={cn(
             "text-2xl font-bold tracking-tight",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>Savings</h1>
-          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>
+          <p className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>
             Break your savings into pots and track allocations
           </p>
         </div>
@@ -316,15 +316,15 @@ export default function SavingsPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Actual savings balance
             </CardTitle>
             <button
               onClick={() => setEditingBalance(!editingBalance)}
-              className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")}
+              className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")}
             >
               <Pencil className="h-3.5 w-3.5" />
             </button>
@@ -345,13 +345,13 @@ export default function SavingsPage() {
                 </Button>
               </div>
             ) : (
-              <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+              <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                 {summary?.savings_balance
                   ? formatCurrency(savingsBalance)
                   : "Not set"}
               </div>
             )}
-            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Enter your actual bank savings balance
             </p>
           </CardContent>
@@ -359,10 +359,10 @@ export default function SavingsPage() {
 
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Total allocated
             </CardTitle>
             <Landmark className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
@@ -371,7 +371,7 @@ export default function SavingsPage() {
             <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
               {formatCurrency(totalAllocated)}
             </div>
-            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Sum of all pot allocations
             </p>
           </CardContent>
@@ -379,10 +379,10 @@ export default function SavingsPage() {
 
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               Unallocated
             </CardTitle>
             {unallocated >= 0 ? (
@@ -401,7 +401,7 @@ export default function SavingsPage() {
             >
               {formatCurrency(Math.abs(unallocated))}
             </div>
-            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+            <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
               {unallocated >= 0
                 ? "Savings not yet assigned to a pot"
                 : "You've allocated more than your balance"}
@@ -414,10 +414,10 @@ export default function SavingsPage() {
       {pots.length > 0 && savingsBalance > 0 && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader className="pb-3">
-            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Allocation breakdown</CardTitle>
+            <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Allocation breakdown</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-6 bg-secondary rounded-full overflow-hidden flex">
@@ -482,12 +482,12 @@ export default function SavingsPage() {
       {forecast && parseFloat(forecast.total_monthly) > 0 && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )} data-tutorial="savings-forecast">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className={cn(
               "flex items-center gap-2",
-              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
             )}>
               <TrendingUp className={cn("h-4 w-4", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
               Savings forecast
@@ -584,10 +584,10 @@ export default function SavingsPage() {
       {showPotForm && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
         )}>
           <CardHeader>
-            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>
+            <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>
               {editingPot ? "Edit savings pot" : "New savings pot"}
             </CardTitle>
           </CardHeader>
@@ -597,7 +597,7 @@ export default function SavingsPage() {
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
             >
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                 <Input
                   placeholder="e.g. Emergency fund"
                   value={potForm.name}
@@ -608,7 +608,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Target amount (optional)
                 </label>
                 <Input
@@ -622,7 +622,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Colour</label>
                 <div className="flex gap-1.5 flex-wrap items-center">
                   {COLOUR_OPTIONS.map((c) => (
                     <button
@@ -650,7 +650,7 @@ export default function SavingsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Contribution (optional)
                 </label>
                 <Input
@@ -664,7 +664,7 @@ export default function SavingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Contribution period
                 </label>
                 <select
@@ -680,7 +680,7 @@ export default function SavingsPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Icon (emoji)</label>
                 <Input
                   placeholder="e.g. 🏦"
                   value={potForm.icon}
@@ -714,13 +714,13 @@ export default function SavingsPage() {
         <div className="text-center py-16">
           <Landmark className={cn(
             "h-12 w-12 mx-auto mb-4",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )} />
           <h2 className={cn(
             "text-lg font-semibold mb-1",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>No savings pots yet</h2>
-          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
             Create pots to break your savings into categories.
           </p>
         </div>
@@ -741,7 +741,7 @@ export default function SavingsPage() {
             return (
               <Card key={pot.id} className={cn(
                 "border",
-                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
               )}>
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">
@@ -754,9 +754,9 @@ export default function SavingsPage() {
                       {pot.icon || pot.name[0]}
                     </div>
                     <div>
-                      <CardTitle className={cn("text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{pot.name}</CardTitle>
+                      <CardTitle className={cn("text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{pot.name}</CardTitle>
                       {target !== null && (
-                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                           Target: {formatCurrency(target)}
                         </p>
                       )}
@@ -766,7 +766,7 @@ export default function SavingsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]", "-mt-1")}
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]", "-mt-1")}
                       onClick={() => handleEditPotClick(pot)}
                     >
                       <Edit2 className="h-4 w-4" />
@@ -774,7 +774,7 @@ export default function SavingsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")}
+                      className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400", "-mt-1")}
                       onClick={() => handleDeletePotClick(pot.id)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -782,7 +782,7 @@ export default function SavingsPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                  <div className={cn("text-2xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                     {formatCurrency(allocated)}
                   </div>
 

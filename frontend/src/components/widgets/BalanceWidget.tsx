@@ -127,7 +127,7 @@ export default function BalanceWidget({ accountId }: BalanceWidgetProps) {
           
           <div className={cn(
             "text-center text-xs",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )}>
             {data.period}
           </div>

@@ -25,7 +25,7 @@ interface CategoryBreakdownData {
   period: string
 }
 
-const COLORS = ['#6BAF92', '#88B39B', '#D9B44A', '#C97C5D', '#6C7A73', '#A7B3AD', '#E6E0D6', '#2E3B35']
+const COLORS = ['#6BAF92', '#88B39B', '#D9B44A', '#C97C5D', '#6C7A73', '#ABA9A2', '#E6E0D6', '#38352F']
 
 export default function CategoryBreakdownWidget({ accountId, size }: CategoryBreakdownWidgetProps) {
   const [data, setData] = useState<CategoryBreakdownData | null>(null)
@@ -52,7 +52,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Tag className="h-4 w-4" />
             Category Breakdown
           </CardTitle>
@@ -75,7 +75,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <Tag className="h-4 w-4" />
             Category Breakdown
           </CardTitle>
@@ -105,7 +105,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+        <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4" />
             Category Breakdown
@@ -141,7 +141,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
             }}>
               <div className={cn(
                 "absolute inset-4 rounded-full flex items-center justify-center",
-                theme === "light" ? "bg-white" : "bg-[#18231D]"
+                theme === "light" ? "bg-white" : "bg-[#201E1B]"
               )}>
                 <div className="text-center">
                   <div className="text-xs text-muted-foreground">Total</div>

@@ -181,9 +181,9 @@ export default function ProfilePage() {
         "flex items-center justify-center min-h-screen",
         theme === "light"
           ? "bg-gradient-to-br from-[#F6F4EF] via-[#E8DCC5] to-[#F6F4EF]"
-          : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
+          : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
       )}>
-        <div className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>Loading...</div>
+        <div className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>Loading...</div>
       </div>
     );
   }
@@ -239,7 +239,7 @@ export default function ProfilePage() {
           </h1>
           <p className={cn(
             "mt-1 text-xs xs:text-sm",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )}>Manage your account settings</p>
         </div>
       </div>
@@ -248,12 +248,12 @@ export default function ProfilePage() {
         "backdrop-blur-md rounded-2xl shadow-xl border p-4 xs:p-6 mb-4 xs:mb-6 w-full",
         theme === "light"
           ? "bg-[#E8DCC5]/90 border-[#E6E0D6]/30"
-          : "bg-[#18231D]/90 border-[#2E3B35]/30"
+          : "bg-[#201E1B]/90 border-[#38352F]/30"
       )}>
         <div className="flex items-center justify-between mb-4 xs:mb-6 gap-3">
           <h2 className={cn(
             "text-lg xs:text-xl font-semibold flex items-center gap-2",
-            theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+            theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
           )}>
             <UserIcon className={cn(
               "h-5 w-5 flex-shrink-0",
@@ -293,11 +293,11 @@ export default function ProfilePage() {
           <div className="space-y-3 xs:space-y-4">
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Mail className="h-4 w-4" />
                 Email
@@ -310,18 +310,18 @@ export default function ProfilePage() {
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#6BAF92]"
-                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#6BAF92]"
+                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#6BAF92]"
                 )}
               />
             </div>
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <UserIcon className="h-4 w-4" />
                 First Name
@@ -334,18 +334,18 @@ export default function ProfilePage() {
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
                 )}
               />
             </div>
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <UserIcon className="h-4 w-4" />
                 Last Name
@@ -358,18 +358,18 @@ export default function ProfilePage() {
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
                 )}
               />
             </div>
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <DollarSign className="h-4 w-4" />
                 Currency
@@ -381,7 +381,7 @@ export default function ProfilePage() {
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
                 )}
               >
                 {CURRENCY_OPTIONS.map((opt) => (
@@ -394,11 +394,11 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Globe className="h-4 w-4" />
                 Timezone
@@ -410,7 +410,7 @@ export default function ProfilePage() {
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
                 )}
               >
                 {TIMEZONE_OPTIONS.map((opt) => (
@@ -423,11 +423,11 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Calendar className="h-4 w-4" />
                 Billing Cycle Day
@@ -442,12 +442,12 @@ export default function ProfilePage() {
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                   theme === "light"
                     ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
                 )}
               />
               <p className={cn(
                 "text-xs mt-1",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 The day of the month when your billing cycle starts (1-31)
               </p>
@@ -473,7 +473,7 @@ export default function ProfilePage() {
                   "border transition-colors text-sm xs:text-base px-4 xs:px-6",
                   theme === "light"
                     ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5]"
-                    : "border-[#2E3B35] text-[#A7B3AD] hover:bg-[#18231D]"
+                    : "border-[#38352F] text-[#ABA9A2] hover:bg-[#201E1B]"
                 )}
               >
                 Cancel
@@ -484,35 +484,35 @@ export default function ProfilePage() {
           <div className="space-y-3 xs:space-y-4">
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Mail className="h-4 w-4" />
                 Email
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base break-all",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>{user.email}</p>
             </div>
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <UserIcon className="h-4 w-4" />
                 Name
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 {user.first_name || ''} {user.last_name || ''} {(user.first_name || user.last_name) ? '' : 'N/A'}
               </p>
@@ -520,18 +520,18 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <DollarSign className="h-4 w-4" />
                 Currency
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 {account?.currency || 'USD'}
               </p>
@@ -539,18 +539,18 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Globe className="h-4 w-4" />
                 Timezone
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 {account?.timezone || 'UTC'}
               </p>
@@ -558,18 +558,18 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Calendar className="h-4 w-4" />
                 Billing Cycle Day
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 {account?.billing_cycle_day || 25}
               </p>
@@ -577,11 +577,11 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Shield className="h-4 w-4" />
                 Account Status
@@ -598,11 +598,11 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Shield className="h-4 w-4" />
                 Email Verified
@@ -633,11 +633,11 @@ export default function ProfilePage() {
             {showVerification && (
               <div className={cn(
                 "rounded-xl p-3 xs:p-4",
-                theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+                theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
               )}>
                 <label className={cn(
                   "block text-sm font-medium mb-2",
-                  theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                  theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                 )}>
                   Verification Token
                 </label>
@@ -651,7 +651,7 @@ export default function ProfilePage() {
                       "flex-1 border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
                       theme === "light"
                         ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                        : "bg-[#18231D] border-[#2E3B35] text-[#E7EFEA] focus:border-[#C9A24A]"
+                        : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
                     )}
                   />
                   <Button
@@ -671,18 +671,18 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Clock className="h-4 w-4" />
                 Last Login
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 {user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}
               </p>
@@ -690,18 +690,18 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#0F1512]/50"
+              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 <Calendar className="h-4 w-4" />
                 Account Created
               </label>
               <p className={cn(
                 "font-medium text-sm xs:text-base",
-                theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+                theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
               )}>
                 {new Date(user.created_at).toLocaleString()}
               </p>

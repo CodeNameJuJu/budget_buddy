@@ -76,13 +76,13 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
   }
 
   return (
-    <Card className={cn("border-2 border-dashed", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/30" : "border-[#C9A24A]/50 bg-[#18231D]/30")}>
+    <Card className={cn("border-2 border-dashed", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/30" : "border-[#C9A24A]/50 bg-[#201E1B]/30")}>
       <CardContent className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Sparkles className={cn("h-4 w-4", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />
-              <h3 className={cn("font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Quick Add Transaction</h3>
+              <h3 className={cn("font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Quick Add Transaction</h3>
               {suggestedCategory && (
                 <Badge variant="secondary" className={cn("text-xs", theme === "light" ? "bg-[#6BAF92]/20 text-[#4A7A60] border-[#6BAF92]/50" : "bg-[#88B39B]/20 text-[#88B39B] border-[#88B39B]/50")}>
                   Auto-categorized as {suggestedCategory.category}
@@ -101,7 +101,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+              <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Amount</label>
               <Input
                 type="number"
                 step="0.01"
@@ -114,7 +114,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               />
             </div>
             <div className="space-y-2">
-              <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
+              <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Description</label>
               <Input
                 placeholder="e.g. Grocery shopping at Woolworths"
                 value={description}
@@ -130,7 +130,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
               variant="ghost"
               size="sm"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}
+              className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}
             >
               {showAdvanced ? (
                 <ChevronUp className="h-4 w-4 mr-1" />
@@ -150,7 +150,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
           {showAdvanced && (
             <div className="space-y-4 pt-4 border-t">
               <div className="space-y-2">
-                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes (optional)</label>
+                <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Notes (optional)</label>
                 <Input
                   placeholder="Additional notes..."
                   value={notes}

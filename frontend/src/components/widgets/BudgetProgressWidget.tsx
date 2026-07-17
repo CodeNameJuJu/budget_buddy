@@ -143,10 +143,10 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     return (
       <Card className={cn(
         "h-full border",
-        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
       )}>
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <PiggyBank className="h-4 w-4" />
             Budget Progress
           </CardTitle>
@@ -156,10 +156,10 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className={cn("animate-pulse h-4 w-20 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}></div>
-                  <div className={cn("animate-pulse h-4 w-12 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}></div>
+                  <div className={cn("animate-pulse h-4 w-20 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
+                  <div className={cn("animate-pulse h-4 w-12 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
                 </div>
-                <div className={cn("animate-pulse h-2 w-full rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}></div>
+                <div className={cn("animate-pulse h-2 w-full rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
               </div>
             ))}
           </div>
@@ -172,17 +172,17 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     return (
       <Card className={cn(
         "h-full border",
-        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]"
+        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
       )}>
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <PiggyBank className="h-4 w-4" />
             Budget Progress
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
-            <PiggyBank className={cn("h-8 w-8 mx-auto mb-2 opacity-50", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
+          <div className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
+            <PiggyBank className={cn("h-8 w-8 mx-auto mb-2 opacity-50", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")} />
             <p className="text-sm mb-2">No budgets set</p>
             <p className="text-xs">Create budgets to track your spending goals</p>
           </div>
@@ -200,7 +200,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     <>
       <Card className="h-full flex flex-col">
         <CardHeader className="pb-2">
-          <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <CardTitle className={cn("text-sm font-medium flex items-center justify-between", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <div className="flex items-center gap-2">
               <PiggyBank className="h-4 w-4" />
               Budget Progress
@@ -238,7 +238,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
               const displayProgress = isOverBudget ? 100 : budget.progress
 
               return (
-                <div key={budget.id} className={cn("space-y-2 cursor-pointer p-2 rounded-md transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/30" : "hover:bg-[#2E3B35]/30")} onClick={() => handleBudgetClick(budget)}>
+                <div key={budget.id} className={cn("space-y-2 cursor-pointer p-2 rounded-md transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/30" : "hover:bg-[#38352F]/30")} onClick={() => handleBudgetClick(budget)}>
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span className="text-sm font-medium truncate">
@@ -252,7 +252,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                       <div className="text-sm font-medium">
                         {formatCurrency(budget.spent)}
                       </div>
-                      <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                      <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                         of {formatCurrency(budget.amount)}
                       </div>
                     </div>
@@ -263,7 +263,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
                       value={displayProgress}
                       className="h-2"
                     />
-                    <div className={cn("flex items-center justify-between text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                    <div className={cn("flex items-center justify-between text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                       <span>{budget.category}</span>
                       <span className={cn(
                         isOverBudget ? "text-red-400 font-medium" :
@@ -280,7 +280,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
 
             {!isExpanded && hasMore && (
               <div className="text-center pt-2">
-                <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   {data.count - defaultDisplayCount} more budgets
                 </p>
               </div>
@@ -294,45 +294,45 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <Card className={cn(
             "w-full max-w-2xl max-h-[80vh] border",
-            theme === "light" ? "bg-[#E8DCC5] border-[#E6E0D6]" : "bg-[#18231D] border-[#2E3B35]"
+            theme === "light" ? "bg-[#E8DCC5] border-[#E6E0D6]" : "bg-[#201E1B] border-[#38352F]"
           )}>
-            <CardHeader className={cn("border-b", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]")}>
+            <CardHeader className={cn("border-b", theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]")}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Button variant="ghost" size="icon" onClick={closeModal} className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")}>
+                  <Button variant="ghost" size="icon" onClick={closeModal} className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")}>
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
                   <div>
-                    <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>{selectedBudget.name} Transactions</CardTitle>
-                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                    <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>{selectedBudget.name} Transactions</CardTitle>
+                    <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                       {formatCurrency(selectedBudget.spent)} of {formatCurrency(selectedBudget.amount)} spent
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" onClick={closeModal} className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")}>
+                <Button variant="ghost" size="icon" onClick={closeModal} className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")}>
                   <X className="h-4 w-4" />
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="p-0 overflow-auto">
               {transactionsLoading ? (
-                <div className={cn("p-6 text-center", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <div className={cn("p-6 text-center", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   Loading transactions...
                 </div>
               ) : transactions.length === 0 ? (
-                <div className={cn("p-6 text-center", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <div className={cn("p-6 text-center", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   No transactions found for this budget
                 </div>
               ) : (
-                <div className={cn("divide-y", theme === "light" ? "divide-[#E6E0D6]" : "divide-[#2E3B35]")}>
+                <div className={cn("divide-y", theme === "light" ? "divide-[#E6E0D6]" : "divide-[#38352F]")}>
                   {transactions.map((transaction) => (
-                    <div key={transaction.id} className={cn("p-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/30" : "hover:bg-[#2E3B35]/30")}>
+                    <div key={transaction.id} className={cn("p-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/30" : "hover:bg-[#38352F]/30")}>
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <p className={cn("font-medium truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                          <p className={cn("font-medium truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                             {transaction.description || "Untitled transaction"}
                           </p>
-                          <div className={cn("flex items-center gap-2 mt-1 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                          <div className={cn("flex items-center gap-2 mt-1 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                             <span>{formatDate(transaction.date)}</span>
                             {transaction.category && (
                               <>

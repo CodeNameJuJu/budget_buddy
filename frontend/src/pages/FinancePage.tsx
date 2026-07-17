@@ -27,9 +27,9 @@ const COLOUR_OPTIONS = [
   { label: "Accent Gold", value: "#D9B44A" },
   { label: "Warning", value: "#C97C5D" },
   { label: "Muted", value: "#6C7A73" },
-  { label: "Dark Muted", value: "#A7B3AD" },
+  { label: "Dark Muted", value: "#ABA9A2" },
   { label: "Border", value: "#E6E0D6" },
-  { label: "Dark Border", value: "#2E3B35" },
+  { label: "Dark Border", value: "#38352F" },
 ]
 
 const TABS = [
@@ -492,8 +492,8 @@ export default function FinancePage() {
         <div className="space-y-4 sm:space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h2 className={cn("text-lg sm:text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Categories</h2>
-              <p className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Organise your transactions</p>
+              <h2 className={cn("text-lg sm:text-xl font-semibold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Categories</h2>
+              <p className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Organise your transactions</p>
             </div>
             <Button onClick={() => setShowCategoryForm(!showCategoryForm)} size="sm" className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
@@ -510,27 +510,27 @@ export default function FinancePage() {
 
           {/* Add/Edit category form */}
           {showCategoryForm && (
-            <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+            <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
               <CardHeader>
-                <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                   {editingCategory ? "Edit category" : "New category"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleCategorySubmit} className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                     <Input placeholder="e.g. Groceries" value={categoryForm.name} onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })} required />
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
-                    <select className={cn("flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={categoryForm.type} onChange={(e) => setCategoryForm({ ...categoryForm, type: e.target.value as "income" | "expense" })}>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
+                    <select className={cn("flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={categoryForm.type} onChange={(e) => setCategoryForm({ ...categoryForm, type: e.target.value as "income" | "expense" })}>
                       <option value="expense">Expense</option>
                       <option value="income">Income</option>
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Colour</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Colour</label>
                     <div className="flex gap-1.5 flex-wrap items-center">
                       {COLOUR_OPTIONS.map((c) => (
                         <button key={c.value} type="button" className={`h-7 w-7 rounded-full border-2 transition-all ${categoryForm.colour === c.value ? "border-foreground scale-110" : "border-transparent"}`} style={{ backgroundColor: c.value }} onClick={() => setCategoryForm({ ...categoryForm, colour: c.value })} title={c.label} />
@@ -539,7 +539,7 @@ export default function FinancePage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Icon (emoji)</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Icon (emoji)</label>
                     <Input placeholder="e.g. 🛒" value={categoryForm.icon} onChange={(e) => setCategoryForm({ ...categoryForm, icon: e.target.value })} maxLength={4} />
                   </div>
                   <div className="sm:col-span-2 lg:col-span-4 flex gap-2">
@@ -554,17 +554,17 @@ export default function FinancePage() {
           {/* Categories */}
           {categories.length === 0 ? (
             <div className="text-center py-16">
-              <Tags className={cn("h-12 w-12 mx-auto mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
-              <h2 className={cn("text-lg font-semibold mb-1", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>No categories yet</h2>
-              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create categories to organise your transactions.</p>
+              <Tags className={cn("h-12 w-12 mx-auto mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")} />
+              <h2 className={cn("text-lg font-semibold mb-1", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>No categories yet</h2>
+              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Create categories to organise your transactions.</p>
             </div>
           ) : (
             <div className="grid gap-6 lg:grid-cols-2">
               {/* Income categories */}
               {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
-                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
                   <CardHeader>
-                    <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                    <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                       <Badge variant="default" className="text-xs">Income</Badge>
                       <span>{incomeCategories.length} categories</span>
                     </CardTitle>
@@ -572,14 +572,14 @@ export default function FinancePage() {
                   <CardContent>
                     <div className="space-y-2">
                       {incomeCategories.map((cat) => (
-                        <div key={cat.id} className={cn("flex items-center justify-between p-3 rounded-md border transition-colors", theme === "light" ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20" : "border-[#2E3B35] hover:bg-[#6BAF92]/20")}>
+                        <div key={cat.id} className={cn("flex items-center justify-between p-3 rounded-md border transition-colors", theme === "light" ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20" : "border-[#38352F] hover:bg-[#6BAF92]/20")}>
                           <div className="flex items-center gap-3">
                             <div className="h-8 w-8 rounded-full flex items-center justify-center text-sm" style={{ backgroundColor: cat.colour || "#6BAF92" }}>{cat.icon || cat.name[0]}</div>
-                            <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
+                            <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{cat.name}</span>
                           </div>
                           <div className="flex gap-1">
-                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")} onClick={() => handleEditCategory(cat)}><Edit2 className="h-4 w-4" /></Button>
-                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")} onClick={() => handleDeleteCategory(cat.id)}><Trash2 className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")} onClick={() => handleEditCategory(cat)}><Edit2 className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400")} onClick={() => handleDeleteCategory(cat.id)}><Trash2 className="h-4 w-4" /></Button>
                           </div>
                         </div>
                       ))}
@@ -590,9 +590,9 @@ export default function FinancePage() {
 
               {/* Expense categories */}
               {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
-                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#18231D]/50 border-[#2E3B35]")}>
+                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
                   <CardHeader>
-                    <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                    <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                       <Badge variant="destructive" className="text-xs">Expense</Badge>
                       <span>{expenseCategories.length} categories</span>
                     </CardTitle>
@@ -600,14 +600,14 @@ export default function FinancePage() {
                   <CardContent>
                     <div className="space-y-2">
                       {expenseCategories.map((cat) => (
-                        <div key={cat.id} className={cn("flex items-center justify-between p-3 rounded-md border transition-colors", theme === "light" ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20" : "border-[#2E3B35] hover:bg-[#6BAF92]/20")}>
+                        <div key={cat.id} className={cn("flex items-center justify-between p-3 rounded-md border transition-colors", theme === "light" ? "border-[#E6E0D6] hover:bg-[#6BAF92]/20" : "border-[#38352F] hover:bg-[#6BAF92]/20")}>
                           <div className="flex items-center gap-3">
                             <div className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white" style={{ backgroundColor: cat.colour || "#C97C5D" }}>{cat.icon || cat.name[0]}</div>
-                            <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>{cat.name}</span>
+                            <span className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{cat.name}</span>
                           </div>
                           <div className="flex gap-1">
-                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#A7B3AD] hover:text-[#E7EFEA]")} onClick={() => handleEditCategory(cat)}><Edit2 className="h-4 w-4" /></Button>
-                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")} onClick={() => handleDeleteCategory(cat.id)}><Trash2 className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")} onClick={() => handleEditCategory(cat)}><Edit2 className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400")} onClick={() => handleDeleteCategory(cat.id)}><Trash2 className="h-4 w-4" /></Button>
                           </div>
                         </div>
                       ))}
@@ -625,29 +625,29 @@ export default function FinancePage() {
         <div className="space-y-4 sm:space-y-6">
           {/* Add budget form */}
           {showBudgetForm && (
-            <Card className={cn("border hover:transition-all duration-200", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70")}>
+            <Card className={cn("border hover:transition-all duration-200", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70")}>
               <CardHeader>
-                <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"}>New budget</CardTitle>
+                <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>New budget</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleBudgetSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Name</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Name</label>
                     <Input placeholder="e.g. Monthly groceries" value={budgetForm.name} onChange={(e) => setBudgetForm({ ...budgetForm, name: e.target.value })} required />
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Amount</label>
                     <Input type="number" step="0.01" placeholder="0.00" value={budgetForm.amount} onChange={(e) => setBudgetForm({ ...budgetForm, amount: e.target.value })} required />
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
                     <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={budgetForm.category_id} onChange={(e) => setBudgetForm({ ...budgetForm, category_id: e.target.value })} required>
                       <option value="">Select category</option>
                       {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Period</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Period</label>
                     <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={budgetForm.period} onChange={(e) => setBudgetForm({ ...budgetForm, period: e.target.value })}>
                       <option value="weekly">Weekly</option>
                       <option value="monthly">Monthly</option>
@@ -655,11 +655,11 @@ export default function FinancePage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Start date</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Start date</label>
                     <Input type="date" value={budgetForm.start_date} onChange={(e) => setBudgetForm({ ...budgetForm, start_date: e.target.value })} required />
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>End date (optional)</label>
+                    <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>End date (optional)</label>
                     <Input type="date" value={budgetForm.end_date} onChange={(e) => setBudgetForm({ ...budgetForm, end_date: e.target.value })} />
                   </div>
                   <div className="sm:col-span-2 lg:col-span-3 flex gap-2">
@@ -674,9 +674,9 @@ export default function FinancePage() {
           {/* Budgets grid */}
           {budgets.length === 0 ? (
             <div className="text-center py-16">
-              <PiggyBank className={cn("h-12 w-12 mx-auto mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")} />
-              <h2 className={cn("text-lg font-semibold mb-1", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>No budgets yet</h2>
-              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Create a budget to start tracking your spending.</p>
+              <PiggyBank className={cn("h-12 w-12 mx-auto mb-4", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")} />
+              <h2 className={cn("text-lg font-semibold mb-1", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>No budgets yet</h2>
+              <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Create a budget to start tracking your spending.</p>
             </div>
           ) : (
             <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -686,7 +686,7 @@ export default function FinancePage() {
                 const remaining = budget.remaining ? parseFloat(budget.remaining) : parseFloat(budget.amount)
 
                 return (
-                  <Card key={budget.id} className={cn("border hover:transition-all duration-200 group cursor-pointer", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#18231D]/50 border-[#2E3B35] hover:bg-[#18231D]/70")}>
+                  <Card key={budget.id} className={cn("border hover:transition-all duration-200 group cursor-pointer", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70")}>
                     <CardHeader className="flex flex-row items-start justify-between pb-2 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
                       <div className="flex items-center gap-2">
                         <div className={cn("p-2 rounded-lg text-white transition-colors duration-200", remaining >= 0 ? (theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]") : percentage >= 90 ? "bg-red-500" : theme === "light" ? "bg-[#C97C5D]" : "bg-[#B46B52]")}>
@@ -694,31 +694,31 @@ export default function FinancePage() {
                         </div>
                         <div>
                           <CardTitle className={cn("text-base transition-colors", theme === "light" ? "group-hover:text-[#6BAF92]" : "group-hover:text-[#88B39B]")}>{budget.name}</CardTitle>
-                          <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{budget.category?.name} · {budget.period}</p>
+                          <p className={cn("text-xs mt-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{budget.category?.name} · {budget.period}</p>
                         </div>
                       </div>
                       <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
-                        <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#A7B3AD] hover:text-[#88B39B]", "-mt-1")} onClick={() => handleEditBudget(budget)}>
+                        <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#ABA9A2] hover:text-[#88B39B]", "-mt-1")} onClick={() => handleEditBudget(budget)}>
                           <Edit2 className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400", "-mt-1")} onClick={() => handleDeleteBudget(budget.id)}>
+                        <Button variant="ghost" size="icon" className={cn(theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400", "-mt-1")} onClick={() => handleDeleteBudget(budget.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
                       <div className="flex justify-between text-sm">
-                        <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{formatCurrency(spent)} spent</span>
+                        <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{formatCurrency(spent)} spent</span>
                         <span className="font-medium">{formatCurrency(budget.amount)}</span>
                       </div>
-                      <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#2E3B35]")}>
+                      <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}>
                         <div className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColour(percentage)} progress-bar-fill`} style={{ width: `${percentage}%` }} />
                       </div>
                       <div className="flex items-center justify-between">
                         <p className={cn("text-sm font-medium", remaining >= 0 ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400")}>
                           {remaining >= 0 ? `${formatCurrency(remaining)} remaining` : `${formatCurrency(Math.abs(remaining))} over budget`}
                         </p>
-                        <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{percentage.toFixed(1)}% used</div>
+                        <div className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{percentage.toFixed(1)}% used</div>
                       </div>
                     </CardContent>
                   </Card>
@@ -734,8 +734,8 @@ export default function FinancePage() {
         <div className="space-y-3 xs:space-y-4 sm:space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h2 className={cn("text-lg sm:text-xl font-semibold tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>Transactions</h2>
-              <p className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
+              <h2 className={cn("text-lg sm:text-xl font-semibold tracking-tight", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Transactions</h2>
+              <p className={cn("text-xs sm:text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{count} transaction{count !== 1 ? "s" : ""}</p>
             </div>
             <div className="flex gap-2 w-full sm:w-auto">
               <Button onClick={() => setShowTransactionForm(!showTransactionForm)} className="hover:shadow-lg transition-all duration-300 w-full sm:w-auto">
@@ -765,7 +765,7 @@ export default function FinancePage() {
             <Button variant={filterTransactionType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("")}>All</Button>
             <Button variant={filterTransactionType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("income")}>Income</Button>
             <Button variant={filterTransactionType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("expense")}>Expenses</Button>
-            <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm flex-1 sm:flex-none", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
+            <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm flex-1 sm:flex-none", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
               <option value="">All Categories</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -781,45 +781,45 @@ export default function FinancePage() {
                 <form onSubmit={handleTransactionSubmit} className="space-y-4">
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Amount</label>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Amount</label>
                       <Input type="number" step="0.01" placeholder="0.00" value={transactionForm.amount} onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })} required />
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Type</label>
-                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Date</label>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Date</label>
                       <Input type="date" value={transactionForm.date} onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })} required />
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Account Type</label>
-                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.account_type} onChange={(e) => setTransactionForm({ ...transactionForm, account_type: e.target.value as "checking" | "savings" })}>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Account Type</label>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.account_type} onChange={(e) => setTransactionForm({ ...transactionForm, account_type: e.target.value as "checking" | "savings" })}>
                         <option value="checking">Checking Account</option>
                         <option value="savings">Savings Account</option>
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Description</label>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Description</label>
                       <Input placeholder="e.g. Grocery shopping" value={transactionForm.description} onChange={(e) => setTransactionForm({ ...transactionForm, description: e.target.value })} />
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Category</label>
-                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#2E3B35] bg-[#18231D] text-[#E7EFEA]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
                         <option value="">No category</option>
                         {categories.filter((c) => c.type === transactionForm.type).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Notes</label>
+                      <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Notes</label>
                       <Input placeholder="Optional notes" value={transactionForm.notes} onChange={(e) => setTransactionForm({ ...transactionForm, notes: e.target.value })} />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Tags</label>
+                    <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Tags</label>
                     <TagInput value={transactionForm.tags} onChange={(tags) => setTransactionForm({ ...transactionForm, tags })} placeholder="Add tags (press Enter or comma to add)" suggestions={popularTags.map(tag => tag.tag)} />
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 justify-end">
@@ -835,11 +835,11 @@ export default function FinancePage() {
           <Card className="mobile-card">
             <CardContent className="p-0">
               {transactions.length === 0 ? (
-                <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found</p>
+                <p className={cn("mobile-text text-center py-6 xs:py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>No transactions found</p>
               ) : (
                 <div className="divide-y">
                   {transactions.map((t) => (
-                    <div key={t.id} className={cn("px-3 xs:px-4 lg:px-6 py-3 xs:py-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/20" : "hover:bg-[#2E3B35]/20")}>
+                    <div key={t.id} className={cn("px-3 xs:px-4 lg:px-6 py-3 xs:py-4 transition-colors", theme === "light" ? "hover:bg-[#E6E0D6]/20" : "hover:bg-[#38352F]/20")}>
                       <div className="flex flex-col gap-2 xs:gap-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1 min-w-0">
@@ -849,7 +849,7 @@ export default function FinancePage() {
                                 {t.type}
                               </Badge>
                             </div>
-                            <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                            <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                               <span>{formatDate(t.date)}</span>
                               {t.category && (
                                 <>
@@ -879,7 +879,7 @@ export default function FinancePage() {
                             <span className={cn("mobile-text font-semibold", t.type === "income" ? (theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]") : "text-red-400")}>
                               {t.type === "income" ? "+" : "-"}{formatCurrency(t.amount)}
                             </span>
-                            <Button variant="ghost" size="icon" className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#A7B3AD] hover:text-red-400")} onClick={() => handleDeleteTransaction(t.id)}>
+                            <Button variant="ghost" size="icon" className={cn("mobile-button-sm", theme === "light" ? "text-[#6C7A73] hover:text-red-400" : "text-[#ABA9A2] hover:text-red-400")} onClick={() => handleDeleteTransaction(t.id)}>
                               <Trash2 className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
                             </Button>
                           </div>
@@ -899,14 +899,14 @@ export default function FinancePage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
           <div className={cn(
             "w-full max-w-2xl max-h-[85vh] sm:max-h-[80vh] overflow-auto rounded-lg p-4 sm:p-6",
-            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
           )}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1 min-w-0">
-                <h2 className={cn("text-lg sm:text-xl font-bold truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                <h2 className={cn("text-lg sm:text-xl font-bold truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                   {selectedBudget.name} Transactions
                 </h2>
-                <p className={cn("text-xs sm:text-sm truncate", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                <p className={cn("text-xs sm:text-sm truncate", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                   {selectedBudget.category?.name} · {selectedBudget.period}
                 </p>
               </div>
@@ -916,9 +916,9 @@ export default function FinancePage() {
             </div>
 
             {loadingBudgetTransactions ? (
-              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>Loading transactions...</p>
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Loading transactions...</p>
             ) : budgetTransactions.length === 0 ? (
-              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>No transactions found for this budget period.</p>
+              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>No transactions found for this budget period.</p>
             ) : (
               <div className="space-y-2">
                 {budgetTransactions.map((t) => (
@@ -926,7 +926,7 @@ export default function FinancePage() {
                     key={t.id}
                     className={cn(
                       "flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 rounded-md border",
-                      theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+                      theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
                     )}
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -937,10 +937,10 @@ export default function FinancePage() {
                         {t.category?.icon || t.category?.name[0] || "??"}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={cn("text-sm font-medium truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                        <p className={cn("text-sm font-medium truncate", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                           {t.description || t.category?.name}
                         </p>
-                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                           {formatDate(t.date)}
                         </p>
                       </div>

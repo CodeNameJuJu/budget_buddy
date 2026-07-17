@@ -42,13 +42,13 @@ export default function VerifyEmailPage() {
       "flex items-center justify-center min-h-screen p-6",
       theme === "light"
         ? "bg-gradient-to-br from-[#F6F4EF] via-[#E8DCC5] to-[#F6F4EF]"
-        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
+        : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
     )}>
       <div className={cn(
         "backdrop-blur-md rounded-2xl shadow-xl border p-8 max-w-md w-full",
         theme === "light"
           ? "bg-white/90 border-[#E6E0D6]/30"
-          : "bg-[#18231D]/90 border-[#2E3B35]/30"
+          : "bg-[#201E1B]/90 border-[#38352F]/30"
       )}>
         {status === 'loading' && (
           <div className="text-center">
@@ -58,10 +58,10 @@ export default function VerifyEmailPage() {
             )}></div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
-              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
             )}>Verifying your email...</h2>
             <p className={cn(
-              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
             )}>Please wait while we verify your email address.</p>
           </div>
         )}
@@ -81,10 +81,10 @@ export default function VerifyEmailPage() {
             </div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
-              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
             )}>Email Verified!</h2>
             <p className={cn(
-              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
             )}>{message}</p>
           </div>
         )}
@@ -98,11 +98,11 @@ export default function VerifyEmailPage() {
             </div>
             <h2 className={cn(
               "text-xl font-semibold mb-2",
-              theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]"
+              theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"
             )}>Verification Failed</h2>
             <p className={cn(
               "mb-6",
-              theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+              theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
             )}>{message}</p>
             <button
               onClick={() => navigate('/profile')}

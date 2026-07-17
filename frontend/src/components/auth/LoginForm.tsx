@@ -79,7 +79,7 @@ export const LoginForm: React.FC = () => {
       "min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area transition-colors duration-300",
       theme === "light" 
         ? "bg-[#F6F4EF]" 
-        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
+        : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
     )}>
       <div className="max-w-md w-full space-y-8">
         <div>
@@ -101,7 +101,7 @@ export const LoginForm: React.FC = () => {
           </h2>
           <p className={cn(
             "mt-2 text-center text-sm",
-            theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+            theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
           )}>
             Or{' '}
             <Link to="/register" className={cn(
@@ -118,7 +118,7 @@ export const LoginForm: React.FC = () => {
             <div>
               <label htmlFor="email" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 Email address
               </label>
@@ -130,10 +130,10 @@ export const LoginForm: React.FC = () => {
                 required
                 className={cn(
                   "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
+                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]",
                   theme === "light"
                     ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
-                    : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                    : "bg-[#201E1B]/80 text-[#EDEBE6] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                 )}
                 placeholder="Enter your email"
                 value={formData.email}
@@ -147,7 +147,7 @@ export const LoginForm: React.FC = () => {
             <div>
               <label htmlFor="password" className={cn(
                 "block text-sm font-medium",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 Password
               </label>
@@ -160,10 +160,10 @@ export const LoginForm: React.FC = () => {
                   required
                   className={cn(
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]",
+                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]",
                     theme === "light"
                       ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
-                      : "bg-[#18231D]/80 text-[#E7EFEA] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                      : "bg-[#201E1B]/80 text-[#EDEBE6] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
                   )}
                   placeholder="Enter your password"
                   value={formData.password}
@@ -174,7 +174,7 @@ export const LoginForm: React.FC = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <span className={theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"}>
+                  <span className={theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"}>
                     {showPassword ? 'Hide' : 'Show'}
                   </span>
                 </button>
@@ -197,12 +197,12 @@ export const LoginForm: React.FC = () => {
                   "h-4 w-4 focus:ring-2 rounded transition-colors duration-200",
                   theme === "light"
                     ? "text-[#6BAF92] focus:ring-[#6BAF92] border-[#E6E0D6] bg-white"
-                    : "text-[#6BAF92] focus:ring-[#6BAF92] border-[#2E3B35] bg-[#18231D]"
+                    : "text-[#6BAF92] focus:ring-[#6BAF92] border-[#38352F] bg-[#201E1B]"
                 )}
               />
               <label htmlFor="remember-me" className={cn(
                 "ml-2 block text-sm",
-                theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
               )}>
                 Remember me {formData.rememberMe ? '(ON)' : '(OFF)'}
               </label>

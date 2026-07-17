@@ -43,13 +43,13 @@ export function ConfirmDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
         "sm:max-w-[425px]",
-        theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+        theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
       )}>
         <DialogHeader>
-          <DialogTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+          <DialogTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             {title}
           </DialogTitle>
-          <DialogDescription className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+          <DialogDescription className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
             {description}
           </DialogDescription>
         </DialogHeader>

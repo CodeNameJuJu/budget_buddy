@@ -37,7 +37,7 @@ export default function GettingStartedWidget() {
           >
             <div className={cn(
               "p-2 rounded-full",
-              theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+              theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
             )}>
               <TrendingUp className={cn(
                 "h-4 w-4",
@@ -77,7 +77,7 @@ export default function GettingStartedWidget() {
           >
             <div className={cn(
               "p-2 rounded-full",
-              theme === "light" ? "bg-[#E8DCC5]" : "bg-[#18231D]"
+              theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
             )}>
               <PlusCircle className={cn(
                 "h-4 w-4",

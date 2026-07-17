@@ -50,24 +50,24 @@ export default function SpendingTrendsChart({ data }: SpendingTrendsChartProps) 
     <div className="w-full h-80">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#E6E0D6" : "#2E3B35"} />
+          <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#E6E0D6" : "#38352F"} />
           <XAxis 
             dataKey="month" 
-            stroke={theme === "light" ? "#6C7A73" : "#A7B3AD"}
-            tick={{ fill: theme === "light" ? "#6C7A73" : "#A7B3AD" }}
+            stroke={theme === "light" ? "#6C7A73" : "#ABA9A2"}
+            tick={{ fill: theme === "light" ? "#6C7A73" : "#ABA9A2" }}
           />
           <YAxis 
             yAxisId="currency"
-            stroke={theme === "light" ? "#6C7A73" : "#A7B3AD"}
-            tick={{ fill: theme === "light" ? "#6C7A73" : "#A7B3AD" }}
+            stroke={theme === "light" ? "#6C7A73" : "#ABA9A2"}
+            tick={{ fill: theme === "light" ? "#6C7A73" : "#ABA9A2" }}
             tickFormatter={(value) => `R${value}`}
           />
           <YAxis
             yAxisId="percentage"
             orientation="right"
             domain={[0, (dataMax: number) => Math.max(100, Math.ceil(dataMax))]}
-            stroke={theme === "light" ? "#6C7A73" : "#A7B3AD"}
-            tick={{ fill: theme === "light" ? "#6C7A73" : "#A7B3AD" }}
+            stroke={theme === "light" ? "#6C7A73" : "#ABA9A2"}
+            tick={{ fill: theme === "light" ? "#6C7A73" : "#ABA9A2" }}
             tickFormatter={(value) => `${value}%`}
           />
           <Tooltip content={<CustomTooltip />} />

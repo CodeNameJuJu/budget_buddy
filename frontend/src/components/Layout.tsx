@@ -210,7 +210,7 @@ export default function Layout() {
       "flex h-screen relative mobile-safe-area transition-colors duration-300",
       theme === "light" 
         ? "bg-[#F6F4EF]" 
-        : "bg-gradient-to-br from-[#0F1512] via-[#18231D] to-[#0F1512]"
+        : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
     )}>
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
@@ -236,7 +236,7 @@ export default function Layout() {
           sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           theme === "light"
             ? "bg-[#E8DCC5] border-[#E6E0D6]"
-            : "bg-[#18231D]/95 border-[#2E3B35]",
+            : "bg-[#201E1B]/95 border-[#38352F]",
           "lg:w-64 lg:shadow-xl"
         )}
       >
@@ -244,7 +244,7 @@ export default function Layout() {
           {/* Sidebar Header */}
           <div className={cn(
             "p-4 xs:p-5 lg:p-6 border-b",
-            theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+            theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
           )}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
@@ -255,7 +255,7 @@ export default function Layout() {
                   )}>Bêre Bietjie</h1>
                   <p className={cn(
                     "text-xs xs:text-sm hidden md:block",
-                    theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]"
+                    theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]"
                   )}>Your local financial companion</p>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default function Layout() {
                     "p-2 rounded-lg transition-colors duration-200",
                     theme === "light"
                       ? "hover:bg-[#D9B44A] text-[#6C7A73]"
-                      : "hover:bg-[#C9A24A] text-[#A7B3AD]"
+                      : "hover:bg-[#C9A24A] text-[#ABA9A2]"
                   )}
                   aria-label="Toggle theme"
                 >
@@ -304,7 +304,7 @@ export default function Layout() {
                           : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
                         : theme === "light"
                           ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24] hover:shadow-md hover:transform hover:translate-x-1"
-                          : "text-[#A7B3AD] hover:bg-[#C9A24A] hover:text-[#E8DCC5] hover:shadow-md hover:transform hover:translate-x-1"
+                          : "text-[#ABA9A2] hover:bg-[#C9A24A] hover:text-[#E8DCC5] hover:shadow-md hover:transform hover:translate-x-1"
                     )
                   }
                 >
@@ -330,7 +330,7 @@ export default function Layout() {
           {/* Sidebar Footer */}
           <div className={cn(
             "p-4 xs:p-5 lg:p-6 border-t relative",
-            theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]"
+            theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
           )} ref={profileDropdownRef}>
             <button
               onClick={handleProfileClick}
@@ -338,7 +338,7 @@ export default function Layout() {
                 "group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button shadow-lg hover:shadow-xl border",
                 theme === "light"
                   ? "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#6C7A73] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#1F2A24] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
-                  : "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#A7B3AD] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#E8DCC5] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
+                  : "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#ABA9A2] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#E8DCC5] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
               )}
             >
               {user?.profile_picture_url ? (
@@ -373,7 +373,7 @@ export default function Layout() {
                 "absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 backdrop-blur-xl rounded-xl shadow-2xl border overflow-hidden z-50",
                 theme === "light"
                   ? "bg-[#E8DCC5]/95 border-[#E6E0D6]"
-                  : "bg-[#18231D]/95 border-[#2E3B35]"
+                  : "bg-[#201E1B]/95 border-[#38352F]"
               )}>
                 <button
                   onClick={handleViewProfile}
@@ -381,13 +381,13 @@ export default function Layout() {
                     "w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200",
                     theme === "light"
                       ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24]"
-                      : "text-[#A7B3AD] hover:bg-[#C9A24A] hover:text-[#E8DCC5]"
+                      : "text-[#ABA9A2] hover:bg-[#C9A24A] hover:text-[#E8DCC5]"
                   )}
                 >
                   <User className="h-4 w-4" />
                   <span className="font-medium">View Profile</span>
                 </button>
-                <div className={cn("border-t", theme === "light" ? "border-[#E6E0D6]" : "border-[#2E3B35]")} />
+                <div className={cn("border-t", theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]")} />
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
@@ -404,7 +404,7 @@ export default function Layout() {
                 onClick={() => setShowReleaseNotes(true)}
                 className={cn(
                   "text-xs font-medium hover:underline transition-colors",
-                  theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#A7B3AD] hover:text-[#88B39B]"
+                  theme === "light" ? "text-[#6C7A73] hover:text-[#6BAF92]" : "text-[#ABA9A2] hover:text-[#88B39B]"
                 )}
               >
                 v0.1.0
@@ -421,7 +421,7 @@ export default function Layout() {
           "lg:hidden sticky top-0 z-30 backdrop-blur-md border-b responsive-padding transition-colors duration-300",
           theme === "light"
             ? "bg-[#E8DCC5]/90 border-[#E6E0D6]"
-            : "bg-[#18231D]/90 border-[#2E3B35]"
+            : "bg-[#201E1B]/90 border-[#38352F]"
         )}>
           <div className="flex items-center justify-between">
             <button
@@ -430,7 +430,7 @@ export default function Layout() {
                 "p-2.5 xs:p-3 rounded-full transition-all duration-200 mobile-app-button group",
                 theme === "light"
                   ? "text-[#6C7A73] hover:bg-[#D9B44A]"
-                  : "text-[#A7B3AD] hover:bg-[#C9A24A]"
+                  : "text-[#ABA9A2] hover:bg-[#C9A24A]"
               )}
             >
               <Menu className="h-5 w-5 xs:h-6 xs:w-6 group-hover:scale-110 transition-transform" />
@@ -455,7 +455,7 @@ export default function Layout() {
                 "p-2.5 xs:p-3 rounded-full transition-all duration-200",
                 theme === "light"
                   ? "text-[#6C7A73] hover:bg-[#D9B44A]"
-                  : "text-[#A7B3AD] hover:bg-[#C9A24A]"
+                  : "text-[#ABA9A2] hover:bg-[#C9A24A]"
               )}
               aria-label="Toggle theme"
             >
@@ -485,7 +485,7 @@ export default function Layout() {
             "w-full max-w-2xl max-h-[85vh] overflow-auto rounded-2xl shadow-2xl relative",
             theme === "light" 
               ? "bg-[#E8DCC5] border border-[#E6E0D6]" 
-              : "bg-[#18231D] border border-[#2E3B35]"
+              : "bg-[#201E1B] border border-[#38352F]"
           )}>
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
@@ -497,14 +497,14 @@ export default function Layout() {
                     <Sparkles className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
                   </div>
                   <div>
-                    <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+                    <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                       What's New
                     </h2>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge className={cn("text-xs", theme === "light" ? "bg-[#6BAF92] text-white" : "bg-[#6BAF92] text-white")}>
                         v0.1.0
                       </Badge>
-                      <span className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#A7B3AD]")}>
+                      <span className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
                         Latest Release
                       </span>
                     </div>
@@ -514,17 +514,17 @@ export default function Layout() {
                   variant="ghost" 
                   size="icon" 
                   onClick={() => setShowReleaseNotes(false)}
-                  className={cn(theme === "light" ? "hover:bg-[#E6E0D6]" : "hover:bg-[#2E3B35]")}
+                  className={cn(theme === "light" ? "hover:bg-[#E6E0D6]" : "hover:bg-[#38352F]")}
                 >
                   <X className="h-5 w-5" />
                 </Button>
               </div>
 
-              <div className={cn("space-y-6", theme === "light" ? "text-[#1F2A24]" : "text-[#E7EFEA]")}>
+              <div className={cn("space-y-6", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                 {/* New Features */}
                 <div className={cn(
                   "rounded-xl p-4 border",
-                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#0F1512]/50 border-[#2E3B35]"
+                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#141311]/50 border-[#38352F]"
                 )}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn("p-1.5 rounded-md", "bg-[#6BAF92]/20")}>
@@ -583,7 +583,7 @@ export default function Layout() {
                 {/* Improvements */}
                 <div className={cn(
                   "rounded-xl p-4 border",
-                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#0F1512]/50 border-[#2E3B35]"
+                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#141311]/50 border-[#38352F]"
                 )}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn("p-1.5 rounded-md", "bg-[#D9B44A]/20")}>
@@ -634,7 +634,7 @@ export default function Layout() {
                 {/* Bug Fixes */}
                 <div className={cn(
                   "rounded-xl p-4 border",
-                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#0F1512]/50 border-[#2E3B35]"
+                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#141311]/50 border-[#38352F]"
                 )}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn("p-1.5 rounded-md", "bg-[#6BAF92]/20")}>

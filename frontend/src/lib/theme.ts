@@ -16,14 +16,14 @@ export const colors = {
   },
   // Dark mode - Kalahari theme
   dark: {
-    background: '#0F1512', // Kalahari background
-    surface: '#18231D', // Surface
+    background: '#141311', // Kalahari background
+    surface: '#201E1B', // Surface
     primary: '#5E9C7E', // Primary green
     primaryLight: '#88B39B', // Lighter green
     primaryDark: '#6BAF92', // Darker green
-    text: '#E7EFEA', // Light text
-    textSecondary: '#A7B3AD', // Muted text
-    border: '#2E3B35', // Border
+    text: '#EDEBE6', // Light text
+    textSecondary: '#ABA9A2', // Muted text
+    border: '#38352F', // Border
     success: '#5E9C7E', // Primary green for success
     error: '#B46B52', // Warning color for error
     warning: '#B46B52', // Warning color
