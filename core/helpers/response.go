@@ -26,7 +26,10 @@ func RespondError(w http.ResponseWriter, status int, message string) {
 	})
 }
 
+// MaxBodySize is the maximum accepted JSON request body size (1 MB)
+const MaxBodySize = 1 << 20
+
 func DecodeBody(r *http.Request, v interface{}) error {
 	defer r.Body.Close()
-	return json.NewDecoder(r.Body).Decode(v)
+	return json.NewDecoder(http.MaxBytesReader(nil, r.Body, MaxBodySize)).Decode(v)
 }

@@ -1,6 +1,12 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '@/lib/api';
+import {
+  clearActiveSession,
+  getActiveStorage,
+  getTokenExpiresAt,
+  storeLoginTokens
+} from '@/lib/tokenStorage';
 
 // Types
 interface User {
@@ -50,21 +56,6 @@ interface AuthContextType {
 
 // API base URL
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://budgetbuddy-production-b70f.up.railway.app/api';
-
-const tokenKeys = ['access_token', 'refresh_token', 'token_expires_at'];
-
-function clearStorageTokens(storage: Storage) {
-  tokenKeys.forEach(key => storage.removeItem(key));
-}
-
-// The tab-scoped sessionStorage session always takes precedence over the
-// shared localStorage (remember me) session. This lets a non-remembered
-// login in one tab coexist with a remembered login in other tabs.
-function getActiveStorage(): Storage | null {
-  if (sessionStorage.getItem('refresh_token')) return sessionStorage;
-  if (localStorage.getItem('refresh_token')) return localStorage;
-  return null;
-}
 
 // Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -174,32 +165,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const setTokens = (data: AuthResponse, rememberMe: boolean = false) => {
-    // Always clear this tab's session tokens so the new session takes effect
-    // (session tokens take precedence over remembered tokens). Only replace
-    // the shared localStorage tokens when this login is a "remember me"
-    // login - clearing them unconditionally logged out any other user who
-    // was remembered in this browser.
-    clearStorageTokens(sessionStorage);
-    if (rememberMe) {
-      clearStorageTokens(localStorage);
-    }
-
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem('access_token', data.access_token);
-    storage.setItem('refresh_token', data.refresh_token);
-    storage.setItem('token_expires_at', (Date.now() + data.expires_in * 1000).toString());
+    storeLoginTokens(data, rememberMe);
   };
 
   const clearTokens = () => {
-    // Only clear the storage holding the active session. A non-remembered
-    // session logging out should not wipe another user's remembered session.
-    const storage = getActiveStorage();
-    if (storage) {
-      clearStorageTokens(storage);
-    } else {
-      clearStorageTokens(sessionStorage);
-      clearStorageTokens(localStorage);
-    }
+    clearActiveSession();
     setUser(null);
   };
 
@@ -296,7 +266,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!user) return;
 
     const checkTokenExpiry = () => {
-      const expiresAt = getActiveStorage()?.getItem('token_expires_at');
+      const expiresAt = getTokenExpiresAt();
       if (!expiresAt) return;
 
       const timeUntilExpiry = parseInt(expiresAt) - Date.now();

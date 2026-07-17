@@ -53,6 +53,11 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(req.Password) < MinPasswordLength {
+		helpers.RespondError(w, http.StatusBadRequest, "Password must be at least 6 characters")
+		return
+	}
+
 	database := db.GetDb()
 	if database == nil {
 		helpers.RespondError(w, http.StatusInternalServerError, "Database not connected")
@@ -607,6 +612,11 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 	// Basic validation
 	if req.CurrentPassword == "" || req.NewPassword == "" {
 		helpers.RespondError(w, http.StatusBadRequest, "Current password and new password are required")
+		return
+	}
+
+	if len(req.NewPassword) < MinPasswordLength {
+		helpers.RespondError(w, http.StatusBadRequest, "Password must be at least 6 characters")
 		return
 	}
 

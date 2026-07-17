@@ -1,13 +1,11 @@
+import { clearStorageTokens, getActiveStorage, getAccessToken, writeTokens } from './tokenStorage'
+
 const API_BASE = import.meta.env.PROD 
   ? `${import.meta.env.RAILWAY_SERVICE_BUDGET_BUDDY_URL || 'https://budgetbuddy-production-b70f.up.railway.app'}/api`
   : 'https://budgetbuddy-production-b70f.up.railway.app/api'
 
 async function request<T>(path: string, options?: RequestInit, isFormData?: boolean): Promise<T> {
-  // Read the access token from either storage. The tab-scoped sessionStorage
-  // session takes precedence over the shared localStorage (remember me)
-  // session, so a non-remembered login in this tab is not shadowed by
-  // another user's remembered tokens.
-  const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token')
+  const token = getAccessToken()
   
   const headers: Record<string, string> = {}
   
@@ -28,23 +26,19 @@ async function request<T>(path: string, options?: RequestInit, isFormData?: bool
 
   // Handle 401 Unauthorized - token expired or invalid
   if (res.status === 401) {
-    // Try to refresh the token. The tab-scoped sessionStorage session takes
-    // precedence, and the new tokens must be persisted back to the same
-    // storage they came from. Writing tokens to a different storage than
-    // they came from caused another user's session to take precedence.
-    const sessionRefresh = sessionStorage.getItem('refresh_token')
-    const refreshToken = sessionRefresh || localStorage.getItem('refresh_token')
-    const storage: Storage = sessionRefresh ? sessionStorage : localStorage
+    // Try to refresh the token. The new tokens must be persisted back to the
+    // same storage they came from - writing tokens to a different storage
+    // than they came from caused another user's session to take precedence.
+    const storage = getActiveStorage()
+    const refreshToken = storage?.getItem('refresh_token')
 
     // Only clear the storage holding the session that failed to refresh so
     // another user's remembered session in this browser is left intact.
     const clearSessionTokens = () => {
-      storage.removeItem('access_token')
-      storage.removeItem('refresh_token')
-      storage.removeItem('token_expires_at')
+      if (storage) clearStorageTokens(storage)
     }
 
-    if (refreshToken) {
+    if (storage && refreshToken) {
       try {
         // Send the expired access token so the backend can reuse the device
         // ID and keep the existing device session alive
@@ -61,9 +55,7 @@ async function request<T>(path: string, options?: RequestInit, isFormData?: bool
 
         if (refreshResponse.ok) {
           const refreshData = await refreshResponse.json()
-          storage.setItem('access_token', refreshData.access_token)
-          storage.setItem('refresh_token', refreshData.refresh_token)
-          storage.setItem('token_expires_at', (Date.now() + refreshData.expires_in * 1000).toString())
+          writeTokens(storage, refreshData)
 
           // Retry the original request with new token
           headers["Authorization"] = `Bearer ${refreshData.access_token}`

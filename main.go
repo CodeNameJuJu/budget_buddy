@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/CodeNameJuJu/budget_buddy/backend/migrations"
 	"github.com/CodeNameJuJu/budget_buddy/core"
@@ -39,9 +40,19 @@ func main() {
 	// the app), so rate limiting keys on the actual client rather than the proxy
 	r.Use(middleware.RealIP)
 
-	// Configure CORS
+	// Configure CORS. Set ALLOWED_ORIGINS to a comma-separated list of
+	// frontend origins in production; it falls back to allowing all origins
+	// so local development keeps working without configuration.
+	allowedOrigins := []string{"*"}
+	if origins := os.Getenv("ALLOWED_ORIGINS"); origins != "" {
+		allowedOrigins = strings.Split(origins, ",")
+		for i := range allowedOrigins {
+			allowedOrigins[i] = strings.TrimSpace(allowedOrigins[i])
+		}
+	}
+
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		ExposedHeaders:   []string{"Link"},

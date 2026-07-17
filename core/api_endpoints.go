@@ -133,7 +133,6 @@ func RegisterRoutes(r chi.Router) {
 			r.Get("/dashboard/widgets", dashboard.GETAvailableWidgets)
 			r.Get("/dashboard/widget-data", dashboard.GETWidgetData)
 			r.Post("/dashboard/init", dashboard.POSTInitializeDashboard)
-			r.Post("/dashboard/setup", dashboard.POSTCreateTables)
 		})
 
 		/* ----------- ANALYTICS ----------- */

@@ -24,6 +24,9 @@ const (
 	AccessTokenDuration  = 30 * 24 * time.Hour
 	RefreshTokenDuration = 60 * 24 * time.Hour
 	TokenResetDuration   = 1 * time.Hour
+
+	// MinPasswordLength is the minimum accepted password length
+	MinPasswordLength = 6
 )
 
 type AuthService struct {
