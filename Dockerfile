@@ -50,6 +50,9 @@ WORKDIR /app
 # Copy the binary from backend builder
 COPY --from=backend-builder /app/budget-buddy .
 
+# Copy migrations so MIGRATE_ON_STARTUP can apply them at boot
+COPY --from=backend-builder /app/backend/migrations ./backend/migrations
+
 # Copy frontend dist folder
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 

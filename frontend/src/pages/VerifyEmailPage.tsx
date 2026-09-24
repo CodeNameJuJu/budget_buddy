@@ -39,16 +39,11 @@ export default function VerifyEmailPage() {
 
   return (
     <div className={cn(
-      "flex items-center justify-center min-h-screen p-6",
-      theme === "light"
-        ? "bg-gradient-to-br from-[#F6F4EF] via-[#E8DCC5] to-[#F6F4EF]"
-        : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
+      "app-backdrop flex items-center justify-center min-h-screen p-6"
     )}>
       <div className={cn(
         "backdrop-blur-md rounded-2xl shadow-xl border p-8 max-w-md w-full",
-        theme === "light"
-          ? "bg-white/90 border-[#E6E0D6]/30"
-          : "bg-[#201E1B]/90 border-[#38352F]/30"
+        "glass-strong"
       )}>
         {status === 'loading' && (
           <div className="text-center">

@@ -31,7 +31,7 @@ export default function TutorialBubble({
   const { theme } = useTheme()
 
   return (
-    <Card className={cn("w-full max-w-2xl mx-auto shadow-2xl backdrop-blur-md", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/95" : "border-[#C9A24A]/50 bg-[#201E1B]/95")}>
+    <Card className={cn("w-full max-w-2xl mx-auto shadow-2xl backdrop-blur-md", "glass-strong border-[#D9B44A]/50 dark:border-[#C9A24A]/50")}>
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <h3 className={cn("font-semibold text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{title}</h3>

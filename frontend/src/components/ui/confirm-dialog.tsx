@@ -41,10 +41,7 @@ export function ConfirmDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(
-        "sm:max-w-[425px]",
-        theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
-      )}>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className={cn(theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             {title}

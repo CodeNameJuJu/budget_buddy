@@ -168,8 +168,8 @@ export default function AlertsWidget({ accountId, size }: AlertsWidgetProps) {
               key={alert.id}
               className={cn("p-3 rounded-lg border",
                 alert.is_read
-                  ? (theme === "light" ? "bg-[#E8DCC5]/30 border-[#E6E0D6]/50" : "bg-[#201E1B]/30 border-[#38352F]/50")
-                  : (theme === "light" ? "bg-[#E8DCC5]/60 border-[#E6E0D6]" : "bg-[#201E1B]/60 border-[#38352F]")
+                  ? ("glass-card")
+                  : ("glass-card")
               )}
             >
               <div className="flex items-start gap-3">

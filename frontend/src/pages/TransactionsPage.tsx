@@ -271,7 +271,7 @@ export default function TransactionsPage() {
           Expenses
         </Button>
         <select
-          className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
+          className={cn("flex mobile-button rounded-md border px-3 py-1 mobile-text shadow-sm", "glass-input")}
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
@@ -308,7 +308,7 @@ export default function TransactionsPage() {
                 <div className="space-y-2">
                   <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
                   <select
-                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", "glass-input")}
                     value={form.type}
                     onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
                   >
@@ -329,7 +329,7 @@ export default function TransactionsPage() {
                 <div className="space-y-2">
                   <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Account Type</label>
                   <select
-                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", "glass-input")}
                     value={form.account_type}
                     onChange={(e) => setForm({ ...form, account_type: e.target.value as "checking" | "savings" })}
                   >
@@ -349,7 +349,7 @@ export default function TransactionsPage() {
                 <div className="space-y-2">
                   <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
                   <select
-                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
+                    className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", "glass-input")}
                     value={form.category_id}
                     onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                   >
@@ -367,7 +367,7 @@ export default function TransactionsPage() {
                   <div className="space-y-2">
                     <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Budget</label>
                     <select
-                      className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
+                      className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", "glass-input")}
                       value={form.budget_id}
                       onChange={(e) => handleBudgetChange(e.target.value)}
                     >

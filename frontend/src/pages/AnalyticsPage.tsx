@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
             return (
               <Card key={card.label} className={cn(
                 "border",
-                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+                "glass-card"
               )}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -153,9 +153,7 @@ export default function AnalyticsPage() {
       {financialHealth && (
         <Card className={cn(
           "border hover:transition-all duration-200",
-          theme === "light"
-            ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-            : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
+          "glass-card glass-hover"
         )}>
           <CardHeader>
             <CardTitle className={cn(
@@ -249,9 +247,7 @@ export default function AnalyticsPage() {
               onChange={(e) => setSelectedPeriod(e.target.value)}
               className={cn(
                 "px-3 py-1 rounded-md border text-sm",
-                theme === "light"
-                  ? "bg-white border-[#E6E0D6] text-[#1F2A24]"
-                  : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6]"
+                "glass-input"
               )}
             >
               <option value="current_cycle">Current cycle</option>

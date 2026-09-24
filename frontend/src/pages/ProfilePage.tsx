@@ -246,9 +246,7 @@ export default function ProfilePage() {
 
       <div className={cn(
         "backdrop-blur-md rounded-2xl shadow-xl border p-4 xs:p-6 mb-4 xs:mb-6 w-full",
-        theme === "light"
-          ? "bg-[#E8DCC5]/90 border-[#E6E0D6]/30"
-          : "bg-[#201E1B]/90 border-[#38352F]/30"
+        "glass-strong"
       )}>
         <div className="flex items-center justify-between mb-4 xs:mb-6 gap-3">
           <h2 className={cn(
@@ -293,7 +291,7 @@ export default function ProfilePage() {
           <div className="space-y-3 xs:space-y-4">
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
@@ -308,16 +306,14 @@ export default function ProfilePage() {
                 onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
                 className={cn(
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                  theme === "light"
-                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#6BAF92]"
-                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#6BAF92]"
+                  "glass-input"
                 )}
               />
             </div>
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
@@ -332,16 +328,14 @@ export default function ProfilePage() {
                 onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
                 className={cn(
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                  theme === "light"
-                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
+                  "glass-input"
                 )}
               />
             </div>
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
@@ -356,16 +350,14 @@ export default function ProfilePage() {
                 onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
                 className={cn(
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                  theme === "light"
-                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
+                  "glass-input"
                 )}
               />
             </div>
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
@@ -379,9 +371,7 @@ export default function ProfilePage() {
                 onChange={(e) => setEditForm({ ...editForm, currency: e.target.value })}
                 className={cn(
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                  theme === "light"
-                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
+                  "glass-input"
                 )}
               >
                 {CURRENCY_OPTIONS.map((opt) => (
@@ -394,7 +384,7 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
@@ -408,9 +398,7 @@ export default function ProfilePage() {
                 onChange={(e) => setEditForm({ ...editForm, timezone: e.target.value })}
                 className={cn(
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                  theme === "light"
-                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
+                  "glass-input"
                 )}
               >
                 {TIMEZONE_OPTIONS.map((opt) => (
@@ -423,7 +411,7 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-2 flex items-center gap-2",
@@ -440,9 +428,7 @@ export default function ProfilePage() {
                 onChange={(e) => setEditForm({ ...editForm, billing_cycle_day: parseInt(e.target.value) || 1 })}
                 className={cn(
                   "w-full border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                  theme === "light"
-                    ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                    : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
+                  "glass-input"
                 )}
               />
               <p className={cn(
@@ -471,9 +457,7 @@ export default function ProfilePage() {
                 variant="outline"
                 className={cn(
                   "border transition-colors text-sm xs:text-base px-4 xs:px-6",
-                  theme === "light"
-                    ? "border-[#E6E0D6] text-[#6C7A73] hover:bg-[#E8DCC5]"
-                    : "border-[#38352F] text-[#ABA9A2] hover:bg-[#201E1B]"
+                  "glass-input text-[#6C7A73]"
                 )}
               >
                 Cancel
@@ -484,7 +468,7 @@ export default function ProfilePage() {
           <div className="space-y-3 xs:space-y-4">
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -501,7 +485,7 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -520,7 +504,7 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -539,7 +523,7 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -558,7 +542,7 @@ export default function ProfilePage() {
 
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -577,7 +561,7 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -598,7 +582,7 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -633,7 +617,7 @@ export default function ProfilePage() {
             {showVerification && (
               <div className={cn(
                 "rounded-xl p-3 xs:p-4",
-                theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+                "glass-card"
               )}>
                 <label className={cn(
                   "block text-sm font-medium mb-2",
@@ -649,9 +633,7 @@ export default function ProfilePage() {
                     placeholder="Enter verification token"
                     className={cn(
                       "flex-1 border rounded-lg px-3 xs:px-4 py-2 text-sm xs:text-base focus:outline-none",
-                      theme === "light"
-                        ? "bg-white border-[#E6E0D6] text-[#1F2A24] focus:border-[#D9B44A]"
-                        : "bg-[#201E1B] border-[#38352F] text-[#EDEBE6] focus:border-[#C9A24A]"
+                      "glass-input"
                     )}
                   />
                   <Button
@@ -671,7 +653,7 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",
@@ -690,7 +672,7 @@ export default function ProfilePage() {
             
             <div className={cn(
               "rounded-xl p-3 xs:p-4",
-              theme === "light" ? "bg-white/50" : "bg-[#141311]/50"
+              "glass-card"
             )}>
               <label className={cn(
                 "block text-sm font-medium mb-1 flex items-center gap-2",

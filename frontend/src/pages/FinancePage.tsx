@@ -156,6 +156,7 @@ export default function FinancePage() {
       setCount(response.count)
     } catch (error) {
       console.error("Failed to load data", error)
+      setMessage({ type: "error", text: error instanceof Error ? `Could not load transactions: ${error.message}` : "Could not load transactions" })
     }
   }
 
@@ -515,7 +516,7 @@ export default function FinancePage() {
 
           {/* Add/Edit category form */}
           {showCategoryForm && (
-            <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+            <Card className={cn("border", "glass-card")}>
               <CardHeader>
                 <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                   {editingCategory ? "Edit category" : "New category"}
@@ -529,7 +530,7 @@ export default function FinancePage() {
                   </div>
                   <div className="space-y-2">
                     <label className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
-                    <select className={cn("flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={categoryForm.type} onChange={(e) => setCategoryForm({ ...categoryForm, type: e.target.value as "income" | "expense" })}>
+                    <select className={cn("flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm", "glass-input")} value={categoryForm.type} onChange={(e) => setCategoryForm({ ...categoryForm, type: e.target.value as "income" | "expense" })}>
                       <option value="expense">Expense</option>
                       <option value="income">Income</option>
                     </select>
@@ -567,7 +568,7 @@ export default function FinancePage() {
             <div className="grid gap-6 lg:grid-cols-2">
               {/* Income categories */}
               {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
-                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+                <Card className={cn("border", "glass-card")}>
                   <CardHeader>
                     <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                       <Badge variant="default" className="text-xs">Income</Badge>
@@ -595,7 +596,7 @@ export default function FinancePage() {
 
               {/* Expense categories */}
               {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
-                <Card className={cn("border", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+                <Card className={cn("border", "glass-card")}>
                   <CardHeader>
                     <CardTitle className={cn("text-base flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
                       <Badge variant="destructive" className="text-xs">Expense</Badge>
@@ -630,7 +631,7 @@ export default function FinancePage() {
         <div className="space-y-4 sm:space-y-6">
           {/* Add budget form */}
           {showBudgetForm && (
-            <Card className={cn("border hover:transition-all duration-200", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70")}>
+            <Card className={cn("border hover:transition-all duration-200", "glass-card glass-hover")}>
               <CardHeader>
                 <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>New budget</CardTitle>
               </CardHeader>
@@ -691,7 +692,7 @@ export default function FinancePage() {
                 const remaining = budget.remaining ? parseFloat(budget.remaining) : parseFloat(budget.amount)
 
                 return (
-                  <Card key={budget.id} className={cn("border hover:transition-all duration-200 group cursor-pointer", theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70" : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70")}>
+                  <Card key={budget.id} className={cn("border hover:transition-all duration-200 group cursor-pointer", "glass-card glass-hover")}>
                     <CardHeader className="flex flex-row items-start justify-between pb-2 cursor-pointer" onClick={() => handleBudgetClick(budget)}>
                       <div className="flex items-center gap-2">
                         <div className={cn("p-2 rounded-lg text-white transition-colors duration-200", remaining >= 0 ? (theme === "light" ? "bg-[#6BAF92]" : "bg-[#6BAF92]") : percentage >= 90 ? "bg-red-500" : theme === "light" ? "bg-[#C97C5D]" : "bg-[#B46B52]")}>
@@ -729,7 +730,7 @@ export default function FinancePage() {
                         <span className={cn(theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>{formatCurrency(spent)} spent</span>
                         <span className="font-medium">{formatCurrency(budget.amount)}</span>
                       </div>
-                      <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}>
+                      <div className={cn("h-4 rounded-full overflow-hidden", "progress-track")}>
                         <div className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColour(percentage)} progress-bar-fill`} style={{ width: `${percentage}%` }} />
                       </div>
                       <div className="flex items-center justify-between">
@@ -791,7 +792,7 @@ export default function FinancePage() {
             <Button variant={filterTransactionType === "" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("")}>All</Button>
             <Button variant={filterTransactionType === "income" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("income")}>Income</Button>
             <Button variant={filterTransactionType === "expense" ? "default" : "outline"} size="sm" onClick={() => setFilterTransactionType("expense")}>Expenses</Button>
-            <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm flex-1 sm:flex-none", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
+            <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm flex-1 sm:flex-none", "glass-input")} value={filterTransactionCategory} onChange={(e) => setFilterTransactionCategory(e.target.value)}>
               <option value="">All Categories</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -812,7 +813,7 @@ export default function FinancePage() {
                     </div>
                     <div className="space-y-2">
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Type</label>
-                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", "glass-input")} value={transactionForm.type} onChange={(e) => setTransactionForm({ ...transactionForm, type: e.target.value as "income" | "expense" })}>
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                       </select>
@@ -823,7 +824,7 @@ export default function FinancePage() {
                     </div>
                     <div className="space-y-2">
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Account Type</label>
-                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.account_type} onChange={(e) => setTransactionForm({ ...transactionForm, account_type: e.target.value as "checking" | "savings" })}>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", "glass-input")} value={transactionForm.account_type} onChange={(e) => setTransactionForm({ ...transactionForm, account_type: e.target.value as "checking" | "savings" })}>
                         <option value="checking">Checking Account</option>
                         <option value="savings">Savings Account</option>
                       </select>
@@ -834,7 +835,7 @@ export default function FinancePage() {
                     </div>
                     <div className="space-y-2">
                       <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Category</label>
-                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
+                      <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", "glass-input")} value={transactionForm.category_id} onChange={(e) => setTransactionForm({ ...transactionForm, category_id: e.target.value })}>
                         <option value="">No category</option>
                         {categories.filter((c) => c.type === transactionForm.type).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
@@ -842,7 +843,7 @@ export default function FinancePage() {
                     {transactionForm.type === "expense" && (
                       <div className="space-y-2">
                         <label className={cn("text-xs sm:text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Budget</label>
-                        <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")} value={transactionForm.budget_id} onChange={(e) => handleTransactionBudgetChange(e.target.value)}>
+                        <select className={cn("flex rounded-md border px-3 py-1 text-sm shadow-sm w-full", "glass-input")} value={transactionForm.budget_id} onChange={(e) => handleTransactionBudgetChange(e.target.value)}>
                           <option value="">{transactionForm.category_id ? "Match by category" : "No budget"}</option>
                           {budgets.map((b) => <option key={b.id} value={b.id}>{b.name}{b.category ? ` (${b.category.name})` : ""}</option>)}
                         </select>

@@ -76,7 +76,7 @@ export default function QuickAddTransaction({ onTransactionAdded }: QuickAddTran
   }
 
   return (
-    <Card className={cn("border-2 border-dashed", theme === "light" ? "border-[#D9B44A]/50 bg-[#E8DCC5]/30" : "border-[#C9A24A]/50 bg-[#201E1B]/30")}>
+    <Card className={cn("border-2 border-dashed", "glass-card border-[#D9B44A]/50 dark:border-[#C9A24A]/50")}>
       <CardContent className="p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-between mb-4">

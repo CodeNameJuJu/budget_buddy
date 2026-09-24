@@ -129,7 +129,7 @@ export default function UserGuidePage() {
       </div>
 
       {/* Getting Started Section */}
-      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+      <Card className={cn("glass-card")}>
         <CardHeader>
           <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <CheckCircle className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
@@ -186,7 +186,7 @@ export default function UserGuidePage() {
       </Card>
 
       {/* Navigation Guide */}
-      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+      <Card className={cn("glass-card")}>
         <CardHeader>
           <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <LayoutDashboard className={cn("h-5 w-5", theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")} />
@@ -203,9 +203,7 @@ export default function UserGuidePage() {
                 key={item.label}
                 className={cn(
                   "flex flex-col sm:flex-row items-center gap-2 p-3 rounded-lg border transition-colors text-center sm:text-left",
-                  theme === "light"
-                    ? "bg-white/60 border-[#E6E0D6]/50 hover:border-[#6BAF92]"
-                    : "bg-[#201E1B]/60 border-[#38352F]/50 hover:border-[#88B39B]"
+                  "glass-card glass-hover"
                 )}
               >
                 <span className={cn(theme === "light" ? "text-[#6BAF92]" : "text-[#88B39B]")}>
@@ -228,7 +226,7 @@ export default function UserGuidePage() {
         {steps.map((step, index) => (
           <Card key={index} className={cn(
             "transition-all duration-200 hover:shadow-lg",
-            theme === "light" ? "bg-white/60 border-[#E6E0D6]" : "bg-[#201E1B]/60 border-[#38352F]"
+            "glass-card"
           )}>
             <CardHeader>
               <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
@@ -268,7 +266,7 @@ export default function UserGuidePage() {
       </div>
 
       {/* Tips Section */}
-      <Card className={cn(theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+      <Card className={cn("glass-card")}>
         <CardHeader>
           <CardTitle className={cn("flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
             <TrendingUp className={cn("h-5 w-5", theme === "light" ? "text-[#D9B44A]" : "text-[#C9A24A]")} />

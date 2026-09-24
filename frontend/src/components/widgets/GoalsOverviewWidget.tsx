@@ -54,7 +54,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
     return (
       <Card className={cn(
         "h-full border",
-        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+        "glass-card"
       )}>
         <CardHeader className="pb-2">
           <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
@@ -67,10 +67,10 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className={cn("animate-pulse h-4 w-24 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
-                  <div className={cn("animate-pulse h-4 w-12 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
+                  <div className={cn("animate-pulse h-4 w-24 rounded", "progress-track")}></div>
+                  <div className={cn("animate-pulse h-4 w-12 rounded", "progress-track")}></div>
                 </div>
-                <div className={cn("animate-pulse h-2 w-full rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
+                <div className={cn("animate-pulse h-2 w-full rounded", "progress-track")}></div>
               </div>
             ))}
           </div>
@@ -83,7 +83,7 @@ export default function GoalsOverviewWidget({ accountId, size }: GoalsOverviewWi
     return (
       <Card className={cn(
         "h-full border",
-        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+        "glass-card"
       )}>
         <CardHeader className="pb-2">
           <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>

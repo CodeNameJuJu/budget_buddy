@@ -143,7 +143,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     return (
       <Card className={cn(
         "h-full border",
-        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+        "glass-card"
       )}>
         <CardHeader className="pb-2">
           <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
@@ -156,10 +156,10 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className={cn("animate-pulse h-4 w-20 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
-                  <div className={cn("animate-pulse h-4 w-12 rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
+                  <div className={cn("animate-pulse h-4 w-20 rounded", "progress-track")}></div>
+                  <div className={cn("animate-pulse h-4 w-12 rounded", "progress-track")}></div>
                 </div>
-                <div className={cn("animate-pulse h-2 w-full rounded", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}></div>
+                <div className={cn("animate-pulse h-2 w-full rounded", "progress-track")}></div>
               </div>
             ))}
           </div>
@@ -172,7 +172,7 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
     return (
       <Card className={cn(
         "h-full border",
-        theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+        "glass-card"
       )}>
         <CardHeader className="pb-2">
           <CardTitle className={cn("text-sm font-medium flex items-center gap-2", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
@@ -294,9 +294,9 @@ export default function BudgetProgressWidget({ accountId, size }: BudgetProgress
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <Card className={cn(
             "w-full max-w-2xl max-h-[80vh] border",
-            theme === "light" ? "bg-[#E8DCC5] border-[#E6E0D6]" : "bg-[#201E1B] border-[#38352F]"
+            "glass-strong"
           )}>
-            <CardHeader className={cn("border-b", theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]")}>
+            <CardHeader className={cn("border-b", "glass-divider")}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Button variant="ghost" size="icon" onClick={closeModal} className={cn(theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]")}>

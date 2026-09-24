@@ -209,10 +209,7 @@ export default function Layout() {
 
   return (
     <div className={cn(
-      "flex h-screen relative mobile-safe-area transition-colors duration-300",
-      theme === "light" 
-        ? "bg-[#F6F4EF]" 
-        : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
+      "app-backdrop flex h-screen relative mobile-safe-area transition-colors duration-300"
     )}>
       {/* Mobile overlay with backdrop blur */}
       {sidebarOpen && (
@@ -234,19 +231,21 @@ export default function Layout() {
       <aside
         ref={sidebarRef}
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-72 xs:w-80 backdrop-blur-xl border-r shadow-2xl transform transition-all duration-300 ease-out",
-          sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          theme === "light"
-            ? "bg-[#E8DCC5] border-[#E6E0D6]"
-            : "bg-[#201E1B]/95 border-[#38352F]",
-          "lg:w-64 lg:shadow-xl"
+          // Floating glass panel: inset from the viewport edges with rounded corners
+          // on every side, both as the mobile drawer and the desktop sidebar
+          "fixed lg:sticky top-3 bottom-3 left-3 lg:top-4 lg:bottom-auto lg:left-auto lg:ml-4 lg:my-4 lg:h-[calc(100vh-2rem)] lg:flex-shrink-0 z-50 w-72 xs:w-80 rounded-3xl overflow-hidden border backdrop-blur-xl transform transition-all duration-300 ease-out",
+          // Keep the original sidebar surface colours rather than the translucent glass
+          theme === "light" ? "bg-[#E8DCC5] border-[#E6E0D6]" : "bg-[#201E1B]/95 border-[#38352F]",
+          "shadow-[0_18px_50px_rgb(var(--glass-shadow)/calc(var(--glass-shadow-alpha)*2))]",
+          sidebarOpen && !isClosing ? "translate-x-0" : "-translate-x-[calc(100%+1rem)] lg:translate-x-0",
+          "lg:w-64"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
           <div className={cn(
             "p-4 xs:p-5 lg:p-6 border-b",
-            theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
+            "glass-divider"
           )}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 xs:gap-4">
@@ -302,19 +301,17 @@ export default function Layout() {
                       "group flex items-center justify-start gap-2 xs:gap-3 px-2 xs:px-3 py-2 xs:py-2.5 rounded-xl text-sm font-medium transition-all duration-200 mobile-app-button nav-item-mobile",
                       isActive
                         ? theme === "light"
-                          ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
-                          : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-lg transform scale-[1.02]"
+                          ? "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_6px_18px_rgba(94,156,126,0.4)] transform scale-[1.02]"
+                          : "bg-gradient-to-r from-[#6BAF92] to-[#5E9C7E] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_6px_18px_rgba(94,156,126,0.4)] transform scale-[1.02]"
                         : theme === "light"
-                          ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24] hover:shadow-md hover:transform hover:translate-x-1"
-                          : "text-[#ABA9A2] hover:bg-[#C9A24A] hover:text-[#E8DCC5] hover:shadow-md hover:transform hover:translate-x-1"
+                          ? "text-[#6C7A73] hover:bg-white/50 hover:text-[#1F2A24] hover:shadow-sm hover:transform hover:translate-x-1"
+                          : "text-[#ABA9A2] hover:bg-white/10 hover:text-[#EDEBE6] hover:shadow-sm hover:transform hover:translate-x-1"
                     )
                   }
                 >
                   <div className={cn(
                     "p-1.5 rounded-lg transition-all duration-200 flex-shrink-0 relative",
-                    theme === "light"
-                      ? "group-hover:bg-[#D9B44A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
-                      : "group-hover:bg-[#C9A24A] group-hover:scale-110 group-[.active]:bg-[#6BAF92]/50"
+                    "group-hover:scale-110 group-[.active]:bg-white/20"
                   )}>
                     <item.icon className="h-4 w-5 xs:h-5 xs:w-5" />
                     {item.to === "/alerts" && unreadAlertCount > 0 && (
@@ -332,15 +329,13 @@ export default function Layout() {
           {/* Sidebar Footer */}
           <div className={cn(
             "p-4 xs:p-5 lg:p-6 border-t relative",
-            theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
+            "glass-divider"
           )} ref={profileDropdownRef}>
             <button
               onClick={handleProfileClick}
               className={cn(
-                "group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium transition-all duration-200 mobile-app-button shadow-lg hover:shadow-xl border",
-                theme === "light"
-                  ? "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#6C7A73] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#1F2A24] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
-                  : "bg-gradient-to-r from-[#6BAF92]/20 to-[#5E9C7E]/20 text-[#ABA9A2] hover:from-[#6BAF92]/30 hover:to-[#5E9C7E]/30 hover:text-[#E8DCC5] border-[#6BAF92]/30 hover:border-[#6BAF92]/50"
+                "glass-card glass-hover group flex items-center gap-3 xs:gap-4 w-full px-3 xs:px-4 py-3 xs:py-3.5 rounded-xl text-sm xs:text-base font-medium mobile-app-button",
+                theme === "light" ? "text-[#6C7A73] hover:text-[#1F2A24]" : "text-[#ABA9A2] hover:text-[#EDEBE6]"
               )}
             >
               {user?.profile_picture_url ? (
@@ -372,24 +367,21 @@ export default function Layout() {
             {/* Dropdown Menu */}
             {profileDropdownOpen && (
               <div className={cn(
-                "absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 backdrop-blur-xl rounded-xl shadow-2xl border overflow-hidden z-50",
-                theme === "light"
-                  ? "bg-[#E8DCC5]/95 border-[#E6E0D6]"
-                  : "bg-[#201E1B]/95 border-[#38352F]"
+                "glass-strong absolute bottom-full left-4 xs:left-5 lg:left-6 right-4 xs:right-5 lg:right-6 mb-2 rounded-xl overflow-hidden z-50"
               )}>
                 <button
                   onClick={handleViewProfile}
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200",
                     theme === "light"
-                      ? "text-[#6C7A73] hover:bg-[#D9B44A] hover:text-[#1F2A24]"
-                      : "text-[#ABA9A2] hover:bg-[#C9A24A] hover:text-[#E8DCC5]"
+                      ? "text-[#6C7A73] hover:bg-white/50 hover:text-[#1F2A24]"
+                      : "text-[#ABA9A2] hover:bg-white/10 hover:text-[#EDEBE6]"
                   )}
                 >
                   <User className="h-4 w-4" />
                   <span className="font-medium">View Profile</span>
                 </button>
-                <div className={cn("border-t", theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]")} />
+                <div className={cn("border-t", "glass-divider")} />
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
@@ -420,10 +412,7 @@ export default function Layout() {
       <main className="flex-1 overflow-auto mobile-scroll">
         {/* Mobile header with enhanced design */}
         <div className={cn(
-          "lg:hidden sticky top-0 z-30 backdrop-blur-md border-b responsive-padding transition-colors duration-300",
-          theme === "light"
-            ? "bg-[#E8DCC5]/90 border-[#E6E0D6]"
-            : "bg-[#201E1B]/90 border-[#38352F]"
+          "glass-strong lg:hidden sticky top-0 z-30 border-x-0 border-t-0 rounded-none responsive-padding transition-colors duration-300"
         )}>
           <div className="flex items-center justify-between">
             <button
@@ -485,9 +474,7 @@ export default function Layout() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className={cn(
             "w-full max-w-2xl max-h-[85vh] overflow-auto rounded-2xl shadow-2xl relative",
-            theme === "light" 
-              ? "bg-[#E8DCC5] border border-[#E6E0D6]" 
-              : "bg-[#201E1B] border border-[#38352F]"
+            "glass-strong"
           )}>
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
@@ -526,7 +513,7 @@ export default function Layout() {
                 {/* New Features */}
                 <div className={cn(
                   "rounded-xl p-4 border",
-                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#141311]/50 border-[#38352F]"
+                  "glass-card"
                 )}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn("p-1.5 rounded-md", "bg-[#6BAF92]/20")}>
@@ -585,7 +572,7 @@ export default function Layout() {
                 {/* Improvements */}
                 <div className={cn(
                   "rounded-xl p-4 border",
-                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#141311]/50 border-[#38352F]"
+                  "glass-card"
                 )}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn("p-1.5 rounded-md", "bg-[#D9B44A]/20")}>
@@ -636,7 +623,7 @@ export default function Layout() {
                 {/* Bug Fixes */}
                 <div className={cn(
                   "rounded-xl p-4 border",
-                  theme === "light" ? "bg-white/50 border-[#E6E0D6]" : "bg-[#141311]/50 border-[#38352F]"
+                  "glass-card"
                 )}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className={cn("p-1.5 rounded-md", "bg-[#6BAF92]/20")}>

@@ -286,7 +286,7 @@ export default function AccountMerge() {
             {pendingTokens.map((token) => (
               <div
                 key={token.id}
-                className={cn("flex items-center justify-between p-4 border rounded-lg", theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]")}
+                className={cn("flex items-center justify-between p-4 border rounded-lg", "glass-divider")}
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">

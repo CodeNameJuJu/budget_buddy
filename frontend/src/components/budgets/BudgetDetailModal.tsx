@@ -40,11 +40,12 @@ export default function BudgetDetailModal({ budget, onClose, onChanged }: Budget
   const [triggeringId, setTriggeringId] = useState<number | "all" | null>(null)
   const [recurringToDelete, setRecurringToDelete] = useState<number | null>(null)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   const isLight = theme === "light"
   const mutedText = isLight ? "text-[#6C7A73]" : "text-[#ABA9A2]"
   const strongText = isLight ? "text-[#1F2A24]" : "text-[#EDEBE6]"
-  const border = isLight ? "border-[#E6E0D6]" : "border-[#38352F]"
+  const border = "glass-divider"
   const dueCount = recurring.filter((r) => r.is_active && !r.triggered_this_period).length
 
   useEffect(() => {
@@ -53,19 +54,19 @@ export default function BudgetDetailModal({ budget, onClose, onChanged }: Budget
 
   async function loadAll() {
     setLoading(true)
-    try {
-      const [txRes, recRes] = await Promise.all([
-        budgetsApi.transactions(budget.id),
-        recurringApi.list({ budget_id: budget.id }),
-      ])
-      setTransactions(txRes.data || [])
-      setRecurring(recRes.data || [])
-    } catch {
-      setTransactions([])
-      setRecurring([])
-    } finally {
-      setLoading(false)
+    setLoadError(null)
+    // Load independently so one failing endpoint does not blank the other tab
+    const [txRes, recRes] = await Promise.allSettled([
+      budgetsApi.transactions(budget.id),
+      recurringApi.list({ budget_id: budget.id }),
+    ])
+    setTransactions(txRes.status === "fulfilled" ? txRes.value.data || [] : [])
+    setRecurring(recRes.status === "fulfilled" ? recRes.value.data || [] : [])
+    const failed = [txRes, recRes].find((r) => r.status === "rejected")
+    if (failed && failed.status === "rejected") {
+      setLoadError(failed.reason instanceof Error ? failed.reason.message : "Could not load budget details")
     }
+    setLoading(false)
   }
 
   function showMessage(type: "success" | "error", text: string) {
@@ -172,6 +173,9 @@ export default function BudgetDetailModal({ budget, onClose, onChanged }: Budget
   }
 
   function renderTransactions() {
+    if (loadError) {
+      return <p className="text-center py-8 text-red-400">Could not load transactions: {loadError}</p>
+    }
     if (transactions.length === 0) {
       return <p className={cn("text-center py-8", mutedText)}>No transactions found for this budget period.</p>
     }
@@ -310,7 +314,7 @@ export default function BudgetDetailModal({ budget, onClose, onChanged }: Budget
     <>
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4" onClick={onClose}>
       <div
-        className={cn("w-full max-w-2xl max-h-[85vh] sm:max-h-[80vh] overflow-auto rounded-lg p-4 sm:p-6", isLight ? "bg-[#E8DCC5]" : "bg-[#201E1B]")}
+        className={cn("w-full max-w-2xl max-h-[85vh] sm:max-h-[80vh] overflow-auto rounded-lg p-4 sm:p-6", "glass-strong")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">

@@ -296,7 +296,7 @@ export default function CreditsPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
@@ -316,7 +316,7 @@ export default function CreditsPage() {
 
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
@@ -336,7 +336,7 @@ export default function CreditsPage() {
 
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className={cn("text-sm font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
@@ -359,7 +359,7 @@ export default function CreditsPage() {
       {forecast && parseFloat(forecast.total_monthly) > 0 && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className={cn(
@@ -463,7 +463,7 @@ export default function CreditsPage() {
       {showPotForm && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader>
             <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>
@@ -644,7 +644,7 @@ export default function CreditsPage() {
             return (
               <Card key={pot.id} className={cn(
                 "border",
-                theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+                "glass-card"
               )}>
                 <CardHeader className="flex flex-row items-start justify-between pb-2">
                   <div className="flex items-center gap-2">

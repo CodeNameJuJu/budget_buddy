@@ -214,9 +214,7 @@ export default function BudgetsPage() {
       {showEditForm && editingBudget && (
         <Card className={cn(
           "border hover:transition-all duration-200",
-          theme === "light"
-            ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-            : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
+          "glass-card glass-hover"
         )}>
           <CardHeader>
             <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>Edit budget</CardTitle>
@@ -306,9 +304,7 @@ export default function BudgetsPage() {
       {showForm && (
         <Card className={cn(
           "border hover:transition-all duration-200",
-          theme === "light"
-            ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-            : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
+          "glass-card glass-hover"
         )}>
           <CardHeader>
             <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>New budget</CardTitle>
@@ -418,9 +414,7 @@ export default function BudgetsPage() {
                 key={budget.id} 
                 className={cn(
                   "border hover:transition-all duration-200 group cursor-pointer",
-                  theme === "light"
-                    ? "bg-[#E8DCC5]/50 border-[#E6E0D6] hover:bg-[#E8DCC5]/70"
-                    : "bg-[#201E1B]/50 border-[#38352F] hover:bg-[#201E1B]/70"
+                  "glass-card glass-hover"
                 )}
               >
                 <CardHeader 
@@ -484,7 +478,7 @@ export default function BudgetsPage() {
                       {formatCurrency(budget.amount)}
                     </span>
                   </div>
-                  <div className={cn("h-4 rounded-full overflow-hidden", theme === "light" ? "bg-[#E6E0D6]" : "bg-[#38352F]")}>
+                  <div className={cn("h-4 rounded-full overflow-hidden", "progress-track")}>
                     <div
                       className={`h-full rounded-full transition-all duration-700 ease-out ${getProgressColour(percentage)} progress-bar-fill`}
                       style={{ width: `${percentage}%` }}

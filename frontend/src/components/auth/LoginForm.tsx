@@ -76,12 +76,9 @@ export const LoginForm: React.FC = () => {
 
   return (
     <div className={cn(
-      "min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area transition-colors duration-300",
-      theme === "light" 
-        ? "bg-[#F6F4EF]" 
-        : "bg-gradient-to-br from-[#141311] via-[#201E1B] to-[#141311]"
+      "app-backdrop min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mobile-safe-area transition-colors duration-300"
     )}>
-      <div className="max-w-md w-full space-y-8">
+      <div className="glass-card max-w-md w-full space-y-8 p-6 sm:p-8">
         <div>
           <div className={cn(
             "mx-auto h-12 w-12 flex items-center justify-center rounded-full text-white shadow-lg transition-transform duration-300 hover:scale-110",
@@ -130,10 +127,8 @@ export const LoginForm: React.FC = () => {
                 required
                 className={cn(
                   "mt-1 appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                  errors.email ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]",
-                  theme === "light"
-                    ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
-                    : "bg-[#201E1B]/80 text-[#EDEBE6] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                  errors.email ? 'border-red-400' : "glass-divider",
+                  "glass-input"
                 )}
                 placeholder="Enter your email"
                 value={formData.email}
@@ -160,10 +155,8 @@ export const LoginForm: React.FC = () => {
                   required
                   className={cn(
                     "appearance-none relative block w-full px-3 py-2 pr-10 border rounded-lg placeholder-slate-400 focus:outline-none focus:ring-2 sm:text-sm transition-colors duration-200",
-                    errors.password ? 'border-red-400' : theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]",
-                    theme === "light"
-                      ? "bg-white/80 text-[#1F2A24] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
-                      : "bg-[#201E1B]/80 text-[#EDEBE6] focus:ring-[#6BAF92] focus:border-[#6BAF92]"
+                    errors.password ? 'border-red-400' : "glass-divider",
+                    "glass-input"
                   )}
                   placeholder="Enter your password"
                   value={formData.password}

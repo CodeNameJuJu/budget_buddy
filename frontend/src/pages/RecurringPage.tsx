@@ -23,7 +23,7 @@ export default function RecurringPage() {
   const isLight = theme === "light"
   const mutedText = isLight ? "text-[#6C7A73]" : "text-[#ABA9A2]"
   const strongText = isLight ? "text-[#1F2A24]" : "text-[#EDEBE6]"
-  const border = isLight ? "border-[#E6E0D6]" : "border-[#38352F]"
+  const border = "glass-divider"
 
   const dueItems = recurring.filter((r) => r.is_active && !r.triggered_this_period)
   const dueTotal = dueItems.reduce((sum, r) => sum + parseFloat(r.amount), 0)
@@ -116,7 +116,7 @@ export default function RecurringPage() {
 
   function renderSummaryCard(title: string, value: string, subtitle: string) {
     return (
-      <Card className={cn("border", isLight ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+      <Card className={cn("border", "glass-card")}>
         <CardHeader className="pb-2">
           <CardTitle className={cn("text-sm font-medium", mutedText)}>{title}</CardTitle>
         </CardHeader>
@@ -170,7 +170,7 @@ export default function RecurringPage() {
     if (items.length === 0) return null
     const due = items.filter((r) => r.is_active && !r.triggered_this_period).length
     return (
-      <Card key={budget.id} className={cn("border", isLight ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]")}>
+      <Card key={budget.id} className={cn("border", "glass-card")}>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div>
             <CardTitle className={cn("text-base", strongText)}>{budget.name}</CardTitle>

@@ -141,7 +141,7 @@ export default function CategoryBreakdownWidget({ accountId, size }: CategoryBre
             }}>
               <div className={cn(
                 "absolute inset-4 rounded-full flex items-center justify-center",
-                theme === "light" ? "bg-white" : "bg-[#201E1B]"
+                "glass-strong"
               )}>
                 <div className="text-center">
                   <div className="text-xs text-muted-foreground">Total</div>

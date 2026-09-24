@@ -247,9 +247,7 @@ export default function AlertsPage() {
             onChange={(e) => setAlertType(e.target.value)}
             className={cn(
               "flex h-10 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 flex-1 sm:flex-none sm:w-[140px]",
-              theme === "light"
-                ? "border-[#E6E0D6] bg-white text-[#1F2A24] focus:ring-[#D9B44A]"
-                : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6] focus:ring-[#C9A24A]"
+              "glass-input"
             )}
           >
             <option value="all">All Alerts</option>
@@ -275,7 +273,7 @@ export default function AlertsPage() {
       {showPreferences && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader>
             <CardTitle className={cn("text-base sm:text-lg", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>Alert Preferences</CardTitle>
@@ -284,7 +282,7 @@ export default function AlertsPage() {
             {preferences.map((pref) => (
               <div key={pref.id} className={cn(
                 "flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 border rounded-lg",
-                theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
+                "glass-divider"
               )}>
                 <div className="flex-1">
                   <Label className={cn("font-medium text-sm sm:text-base", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>{getAlertTypeLabel(pref.type)}</Label>
@@ -340,7 +338,7 @@ export default function AlertsPage() {
         {alerts.length === 0 ? (
           <Card className={cn(
             "border",
-            theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+            "glass-card"
           )}>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <BellOff className={cn(

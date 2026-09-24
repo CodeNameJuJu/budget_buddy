@@ -194,7 +194,7 @@ export default function CategoriesPage() {
       {showForm && (
         <Card className={cn(
           "border",
-          theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+          "glass-card"
         )}>
           <CardHeader>
             <CardTitle className={theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]"}>
@@ -217,9 +217,7 @@ export default function CategoriesPage() {
                 <select
                   className={cn(
                     "flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm",
-                    theme === "light"
-                      ? "border-[#E6E0D6] bg-white text-[#1F2A24]"
-                      : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]"
+                    "glass-input"
                   )}
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value as "income" | "expense" })}
@@ -301,7 +299,7 @@ export default function CategoriesPage() {
           {(filterType === "" || filterType === "income") && incomeCategories.length > 0 && (
             <Card className={cn(
               "border",
-              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+              "glass-card"
             )}>
               <CardHeader>
                 <CardTitle className={cn(
@@ -366,7 +364,7 @@ export default function CategoriesPage() {
           {(filterType === "" || filterType === "expense") && expenseCategories.length > 0 && (
             <Card className={cn(
               "border",
-              theme === "light" ? "bg-[#E8DCC5]/50 border-[#E6E0D6]" : "bg-[#201E1B]/50 border-[#38352F]"
+              "glass-card"
             )}>
               <CardHeader>
                 <CardTitle className={cn(
