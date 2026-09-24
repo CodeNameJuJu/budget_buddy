@@ -25,8 +25,12 @@ type Budget struct {
 	Transactions []*Transaction `json:"transactions,omitempty" bun:"rel:has-many,join:id=budget_id"`
 
 	// Computed fields (not stored in DB)
-	Spent     *decimal.Decimal `json:"spent,omitempty" bun:"-"`
-	Remaining *decimal.Decimal `json:"remaining,omitempty" bun:"-"`
+	Spent          *decimal.Decimal `json:"spent,omitempty" bun:"-"`
+	Remaining      *decimal.Decimal `json:"remaining,omitempty" bun:"-"`
+	PeriodStart    *time.Time       `json:"period_start,omitempty" bun:"-"`
+	PeriodEnd      *time.Time       `json:"period_end,omitempty" bun:"-"`
+	RecurringCount int              `json:"recurring_count" bun:"-"` // Active recurring templates on this budget
+	RecurringDue   int              `json:"recurring_due" bun:"-"`   // Templates not yet triggered this period
 
 	Timestamps
 }

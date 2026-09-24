@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react"
-import { Plus, Trash2, PiggyBank, Target, Sparkles, Edit2, X } from "lucide-react"
+import { Plus, Trash2, PiggyBank, Target, Sparkles, Edit2, Repeat } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
-import { budgetsApi, categoriesApi, accountsApi, transactionsApi, type Budget, type Category, type Account, type Transaction } from "@/lib/api"
-import { formatCurrency, formatDate } from "@/lib/utils"
+import { budgetsApi, categoriesApi, accountsApi, type Budget, type Category } from "@/lib/api"
+import BudgetDetailModal from "@/components/budgets/BudgetDetailModal"
+import { formatCurrency } from "@/lib/utils"
 import { useTheme } from "@/contexts/ThemeContext"
 import { cn } from "@/lib/utils"
 
 export default function BudgetsPage() {
   const [accountId, setAccountId] = useState<number | null>(null)
-  const [account, setAccount] = useState<Account | null>(null)
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,8 +19,7 @@ export default function BudgetsPage() {
   const [showEditForm, setShowEditForm] = useState(false)
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
-  const [budgetTransactions, setBudgetTransactions] = useState<Transaction[]>([])
-  const [loadingTransactions, setLoadingTransactions] = useState(false)
+  const [triggeringBudgetId, setTriggeringBudgetId] = useState<number | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [budgetToDelete, setBudgetToDelete] = useState<number | null>(null)
   const { theme } = useTheme()
@@ -58,7 +57,6 @@ export default function BudgetsPage() {
       const response = await accountsApi.getMyAccount()
       if (response.data && response.data.length > 0) {
         setAccountId(response.data[0].id)
-        setAccount(response.data[0])
       }
     } catch (error) {
       console.error("Failed to load user account", error)
@@ -127,69 +125,19 @@ export default function BudgetsPage() {
     }
   }
 
-  function getCurrentPeriodWindow(budget: Budget): { from: string; to: string } {
-    const billingCycleDay = account?.billing_cycle_day || 25
-    const now = new Date()
-    const startDate = new Date(budget.start_date)
-
-    if (budget.period === "weekly") {
-      const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
-      const periodsElapsed = Math.floor(daysElapsed / 7)
-      const periodStart = new Date(startDate)
-      periodStart.setDate(startDate.getDate() + periodsElapsed * 7)
-      const periodEnd = new Date(periodStart)
-      periodEnd.setDate(periodStart.getDate() + 7)
-      return {
-        from: periodStart.toISOString().split("T")[0],
-        to: periodEnd.toISOString().split("T")[0],
-      }
-    }
-
-    if (budget.period === "yearly") {
-      let yearsElapsed = now.getFullYear() - startDate.getFullYear()
-      if (now.getMonth() < startDate.getMonth() || (now.getMonth() === startDate.getMonth() && now.getDate() < billingCycleDay)) {
-        yearsElapsed--
-      }
-      const periodStart = new Date(startDate.getFullYear() + yearsElapsed, startDate.getMonth(), billingCycleDay)
-      const periodEnd = new Date(periodStart)
-      periodEnd.setFullYear(periodStart.getFullYear() + 1)
-      return {
-        from: periodStart.toISOString().split("T")[0],
-        to: periodEnd.toISOString().split("T")[0],
-      }
-    }
-
-    // monthly
-    let monthsElapsed = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth())
-    if (now.getDate() < billingCycleDay) {
-      monthsElapsed--
-    }
-    const periodStart = new Date(startDate.getFullYear(), startDate.getMonth(), billingCycleDay)
-    periodStart.setMonth(periodStart.getMonth() + monthsElapsed)
-    const periodEnd = new Date(periodStart)
-    periodEnd.setMonth(periodStart.getMonth() + 1)
-    return {
-      from: periodStart.toISOString().split("T")[0],
-      to: periodEnd.toISOString().split("T")[0],
-    }
+  function handleBudgetClick(budget: Budget) {
+    setSelectedBudget(budget)
   }
 
-  async function handleBudgetClick(budget: Budget) {
-    setSelectedBudget(budget)
-    setLoadingTransactions(true)
+  async function handleTriggerBudgetRecurring(budget: Budget) {
+    setTriggeringBudgetId(budget.id)
     try {
-      const periodWindow = getCurrentPeriodWindow(budget)
-      const response = await transactionsApi.list(accountId!, {
-        category_id: String(budget.category_id),
-        from: periodWindow.from,
-        to: periodWindow.to,
-      })
-      setBudgetTransactions(response.data || [])
+      await budgetsApi.triggerRecurring(budget.id)
+      loadData()
     } catch {
-      console.error("Failed to load budget transactions")
-      setBudgetTransactions([])
+      console.error("Failed to trigger recurring transactions")
     } finally {
-      setLoadingTransactions(false)
+      setTriggeringBudgetId(null)
     }
   }
 
@@ -495,7 +443,20 @@ export default function BudgetsPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex gap-1 items-center" onClick={(e) => e.stopPropagation()}>
+                    {budget.recurring_due > 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className={cn("h-7 px-2 text-xs -mt-1", theme === "light" ? "border-[#D9B44A] text-[#8A6D1F] hover:bg-[#D9B44A]/20" : "border-[#C9A24A] text-[#C9A24A] hover:bg-[#C9A24A]/20")}
+                        disabled={triggeringBudgetId !== null}
+                        onClick={() => handleTriggerBudgetRecurring(budget)}
+                        title="Capture all recurring transactions that are still due this period"
+                      >
+                        <Repeat className="h-3 w-3 mr-1" />
+                        {budget.recurring_due} due
+                      </Button>
+                    )}
                     <Button
                       variant="ghost"
                       size="icon"
@@ -544,6 +505,14 @@ export default function BudgetsPage() {
                       {percentage.toFixed(1)}% used
                     </div>
                   </div>
+                  {budget.recurring_count > 0 && (
+                    <p className={cn("text-xs flex items-center gap-1", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
+                      <Repeat className="h-3 w-3" />
+                      {budget.recurring_due === 0
+                        ? `All ${budget.recurring_count} recurring captured`
+                        : `${budget.recurring_count - budget.recurring_due} of ${budget.recurring_count} recurring captured`}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             )
@@ -551,71 +520,13 @@ export default function BudgetsPage() {
         </div>
       )}
 
-      {/* Budget transactions modal */}
+      {/* Budget detail modal (transactions and recurring items) */}
       {selectedBudget && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className={cn(
-            "w-full max-w-2xl max-h-[80vh] overflow-auto rounded-lg p-6",
-            theme === "light" ? "bg-[#E8DCC5]" : "bg-[#201E1B]"
-          )}>
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className={cn("text-xl font-bold", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
-                  {selectedBudget.name} Transactions
-                </h2>
-                <p className={cn("text-sm", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
-                  {selectedBudget.category?.name} · {selectedBudget.period}
-                </p>
-              </div>
-              <Button variant="ghost" size="icon" onClick={() => setSelectedBudget(null)}>
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {loadingTransactions ? (
-              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Loading transactions...</p>
-            ) : budgetTransactions.length === 0 ? (
-              <p className={cn("text-center py-8", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>No transactions found for this budget period.</p>
-            ) : (
-              <div className="space-y-2">
-                {budgetTransactions.map((t) => (
-                  <div
-                    key={t.id}
-                    className={cn(
-                      "flex items-center justify-between p-3 rounded-md border",
-                      theme === "light" ? "border-[#E6E0D6]" : "border-[#38352F]"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="h-8 w-8 rounded-full flex items-center justify-center text-sm text-white"
-                        style={{ backgroundColor: t.category?.colour || "#6BAF92" }}
-                      >
-                        {t.category?.icon || t.category?.name[0] || "??"}
-                      </div>
-                      <div>
-                        <p className={cn("text-sm font-medium", theme === "light" ? "text-[#1F2A24]" : "text-[#EDEBE6]")}>
-                          {t.description || t.category?.name}
-                        </p>
-                        <p className={cn("text-xs", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>
-                          {formatDate(t.date)}
-                        </p>
-                      </div>
-                    </div>
-                    <p className={cn(
-                      "text-sm font-medium",
-                      t.type === "income"
-                        ? theme === "light" ? "text-[#6BAF92]" : "text-[#A8D5BA]"
-                        : "text-red-400"
-                    )}>
-                      {t.type === "income" ? "+" : "-"}{formatCurrency(parseFloat(t.amount))}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <BudgetDetailModal
+          budget={budgets.find((b) => b.id === selectedBudget.id) || selectedBudget}
+          onClose={() => setSelectedBudget(null)}
+          onChanged={loadData}
+        />
       )}
 
       <ConfirmDialog

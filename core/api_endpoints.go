@@ -14,6 +14,7 @@ import (
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/credits"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/dashboard"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/goals"
+	"github.com/CodeNameJuJu/budget_buddy/core/functions/recurring"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/savings"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/tags"
 	"github.com/CodeNameJuJu/budget_buddy/core/functions/transactions"
@@ -95,6 +96,18 @@ func RegisterRoutes(r chi.Router) {
 			r.Post("/budgets", budgets.POSTBudget)
 			r.Patch("/budgets/{id}", budgets.PATCHBudget)
 			r.Delete("/budgets/{id}", budgets.DELETEBudget)
+			r.Get("/budgets/{id}/transactions", budgets.GETBudgetTransactions)
+			r.Post("/budgets/{id}/trigger-recurring", recurring.POSTTriggerBudgetRecurring)
+		})
+
+		/* ----------- RECURRING TRANSACTIONS ----------- */
+		r.With(authHandler.AuthMiddleware).Group(func(r chi.Router) {
+			r.Get("/recurring-transactions", recurring.GETRecurringTransactions)
+			r.Get("/recurring-transactions/{id}", recurring.GETRecurringTransactions)
+			r.Post("/recurring-transactions", recurring.POSTRecurringTransaction)
+			r.Patch("/recurring-transactions/{id}", recurring.PATCHRecurringTransaction)
+			r.Delete("/recurring-transactions/{id}", recurring.DELETERecurringTransaction)
+			r.Post("/recurring-transactions/{id}/trigger", recurring.POSTTriggerRecurringTransaction)
 		})
 
 		/* ----------- SAVINGS ----------- */

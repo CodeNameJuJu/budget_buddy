@@ -174,7 +174,9 @@ export interface Transaction {
   notes?: string
   tags?: string // JSON array of tags
   account_type?: "checking" | "savings" // Track which account the transaction is from
+  recurring_transaction_id?: number
   category?: Category
+  budget?: Budget
   created_date: string
 }
 
@@ -190,7 +192,34 @@ export interface Budget {
   category?: Category
   spent?: string
   remaining?: string
+  period_start?: string
+  period_end?: string
+  recurring_count: number
+  recurring_due: number
   created_date: string
+}
+
+export interface RecurringTransaction {
+  id: number
+  account_id: number
+  budget_id: number
+  category_id?: number
+  amount: string
+  type: "income" | "expense"
+  description: string
+  notes?: string
+  due_day?: number
+  is_active: boolean
+  budget?: Budget
+  category?: Category
+  triggered_this_period: boolean
+  triggered_transaction?: Transaction
+  created_date: string
+}
+
+export interface TriggerRecurringResult {
+  created: Transaction[]
+  skipped: RecurringTransaction[]
 }
 
 export interface DashboardSummary {
@@ -276,6 +305,35 @@ export const budgetsApi = {
   update: (id: number, data: Partial<Budget>) =>
     patch<APIResponse<Budget>>(`/budgets/${id}`, data),
   delete: (id: number) => del<APIResponse<null>>(`/budgets/${id}`),
+  // Transactions counted against the budget in its current period
+  transactions: (id: number) => get<APIResponse<Transaction[]>>(`/budgets/${id}/transactions`),
+  // Create this period's transactions for every recurring item not yet captured
+  triggerRecurring: (id: number, date?: string) =>
+    post<APIResponse<TriggerRecurringResult>>(`/budgets/${id}/trigger-recurring`, date ? { date } : {}),
+}
+
+// Recurring transaction API
+export const recurringApi = {
+  list: (params?: { budget_id?: number; active_only?: boolean }) => {
+    const query: Record<string, string> = {}
+    if (params?.budget_id) query.budget_id = String(params.budget_id)
+    if (params?.active_only) query.active_only = "true"
+    return get<APIResponse<RecurringTransaction[]>>("/recurring-transactions", query)
+  },
+  create: (data: {
+    budget_id: number
+    category_id?: number
+    amount: string
+    type: "income" | "expense"
+    description: string
+    notes?: string
+    due_day?: number
+  }) => post<APIResponse<RecurringTransaction>>("/recurring-transactions", data),
+  update: (id: number, data: Partial<Omit<RecurringTransaction, "id" | "budget" | "category">>) =>
+    patch<APIResponse<RecurringTransaction>>(`/recurring-transactions/${id}`, data),
+  delete: (id: number) => del<APIResponse<null>>(`/recurring-transactions/${id}`),
+  trigger: (id: number, options?: { date?: string; force?: boolean }) =>
+    post<APIResponse<TriggerRecurringResult>>(`/recurring-transactions/${id}/trigger`, options || {}),
 }
 
 // Savings types

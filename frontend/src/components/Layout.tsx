@@ -25,6 +25,7 @@ import {
   TrendingUp,
   CheckCircle,
   CreditCard,
+  Repeat,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -37,6 +38,7 @@ import { useTheme } from "@/contexts/ThemeContext"
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/finance", icon: Target, label: "Finance" },
+  { to: "/recurring", icon: Repeat, label: "Recurring" },
   { to: "/savings", icon: Landmark, label: "Savings" },
   { to: "/credits", icon: CreditCard, label: "Credits" },
   { to: "/analytics", icon: BarChart3, label: "Analytics" },

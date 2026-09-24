@@ -9,10 +9,12 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import {
   transactionsApi,
   categoriesApi,
+  budgetsApi,
   tagsApi,
   accountsApi,
   type Transaction,
   type Category,
+  type Budget,
   type PopularTag,
 } from "@/lib/api"
 import { formatCurrency, formatDate } from "@/lib/utils"
@@ -23,6 +25,7 @@ export default function TransactionsPage() {
   const [accountId, setAccountId] = useState<number | null>(null)
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [budgets, setBudgets] = useState<Budget[]>([])
   const [popularTags, setPopularTags] = useState<PopularTag[]>([])
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -41,6 +44,7 @@ export default function TransactionsPage() {
     description: "",
     date: new Date().toISOString().split("T")[0],
     category_id: "",
+    budget_id: "",
     notes: "",
     tags: [] as string[],
     account_type: "checking" as "checking" | "savings",
@@ -76,14 +80,16 @@ export default function TransactionsPage() {
       if (filterType) params.type = filterType
       if (filterCategory) params.category_id = filterCategory
 
-      const [txRes, catRes, tagsRes] = await Promise.all([
+      const [txRes, catRes, budRes, tagsRes] = await Promise.all([
         transactionsApi.list(accountId, params),
         categoriesApi.list(accountId),
+        budgetsApi.list(accountId),
         tagsApi.popular(accountId),
       ])
       setTransactions(txRes.data || [])
       setCount(txRes.count)
       setCategories(catRes.data || [])
+      setBudgets(budRes.data || [])
       setPopularTags(tagsRes.data || [])
     } catch (error) {
       console.error("Failed to load data", error)
@@ -104,6 +110,7 @@ export default function TransactionsPage() {
         description: form.description || undefined,
         date: form.date,
         category_id: form.category_id ? Number(form.category_id) : undefined,
+        budget_id: form.budget_id ? Number(form.budget_id) : undefined,
         notes: form.notes || undefined,
         tags: form.tags.length > 0 ? JSON.stringify(form.tags) : undefined,
         account_type: form.account_type,
@@ -114,6 +121,7 @@ export default function TransactionsPage() {
         description: "",
         date: new Date().toISOString().split("T")[0],
         category_id: "",
+        budget_id: "",
         notes: "",
         tags: [],
         account_type: "checking",
@@ -123,6 +131,16 @@ export default function TransactionsPage() {
     } catch {
       console.error("Failed to create transaction")
     }
+  }
+
+  function handleBudgetChange(budgetId: string) {
+    const budget = budgets.find((b) => String(b.id) === budgetId)
+    // Picking a budget fills in its category when none is chosen yet
+    setForm({
+      ...form,
+      budget_id: budgetId,
+      category_id: form.category_id || (budget ? String(budget.category_id) : ""),
+    })
   }
 
   function handleDeleteClick(id: number) {
@@ -345,6 +363,23 @@ export default function TransactionsPage() {
                       ))}
                   </select>
                 </div>
+                {form.type === "expense" && (
+                  <div className="space-y-2">
+                    <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Budget</label>
+                    <select
+                      className={cn("flex responsive-input rounded-md border px-3 py-1 mobile-text shadow-sm", theme === "light" ? "border-[#E6E0D6] bg-white text-[#1F2A24]" : "border-[#38352F] bg-[#201E1B] text-[#EDEBE6]")}
+                      value={form.budget_id}
+                      onChange={(e) => handleBudgetChange(e.target.value)}
+                    >
+                      <option value="">{form.category_id ? "Match by category" : "No budget"}</option>
+                      {budgets.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}{b.category ? ` (${b.category.name})` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <label className={cn("mobile-text font-medium", theme === "light" ? "text-[#6C7A73]" : "text-[#ABA9A2]")}>Notes</label>
                   <Input

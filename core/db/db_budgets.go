@@ -6,6 +6,7 @@ import (
 
 	"github.com/CodeNameJuJu/budget_buddy/utils/types"
 	"github.com/shopspring/decimal"
+	"github.com/uptrace/bun"
 )
 
 func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error) {
@@ -27,7 +28,40 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 		return nil, 0, err
 	}
 
-	// Get the account's billing cycle day and timezone
+	billingCycleDay, loc := GetAccountBillingSettings(accountID)
+
+	// Calculate spent amount and recurring status for each budget
+	for i := range budgets {
+		periodStart, periodEnd := getCurrentPeriodWindow(budgets[i].StartDate, budgets[i].Period, budgets[i].EndDate, billingCycleDay, loc)
+		budgets[i].PeriodStart = &periodStart
+		budgets[i].PeriodEnd = periodEnd
+
+		spent, calcErr := calculateBudgetSpent(&budgets[i], periodStart, periodEnd)
+		if calcErr != nil {
+			// If calculation fails, set spent to 0 instead of skipping
+			zero := decimal.Zero
+			budgets[i].Spent = &zero
+			budgets[i].Remaining = &budgets[i].Amount
+		} else {
+			remaining := budgets[i].Amount.Sub(spent)
+			budgets[i].Spent = &spent
+			budgets[i].Remaining = &remaining
+		}
+
+		total, due, recErr := countRecurringForBudget(budgets[i].ID, periodStart, periodEnd)
+		if recErr == nil {
+			budgets[i].RecurringCount = total
+			budgets[i].RecurringDue = due
+		}
+	}
+
+	return budgets, count, nil
+}
+
+// GetAccountBillingSettings returns the billing cycle day and timezone for an
+// account, falling back to the 25th and the server's local timezone.
+func GetAccountBillingSettings(accountID int64) (int, *time.Location) {
+	db := GetDb()
 	billingCycleDay := 25
 	loc := time.Local
 	var account types.Account
@@ -41,45 +75,61 @@ func QueryBudgets(accountID int64, budgetID *int64) ([]types.Budget, int, error)
 			}
 		}
 	}
-
-	// Calculate spent amount for each budget
-	for i := range budgets {
-		periodStart, periodEnd := getCurrentPeriodWindow(budgets[i].StartDate, budgets[i].Period, budgets[i].EndDate, billingCycleDay, loc)
-		spent, calcErr := calculateBudgetSpent(budgets[i].CategoryID, budgets[i].AccountID, periodStart, periodEnd)
-		if calcErr != nil {
-			// If calculation fails, set spent to 0 instead of skipping
-			zero := decimal.Zero
-			budgets[i].Spent = &zero
-			budgets[i].Remaining = &budgets[i].Amount
-			continue
-		}
-		remaining := budgets[i].Amount.Sub(spent)
-		budgets[i].Spent = &spent
-		budgets[i].Remaining = &remaining
-	}
-
-	return budgets, count, nil
+	return billingCycleDay, loc
 }
 
-func calculateBudgetSpent(categoryID int64, accountID int64, startDate time.Time, endDate *time.Time) (decimal.Decimal, error) {
+// applyBudgetTransactionMatch restricts a transactions query to the
+// transactions that belong to a budget: anything explicitly linked via
+// budget_id, plus unlinked transactions in the budget's category. A
+// transaction linked to a different budget is never counted, even if it
+// shares the category.
+func applyBudgetTransactionMatch(query *bun.SelectQuery, budget *types.Budget, startDate time.Time, endDate *time.Time) *bun.SelectQuery {
+	query = query.
+		Where("t.account_id = ?", budget.AccountID).
+		Where("t.deleted_date IS NULL").
+		Where("(t.budget_id = ? OR (t.budget_id IS NULL AND t.category_id = ?))", budget.ID, budget.CategoryID).
+		Where("t.date >= ?", startDate)
+
+	if endDate != nil {
+		query = query.Where("t.date < ?", *endDate)
+	}
+	return query
+}
+
+func calculateBudgetSpent(budget *types.Budget, startDate time.Time, endDate *time.Time) (decimal.Decimal, error) {
 	db := GetDb()
 	var spent decimal.Decimal
 
 	query := db.NewSelect().
 		Model((*types.Transaction)(nil)).
-		ColumnExpr("COALESCE(SUM(amount), 0)").
-		Where("category_id = ?", categoryID).
-		Where("account_id = ?", accountID).
-		Where("type = ?", "expense").
-		Where("deleted_date IS NULL").
-		Where("date >= ?", startDate)
-
-	if endDate != nil {
-		query = query.Where("date < ?", *endDate)
-	}
+		ColumnExpr("COALESCE(SUM(t.amount), 0)").
+		Where("t.type = ?", "expense")
+	query = applyBudgetTransactionMatch(query, budget, startDate, endDate)
 
 	err := query.Scan(context.Background(), &spent)
 	return spent, err
+}
+
+// QueryBudgetTransactions returns the transactions counted against a budget in
+// its current period, using the same matching rule as the spent calculation.
+func QueryBudgetTransactions(budget *types.Budget) ([]types.Transaction, int, error) {
+	db := GetDb()
+	var transactions []types.Transaction
+
+	if budget.PeriodStart == nil {
+		billingCycleDay, loc := GetAccountBillingSettings(budget.AccountID)
+		periodStart, periodEnd := getCurrentPeriodWindow(budget.StartDate, budget.Period, budget.EndDate, billingCycleDay, loc)
+		budget.PeriodStart = &periodStart
+		budget.PeriodEnd = periodEnd
+	}
+
+	query := db.NewSelect().Model(&transactions).
+		Relation("Category").
+		Order("t.date DESC", "t.id DESC")
+	query = applyBudgetTransactionMatch(query, budget, *budget.PeriodStart, budget.PeriodEnd)
+
+	count, err := query.ScanAndCount(context.Background())
+	return transactions, count, err
 }
 
 // getCurrentPeriodWindow computes the start and end of the current budget period

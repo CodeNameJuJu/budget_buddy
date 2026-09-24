@@ -95,6 +95,13 @@ The UI will be available at `http://localhost:5173`. API requests are proxied to
 | `POST` | `/api/budgets` | Create budget |
 | `PATCH` | `/api/budgets/:id` | Update budget |
 | `DELETE` | `/api/budgets/:id` | Delete budget |
+| `GET` | `/api/budgets/:id/transactions` | Transactions counted against the budget this period |
+| `POST` | `/api/budgets/:id/trigger-recurring` | Capture all recurring items still due this period |
+| `GET` | `/api/recurring-transactions` | List recurring templates (`budget_id`, `active_only` filters) |
+| `POST` | `/api/recurring-transactions` | Create recurring template |
+| `PATCH` | `/api/recurring-transactions/:id` | Update recurring template |
+| `DELETE` | `/api/recurring-transactions/:id` | Delete recurring template |
+| `POST` | `/api/recurring-transactions/:id/trigger` | Capture this period's transaction for one template |
 | `GET` | `/api/dashboard/summary` | Dashboard summary |
 
 All list endpoints require `account_id` as a query parameter.
@@ -110,3 +117,16 @@ The backend follows the same patterns as the ShipLogic backend:
 - **DB layer** — `core/db/db_*.go` files with query functions
 - **Types** — `utils/types/types_*.go` files with struct definitions
 - **Soft deletes** — records are never hard-deleted; `deleted_date` is set instead
+
+## Budgets and recurring transactions
+
+A budget's `spent` amount for the current period counts expense transactions that are either
+explicitly linked to it (`transactions.budget_id`) or unlinked but in the budget's category. A
+transaction linked to a different budget is never counted, even if it shares the category. The
+`/api/budgets/:id/transactions` endpoint uses the same rule and period window, so the list shown
+when clicking a budget card always reconciles with its progress bar.
+
+Recurring transactions are templates stored against a budget. They are never created automatically:
+the budget card shows how many are still due this period and triggering one (or all) inserts a real
+transaction with `budget_id` and `recurring_transaction_id` set. A template counts as captured for
+the period when such a transaction exists inside the budget's current period window.

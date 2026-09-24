@@ -16,6 +16,7 @@ import ProfilePage from "./pages/ProfilePage"
 import UserGuidePage from "./pages/UserGuidePage"
 import VerifyEmailPage from "./pages/VerifyEmailPage"
 import FinancePage from "./pages/FinancePage"
+import RecurringPage from "./pages/RecurringPage"
 import { LoginForm } from "./components/auth/LoginForm"
 import { RegisterForm } from "./components/auth/RegisterForm"
 import { ProtectedRoute } from "./components/auth/ProtectedRoute"
@@ -97,6 +98,11 @@ export default function App() {
             <Route path="/finance" element={
               <ProtectedRoute>
                 <FinancePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/recurring" element={
+              <ProtectedRoute>
+                <RecurringPage />
               </ProtectedRoute>
             } />
         </Route>
